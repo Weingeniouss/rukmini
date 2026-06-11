@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'view/screen/splash/splash.dart';
+import 'routes/app_pages.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,7 +15,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Splash(),
+      theme: ThemeData(
+        fontFamily: 'Poppins',
+        useMaterial3: true,
+      ),
+      initialRoute: AppPages.initial,
+      getPages: AppPages.routes,
     );
   }
 }

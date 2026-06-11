@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 //horizontal padding All Over Screen !
 Widget horizontalPadding({Widget? child}) {
   return Padding(
-    padding: EdgeInsetsGeometry.symmetric(horizontal: Get.width * 0.07),
+    padding: EdgeInsetsGeometry.symmetric(horizontal: Get.width * 0.05),
     child: child,
   );
 }

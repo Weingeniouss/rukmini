@@ -9,4 +9,10 @@ class AppString {
   static const andyRooneyJournalist = "— Andy Rooney, journalist";
   static const williamGeorge = "“Mistakes are the growing pains of wisdom.”";
   static const williamGeorgeJordan = "— William George Jordan";
+
+  //Login
+  static const welcome = 'Welcome to';
+  static const rukminiJewellers = 'Rukmini Jewellers';
+  static const emailphone = 'Email/Phone';
+  static const password = 'password';
 }

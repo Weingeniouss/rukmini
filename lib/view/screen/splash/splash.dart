@@ -40,6 +40,7 @@ class Splash extends StatelessWidget {
                     quote: AppString.andyRooney,
                     author: AppString.andyRooneyJournalist,
                     goldColor: AppColor.goldColor,
+                    onTap: () => Get.toNamed('/login'),
                   ),
                   QuoteWidget(
                     quote: AppString.williamGeorge,
@@ -62,12 +63,14 @@ class QuoteWidget extends StatelessWidget {
   final String quote;
   final String author;
   final Color goldColor;
+  final void Function()?onTap;
 
   const QuoteWidget({
     super.key,
     required this.quote,
     required this.author,
     required this.goldColor,
+    this.onTap,
   });
 
   @override
@@ -87,12 +90,15 @@ class QuoteWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: context.height * 0.005),
-          Text(
-            author,
-            style: TextStyle(
-              color: goldColor.withOpacity(0.7),
-              fontSize: context.width * 0.04,
-              fontStyle: FontStyle.italic,
+          GestureDetector(
+            onTap: onTap,
+            child: Text(
+              author,
+              style: TextStyle(
+                color: goldColor.withOpacity(0.7),
+                fontSize: context.width * 0.04,
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ),
         ],
