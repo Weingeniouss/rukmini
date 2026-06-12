@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rukmini/controller/ui/credentials/login.dart';
+import 'package:rukmini/controller/api/controllers/credentials/login_controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_String.dart';
@@ -10,6 +10,7 @@ import 'package:rukmini/view/utils/app_logo.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:rukmini/view/utils/widget/inputField.dart';
+import '../../../elevated/credenials/loginElevated.dart';
 import '../../utils/app_background.dart';
 
 class Login extends StatelessWidget {
@@ -17,7 +18,7 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loginUI = Get.put(LoginControllerUI());
+    final loginAPI = Get.put(LoginControllerAPI());
     return Fullscreen(
       backgroundImage: AppBackground.loginImage,
       child: horizontalPadding(
@@ -35,12 +36,13 @@ class Login extends StatelessWidget {
 
               //Login TextField
               loginTextField(
-                inputTextcontrollerEmailPhone: loginUI.emailController,
-                inputTextcontrollerPassword: loginUI.passwordController,
+                inputTextcontrollerEmailPhone: loginAPI.loginUI.emailController,
+                inputTextcontrollerPassword:
+                    loginAPI.loginUI.passwordController,
               ),
 
               //button Login
-              loginButton(),
+              Obx(() => loginButton(loginAPI)),
 
               //Forget Password
               forgetpasswod(onPressed: () {}),
@@ -110,13 +112,18 @@ Widget loginTextField({
   );
 }
 
-Widget loginButton() {
+Widget loginButton(LoginControllerAPI loginUI) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.end,
     children: [
       Padding(
         padding: EdgeInsets.symmetric(vertical: Get.height * 0.10),
-        child: Image.asset(AppIcon.btLogin, scale: 2.3),
+        child: GestureDetector(
+          onTap: postLogin,
+          child: loginUI.isLoading.value
+              ? const CircularProgressIndicator(color: Colors.white)
+              : Image.asset(AppIcon.btLogin, scale: 2.3),
+        ),
       ),
     ],
   );
@@ -126,7 +133,7 @@ Widget forgetpasswod({required void Function()? onPressed}) {
   return TextButton(
     onPressed: onPressed,
     child: Text(
-      'Forget Password?',
+      AppString.forgetPassword,
       style: TextStyle(color: AppColor.fullScreenColor),
     ),
   );

@@ -15,4 +15,5 @@ class AppString {
   static const rukminiJewellers = 'Rukmini Jewellers';
   static const emailphone = 'Email/Phone';
   static const password = 'password';
+  static const forgetPassword = 'Forget Password?';
 }
