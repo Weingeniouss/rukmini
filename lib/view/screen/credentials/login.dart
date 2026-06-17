@@ -36,9 +36,8 @@ class Login extends StatelessWidget {
 
               //Login TextField
               loginTextField(
-                inputTextcontrollerEmailPhone: loginAPI.loginUI.emailController,
-                inputTextcontrollerPassword:
-                    loginAPI.loginUI.passwordController,
+                emailPhoneInput: loginAPI.loginUI.emailController,
+                passwordInput: loginAPI.loginUI.passwordController,
               ),
 
               //button Login
@@ -89,8 +88,8 @@ Widget heding() {
 }
 
 Widget loginTextField({
-  TextEditingController? inputTextcontrollerEmailPhone,
-  TextEditingController? inputTextcontrollerPassword,
+  TextEditingController? emailPhoneInput,
+  TextEditingController? passwordInput,
 }) {
   return Padding(
     padding: EdgeInsets.only(right: Get.width * 0.2),
@@ -99,13 +98,13 @@ Widget loginTextField({
         inputField(
           hintText: AppString.emailphone,
           prefixIcon: AppIcon.user,
-          inputTextcontroller: inputTextcontrollerEmailPhone,
+          inputTextcontroller: emailPhoneInput,
         ),
         inputField(
           hintText: AppString.password,
           prefixIcon: AppIcon.padlock,
           isPassword: true,
-          inputTextcontroller: inputTextcontrollerPassword,
+          inputTextcontroller: passwordInput,
         ),
       ],
     ),
@@ -121,7 +120,7 @@ Widget loginButton(LoginControllerAPI loginUI) {
         child: GestureDetector(
           onTap: postLogin,
           child: loginUI.isLoading.value
-              ? const CircularProgressIndicator(color: Colors.white)
+              ? CircularProgressIndicator(color: AppColor.fullScreenColor)
               : Image.asset(AppIcon.btLogin, scale: 2.3),
         ),
       ),

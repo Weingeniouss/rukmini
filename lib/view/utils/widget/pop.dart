@@ -1,7 +1,7 @@
-
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:toastification/toastification.dart';
 
 class ToastificationSuccess {
@@ -13,9 +13,9 @@ class ToastificationSuccess {
         dismissDirection: DismissDirection.startToEnd,
         type: ToastificationType.success,
         style: ToastificationStyle.minimal,
-        autoCloseDuration: const Duration(seconds: 5),
+        autoCloseDuration: Duration(seconds: 5),
         boxShadow: kElevationToShadow[2],
-        // primaryColor: AppColor.primary,
+        primaryColor: AppColor.primaryColor,
       );
     });
   }
