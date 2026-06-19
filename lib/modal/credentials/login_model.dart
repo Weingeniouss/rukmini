@@ -33,16 +33,17 @@ class Data {
   String? isLogin;
   String? loginToken;
 
-  Data(
-      {this.userId,
-      this.email,
-      this.phone,
-      this.roleId,
-      this.status,
-      this.roleName,
-      this.isSupper,
-      this.isLogin,
-      this.loginToken});
+  Data({
+    this.userId,
+    this.email,
+    this.phone,
+    this.roleId,
+    this.status,
+    this.roleName,
+    this.isSupper,
+    this.isLogin,
+    this.loginToken,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     userId = json['UserId'];

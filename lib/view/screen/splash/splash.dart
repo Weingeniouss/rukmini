@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/app_background.dart';
+import 'package:rukmini/view/utils/app_constants.dart';
 import 'package:rukmini/view/utils/app_logo.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
-import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 
 class Splash extends StatelessWidget {
   const Splash({super.key});
@@ -18,40 +18,39 @@ class Splash extends StatelessWidget {
   Widget build(BuildContext context) {
     return Fullscreen(
       backgroundImage: AppBackground.backgroundImage,
-      child: horizontalPadding(
-        child: Column(
-          children: [
+      child: Column(
+        children: [
+          //Logo
+          logo(AppLogo.rukminiLogo),
+          SizedBox(height: Get.height * 0.05),
 
-            //Logo
-            logo(AppLogo.rukminiLogo),
-            SizedBox(height: Get.height * 0.05),
-
-            //quote
-            Expanded(
-              child: ListView(
-                physics: BouncingScrollPhysics(),
-                children: [
-                  QuoteWidget(
-                    quote: AppString.napoleonHill,
-                    author: AppString.authorNapoleonHill,
-                    goldColor: AppColor.goldColor,
-                  ),
-                  QuoteWidget(
-                    quote: AppString.andyRooney,
-                    author: AppString.andyRooneyJournalist,
-                    goldColor: AppColor.goldColor,
-                    onTap: () => Get.toNamed('/login'),
-                  ),
-                  QuoteWidget(
-                    quote: AppString.williamGeorge,
-                    author: AppString.williamGeorgeJordan,
-                    goldColor: AppColor.goldColor,
-                  ),
-                ],
-              ),
+          //quote
+          Expanded(
+            child: ListView(
+              physics: BouncingScrollPhysics(),
+              children: [
+                QuoteWidget(
+                  quote: AppString.napoleonHill,
+                  author: AppString.authorNapoleonHill,
+                  goldColor: AppColor.goldColor,
+                ),
+                QuoteWidget(
+                  quote: AppString.andyRooney,
+                  author: AppString.andyRooneyJournalist,
+                  goldColor: AppColor.goldColor,
+                  onTap: () {
+                    islogin ? Get.toNamed('/home') : Get.toNamed('/login');
+                  },
+                ),
+                QuoteWidget(
+                  quote: AppString.williamGeorge,
+                  author: AppString.williamGeorgeJordan,
+                  goldColor: AppColor.goldColor,
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -63,7 +62,7 @@ class QuoteWidget extends StatelessWidget {
   final String quote;
   final String author;
   final Color goldColor;
-  final void Function()?onTap;
+  final void Function()? onTap;
 
   const QuoteWidget({
     super.key,

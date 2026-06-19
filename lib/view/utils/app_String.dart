@@ -2,6 +2,11 @@
 
 class AppString {
 
+  //Url
+  static const apiKey = 'API-KEY';
+  static const emailBody = 'Email';
+  static const passwordBody = 'Password';
+
   //Splash
   static const napoleonHill = "“Strength and growth come only through continuous effort and struggle.”";
   static const authorNapoleonHill = "— Napoleon Hill, author";
@@ -16,4 +21,7 @@ class AppString {
   static const emailphone = 'Email/Phone';
   static const password = 'password';
   static const forgetPassword = 'Forget Password?';
+
+  //home
+  static const homeScreen = 'Home Screen';
 }

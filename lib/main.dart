@@ -1,6 +1,9 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:rukmini/controller/local/localDatabase.dart';
 import 'package:toastification/toastification.dart';
 import 'routes/app_pages.dart';
 
@@ -10,7 +13,10 @@ import 'routes/app_pages.dart';
 */
 
 void main() async {
+  final localdata = LocalDatabase();
   WidgetsFlutterBinding.ensureInitialized();
+
+  localdata.loadLocalData();
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,

@@ -6,7 +6,7 @@ import '../../services/credentials/loginServices.dart';
 
 class LoginControllerAPI extends GetxController {
   final LoginControllerUi loginUI = Get.put(LoginControllerUi());
-  final LoginServices _loginServices = Get.put(LoginServices());
+  final LoginServices _loginServices = LoginServices();
 
   var isLoading = false.obs;
 

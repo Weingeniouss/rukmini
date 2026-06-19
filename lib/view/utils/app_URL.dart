@@ -8,4 +8,5 @@ class AppUrl {
 
   //Credentials
   static const login = '${baseAPI}user/login';
+  static const forgetPassword = '${baseAPI}user/forgotPassword';
 }

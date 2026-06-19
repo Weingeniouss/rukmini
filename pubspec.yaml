@@ -41,6 +41,9 @@ dependencies:
   connectivity_plus:
   dio:
   http:
+  shared_preferences:
+  lottie:
+  flutter_svg:
 
 dev_dependencies:
   flutter_test:
