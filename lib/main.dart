@@ -13,10 +13,10 @@ import 'routes/app_pages.dart';
 */
 
 void main() async {
-  final localdata = LocalDatabase();
   WidgetsFlutterBinding.ensureInitialized();
+  final localdata = LocalDatabase();
 
-  localdata.loadLocalData();
+  await localdata.loadLocalData();
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,

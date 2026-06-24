@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/credentials/login_controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
@@ -10,7 +11,6 @@ import 'package:rukmini/view/utils/app_logo.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:rukmini/view/utils/widget/inputField.dart';
-import '../../../elevated/credenials/loginElevated.dart';
 import '../../utils/app_background.dart';
 
 class Login extends StatelessWidget {
@@ -118,7 +118,9 @@ Widget loginButton(LoginControllerAPI loginUI) {
       Padding(
         padding: EdgeInsets.symmetric(vertical: Get.height * 0.10),
         child: GestureDetector(
-          onTap: postLogin,
+          onTap: (){
+            CallApi.callLogin();
+          },
           child: loginUI.isLoading.value
               ? CircularProgressIndicator(color: AppColor.fullScreenColor)
               : Image.asset(AppIcon.btLogin, scale: 2.3),

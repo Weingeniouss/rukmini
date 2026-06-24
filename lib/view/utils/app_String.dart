@@ -4,6 +4,8 @@ class AppString {
 
   //Url
   static const apiKey = 'API-KEY';
+  static const logintokan = 'LoginToken';
+  static const userid = 'UserId';
   static const emailBody = 'Email';
   static const passwordBody = 'Password';
 

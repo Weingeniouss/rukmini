@@ -2,13 +2,28 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      CallApi.callDashboard();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +39,7 @@ Widget listOfCategory() {
   return GridView.builder(
     primary: true,
     shrinkWrap: true,
-    padding: EdgeInsets.zero,
+    padding: EdgeInsets.only(top: 10),
     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
       crossAxisCount: 2,
       childAspectRatio: 1,
@@ -46,7 +61,7 @@ Widget valueOfCategory() {
       border: Border.all(color: AppColor.textField),
     ),
     child: Center(
-      child: Text('Rukmini Jewellers'),
+      child: Text('Rukmini Jewellers !'),
     ),
   );
 }

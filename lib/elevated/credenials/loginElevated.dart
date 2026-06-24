@@ -27,6 +27,7 @@ Future postLogin() async {
         localData.loginSaveData(
           email: loginApi.loginUI.emailController.text,
           password: loginApi.loginUI.passwordController.text,
+          uId: loginModel.data!.userId,
         );
       } else {
         ToastificationError.Error(loginModel.message ?? 'Login failed');

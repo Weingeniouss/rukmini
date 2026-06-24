@@ -12,3 +12,6 @@ bool islogin = false;
 
 //get Tokan
 String tokans =  '';
+
+//get userId
+String userId = '';
