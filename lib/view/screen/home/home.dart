@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
+import 'package:rukmini/controller/api/controllers/home/dashbord_Controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
@@ -16,6 +17,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final dashbord = Get.put(DashbordController());
 
   @override
   void initState() {
@@ -30,12 +32,34 @@ class _HomeState extends State<Home> {
     return Fullscreen(
       backGroundcolor: AppColor.backgroundColor,
       appBar: appBar(title: AppString.homeScreen),
-      child: listOfCategory(),
+      child: Obx(() {
+        final api = dashbord;
+        final loading = api.isLoading.value;
+        final dashboardData = api.dashboardData.value;
+        final dataValue = dashboardData.data;
+
+        if (loading) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        return Column(
+          children: [
+            Text(dataValue?.totalCust.toString() ?? ''),
+            Text(dataValue?.totalGirvi.toString() ?? ''),
+            Text(dataValue?.totalKarkit.toString() ?? ''),
+            Text(dataValue?.totalSold.toString() ?? ''),
+            Text(dataValue?.totalDueGirvi.toString() ?? ''),
+            Text(dataValue?.totalDueOverGirvi.toString() ?? ''),
+            listOfCategory(dashbord),
+          ],
+        );
+      }),
     );
   }
 }
 
-Widget listOfCategory() {
+Widget listOfCategory(DashbordController dashbord) {
+  final list = dashbord.dashboardData.value.data?.lockerList ?? [];
   return GridView.builder(
     primary: true,
     shrinkWrap: true,
@@ -46,13 +70,15 @@ Widget listOfCategory() {
       crossAxisSpacing: 10,
       mainAxisSpacing: 10,
     ),
+    itemCount: list.length,
     itemBuilder: (BuildContext context, int index) {
-      return valueOfCategory();
+      final item = list[index];
+      return valueOfCategory(title: item.comName ?? 'No Name');
     },
   );
 }
 
-Widget valueOfCategory() {
+Widget valueOfCategory({required String title}) {
   return Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(Get.width * 0.02),
@@ -61,7 +87,14 @@ Widget valueOfCategory() {
       border: Border.all(color: AppColor.textField),
     ),
     child: Center(
-      child: Text('Rukmini Jewellers !'),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
     ),
   );
 }

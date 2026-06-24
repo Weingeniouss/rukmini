@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -17,6 +18,12 @@ class DashbordController extends GetxController {
       final http.Response response = await _dashbordServices.dashbordApi();
       if (kDebugMode) {
         print('Dashboard Response: ${response.body}');
+      }
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        if (decoded is Map<String, dynamic>) {
+          dashboardData.value = DashboardModel.fromJson(decoded);
+        }
       }
       return response;
     } catch (e) {
