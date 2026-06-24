@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import '../../../../view/utils/app_URL.dart';
@@ -18,6 +19,14 @@ class LoginServices {
       AppString.passwordBody: loginUI.passwordController.text,
       AppString.apiKey: apiKey,
     };
+
+    if (kDebugMode) {
+      print('--- Login API Request ---');
+      print('URL: $url');
+      print('body: $body');
+      print('--- Login API Request ---');
+    }
+
     return await http.post(login, body: body);
   }
 }
