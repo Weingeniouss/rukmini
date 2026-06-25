@@ -17,7 +17,8 @@ AppBar appBar({required String title}) {
       title,
       style: TextStyle(
         color: AppColor.fullScreenColor,
-        fontSize: Get.width * 0.04,
+        fontSize: Get.width * 0.05,
+        fontWeight: FontWeight.w600,
       ),
     ),
     backgroundColor: AppColor.primaryColor,

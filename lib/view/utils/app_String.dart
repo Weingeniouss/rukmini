@@ -25,5 +25,13 @@ class AppString {
   static const forgetPassword = 'Forget Password?';
 
   //home
-  static const homeScreen = 'Home Screen';
+  static const homeScreen = 'Home';
+  static const totalCustomer = 'Total Customer';
+  static const totalGirvi = 'Total Girvi';
+  static const totalKarkit = 'Total Karkit';
+  static const totalSold = 'Total Sold';
+  static const totalDueGirvi = 'Total Due Girvi';
+  static const totalDueOverGirvi = 'Total Due Over Girvi';
+  static const totalPendingProduct = 'Total Pending Product';
+  static const totalReturnProduct = 'Total Return Product';
 }
