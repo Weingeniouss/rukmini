@@ -11,6 +11,7 @@ class Fullscreen extends StatelessWidget {
   String? backgroundImage;
   PreferredSizeWidget? appBar;
   Color? backGroundcolor;
+  Widget? drawer;
 
   //All Screen Background All Over Screnn Effict !
 
@@ -20,11 +21,13 @@ class Fullscreen extends StatelessWidget {
     this.backgroundImage,
     this.appBar,
     this.backGroundcolor,
+    this.drawer,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: drawer,
       appBar: appBar,
       body: Container(
         height: Get.height,
@@ -38,7 +41,11 @@ class Fullscreen extends StatelessWidget {
                 )
               : null,
         ),
-        child: horizontalPadding(child: SafeArea(child: child)),
+        child: horizontalPadding(
+          child: SafeArea(
+            child: child,
+          ),
+        ),
       ),
     );
   }

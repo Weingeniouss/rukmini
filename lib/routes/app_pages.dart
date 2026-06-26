@@ -9,17 +9,8 @@ class AppPages {
   static const initial = Routes.splash;
 
   static final routes = [
-    GetPage(
-      name: _Paths.splash,
-      page: () => const Splash(),
-    ),
-    GetPage(
-      name: _Paths.login,
-      page: () => const Login(),
-    ),
-    GetPage(
-      name: _Paths.home,
-      page: () => const Home(),
-    ),
+    GetPage(name: _Paths.splash, page: () => Splash()),
+    GetPage(name: _Paths.login, page: () => Login()),
+    GetPage(name: _Paths.home, page: () => Home()),
   ];
 }

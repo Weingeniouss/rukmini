@@ -14,11 +14,12 @@ import 'package:rukmini/view/utils/widget/inputField.dart';
 import '../../utils/app_background.dart';
 
 class Login extends StatelessWidget {
-  const Login({super.key});
+  Login({super.key});
+
+  final loginAPI = Get.put(LoginControllerAPI());
 
   @override
   Widget build(BuildContext context) {
-    final loginAPI = Get.put(LoginControllerAPI());
     return Fullscreen(
       backgroundImage: AppBackground.loginImage,
       child: horizontalPadding(
@@ -118,7 +119,7 @@ Widget loginButton(LoginControllerAPI loginUI) {
       Padding(
         padding: EdgeInsets.symmetric(vertical: Get.height * 0.10),
         child: GestureDetector(
-          onTap: (){
+          onTap: () {
             CallApi.callLogin();
           },
           child: loginUI.isLoading.value

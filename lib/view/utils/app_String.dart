@@ -1,6 +1,18 @@
 // ignore_for_file: file_names
 
 class AppString {
+  //Drawer
+  static const home = 'Home';
+  static const logout = 'Logout';
+  static const allMaster = 'All Master';
+  static const customer = 'Customer';
+  static const girvi = 'Girvi';
+  static const products = 'Products';
+  static const productinLocker = 'Product in Locker';
+  static const pendingTransaction = 'Pending Transaction';
+  static const lockerTransaction = 'Locker Transaction';
+  static const reports = 'Reports';
+  static const exportCustomersContacts = "Export Customer's Contacts";
 
   //Url
   static const apiKey = 'API-KEY';

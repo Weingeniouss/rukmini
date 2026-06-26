@@ -8,10 +8,17 @@ import '../app_Icon.dart';
 
 AppBar appBar({required String title}) {
   return AppBar(
-    leading: Padding(
-      padding: EdgeInsets.symmetric(horizontal: Get.width * 0.03),
-      child: SvgPicture.asset(AppIcon.openMenu),
-    ),
+    leading: Builder(builder: (context) {
+      return GestureDetector(
+        onTap: () {
+          Scaffold.of(context).openDrawer();
+        },
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: Get.width * 0.03),
+          child: SvgPicture.asset(AppIcon.openMenu),
+        ),
+      );
+    }),
     primary: true,
     title: Text(
       title,

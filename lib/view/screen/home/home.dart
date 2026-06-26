@@ -7,6 +7,7 @@ import 'package:rukmini/controller/api/controllers/home/dashbord_Controller.dart
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
+import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/locker_bar_chart.dart';
 import 'package:shimmer/shimmer.dart';
@@ -32,6 +33,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Fullscreen(
+      drawer: homeDrawer(),
       backGroundcolor: AppColor.backgroundColor,
       appBar: appBar(title: AppString.homeScreen),
       child: Obx(() {
@@ -40,7 +42,7 @@ class _HomeState extends State<Home> {
         final dashboardData = api.dashboardData.value;
         final dataValue = dashboardData.data;
 
-        if (loading) {
+        if (loading || dataValue == null) {
           return loadingWait();
         }
 
@@ -50,12 +52,12 @@ class _HomeState extends State<Home> {
           elevation: 2.0,
           onRefresh: CallApi.callDashboard,
           child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
+            physics: BouncingScrollPhysics(),
             child: Column(
               children: [
                 varticalSpace(),
                 totalValueName(
-                  totalCustomer: dataValue!.totalCust.toString(),
+                  totalCustomer: dataValue.totalCust.toString(),
                   totalGirvi: dataValue.totalGirvi.toString(),
                   totalKarkit: dataValue.totalKarkit.toString(),
                   totalSold: dataValue.totalSold.toString(),
@@ -83,7 +85,6 @@ Widget loadingWait() {
     baseColor: AppColor.baseColor!,
     highlightColor: AppColor.highlightColor!,
     child: SingleChildScrollView(
-      physics: NeverScrollableScrollPhysics(),
       child: Column(
         children: [
           varticalSpace(),
@@ -111,6 +112,7 @@ Widget loadingWait() {
               borderRadius: BorderRadius.circular(10),
             ),
           ),
+          varticalSpace(),
         ],
       ),
     ),

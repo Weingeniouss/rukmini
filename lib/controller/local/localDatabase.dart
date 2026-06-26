@@ -51,4 +51,14 @@ class LocalDatabase {
     islogin = pref!.getBool('login')!;
     print('islogin :- $islogin');
   }
+
+  //Logout
+  Future<void> logout() async {
+    await pref!.clear();
+    emailStrore = '';
+    passwordStrore = '';
+    tokans = '';
+    userId = '';
+    islogin = false;
+  }
 }
