@@ -20,6 +20,9 @@ class AppString {
   static const userid = 'UserId';
   static const emailBody = 'Email';
   static const passwordBody = 'Password';
+  static const timezonePera = 'timezone';
+  static const pagePera = 'page';
+  static const searchPera = 'Search';
 
   //Splash
   static const napoleonHill = "“Strength and growth come only through continuous effort and struggle.”";

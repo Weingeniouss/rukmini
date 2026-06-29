@@ -57,6 +57,10 @@ class _HomeState extends State<Home> {
               children: [
                 varticalSpace(),
                 totalValueName(
+                  //Value Navigate
+                  customerOnTap: () => Get.toNamed('/custList'),
+
+                  //Value
                   totalCustomer: dataValue.totalCust.toString(),
                   totalGirvi: dataValue.totalGirvi.toString(),
                   totalKarkit: dataValue.totalKarkit.toString(),
@@ -128,15 +132,19 @@ Widget totalValueName({
   required String totalDueOverGirvi,
   required String totalPendingProduct,
   required String totalReturnProduct,
+  void Function()? customerOnTap,
 }) {
   return Column(
     children: [
       Row(
         children: [
           Expanded(
-            child: totalValue(
-              title: totalCustomer,
-              label: AppString.totalCustomer,
+            child: GestureDetector(
+              onTap: customerOnTap,
+              child: totalValue(
+                title: totalCustomer,
+                label: AppString.totalCustomer,
+              ),
             ),
           ),
           horizontalSpace(),

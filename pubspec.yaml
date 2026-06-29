@@ -36,7 +36,7 @@ dependencies:
   cupertino_icons:
   get:
   toastification:
-  shimmer: ^3.0.0
+  shimmer:
   internet_connection_checker_plus:
   connectivity_plus:
   dio:
@@ -44,7 +44,8 @@ dependencies:
   shared_preferences:
   lottie:
   flutter_svg:
-  fl_chart: ^1.2.0
+  fl_chart:
+  marquee:
 
 dev_dependencies:
   flutter_test:
