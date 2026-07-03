@@ -162,7 +162,7 @@ class _CustDetailState extends State<CustDetail> {
                   ],
                 ),
               ),
-              // Girvi Details Tab
+              // Girvi Details
               SingleChildScrollView(
                 child: horizontalPadding(
                   child: Column(
