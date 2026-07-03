@@ -8,7 +8,9 @@ class CustomerDetailModel {
   CustomerDetailModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? CustomerDetailData.fromJson(json['data']) : null;
+    data = json['data'] != null
+        ? CustomerDetailData.fromJson(json['data'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -32,10 +34,10 @@ class CustomerDetailData {
   String? imagePath;
   String? gracePeriod;
   List<CustType>? custType;
-  dynamic nominee;
+  Nominee? nominee;
   List<Phone>? phone;
-  List<dynamic>? proof;
-  List<dynamic>? profile;
+  List<Proof>? proof;
+  List<Profile>? profile;
   List<dynamic>? girviList;
   num? totalGivenAmt;
   num? totalBalance;
@@ -47,6 +49,7 @@ class CustomerDetailData {
     this.gender,
     this.custId,
     this.status,
+    this.imagePath,
     this.gracePeriod,
     this.custType,
     this.nominee,
@@ -73,7 +76,9 @@ class CustomerDetailData {
         custType!.add(CustType.fromJson(v));
       });
     }
-    nominee = json['Nominee'];
+    nominee = json['Nominee'] != null
+        ? Nominee.fromJson(json['Nominee'])
+        : null;
     if (json['Phone'] != null) {
       phone = <Phone>[];
       json['Phone'].forEach((v) {
@@ -81,10 +86,16 @@ class CustomerDetailData {
       });
     }
     if (json['Proof'] != null) {
-      proof = List<dynamic>.from(json['Proof']);
+      proof = <Proof>[];
+      json['Proof'].forEach((v) {
+        proof!.add(Proof.fromJson(v));
+      });
     }
     if (json['Profile'] != null) {
-      profile = List<dynamic>.from(json['Profile']);
+      profile = <Profile>[];
+      json['Profile'].forEach((v) {
+        profile!.add(Profile.fromJson(v));
+      });
     }
     if (json['GirviList'] != null) {
       girviList = List<dynamic>.from(json['GirviList']);
@@ -106,12 +117,18 @@ class CustomerDetailData {
     if (custType != null) {
       data['CustType'] = custType!.map((v) => v.toJson()).toList();
     }
-    data['Nominee'] = nominee;
+    if (nominee != null) {
+      data['Nominee'] = nominee!.toJson();
+    }
     if (phone != null) {
       data['Phone'] = phone!.map((v) => v.toJson()).toList();
     }
-    data['Proof'] = proof;
-    data['Profile'] = profile;
+    if (proof != null) {
+      data['Proof'] = proof!.map((v) => v.toJson()).toList();
+    }
+    if (profile != null) {
+      data['Profile'] = profile!.map((v) => v.toJson()).toList();
+    }
     data['GirviList'] = girviList;
     data['TotalGivenAmt'] = totalGivenAmt;
     data['TotalBalance'] = totalBalance;
@@ -153,6 +170,44 @@ class CustType {
   }
 }
 
+class Nominee {
+  String? nomineeId;
+  String? custId;
+  String? name;
+  String? phone;
+  String? custRelation;
+  String? status;
+
+  Nominee({
+    this.nomineeId,
+    this.custId,
+    this.name,
+    this.phone,
+    this.custRelation,
+    this.status,
+  });
+
+  Nominee.fromJson(Map<String, dynamic> json) {
+    nomineeId = json['NomineeId'];
+    custId = json['CustId'];
+    name = json['Name'];
+    phone = json['Phone'];
+    custRelation = json['CustRelation'];
+    status = json['Status'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['NomineeId'] = nomineeId;
+    data['CustId'] = custId;
+    data['Name'] = name;
+    data['Phone'] = phone;
+    data['CustRelation'] = custRelation;
+    data['Status'] = status;
+    return data;
+  }
+}
+
 class Phone {
   String? phoneId;
   String? custId;
@@ -177,6 +232,86 @@ class Phone {
     data['Phone'] = phone;
     data['Status'] = status;
     data['IsDefault'] = isDefault;
+    return data;
+  }
+}
+
+class Proof {
+  String? proofId;
+  String? custId;
+  String? name;
+  String? status;
+  String? image;
+  String? imagePath;
+
+  Proof({
+    this.proofId,
+    this.custId,
+    this.name,
+    this.status,
+    this.image,
+    this.imagePath,
+  });
+
+  Proof.fromJson(Map<String, dynamic> json) {
+    proofId = json['ProofId'];
+    custId = json['CustId'];
+    name = json['Name'];
+    status = json['Status'];
+    image = json['Image'];
+    imagePath = json['ImagePath'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['ProofId'] = proofId;
+    data['CustId'] = custId;
+    data['Name'] = name;
+    data['Status'] = status;
+    data['Image'] = image;
+    data['ImagePath'] = imagePath;
+    return data;
+  }
+}
+
+class Profile {
+  String? profileId;
+  String? custId;
+  String? name;
+  String? status;
+  String? image;
+  String? imagePath;
+  String? isProfile;
+
+  Profile({
+    this.profileId,
+    this.custId,
+    this.name,
+    this.status,
+    this.image,
+    this.imagePath,
+    this.isProfile,
+  });
+
+  Profile.fromJson(Map<String, dynamic> json) {
+    profileId = json['ProfileId'];
+    custId = json['CustId'];
+    name = json['Name'];
+    status = json['Status'];
+    image = json['Image'];
+    imagePath = json['ImagePath'];
+    isProfile = json['IsProfile'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['ProfileId'] = profileId;
+    data['CustId'] = custId;
+    data['Name'] = name;
+    data['Status'] = status;
+    data['Image'] = image;
+    data['ImagePath'] = imagePath;
+    data['IsProfile'] = isProfile;
     return data;
   }
 }

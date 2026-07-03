@@ -57,10 +57,20 @@ class AppString {
           static const type = 'Type';
           static const custCode = 'CustCode';
           static const customerDetail = 'Customer Detail';
+          static const nomineeDetail = 'Nominee Detail';
           static const gvnAmt = 'Gvn Amt';
           static const pendingAmt = 'Pending Amt';
           static const call = 'Call';
           static const message = 'Message';
           static const whatsapp = 'Whatsapp';
-
+          static const customerDetails = 'Customer Details';
+          static const girviDetails = 'Girvi Details';
+          static const transactionDetails = 'Transaction Detail';
+          static const identiyProof = 'Identiy Proof';
+          static const gender = 'Gender';
+          static const status = 'Status';
+          static const gracePeriod = 'GracePeriod';
+          static const phoneNumbar = 'Phone Numbers';
+          static const customerTypes = 'Customer Types';
+          static const customerRelation = 'Customer Relation';
 }
