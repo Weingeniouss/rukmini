@@ -12,6 +12,7 @@ class Fullscreen extends StatelessWidget {
   PreferredSizeWidget? appBar;
   Color? backGroundcolor;
   Widget? drawer;
+  bool isPadding;
 
   //All Screen Background All Over Screnn Effict !
 
@@ -22,6 +23,7 @@ class Fullscreen extends StatelessWidget {
     this.appBar,
     this.backGroundcolor,
     this.drawer,
+    this.isPadding = true,
   });
 
   @override
@@ -41,11 +43,9 @@ class Fullscreen extends StatelessWidget {
                 )
               : null,
         ),
-        child: horizontalPadding(
-          child: SafeArea(
-            child: child,
-          ),
-        ),
+        child: isPadding
+            ? horizontalPadding(child: SafeArea(child: child))
+            : SafeArea(child: child),
       ),
     );
   }

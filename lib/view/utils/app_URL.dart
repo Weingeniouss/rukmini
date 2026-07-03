@@ -13,4 +13,5 @@ class AppUrl {
   //home
   static const dashboard = '${baseAPI}user/Dashboard';
   static const custList = '${baseAPI}customer/CustList';
+  static const custDetail = '${baseAPI}customer/CustDetail';
 }

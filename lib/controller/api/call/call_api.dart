@@ -1,4 +1,5 @@
 import 'package:rukmini/elevated/credenials/loginElevated.dart';
+import 'package:rukmini/elevated/home/customers/custDetailElevated.dart';
 import 'package:rukmini/elevated/home/customers/custListElevated.dart';
 import 'package:rukmini/elevated/home/dashboardElevated.dart';
 
@@ -12,9 +13,14 @@ class CallApi {
   static Future<void> callDashboard() async {
     await getDashboard();
   }
-  
+
   // Customer List
   static Future<void> callCustList({bool isRefresh = false}) async {
     await getCustList(isRefresh: isRefresh);
+  }
+
+  // Customer Detail
+  static Future<void> callCustDetail({String? custId}) async {
+    await getCustDetail(custId: custId);
   }
 }

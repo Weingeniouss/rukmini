@@ -1,6 +1,5 @@
 // ignore_for_file: file_names
 
-
 import 'package:flutter/material.dart';
 
 class AppColor {
@@ -13,4 +12,6 @@ class AppColor {
   static const goldColor = Color(0xFFD4AF37);
   static const textField = Color(0xff8E8E8E);
   static const primaryColor = Color(0xff0A1624);
+  static const textColor = Color(0xff84878C);
+  static const subHeadingContainerColor = Color(0xffE7ECF2);
 }

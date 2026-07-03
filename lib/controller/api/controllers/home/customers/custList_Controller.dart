@@ -13,7 +13,7 @@ class CustListController extends GetxController {
   var isMoreLoading = false.obs;
   var currentPage = 1;
   var hasMoreData = true.obs;
-  
+
   var customerListData = CustomerListModel().obs;
   var customers = <CustomerData>[].obs;
 

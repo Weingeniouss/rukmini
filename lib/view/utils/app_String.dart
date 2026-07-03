@@ -23,6 +23,7 @@ class AppString {
   static const timezonePera = 'timezone';
   static const pagePera = 'page';
   static const searchPera = 'Search';
+  static const cusid = 'CustId';
 
   //Splash
   static const napoleonHill = "“Strength and growth come only through continuous effort and struggle.”";
@@ -49,4 +50,17 @@ class AppString {
   static const totalDueOverGirvi = 'Total Due Over Girvi';
   static const totalPendingProduct = 'Total Pending Product';
   static const totalReturnProduct = 'Total Return Product';
+        //Customer
+          static const name = 'Name';
+          static const address = 'Address';
+          static const phone = 'Phone';
+          static const type = 'Type';
+          static const custCode = 'CustCode';
+          static const customerDetail = 'Customer Detail';
+          static const gvnAmt = 'Gvn Amt';
+          static const pendingAmt = 'Pending Amt';
+          static const call = 'Call';
+          static const message = 'Message';
+          static const whatsapp = 'Whatsapp';
+
 }

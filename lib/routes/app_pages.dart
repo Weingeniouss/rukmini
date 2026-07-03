@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:rukmini/view/screen/home/customer/custDetail.dart';
 import 'package:rukmini/view/screen/home/customer/custList.dart';
 import 'package:rukmini/view/screen/home/home.dart';
 import '../view/screen/splash/splash.dart';
@@ -14,5 +15,6 @@ class AppPages {
     GetPage(name: _Paths.login, page: () => Login()),
     GetPage(name: _Paths.home, page: () => Home()),
     GetPage(name: _Paths.custList, page: () => Custlist()),
+    GetPage(name: _Paths.custDetail, page: () => CustDetail()),
   ];
 }

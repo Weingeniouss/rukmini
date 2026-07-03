@@ -31,6 +31,11 @@ class _HomeState extends State<Home> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Fullscreen(
       drawer: homeDrawer(),
@@ -109,11 +114,11 @@ Widget loadingWait() {
           ),
           varticalSpace(),
           Container(
-            height: 300,
+            height: Get.height * 0.35,
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(Get.width * 0.025),
             ),
           ),
           varticalSpace(),
