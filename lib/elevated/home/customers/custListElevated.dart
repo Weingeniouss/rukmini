@@ -7,10 +7,10 @@ import '../../../controller/api/controllers/home/customers/custList_Controller.d
 import '../../../modal/home/customer/customer_list_model.dart';
 import '../../../view/utils/widget/pop.dart';
 
-Future<CustomerListModel?> getCustList({bool isRefresh = false}) async {
+Future<CustomerListModel?> getCustList({bool isRefresh = false, String? search}) async {
   final CustListController custListController = Get.put(CustListController());
   final http.Response? response =
-      await custListController.custList(isRefresh: isRefresh);
+      await custListController.custList(isRefresh: isRefresh, search: search);
 
   if (response != null) {
     final decoded = jsonDecode(response.body);

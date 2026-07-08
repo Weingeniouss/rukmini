@@ -23,6 +23,8 @@ class Custlist extends StatefulWidget {
 class _CustlistState extends State<Custlist> {
   final custListController = Get.put(CustListController());
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+  final RxBool _isSearching = false.obs;
 
   @override
   void initState() {
@@ -36,7 +38,7 @@ class _CustlistState extends State<Custlist> {
           _scrollController.position.maxScrollExtent) {
         if (!custListController.isMoreLoading.value &&
             custListController.hasMoreData.value) {
-          CallApi.callCustList();
+          CallApi.callCustList(search: _searchController.text);
         }
       }
     });
@@ -45,41 +47,83 @@ class _CustlistState extends State<Custlist> {
   @override
   void dispose() {
     _scrollController.dispose();
-    CallApi.callCustList();
+    _searchController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Fullscreen(
-      appBar: appBar(title: AppString.customer,searchIcon: true),
-      drawer: homeDrawer(),
-      child: Obx(() {
-        final loading = custListController.isLoading.value;
-        final list = custListController.customers;
+    return Obx(() {
+      return Fullscreen(
+        appBar: appBar(
+          title: _isSearching.value
+              ? TextField(
+                  controller: _searchController,
+                  autofocus: true,
+                  style: TextStyle(color: Colors.white),
+                  cursorColor: Colors.white,
+                  decoration: InputDecoration(
+                    hintText: 'Search Customer...',
+                    hintStyle: TextStyle(color: Colors.white70),
+                    border: InputBorder.none,
+                  ),
+                  onChanged: (value) {
+                    custListController.searchQuery.value = value;
+                    CallApi.callCustList(isRefresh: true, search: value);
+                  },
+                )
+              : AppString.customer,
+          searchIcon: true,
+          searchOnPressed: () {
+            _isSearching.value = !_isSearching.value;
+            if (!_isSearching.value) {
+              _searchController.clear();
+              custListController.searchQuery.value = "";
+              CallApi.callCustList(isRefresh: true);
+            }
+          },
+        ),
+        drawer: homeDrawer(),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: AppColor.primaryColor,
+          onPressed: () {
+            Get.snackbar(
+              'Coming Soon',
+              'Add Customer feature is under development',
+            );
+          },
+          child: Icon(Icons.add, color: Colors.white),
+        ),
+        child: Obx(() {
+          final loading = custListController.isLoading.value;
+          final list = custListController.customers;
 
-        if (loading && list.isEmpty) {
-          return customerLoading();
-        }
+          if (loading && list.isEmpty) {
+            return customerLoading();
+          }
 
-        if (!loading && list.isEmpty) {
-          return Center(child: Text('No Customers Found'));
-        }
+          if (!loading && list.isEmpty) {
+            return Center(child: Text('No Customers Found'));
+          }
 
-        return RefreshIndicator(
-          backgroundColor: AppColor.backgroundColor,
-          color: AppColor.primaryColor,
-          elevation: 2.0,
-          onRefresh: () => CallApi.callCustList(isRefresh: true),
-          child: Column(
-            children: [
-              customersList(scrollController: _scrollController, list: list),
-              if (custListController.isMoreLoading.value) nextPageLoading(),
-            ],
-          ),
-        );
-      }),
-    );
+          return RefreshIndicator(
+            backgroundColor: AppColor.backgroundColor,
+            color: AppColor.primaryColor,
+            elevation: 2.0,
+            onRefresh: () => CallApi.callCustList(
+              isRefresh: true,
+              search: _searchController.text,
+            ),
+            child: Column(
+              children: [
+                customersList(scrollController: _scrollController, list: list),
+                if (custListController.isMoreLoading.value) nextPageLoading(),
+              ],
+            ),
+          );
+        }),
+      );
+    });
   }
 }
 
@@ -140,7 +184,12 @@ Widget dataValue(showHeader, currentInitial, customer, phoneData, custType) {
     children: [
       if (showHeader)
         Padding(
-          padding: EdgeInsets.fromLTRB(Get.width * 0.02, Get.height * 0.02, Get.width * 0.02, Get.width * 0.02),
+          padding: EdgeInsets.fromLTRB(
+            Get.width * 0.02,
+            Get.height * 0.02,
+            Get.width * 0.02,
+            Get.width * 0.02,
+          ),
           child: Text(
             currentInitial,
             style: TextStyle(
@@ -278,7 +327,7 @@ Widget customerLoading() {
               width: Get.width * 0.12,
               height: Get.height * 0.1,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColor.textField,
                 borderRadius: BorderRadius.circular(Get.width * 0.015),
               ),
             ),
@@ -287,14 +336,14 @@ Widget customerLoading() {
               children: [
                 Container(
                   width: double.infinity,
-                  height: Get.height * 0.03,
-                  color: Colors.white,
+                  height: Get.height * 0.02,
+                  color: AppColor.textField,
                 ),
                 SizedBox(height: Get.height * 0.012),
                 Container(
                   width: Get.width * 0.5,
-                  height: Get.height * 0.03,
-                  color: Colors.white,
+                  height: Get.height * 0.02,
+                  color: AppColor.textField,
                 ),
               ],
             ),
@@ -305,13 +354,13 @@ Widget customerLoading() {
                 children: [
                   Container(
                     width: Get.width * 0.2,
-                    height: Get.height * 0.03,
-                    color: Colors.white,
+                    height: Get.height * 0.02,
+                    color: AppColor.textField,
                   ),
                   Container(
                     width: Get.width * 0.2,
-                    height: Get.height * 0.03,
-                    color: Colors.white,
+                    height: Get.height * 0.02,
+                    color: AppColor.textField,
                   ),
                 ],
               ),

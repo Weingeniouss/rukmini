@@ -11,6 +11,7 @@ import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CustDetail extends StatefulWidget {
@@ -51,10 +52,10 @@ class _CustDetailState extends State<CustDetail> {
         remove: true,
       ),
       child: DefaultTabController(
-        length: 2,
+        length: 4,
         child: Obx(() {
           if (custDetailController.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
+            return loadingState();
           }
 
           final data = custDetailController.custDetailData.value.data;
@@ -80,19 +81,7 @@ class _CustDetailState extends State<CustDetail> {
                       : '',
                 ),
               ),
-              Expanded(
-                child: tabBar(
-                  address: data.address ?? '',
-                  gender: data.gender ?? '',
-                  status: data.status ?? '',
-                  phone: data.phone ?? <Phone>[],
-                  gracePeriod: data.gracePeriod ?? '',
-                  custType: data.custType ?? <CustType>[],
-                  nomineeName: data.nominee?.name ?? '',
-                  nomineephoneNumbar: data.nominee?.phone ?? '',
-                  nomineeRelation: data.nominee?.custRelation ?? '',
-                ),
-              ),
+              Expanded(child: tabBar(data)),
             ],
           );
         }),
@@ -113,17 +102,7 @@ class _CustDetailState extends State<CustDetail> {
     );
   }
 
-  Widget tabBar({
-    required String address,
-    required String gender,
-    required String status,
-    required String gracePeriod,
-    required List<Phone> phone,
-    required List<CustType> custType,
-    required String nomineeName,
-    required String nomineephoneNumbar,
-    required String nomineeRelation,
-  }) {
+  Widget tabBar(CustomerDetailData data) {
     return Column(
       children: [
         TabBar(
@@ -149,15 +128,15 @@ class _CustDetailState extends State<CustDetail> {
                   children: [
                     // Customer Details
                     customerDetails(
-                      address: address,
-                      gender: gender,
-                      status: status,
-                      gracePeriod: gracePeriod,
-                      phone: phone,
-                      custType: custType,
-                      nomineeName: nomineeName,
-                      nomineephoneNumbar: nomineephoneNumbar,
-                      nomineeRelation: nomineeRelation,
+                      address: data.address ?? '',
+                      gender: data.gender ?? '',
+                      status: data.status ?? '',
+                      gracePeriod: data.gracePeriod ?? '',
+                      phone: data.phone ?? <Phone>[],
+                      custType: data.custType ?? <CustType>[],
+                      nomineeName: data.nominee?.name ?? '',
+                      nomineephoneNumbar: data.nominee?.phone ?? '',
+                      nomineeRelation: data.nominee?.custRelation ?? '',
                     ),
                   ],
                 ),
@@ -168,15 +147,249 @@ class _CustDetailState extends State<CustDetail> {
                   child: Column(
                     children: [
                       SizedBox(height: Get.height * 0.02),
-                      Center(child: Text('Girvi Details Coming Soon')),
+                      if (data.girviList == null || data.girviList!.isEmpty)
+                        const Center(child: Text('No Girvi Records Found'))
+                      else
+                        ...data.girviList!.map(
+                          (girvi) => girviDetail(girvi: girvi),
+                        ),
                     ],
                   ),
                 ),
               ),
+
+              //Transaction Details
+              SingleChildScrollView(
+                child: horizontalPadding(
+                  child: Column(
+                    children: [
+                      SizedBox(height: Get.height * 0.02),
+                      if (data.girviList == null || data.girviList!.isEmpty)
+                        const Center(child: Text('No Girvi Records Found'))
+                      else
+                        ...data.girviList!.map(
+                          (girvi) => translationDetail(girvi: girvi),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+
+              //Identity Proof Tab
+              identityProofTab(data),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget identityProofTab(CustomerDetailData data) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          if (data.proof != null && data.proof!.isNotEmpty) ...[
+            Container(
+              padding: EdgeInsets.all(Get.width * 0.04),
+              decoration: BoxDecoration(
+                color: AppColor.subHeadingContainerColor,
+              ),
+              width: Get.width,
+              child: Text(
+                AppString.identiyProof,
+                style: TextStyle(
+                  fontSize: Get.width * 0.038,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            ...data.proof!.map(
+              (proof) => Card(
+                color: AppColor.backgroundColor,
+                margin: EdgeInsets.symmetric(
+                  horizontal: Get.width * 0.04,
+                  vertical: Get.height * 0.01,
+                ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: Text(proof.name ?? ''),
+                      subtitle: Text(proof.status ?? ''),
+                      leading: const Icon(
+                        Icons.verified_user,
+                        color: Colors.green,
+                      ),
+                    ),
+                    if (proof.imagePath != null)
+                      GestureDetector(
+                        onTap: () => _showFullScreenImage(
+                          context,
+                          proof.imagePath!,
+                          proof.name ?? 'Proof Image',
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(Get.width * 0.02),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              proof.imagePath!,
+                              width: double.infinity,
+                              height: 200,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.broken_image, size: 50),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+          if (data.profile != null && data.profile!.isNotEmpty) ...[
+            Container(
+              padding: EdgeInsets.all(Get.width * 0.04),
+              decoration: BoxDecoration(
+                color: AppColor.subHeadingContainerColor,
+              ),
+              width: Get.width,
+              child: Text(
+                'Profile Photos',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+              ),
+            ),
+            ...data.profile!.map(
+              (profile) => Card(
+                color: AppColor.backgroundColor,
+                margin: EdgeInsets.symmetric(
+                  horizontal: Get.width * 0.04,
+                  vertical: Get.height * 0.01,
+                ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: Text(profile.name ?? ''),
+                      subtitle: Text(profile.status ?? ''),
+                      leading: const Icon(
+                        Icons.person_pin,
+                        color: Colors.green,
+                      ),
+                    ),
+                    if (profile.imagePath != null)
+                      GestureDetector(
+                        onTap: () => _showFullScreenImage(
+                          context,
+                          profile.imagePath!,
+                          profile.name ?? 'Profile Image',
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(Get.width * 0.02),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: Get.width * 0.25,
+                                height: Get.width * 0.45,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                    image: NetworkImage(profile.imagePath!),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: Get.width * 0.04),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      profile.name ?? '',
+                                      style: TextStyle(
+                                        fontSize: Get.width * 0.042,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    SizedBox(height: Get.height * 0.005),
+                                    Text(
+                                      profile.status ?? '',
+                                      style: TextStyle(
+                                        color: AppColor.textColor,
+                                        fontSize: Get.width * 0.035,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    SizedBox(height: Get.height * 0.005),
+                                    Text(
+                                      "ID: ${profile.custId ?? ''}",
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                        fontSize: Get.width * 0.035,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+          if ((data.proof == null || data.proof!.isEmpty) &&
+              (data.profile == null || data.profile!.isEmpty))
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Text('No Identity Proofs Found'),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  void _showFullScreenImage(
+    BuildContext context,
+    String imageUrl,
+    String title,
+  ) {
+    Get.to(
+      () => Scaffold(
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: Text(title, style: const TextStyle(color: Colors.white)),
+        ),
+        body: Center(
+          child: InteractiveViewer(
+            panEnabled: true,
+            minScale: 0.5,
+            maxScale: 4.0,
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.contain,
+              width: double.infinity,
+              height: double.infinity,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return const Center(child: CircularProgressIndicator());
+              },
+              errorBuilder: (context, error, stackTrace) => const Center(
+                child: Icon(Icons.broken_image, color: Colors.white, size: 100),
+              ),
+            ),
+          ),
+        ),
+      ),
+      fullscreenDialog: true,
     );
   }
 
@@ -269,24 +482,101 @@ class _CustDetailState extends State<CustDetail> {
             ),
           ),
         ),
-        Column(
-          children: [
-            SizedBox(height: Get.height * 0.01),
-            _detailItem(AppString.name, nomineeName, Icons.location_on),
-            _detailItem(
-              AppString.phoneNumbar,
-              nomineephoneNumbar,
-              Icons.person,
-            ),
-            _detailItem(
-              AppString.customerRelation,
-              nomineeRelation,
-              Icons.info_outline,
-            ),
-          ],
+        horizontalPadding(
+          child: Column(
+            children: [
+              SizedBox(height: Get.height * 0.01),
+              _detailItem(AppString.name, nomineeName, Icons.location_on),
+              _detailItem(
+                AppString.phoneNumbar,
+                nomineephoneNumbar,
+                Icons.person,
+              ),
+              _detailItem(
+                AppString.customerRelation,
+                nomineeRelation,
+                Icons.info_outline,
+              ),
+            ],
+          ),
         ),
         //Nominee Details End
       ],
+    );
+  }
+
+  Widget girviDetail({required Girvi girvi}) {
+    return Card(
+      borderOnForeground: true,
+      color: AppColor.backgroundColor,
+      margin: EdgeInsets.only(bottom: Get.height * 0.015),
+      child: Padding(
+        padding: EdgeInsets.all(Get.width * 0.03),
+        child: Column(
+          children: [
+            _detailItem(
+              AppString.name,
+              girvi.custName,
+              Icons.person,
+              valueColor: Colors.green,
+              fontWeight: FontWeight.w500,
+            ),
+            _detailItem(AppString.phone, girvi.custPhone, Icons.phone),
+            _detailItem(AppString.uniqueId, girvi.uniqueId, Icons.fingerprint),
+            _detailItem(
+              AppString.girviDate,
+              girvi.girviDate,
+              Icons.calendar_today,
+            ),
+            _detailItem(
+              AppString.givenAmt,
+              girvi.givenAmt,
+              Icons.currency_rupee,
+            ),
+            _detailItem(
+              AppString.balance,
+              girvi.balance?.toString(),
+              Icons.account_balance_wallet,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget translationDetail({required Girvi girvi}) {
+    return Card(
+      borderOnForeground: true,
+      color: AppColor.backgroundColor,
+      margin: EdgeInsets.only(bottom: Get.height * 0.015),
+      child: Padding(
+        padding: EdgeInsets.all(Get.width * 0.03),
+        child: Column(
+          children: [
+            _detailItem(AppString.uniqueId, girvi.uniqueId, Icons.fingerprint),
+            _detailItem(
+              AppString.givenAmt,
+              girvi.givenAmt,
+              Icons.currency_rupee,
+            ),
+            _detailItem(
+              AppString.paidAmt,
+              girvi.totalPaidAmt?.toString(),
+              Icons.payments_outlined,
+            ),
+            _detailItem(
+              AppString.totint,
+              girvi.tillInterest?.toString(),
+              Icons.trending_up,
+            ),
+            _detailItem(
+              AppString.paidint,
+              girvi.paidInterset,
+              Icons.check_circle_outline,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -489,7 +779,14 @@ class _CustDetailState extends State<CustDetail> {
     }
   }
 
-  Widget _detailItem(String label, String? value, IconData icon) {
+  Widget _detailItem(
+    String label,
+    String? value,
+    IconData icon, {
+    Color? valueColor,
+    String? fontFamily,
+    FontWeight? fontWeight,
+  }) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: Get.height * 0.005),
       child: Row(
@@ -507,9 +804,144 @@ class _CustDetailState extends State<CustDetail> {
               ),
             ),
           ),
-          Expanded(flex: 7, child: Text(value ?? 'N/A')),
+          Expanded(
+            flex: 7,
+            child: Text(
+              value ?? 'N/A',
+              style: TextStyle(
+                color: valueColor,
+                fontFamily: fontFamily,
+                fontWeight: fontWeight,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
+}
+
+Widget loadingState() {
+  return Shimmer.fromColors(
+    baseColor: AppColor.baseColor ?? Colors.grey[300]!,
+    highlightColor: AppColor.highlightColor ?? Colors.grey[100]!,
+    child: SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header Shimmer
+          Container(
+            padding: EdgeInsets.all(Get.width * 0.04),
+            child: Row(
+              children: [
+                Container(
+                  width: Get.width * 0.2,
+                  height: Get.width * 0.4,
+                  decoration: BoxDecoration(
+                    color: AppColor.textField,
+                    borderRadius: BorderRadius.circular(Get.width * 0.02),
+                  ),
+                ),
+                SizedBox(width: Get.width * 0.04),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 20,
+                        color: AppColor.textField,
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        width: Get.width * 0.3,
+                        height: 15,
+                        color: AppColor.textField,
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: List.generate(
+                          3,
+                          (index) => Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: AppColor.textField,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // TabBar Shimmer
+          Container(
+            height: 50,
+            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List.generate(
+                4,
+                (index) => Container(
+                  width: Get.width * 0.2,
+                  height: 20,
+                  color: AppColor.textField,
+                ),
+              ),
+            ),
+          ),
+
+          // Content Shimmer
+          Padding(
+            padding: EdgeInsets.all(Get.width * 0.04),
+            child: Column(
+              children: List.generate(
+                8,
+                (index) => Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: AppColor.textField,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      SizedBox(width: 15),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: Get.width * 0.4,
+                              height: 15,
+                              color: AppColor.textField,
+                            ),
+                            SizedBox(height: 5),
+                            Container(
+                              width: double.infinity,
+                              height: 12,
+                              color: AppColor.textField,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }

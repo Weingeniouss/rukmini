@@ -15,8 +15,11 @@ class CallApi {
   }
 
   // Customer List
-  static Future<void> callCustList({bool isRefresh = false}) async {
-    await getCustList(isRefresh: isRefresh);
+  static Future<void> callCustList({
+    bool isRefresh = false,
+    String? search,
+  }) async {
+    await getCustList(isRefresh: isRefresh, search: search);
   }
 
   // Customer Detail

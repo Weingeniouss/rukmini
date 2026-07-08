@@ -282,7 +282,7 @@ Widget shimmerCard() {
     child: Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Get.width * 0.02),
-        color: Colors.white,
+        color: AppColor.textField,
       ),
     ),
   );

@@ -73,4 +73,11 @@ class AppString {
           static const phoneNumbar = 'Phone Numbers';
           static const customerTypes = 'Customer Types';
           static const customerRelation = 'Customer Relation';
+          static const uniqueId = 'Unique Id';
+          static const girviDate = 'Girvi Date';
+          static const givenAmt = 'Given Amt';
+          static const balance = 'Balance';
+          static const paidAmt = 'Paid Amt';
+          static const totint = 'Tot int';
+          static const paidint = 'Paid int';
 }

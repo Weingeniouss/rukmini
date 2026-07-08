@@ -13,6 +13,7 @@ class Fullscreen extends StatelessWidget {
   Color? backGroundcolor;
   Widget? drawer;
   bool isPadding;
+  Widget? floatingActionButton;
 
   //All Screen Background All Over Screnn Effict !
 
@@ -24,6 +25,7 @@ class Fullscreen extends StatelessWidget {
     this.backGroundcolor,
     this.drawer,
     this.isPadding = true,
+    this.floatingActionButton,
   });
 
   @override
@@ -31,6 +33,9 @@ class Fullscreen extends StatelessWidget {
     return Scaffold(
       drawer: drawer,
       appBar: appBar,
+      floatingActionButton: floatingActionButton,
+      extendBodyBehindAppBar: true,
+      extendBody: true,
       body: Container(
         height: Get.height,
         width: Get.width,

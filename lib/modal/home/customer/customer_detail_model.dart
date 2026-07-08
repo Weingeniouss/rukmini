@@ -38,7 +38,7 @@ class CustomerDetailData {
   List<Phone>? phone;
   List<Proof>? proof;
   List<Profile>? profile;
-  List<dynamic>? girviList;
+  List<Girvi>? girviList;
   num? totalGivenAmt;
   num? totalBalance;
 
@@ -98,7 +98,10 @@ class CustomerDetailData {
       });
     }
     if (json['GirviList'] != null) {
-      girviList = List<dynamic>.from(json['GirviList']);
+      girviList = <Girvi>[];
+      json['GirviList'].forEach((v) {
+        girviList!.add(Girvi.fromJson(v));
+      });
     }
     totalGivenAmt = json['TotalGivenAmt'];
     totalBalance = json['TotalBalance'];
@@ -129,7 +132,9 @@ class CustomerDetailData {
     if (profile != null) {
       data['Profile'] = profile!.map((v) => v.toJson()).toList();
     }
-    data['GirviList'] = girviList;
+    if (girviList != null) {
+      data['GirviList'] = girviList!.map((v) => v.toJson()).toList();
+    }
     data['TotalGivenAmt'] = totalGivenAmt;
     data['TotalBalance'] = totalBalance;
     return data;
@@ -312,6 +317,140 @@ class Profile {
     data['Image'] = image;
     data['ImagePath'] = imagePath;
     data['IsProfile'] = isProfile;
+    return data;
+  }
+}
+
+class Girvi {
+  String? girviId;
+  String? custId;
+  String? custName;
+  String? custPhone;
+  String? uniqueId;
+  String? girviDate;
+  String? givenMonth;
+  String? dueDate;
+  String? interest;
+  String? givenAmt;
+  String? totalCunt;
+  String? discAmt;
+  String? badDept;
+  num? balance;
+  String? isClosed;
+  String? tranDate;
+  String? interestAmt;
+  String? paidInterset;
+  String? isCarried;
+  String? parentId;
+  List<dynamic>? productList;
+  List<dynamic>? tranHistory;
+  num? totalPaidAmt;
+  num? crDr;
+  num? tillInterest;
+  num? monthInterset;
+  String? tillDate;
+  num? tillMonth;
+
+  Girvi({
+    this.girviId,
+    this.custId,
+    this.custName,
+    this.custPhone,
+    this.uniqueId,
+    this.girviDate,
+    this.givenMonth,
+    this.dueDate,
+    this.interest,
+    this.givenAmt,
+    this.totalCunt,
+    this.discAmt,
+    this.badDept,
+    this.balance,
+    this.isClosed,
+    this.tranDate,
+    this.interestAmt,
+    this.paidInterset,
+    this.isCarried,
+    this.parentId,
+    this.productList,
+    this.tranHistory,
+    this.totalPaidAmt,
+    this.crDr,
+    this.tillInterest,
+    this.monthInterset,
+    this.tillDate,
+    this.tillMonth,
+  });
+
+  Girvi.fromJson(Map<String, dynamic> json) {
+    girviId = json['GirviId'];
+    custId = json['CustId'];
+    custName = json['CustName'];
+    custPhone = json['CustPhone'];
+    uniqueId = json['UniqueId'];
+    girviDate = json['GirviDate'];
+    givenMonth = json['GivenMonth'];
+    dueDate = json['DueDate'];
+    interest = json['Interest'];
+    givenAmt = json['GivenAmt'];
+    totalCunt = json['TotalCunt'];
+    discAmt = json['DiscAmt'];
+    badDept = json['BadDept'];
+    balance = json['Balance'];
+    isClosed = json['IsClosed'];
+    tranDate = json['TranDate'];
+    interestAmt = json['InterestAmt'];
+    paidInterset = json['PaidInterset'];
+    isCarried = json['IsCarried'];
+    parentId = json['ParentId'];
+    if (json['ProductList'] != null) {
+      productList = List<dynamic>.from(json['ProductList']);
+    }
+    if (json['TranHistory'] != null) {
+      tranHistory = List<dynamic>.from(json['TranHistory']);
+    }
+    totalPaidAmt = json['TotalPaidAmt'];
+    crDr = json['CR_DR'];
+    tillInterest = json['TillInterest'];
+    monthInterset = json['MonthInterset'];
+    tillDate = json['TillDate'];
+    tillMonth = json['TillMonth'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['GirviId'] = girviId;
+    data['CustId'] = custId;
+    data['CustName'] = custName;
+    data['CustPhone'] = custPhone;
+    data['UniqueId'] = uniqueId;
+    data['GirviDate'] = girviDate;
+    data['GivenMonth'] = givenMonth;
+    data['DueDate'] = dueDate;
+    data['Interest'] = interest;
+    data['GivenAmt'] = givenAmt;
+    data['TotalCunt'] = totalCunt;
+    data['DiscAmt'] = discAmt;
+    data['BadDept'] = badDept;
+    data['Balance'] = balance;
+    data['IsClosed'] = isClosed;
+    data['TranDate'] = tranDate;
+    data['InterestAmt'] = interestAmt;
+    data['PaidInterset'] = paidInterset;
+    data['IsCarried'] = isCarried;
+    data['ParentId'] = parentId;
+    if (productList != null) {
+      data['ProductList'] = productList;
+    }
+    if (tranHistory != null) {
+      data['TranHistory'] = tranHistory;
+    }
+    data['TotalPaidAmt'] = totalPaidAmt;
+    data['CR_DR'] = crDr;
+    data['TillInterest'] = tillInterest;
+    data['MonthInterset'] = monthInterset;
+    data['TillDate'] = tillDate;
+    data['TillMonth'] = tillMonth;
     return data;
   }
 }

@@ -16,14 +16,18 @@ class CustListController extends GetxController {
 
   var customerListData = CustomerListModel().obs;
   var customers = <CustomerData>[].obs;
+  var searchQuery = "".obs;
 
-  Future<http.Response?> custList({bool isRefresh = false}) async {
+  Future<http.Response?> custList({
+    bool isRefresh = false,
+    String? search,
+  }) async {
     if (isRefresh) {
       currentPage = 1;
       hasMoreData.value = true;
     }
 
-    if (!hasMoreData.value) return null;
+    if (!hasMoreData.value && !isRefresh) return null;
 
     try {
       if (currentPage == 1) {
@@ -34,6 +38,7 @@ class CustListController extends GetxController {
 
       final http.Response response = await cuslistServices.custListApi(
         page: currentPage.toString(),
+        search: search ?? searchQuery.value,
       );
 
       if (kDebugMode) {
