@@ -11,6 +11,7 @@ import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:marquee/marquee.dart';
+import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:shimmer/shimmer.dart';
 
 class Custlist extends StatefulWidget {
@@ -60,8 +61,8 @@ class _CustlistState extends State<Custlist> {
               ? TextField(
                   controller: _searchController,
                   autofocus: true,
-                  style: TextStyle(color: Colors.white),
-                  cursorColor: Colors.white,
+                  style: TextStyle(color: AppColor.fullScreenColor),
+                  cursorColor: AppColor.fullScreenColor,
                   decoration: InputDecoration(
                     hintText: 'Search Customer...',
                     hintStyle: TextStyle(color: Colors.white70),
@@ -87,12 +88,9 @@ class _CustlistState extends State<Custlist> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: AppColor.primaryColor,
           onPressed: () {
-            Get.snackbar(
-              'Coming Soon',
-              'Add Customer feature is under development',
-            );
+            Get.toNamed('/addCustForm');
           },
-          child: Icon(Icons.add, color: Colors.white),
+          child: Icon(AppIcon.add, color: Colors.white),
         ),
         child: Obx(() {
           final loading = custListController.isLoading.value;
@@ -195,7 +193,7 @@ Widget dataValue(showHeader, currentInitial, customer, phoneData, custType) {
             style: TextStyle(
               fontSize: Get.width * 0.045,
               fontWeight: FontWeight.normal,
-              color: Colors.green,
+              color: AppColor.activeColor,
             ),
           ),
         ),
@@ -217,7 +215,7 @@ Widget dataValue(showHeader, currentInitial, customer, phoneData, custType) {
                   : null,
             ),
             child: customer.imagePath == null
-                ? Icon(Icons.person, color: AppColor.backgroundColor)
+                ? Icon(AppIcon.person, color: AppColor.backgroundColor)
                 : null,
           ),
           title: Column(

@@ -4,12 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/widget/inputField.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_Icon.dart';
 
 Widget inputField({
   required String hintText,
-  required String prefixIcon,
+  String? prefixIcon,
+  dynamic icon,
+  Color? iconColor,
   bool isPassword = false,
   TextEditingController? inputTextcontroller,
+  Widget? suffixIcon,
 }) {
   // Use hintText as tag to ensure each field gets its own controller instance
   final isvisorNot = Get.put(InputFieldController(), tag: hintText);
@@ -26,24 +30,31 @@ Widget inputField({
       cursorColor: AppColor.textField,
       obscureText: obscureText,
       decoration: InputDecoration(
-        prefixIcon: Padding(
-          padding: EdgeInsets.all(12.0),
-          child: Image.asset(prefixIcon, scale: 28, color: AppColor.textField),
-        ),
-        prefixIconColor: AppColor.textField,
-        suffixIconColor: AppColor.textField,
-        suffixIcon: isPassword
-            ? IconButton(
-                onPressed: () => isvisorNot.obscureTextClick(),
-                icon: Icon(
-                  obscureText
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility_outlined,
-                  color: AppColor.textField,
-                  size: 22,
-                ),
-              )
-            : null,
+        prefixIcon: (icon != null)
+            ? Icon(icon is IconData ? icon : icon,
+                color: iconColor ?? AppColor.textField)
+            : (prefixIcon != null && prefixIcon.isNotEmpty)
+                ? Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: Image.asset(prefixIcon,
+                        scale: 28, color: iconColor ?? AppColor.textField),
+                  )
+                : null,
+        prefixIconColor: iconColor ?? AppColor.textField,
+        suffixIconColor: iconColor ?? AppColor.textField,
+        suffixIcon: suffixIcon ??
+            (isPassword
+                ? IconButton(
+                    onPressed: () => isvisorNot.obscureTextClick(),
+                    icon: Icon(
+                      obscureText
+                          ? AppIcon.visibilityOff
+                          : AppIcon.visibilityOn,
+                      color: iconColor ?? AppColor.textField,
+                      size: 22,
+                    ),
+                  )
+                : null),
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: AppColor.textField),
         ),

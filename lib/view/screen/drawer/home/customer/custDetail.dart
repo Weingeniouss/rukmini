@@ -8,9 +8,11 @@ import 'package:rukmini/modal/drawer/home/customer/customer_detail_model.dart';
 import 'package:rukmini/modal/drawer/home/customer/customer_list_model.dart'
     as list;
 import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
+import 'package:rukmini/view/utils/widget/headingContainer.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -190,20 +192,7 @@ class _CustDetailState extends State<CustDetail> {
       child: Column(
         children: [
           if (data.proof != null && data.proof!.isNotEmpty) ...[
-            Container(
-              padding: EdgeInsets.all(Get.width * 0.04),
-              decoration: BoxDecoration(
-                color: AppColor.subHeadingContainerColor,
-              ),
-              width: Get.width,
-              child: Text(
-                AppString.identiyProof,
-                style: TextStyle(
-                  fontSize: Get.width * 0.038,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
+            headingContainer(AppString.identiyProof),
             ...data.proof!.map(
               (proof) => Card(
                 color: AppColor.backgroundColor,
@@ -217,8 +206,8 @@ class _CustDetailState extends State<CustDetail> {
                       title: Text(proof.name ?? ''),
                       subtitle: Text(proof.status ?? ''),
                       leading: const Icon(
-                        Icons.verified_user,
-                        color: Colors.green,
+                        AppIcon.verifiedUser,
+                        color: AppColor.activeColor,
                       ),
                     ),
                     if (proof.imagePath != null)
@@ -238,7 +227,7 @@ class _CustDetailState extends State<CustDetail> {
                               height: 200,
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) =>
-                                  const Icon(Icons.broken_image, size: 50),
+                                  const Icon(AppIcon.brokenImage, size: 50),
                             ),
                           ),
                         ),
@@ -249,17 +238,7 @@ class _CustDetailState extends State<CustDetail> {
             ),
           ],
           if (data.profile != null && data.profile!.isNotEmpty) ...[
-            Container(
-              padding: EdgeInsets.all(Get.width * 0.04),
-              decoration: BoxDecoration(
-                color: AppColor.subHeadingContainerColor,
-              ),
-              width: Get.width,
-              child: Text(
-                'Profile Photos',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-              ),
-            ),
+            headingContainer(AppString.profilePhotos),
             ...data.profile!.map(
               (profile) => Card(
                 color: AppColor.backgroundColor,
@@ -273,8 +252,8 @@ class _CustDetailState extends State<CustDetail> {
                       title: Text(profile.name ?? ''),
                       subtitle: Text(profile.status ?? ''),
                       leading: const Icon(
-                        Icons.person_pin,
-                        color: Colors.green,
+                        AppIcon.personPin,
+                        color: AppColor.activeColor,
                       ),
                     ),
                     if (profile.imagePath != null)
@@ -326,7 +305,7 @@ class _CustDetailState extends State<CustDetail> {
                                     Text(
                                       "ID: ${profile.custId ?? ''}",
                                       style: TextStyle(
-                                        color: Colors.green,
+                                        color: AppColor.activeColor,
                                         fontSize: Get.width * 0.035,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -384,7 +363,11 @@ class _CustDetailState extends State<CustDetail> {
                 return const Center(child: CircularProgressIndicator());
               },
               errorBuilder: (context, error, stackTrace) => const Center(
-                child: Icon(Icons.broken_image, color: Colors.white, size: 100),
+                child: Icon(
+                  AppIcon.brokenImage,
+                  color: Colors.white,
+                  size: 100,
+                ),
               ),
             ),
           ),
@@ -407,32 +390,16 @@ class _CustDetailState extends State<CustDetail> {
   }) {
     return Column(
       children: [
-        // Customer Details start
-        Container(
-          padding: EdgeInsets.all(Get.width * 0.04),
-          decoration: BoxDecoration(color: AppColor.subHeadingContainerColor),
-          width: Get.width,
-          child: Text(
-            AppString.customerDetail,
-            style: TextStyle(
-              fontSize: Get.width * 0.038,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
+        headingContainer(AppString.customerDetail),
         horizontalPadding(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: Get.height * 0.01),
-              _detailItem(AppString.address, address, Icons.location_on),
-              _detailItem(AppString.gender, gender, Icons.person),
-              _detailItem(AppString.status, status, Icons.info_outline),
-              _detailItem(
-                AppString.gracePeriod,
-                gracePeriod,
-                Icons.calendar_month,
-              ),
+              _detailItem(AppString.address, address, AppIcon.location),
+              _detailItem(AppString.gender, gender, AppIcon.person),
+              _detailItem(AppString.status, status, AppIcon.status),
+              _detailItem(AppString.gracePeriod, gracePeriod, AppIcon.calendar),
               if (custType.isNotEmpty) ...[
                 SizedBox(height: Get.height * 0.02),
                 Text(
@@ -446,7 +413,7 @@ class _CustDetailState extends State<CustDetail> {
                   (type) => ListTile(
                     title: Text(type.typeName ?? ''),
                     subtitle: Text(type.status ?? ''),
-                    leading: Icon(Icons.category, color: Colors.green),
+                    leading: Icon(AppIcon.category, color: Colors.green),
                   ),
                 ),
               ],
@@ -462,7 +429,7 @@ class _CustDetailState extends State<CustDetail> {
                 (p) => ListTile(
                   title: Text(p.phone ?? ''),
                   subtitle: Text(p.isDefault == "1" ? "Default" : ""),
-                  leading: Icon(Icons.phone, color: Colors.green),
+                  leading: Icon(AppIcon.phone, color: Colors.green),
                 ),
               ),
             ],
@@ -471,32 +438,21 @@ class _CustDetailState extends State<CustDetail> {
         //Customer Details End
 
         //Nominee Details start
-        Container(
-          padding: EdgeInsets.all(Get.width * 0.04),
-          decoration: BoxDecoration(color: AppColor.subHeadingContainerColor),
-          width: Get.width,
-          child: Text(
-            AppString.nomineeDetail,
-            style: TextStyle(
-              fontSize: Get.width * 0.038,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
+        headingContainer(AppString.nomineeDetail),
         horizontalPadding(
           child: Column(
             children: [
               SizedBox(height: Get.height * 0.01),
-              _detailItem(AppString.name, nomineeName, Icons.location_on),
+              _detailItem(AppString.name, nomineeName, AppIcon.location),
               _detailItem(
                 AppString.phoneNumbar,
                 nomineephoneNumbar,
-                Icons.person,
+                AppIcon.person,
               ),
               _detailItem(
                 AppString.customerRelation,
                 nomineeRelation,
-                Icons.info_outline,
+                AppIcon.status,
               ),
             ],
           ),
@@ -518,26 +474,22 @@ class _CustDetailState extends State<CustDetail> {
             _detailItem(
               AppString.name,
               girvi.custName,
-              Icons.person,
-              valueColor: Colors.green,
+              AppIcon.person,
+              valueColor: AppColor.activeColor,
               fontWeight: FontWeight.w500,
             ),
-            _detailItem(AppString.phone, girvi.custPhone, Icons.phone),
-            _detailItem(AppString.uniqueId, girvi.uniqueId, Icons.fingerprint),
+            _detailItem(AppString.phone, girvi.custPhone, AppIcon.phone),
             _detailItem(
-              AppString.girviDate,
-              girvi.girviDate,
-              Icons.calendar_today,
+              AppString.uniqueId,
+              girvi.uniqueId,
+              AppIcon.fingerprint,
             ),
-            _detailItem(
-              AppString.givenAmt,
-              girvi.givenAmt,
-              Icons.currency_rupee,
-            ),
+            _detailItem(AppString.girviDate, girvi.girviDate, AppIcon.date),
+            _detailItem(AppString.givenAmt, girvi.givenAmt, AppIcon.rupee),
             _detailItem(
               AppString.balance,
               girvi.balance?.toString(),
-              Icons.account_balance_wallet,
+              AppIcon.wallet,
             ),
           ],
         ),
@@ -554,26 +506,26 @@ class _CustDetailState extends State<CustDetail> {
         padding: EdgeInsets.all(Get.width * 0.03),
         child: Column(
           children: [
-            _detailItem(AppString.uniqueId, girvi.uniqueId, Icons.fingerprint),
             _detailItem(
-              AppString.givenAmt,
-              girvi.givenAmt,
-              Icons.currency_rupee,
+              AppString.uniqueId,
+              girvi.uniqueId,
+              AppIcon.fingerprint,
             ),
+            _detailItem(AppString.givenAmt, girvi.givenAmt, AppIcon.rupee),
             _detailItem(
               AppString.paidAmt,
               girvi.totalPaidAmt?.toString(),
-              Icons.payments_outlined,
+              AppIcon.payment,
             ),
             _detailItem(
               AppString.totint,
               girvi.tillInterest?.toString(),
-              Icons.trending_up,
+              AppIcon.trend,
             ),
             _detailItem(
               AppString.paidint,
               girvi.paidInterset,
-              Icons.check_circle_outline,
+              AppIcon.checkCircle,
             ),
           ],
         ),
@@ -614,7 +566,7 @@ class _CustDetailState extends State<CustDetail> {
                     : null,
               ),
               child: customer.imagePath == null
-                  ? Icon(Icons.person, color: Colors.white, size: 40)
+                  ? Icon(AppIcon.person, color: Colors.white, size: 40)
                   : null,
             ),
           ),
@@ -693,7 +645,7 @@ class _CustDetailState extends State<CustDetail> {
                     Column(
                       children: [
                         _contactIcon(
-                          Icons.call,
+                          AppIcon.call,
                           Colors.green,
                           () => _makeCall(phone),
                         ),
@@ -708,7 +660,7 @@ class _CustDetailState extends State<CustDetail> {
                     Column(
                       children: [
                         _contactIcon(
-                          Icons.message,
+                          AppIcon.message,
                           Colors.blue,
                           () => _sendSMS(phone),
                         ),
@@ -723,7 +675,7 @@ class _CustDetailState extends State<CustDetail> {
                     Column(
                       children: [
                         _contactIcon(
-                          Icons.chat,
+                          AppIcon.chat,
                           Colors.green,
                           () => _launchWhatsApp(phone),
                         ),

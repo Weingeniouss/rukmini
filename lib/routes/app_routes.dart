@@ -1,17 +1,35 @@
 part of 'app_pages.dart';
 
 abstract class Routes {
-  static const splash = _Paths.splash;
-  static const login = _Paths.login;
-  static const home = _Paths.home;
-  static const custList = _Paths.custList;
-  static const custDetail = _Paths.custDetail;
+  //Splash
+    static const splash = _Paths.splash;
+
+  //Credentials
+    //Login
+      static const login = _Paths.login;
+
+  //Drawer
+    // Home
+      // Customer
+        static const home = _Paths.home;
+        static const custList = _Paths.custList;
+        static const custDetail = _Paths.custDetail;
+        static const addCustForm = _Paths.addCustForm;
 }
 
 abstract class _Paths {
+  //Splash
   static const splash = '/splash';
-  static const login = '/login';
-  static const home = '/home';
-  static const custList = '/custList';
-  static const custDetail = '/custDetail';
+
+  //Credentials
+    //Login
+     static const login = '/login';
+
+  //Drawer
+    // Home
+      // Customer
+        static const home = '/home';
+        static const custList = '/custList';
+        static const custDetail = '/custDetail';
+        static const addCustForm = '/addCustForm';
 }

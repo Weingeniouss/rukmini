@@ -13,6 +13,7 @@ AppBar appBar({
   bool? remove,
   bool? back,
   void Function()? searchOnPressed,
+  bool? centerTitle,
 }) {
   Widget titleWidget;
   if (title is String) {
@@ -21,7 +22,7 @@ AppBar appBar({
       style: TextStyle(
         color: AppColor.fullScreenColor,
         fontSize: Get.width * 0.05,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w500,
       ),
     );
   } else if (title is Widget) {
@@ -31,12 +32,14 @@ AppBar appBar({
   }
 
   return AppBar(
+    leadingWidth: (back == true) ? 40 : null,
     leading: (back == true)
-        ? GestureDetector(
-            onTap: () {
+        ? IconButton(
+            onPressed: () {
               Get.back();
             },
-            child: Icon(Icons.u_turn_left, color: AppColor.backgroundColor),
+            padding: EdgeInsets.zero,
+            icon: AppIcon.back,
           )
         : Builder(
             builder: (context) {
@@ -53,26 +56,18 @@ AppBar appBar({
           ),
     actions: [
       (searchIcon == true)
-          ? IconButton(
-              onPressed: searchOnPressed,
-              icon: Icon(Icons.search, color: AppColor.fullScreenColor),
-            )
+          ? IconButton(onPressed: searchOnPressed, icon: AppIcon.search)
           : SizedBox(),
       (edit == true)
-          ? IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.edit, color: AppColor.fullScreenColor),
-            )
+          ? IconButton(onPressed: () {}, icon: AppIcon.edit)
           : SizedBox(),
       (remove == true)
-          ? IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.delete, color: AppColor.fullScreenColor),
-            )
+          ? IconButton(onPressed: () {}, icon: AppIcon.delete)
           : SizedBox(),
     ],
     primary: true,
     title: titleWidget,
     backgroundColor: AppColor.primaryColor,
+    centerTitle: centerTitle,
   );
 }

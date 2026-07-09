@@ -14,4 +14,7 @@ class AppColor {
   static const primaryColor = Color(0xff0A1624);
   static const textColor = Color(0xff84878C);
   static const subHeadingContainerColor = Color(0xffE7ECF2);
+
+  static const activeColor = Colors.green;
+  static const deleteColor = Colors.red;
 }

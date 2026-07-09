@@ -67,6 +67,7 @@ class AppString {
           static const girviDetails = 'Girvi Details';
           static const transactionDetails = 'Transaction Detail';
           static const identiyProof = 'Identiy Proof';
+          static const profilePhotos = 'Profile Photos';
           static const gender = 'Gender';
           static const status = 'Status';
           static const gracePeriod = 'GracePeriod';
@@ -80,4 +81,11 @@ class AppString {
           static const paidAmt = 'Paid Amt';
           static const totint = 'Tot int';
           static const paidint = 'Paid int';
+          static const addCustomerForm = 'Add Customer Form';
+          static const nomineeName = 'Nominee Name';
+          static const nomineePhoneNumber = 'Nominee Phone Number';
+          static const customerName = 'Customer Name';
+          static const male = 'Male';
+          static const female = 'FeMale';
+          static const gracedDays = 'Grace Days';
 }

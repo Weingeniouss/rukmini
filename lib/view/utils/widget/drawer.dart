@@ -5,6 +5,7 @@ import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import '../../../controller/local/localDatabase.dart';
 import '../app_Color.dart';
+import '../app_Icon.dart';
 import '../app_logo.dart';
 
 Widget homeDrawer() {
@@ -67,7 +68,7 @@ Widget homeDrawer() {
                 listTital(
                   index: 0,
                   title: AppString.home,
-                  icon: Icons.home_outlined,
+                  icon: AppIcon.home,
                   onTap: () {
                     navDrawerController.changeIndex(0);
                     Get.back();
@@ -76,13 +77,13 @@ Widget homeDrawer() {
                 listTital(
                   index: 1,
                   title: AppString.allMaster,
-                  icon: Icons.settings_suggest_outlined,
+                  icon: AppIcon.settings,
                   onTap: () => navDrawerController.changeIndex(1),
                 ),
                 listTital(
                   index: 2,
                   title: AppString.customer,
-                  icon: Icons.person_pin_outlined,
+                  icon: AppIcon.personOutline,
                   onTap: () {
                     navDrawerController.changeIndex(2);
                     Get.toNamed('/custList');
@@ -91,43 +92,43 @@ Widget homeDrawer() {
                 listTital(
                   index: 3,
                   title: AppString.girvi,
-                  icon: Icons.account_balance_outlined,
+                  icon: AppIcon.bank,
                   onTap: () => navDrawerController.changeIndex(3),
                 ),
                 listTital(
                   index: 4,
                   title: AppString.products,
-                  icon: Icons.grid_view_outlined,
+                  icon: AppIcon.grid,
                   onTap: () => navDrawerController.changeIndex(4),
                 ),
                 listTital(
                   index: 5,
                   title: AppString.productinLocker,
-                  icon: Icons.lock_person_outlined,
+                  icon: AppIcon.lockPerson,
                   onTap: () => navDrawerController.changeIndex(5),
                 ),
                 listTital(
                   index: 6,
                   title: AppString.pendingTransaction,
-                  icon: Icons.pending_actions_outlined,
+                  icon: AppIcon.pending,
                   onTap: () => navDrawerController.changeIndex(6),
                 ),
                 listTital(
                   index: 7,
                   title: AppString.lockerTransaction,
-                  icon: Icons.lock_reset_outlined,
+                  icon: AppIcon.lockReset,
                   onTap: () => navDrawerController.changeIndex(7),
                 ),
                 listTital(
                   index: 8,
                   title: AppString.reports,
-                  icon: Icons.description_outlined,
+                  icon: AppIcon.description,
                   onTap: () => navDrawerController.changeIndex(8),
                 ),
                 listTital(
                   index: 9,
                   title: AppString.exportCustomersContacts,
-                  icon: Icons.contact_mail_outlined,
+                  icon: AppIcon.contact,
                   onTap: () => navDrawerController.changeIndex(9),
                 ),
               ],
@@ -136,8 +137,8 @@ Widget homeDrawer() {
         ),
         const Divider(color: AppColor.textField, thickness: 0.5),
         ListTile(
-          leading: const Icon(Icons.logout, color: Colors.red),
-          title: const Text('Logout', style: TextStyle(color: Colors.red)),
+          leading: const Icon(AppIcon.logout, color: AppColor.deleteColor),
+          title: const Text('Logout', style: TextStyle(color: AppColor.deleteColor)),
           onTap: () async {
             await LocalDatabase().logout();
             Get.offAllNamed('/login');
