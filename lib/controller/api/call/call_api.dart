@@ -1,7 +1,7 @@
 import 'package:rukmini/elevated/credenials/loginElevated.dart';
-import 'package:rukmini/elevated/home/customers/custDetailElevated.dart';
-import 'package:rukmini/elevated/home/customers/custListElevated.dart';
-import 'package:rukmini/elevated/home/dashboardElevated.dart';
+import 'package:rukmini/elevated/drawer/home/customers/custDetailElevated.dart';
+import 'package:rukmini/elevated/drawer/home/customers/custListElevated.dart';
+import 'package:rukmini/elevated/drawer/home/dashboardElevated.dart';
 
 class CallApi {
   // Credentials Login

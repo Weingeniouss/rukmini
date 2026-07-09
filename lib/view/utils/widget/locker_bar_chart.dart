@@ -4,7 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:rukmini/modal/home/dashboard_model.dart';
+import 'package:rukmini/modal/drawer/home/dashboard_model.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import '../app_Color.dart';
 

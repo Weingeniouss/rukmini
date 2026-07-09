@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:rukmini/view/screen/home/customer/custDetail.dart';
-import 'package:rukmini/view/screen/home/customer/custList.dart';
-import 'package:rukmini/view/screen/home/home.dart';
+import 'package:rukmini/view/screen/drawer/home/customer/custDetail.dart';
+import 'package:rukmini/view/screen/drawer/home/customer/custList.dart';
+import 'package:rukmini/view/screen/drawer/home/home.dart';
 import '../view/screen/splash/splash.dart';
 import '../view/screen/credentials/login.dart';
 

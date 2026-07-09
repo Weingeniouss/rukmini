@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
-import 'package:rukmini/controller/api/controllers/home/customers/custList_Controller.dart';
-import 'package:rukmini/modal/home/customer/customer_list_model.dart';
+import 'package:rukmini/controller/api/controllers/drawer/home/customers/custList_Controller.dart';
+import 'package:rukmini/modal/drawer/home/customer/customer_list_model.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';

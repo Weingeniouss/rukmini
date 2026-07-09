@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import '../../../../modal/home/dashboard_model.dart';
-import '../../services/home/dashbord_services.dart';
+import '../../../../../modal/drawer/home/dashboard_model.dart';
+import '../../../services/drawer/home/dashbord_services.dart';
 
 class DashbordController extends GetxController {
   final DashbordServices _dashbordServices = DashbordServices();

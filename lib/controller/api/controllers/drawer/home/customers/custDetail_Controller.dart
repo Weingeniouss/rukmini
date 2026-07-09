@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:rukmini/controller/api/services/home/customres/custDetail_service.dart';
-import 'package:rukmini/modal/home/customer/customer_detail_model.dart';
+import 'package:rukmini/controller/api/services/drawer/home/customres/custDetail_service.dart';
+import 'package:rukmini/modal/drawer/home/customer/customer_detail_model.dart';
 
 class CustdetailController extends GetxController {
   final CustDetailServices _custDetailServices = CustDetailServices();

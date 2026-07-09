@@ -3,9 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
-import 'package:rukmini/controller/api/controllers/home/customers/custDetail_Controller.dart';
-import 'package:rukmini/modal/home/customer/customer_detail_model.dart';
-import 'package:rukmini/modal/home/customer/customer_list_model.dart' as list;
+import 'package:rukmini/controller/api/controllers/drawer/home/customers/custDetail_Controller.dart';
+import 'package:rukmini/modal/drawer/home/customer/customer_detail_model.dart';
+import 'package:rukmini/modal/drawer/home/customer/customer_list_model.dart'
+    as list;
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
@@ -591,22 +592,31 @@ class _CustDetailState extends State<CustDetail> {
       padding: EdgeInsets.all(Get.width * 0.04),
       child: Row(
         children: [
-          Container(
-            width: Get.width * 0.2,
-            height: Get.width * 0.4,
-            decoration: BoxDecoration(
-              color: AppColor.primaryColor,
-              borderRadius: BorderRadius.circular(Get.width * 0.02),
-              image: customer.imagePath != null
-                  ? DecorationImage(
-                      image: NetworkImage(customer.imagePath!),
-                      fit: BoxFit.cover,
-                    )
+          GestureDetector(
+            onTap: () {
+              _showFullScreenImage(
+                context,
+                customer.imagePath!,
+                customer.name ?? 'Profile Image',
+              );
+            },
+            child: Container(
+              width: Get.width * 0.2,
+              height: Get.width * 0.4,
+              decoration: BoxDecoration(
+                color: AppColor.primaryColor,
+                borderRadius: BorderRadius.circular(Get.width * 0.02),
+                image: customer.imagePath != null
+                    ? DecorationImage(
+                        image: NetworkImage(customer.imagePath!),
+                        fit: BoxFit.cover,
+                      )
+                    : null,
+              ),
+              child: customer.imagePath == null
+                  ? Icon(Icons.person, color: Colors.white, size: 40)
                   : null,
             ),
-            child: customer.imagePath == null
-                ? Icon(Icons.person, color: Colors.white, size: 40)
-                : null,
           ),
           SizedBox(width: Get.width * 0.04),
           Expanded(
