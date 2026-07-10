@@ -53,6 +53,20 @@ class _CustDetailState extends State<CustDetail> {
         title: AppString.customerDetail,
         edit: true,
         remove: true,
+        deletOnPressed: () {
+          Get.defaultDialog(
+            title: AppString.deleteCustomer,
+            middleText: AppString.deleteMessage,
+            textConfirm: AppString.delete,
+            textCancel: AppString.cancel,
+            confirmTextColor: Colors.white,
+            buttonColor: AppColor.deleteColor,
+            onConfirm: () {
+              // TODO: Implement delete API call
+              Get.back();
+            },
+          );
+        },
       ),
       child: DefaultTabController(
         length: 4,

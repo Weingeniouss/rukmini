@@ -1,30 +1,51 @@
 // ignore_for_file: constant_identifier_names, file_names
 
 class AppString {
-  //Url
-  static const apiKey = 'API-KEY';
-  static const logintokan = 'LoginToken';
-  static const userid = 'UserId';
-  static const emailBody = 'Email';
-  static const passwordBody = 'Password';
-  static const timezonePera = 'timezone';
-  static const pagePera = 'page';
-  static const searchPera = 'Search';
-  static const cusid = 'CustId';
-  static const name_Body = 'Name';
-  static const typeDel_Body = 'TypeDel';
-  static const phoneDel_Body = 'PhoneDel';
-  static const address_Body = 'Address';
-  static const gender_Body = 'Gender';
-  static const nName_Body = 'NName';
-  static const nPhone_Body = 'NPhone';
-  static const custRelation_Body = 'CustRelation';
-  static const gracePeriod_Body = 'GracePeriod';
-  static const pName_Body = 'PName';
-  static const isProfile_Body = 'IsProfile';
-  static const profileName_Body = 'ProfileName';
-  static const profile_Body = 'Profile[]';
-  static const proof_Body = 'Proof[]';
+  //Url Start
+
+  //Headers
+    static const apiKey = 'API-KEY';
+    static const logintokan = 'LoginToken';
+    static const userid = 'UserId';
+  //Headers
+
+    //Credetinals
+      //Login Start _Body
+        static const emailBody = 'Email';
+        static const passwordBody = 'Password';
+      //Login End _Body
+    //Credetinals
+
+    //Customer
+        //Add CustList _Params
+          static const timezonePera = 'timezone';
+          static const pagePera = 'page';
+          static const searchPera = 'Search';
+        //Add CustList _Params
+
+        //Add CustDetail Start  _Params
+          static const cusid = 'CustId';
+        //Add CustDetail End
+
+        //Add Cust Form Start  _Body
+          static const name_Body = 'Name';
+          static const typeDel_Body = 'TypeDel';
+          static const phoneDel_Body = 'PhoneDel';
+          static const address_Body = 'Address';
+          static const gender_Body = 'Gender';
+          static const nName_Body = 'NName';
+          static const nPhone_Body = 'NPhone';
+          static const custRelation_Body = 'CustRelation';
+          static const gracePeriod_Body = 'GracePeriod';
+          static const pName_Body = 'PName';
+          static const isProfile_Body = 'IsProfile';
+          static const profileName_Body = 'ProfileName';
+          static const profile_Body = 'Profile[]';
+          static const proof_Body = 'Proof[]';
+       //Add Cust Form End
+    //Customer
+
+//Url End
 
   //Error Handilaing
   static const customeraddedsuccessfully = 'Customer added successfully';
@@ -46,6 +67,10 @@ class AppString {
 
   //Buttons
   static const sumit = 'Sumit';
+  static const delete = 'Delete';
+  static const cancel = 'Cancel';
+  static const deleteCustomer = 'Delete Customer';
+  static const deleteMessage = 'Are you sure you want to delete this customer?';
 
   //Splash
   static const napoleonHill =

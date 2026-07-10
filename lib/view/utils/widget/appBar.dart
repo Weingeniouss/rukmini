@@ -13,6 +13,7 @@ AppBar appBar({
   bool? remove,
   bool? back,
   void Function()? searchOnPressed,
+  void Function()? deletOnPressed,
   bool? centerTitle,
 }) {
   Widget titleWidget;
@@ -62,7 +63,7 @@ AppBar appBar({
           ? IconButton(onPressed: () {}, icon: AppIcon.edit)
           : SizedBox(),
       (remove == true)
-          ? IconButton(onPressed: () {}, icon: AppIcon.delete)
+          ? IconButton(onPressed: deletOnPressed, icon: AppIcon.delete)
           : SizedBox(),
     ],
     primary: true,
