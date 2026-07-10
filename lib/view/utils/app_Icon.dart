@@ -36,7 +36,8 @@ class AppIcon {
   static const IconData payment = Icons.payments_outlined;
   static const IconData trend = Icons.trending_up;
   static const IconData checkCircle = Icons.check_circle_outline;
-  
+  static const IconData camera = Icons.camera_enhance_outlined;
+
   // Contact Icons
   static const IconData call = Icons.call;
   static const IconData message = Icons.message;

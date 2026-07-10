@@ -1,9 +1,13 @@
 // ignore_for_file: deprecated_member_use, file_names
 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
+import 'package:rukmini/view/utils/widget/button.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/headingContainer.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
@@ -15,7 +19,7 @@ import 'package:rukmini/view/utils/app_Color.dart';
 class AddCustForm extends StatelessWidget {
   AddCustForm({super.key});
 
-  final controller = Get.put(AddCustFormController());
+  final addCustForomUI = Get.put(AddCustFormControllerUI());
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +33,41 @@ class AddCustForm extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            customerDetails(controller),
-            nomineeDetails(),
+            customerDetails(addCustForomUI),
+            nomineeDetails(addCustForomUI),
+            inputVarticalSpace(),
+            identificationProof(
+              addCustForomUI,
+              callSumit: () async {
+                await CallApi.callAddCustomer(
+                  name: addCustForomUI.nameController.text,
+                  typeDel: addCustForomUI.selectedCustType.value,
+                  phoneDel: addCustForomUI.phoneControllers
+                      .map((e) => e.text)
+                      .join(','),
+                  address: addCustForomUI.addressController.text,
+                  gender: addCustForomUI.selectedGender.value,
+                  nName: addCustForomUI.nomineeNameController.text,
+                  nPhone: addCustForomUI.nomineePhoneController.text,
+                  custRelation: addCustForomUI.nomineeRelationController.text,
+                  gracePeriod: addCustForomUI.selectedGraceDays.value,
+                  isProfile: addCustForomUI.customerPhotoControllers.isNotEmpty
+                      ? "1"
+                      : "0",
+                  profileName:
+                      addCustForomUI.customerPhotoControllers.isNotEmpty
+                      ? addCustForomUI.customerPhotoControllers[0].text
+                      : "",
+                  profile: addCustForomUI.customerPhotoControllers
+                      .map((e) => e.text)
+                      .toList(),
+                  proof: addCustForomUI.identityProofControllers
+                      .map((e) => e.text)
+                      .toList(),
+                );
+                await CallApi.callCustList(isRefresh: true);
+              },
+            ),
             inputVarticalSpace(),
           ],
         ),
@@ -39,7 +76,7 @@ class AddCustForm extends StatelessWidget {
   }
 }
 
-Widget customerDetails(AddCustFormController controller) {
+Widget customerDetails(AddCustFormControllerUI controller) {
   return Column(
     children: [
       headingContainer(AppString.customerDetail),
@@ -51,6 +88,7 @@ Widget customerDetails(AddCustFormController controller) {
               hintText: AppString.customerName,
               icon: AppIcon.person,
               iconColor: AppColor.activeColor,
+              inputTextcontroller: controller.nameController,
             ),
             inputVarticalSpace(),
             Obx(
@@ -91,6 +129,7 @@ Widget customerDetails(AddCustFormController controller) {
               hintText: AppString.address,
               icon: AppIcon.location,
               iconColor: AppColor.activeColor,
+              inputTextcontroller: controller.addressController,
             ),
             inputVarticalSpace(),
 
@@ -160,6 +199,210 @@ Widget customerDetails(AddCustFormController controller) {
   );
 }
 
+Widget nomineeDetails(AddCustFormControllerUI controller) {
+  return Column(
+    children: [
+      headingContainer(AppString.nomineeDetail),
+      horizontalPadding(
+        child: Column(
+          children: [
+            inputField(
+              hintText: AppString.nomineeName,
+              icon: AppIcon.person,
+              iconColor: AppColor.activeColor,
+              inputTextcontroller: controller.nomineeNameController,
+            ),
+            inputVarticalSpace(),
+            inputField(
+              hintText: AppString.nomineePhoneNumber,
+              icon: AppIcon.phone,
+              iconColor: AppColor.activeColor,
+              inputTextcontroller: controller.nomineePhoneController,
+            ),
+            inputVarticalSpace(),
+            inputField(
+              hintText: AppString.customerRelation,
+              icon: AppIcon.status,
+              iconColor: AppColor.activeColor,
+              inputTextcontroller: controller.nomineeRelationController,
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+Widget identificationProof(
+  AddCustFormControllerUI controller, {
+  void Function()? callSumit,
+}) {
+  return Column(
+    children: [
+      headingContainer(AppString.identiyProof),
+      horizontalPadding(
+        child: Column(
+          children: [
+            photoListSection(
+              title: AppString.customerPhotos,
+              controllers: controller.customerPhotoControllers,
+              images: controller.customerPhotoImages,
+              onAdd: controller.addCustomerPhotoField,
+              onRemove: controller.removeCustomerPhotoField,
+              onPick: controller.pickCustomerPhoto,
+              hintText: AppString.personName,
+            ),
+            inputVarticalSpace(),
+            Divider(),
+            inputVarticalSpace(),
+            photoListSection(
+              title: AppString.customerProof,
+              controllers: controller.identityProofControllers,
+              images: controller.identityProofImages,
+              onAdd: controller.addIdentityProofField,
+              onRemove: controller.removeIdentityProofField,
+              onPick: controller.pickIdentityProof,
+              hintText: AppString.identifyProofType,
+            ),
+            inputVarticalSpace(),
+            GestureDetector(
+              onTap: callSumit,
+              child: clickButton(AppString.sumit),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+Widget photoListSection({
+  required String title,
+  required RxList<TextEditingController> controllers,
+  required RxList<Rx<XFile?>> images,
+  required VoidCallback onAdd,
+  required Function(int) onRemove,
+  required Function(int) onPick,
+  required String hintText,
+}) {
+  return Column(
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: Get.width * 0.038,
+            ),
+          ),
+          IconButton(
+            onPressed: onAdd,
+            icon: Icon(AppIcon.add, color: AppColor.activeColor),
+          ),
+        ],
+      ),
+      inputVarticalSpace(),
+      Obx(
+        () => Column(
+          children: List.generate(controllers.length, (index) {
+            return Column(
+              children: [
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => onPick(index),
+                      child: Obx(
+                        () => Container(
+                          width: Get.width * 0.15,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: AppColor.textField,
+                            borderRadius: BorderRadius.circular(3),
+                            image: images[index].value != null
+                                ? DecorationImage(
+                                    image: FileImage(
+                                      File(images[index].value!.path),
+                                    ),
+                                    fit: BoxFit.cover,
+                                  )
+                                : null,
+                          ),
+                          child: images[index].value == null
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      AppIcon.camera,
+                                      color: AppColor.fullScreenColor,
+                                      size: 18,
+                                    ),
+                                    Text(
+                                      AppString.image,
+                                      style: TextStyle(
+                                        fontSize: Get.width * 0.02,
+                                        color: AppColor.fullScreenColor,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : null,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: Get.width * 0.04),
+                    Expanded(
+                      child: SizedBox(
+                        height: 40,
+                        child: TextField(
+                          controller: controllers[index],
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                              horizontal: 10,
+                            ),
+                            hintText: hintText,
+                            hintStyle: TextStyle(
+                              fontSize: Get.width * 0.035,
+                              color: AppColor.textField.withOpacity(0.6),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: AppColor.textField),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: AppColor.textField),
+                            ),
+                            disabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: AppColor.textField),
+                            ),
+                            suffixIcon: index == 0
+                                ? null
+                                : IconButton(
+                                    padding: EdgeInsets.zero,
+                                    onPressed: () => onRemove(index),
+                                    icon: const Icon(
+                                      Icons.remove_circle,
+                                      color: AppColor.deleteColor,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                if (index < controllers.length - 1) inputVarticalSpace(),
+              ],
+            );
+          }),
+        ),
+      ),
+    ],
+  );
+}
+
 Widget dropDownField({
   required String title,
   required dynamic icon,
@@ -197,37 +440,6 @@ Widget dropDownField({
             return DropdownMenuItem<String>(value: item, child: Text(item));
           }).toList(),
           onChanged: onChanged,
-        ),
-      ),
-    ],
-  );
-}
-
-Widget nomineeDetails() {
-  return Column(
-    children: [
-      headingContainer(AppString.nomineeDetail),
-      horizontalPadding(
-        child: Column(
-          children: [
-            inputField(
-              hintText: AppString.nomineeName,
-              icon: AppIcon.person,
-              iconColor: AppColor.activeColor,
-            ),
-            inputVarticalSpace(),
-            inputField(
-              hintText: AppString.nomineePhoneNumber,
-              icon: AppIcon.phone,
-              iconColor: AppColor.activeColor,
-            ),
-            inputVarticalSpace(),
-            inputField(
-              hintText: AppString.customerRelation,
-              icon: AppIcon.status,
-              iconColor: AppColor.activeColor,
-            ),
-          ],
         ),
       ),
     ],

@@ -2,8 +2,18 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
-class AddCustFormController extends GetxController {
+class AddCustFormControllerUI extends GetxController {
+  final ImagePicker _picker = ImagePicker();
+
+  // Text Controllers
+  final nameController = TextEditingController();
+  final addressController = TextEditingController();
+  final nomineeNameController = TextEditingController();
+  final nomineePhoneController = TextEditingController();
+  final nomineeRelationController = TextEditingController();
+
   // Gender selection
   var selectedGender = 'Male'.obs;
 
@@ -18,6 +28,32 @@ class AddCustFormController extends GetxController {
   // Phone numbers list
   var phoneControllers = <TextEditingController>[TextEditingController()].obs;
 
+  // Customer Photos list
+  var customerPhotoControllers = <TextEditingController>[
+    TextEditingController(),
+  ].obs;
+  var customerPhotoImages = <Rx<XFile?>>[Rx<XFile?>(null)].obs;
+
+  // Identity Proofs list
+  var identityProofControllers = <TextEditingController>[
+    TextEditingController(),
+  ].obs;
+  var identityProofImages = <Rx<XFile?>>[Rx<XFile?>(null)].obs;
+
+  Future<void> pickCustomerPhoto(int index) async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+    if (image != null) {
+      customerPhotoImages[index].value = image;
+    }
+  }
+
+  Future<void> pickIdentityProof(int index) async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      identityProofImages[index].value = image;
+    }
+  }
+
   void addPhoneField() {
     phoneControllers.add(TextEditingController());
   }
@@ -29,9 +65,46 @@ class AddCustFormController extends GetxController {
     }
   }
 
+  void addCustomerPhotoField() {
+    customerPhotoControllers.add(TextEditingController());
+    customerPhotoImages.add(Rx<XFile?>(null));
+  }
+
+  void removeCustomerPhotoField(int index) {
+    if (customerPhotoControllers.length > 1) {
+      customerPhotoControllers[index].dispose();
+      customerPhotoControllers.removeAt(index);
+      customerPhotoImages.removeAt(index);
+    }
+  }
+
+  void addIdentityProofField() {
+    identityProofControllers.add(TextEditingController());
+    identityProofImages.add(Rx<XFile?>(null));
+  }
+
+  void removeIdentityProofField(int index) {
+    if (identityProofControllers.length > 1) {
+      identityProofControllers[index].dispose();
+      identityProofControllers.removeAt(index);
+      identityProofImages.removeAt(index);
+    }
+  }
+
   @override
   void onClose() {
+    nameController.dispose();
+    addressController.dispose();
+    nomineeNameController.dispose();
+    nomineePhoneController.dispose();
+    nomineeRelationController.dispose();
     for (var controller in phoneControllers) {
+      controller.dispose();
+    }
+    for (var controller in customerPhotoControllers) {
+      controller.dispose();
+    }
+    for (var controller in identityProofControllers) {
       controller.dispose();
     }
     super.onClose();
