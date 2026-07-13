@@ -47,13 +47,23 @@ dependencies:
   fl_chart:
   marquee:
   url_launcher:
-  image_picker: ^1.1.2
+  image_picker:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons:
 
-  # The "flutter_lints" package below contains a set of recommended lints to
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "asset/appImage/logo/rukminiLogo.png"
+  adaptive_icon_background: "#0A1624"
+  adaptive_icon_foreground: "asset/appImage/logo/rukminiLogo.png"
+  remove_alpha_ios: true
+  remove_alpha_android: true
+
+# The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
@@ -77,7 +87,6 @@ flutter:
       - asset/appImage/icon/
       - asset/appImage/image/
       - asset/appImage/logo/
-      - asset/appImage/icon/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

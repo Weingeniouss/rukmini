@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import '../../../../controller/api/controllers/drawer/home/customers/addCustForm_Controller.dart';
 import '../../../../modal/drawer/home/customer/add_customer_model.dart';
@@ -14,14 +15,17 @@ Future<AddCustomerModel?> postAddCustomer({
   required String phoneDel,
   required String address,
   required String gender,
+  List<String>? phones,
   String? nName,
   String? nPhone,
   String? custRelation,
   String? gracePeriod,
   String? isProfile,
   String? profileName,
-  List<String>? profile,
-  List<String>? proof,
+  List<String>? profileNames,
+  List<String>? proofNames,
+  List<XFile?>? profileImages,
+  List<XFile?>? proofImages,
 }) async {
   final AddcustformController addCustController = Get.put(
     AddcustformController(),
@@ -30,6 +34,7 @@ Future<AddCustomerModel?> postAddCustomer({
     name: name,
     typeDel: typeDel,
     phoneDel: phoneDel,
+    phones: phones,
     address: address,
     gender: gender,
     nName: nName,
@@ -38,12 +43,20 @@ Future<AddCustomerModel?> postAddCustomer({
     gracePeriod: gracePeriod,
     isProfile: isProfile,
     profileName: profileName,
-    profile: profile,
-    proof: proof,
+    profileNames: profileNames,
+    proofNames: proofNames,
+    profileImages: profileImages,
+    proofImages: proofImages,
   );
 
   if (response != null) {
-    final decoded = jsonDecode(response.body);
+    String body = response.body;
+    // If the response contains HTML (PHP Errors), extract only the JSON part
+    if (body.contains('{') && body.contains('}')) {
+      body = body.substring(body.indexOf('{'), body.lastIndexOf('}') + 1);
+    }
+
+    final decoded = jsonDecode(body);
     if (decoded is Map<String, dynamic>) {
       final addCustomerModel = AddCustomerModel.fromJson(decoded);
       if (response.statusCode == 200) {

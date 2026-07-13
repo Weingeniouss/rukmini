@@ -8,23 +8,32 @@ import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/app_URL.dart';
 import 'package:rukmini/view/utils/app_constants.dart';
 
-class AddcustformServices {
-  final String url = AppUrl.custAdd;
+class CustUpdateServices {
+  final String url = AppUrl.custUpdate;
   final apiKey = AppUrl.apiKey;
 
-  Future<http.Response> addcustformApi({
+  Future<http.Response> custUpdateApi({
+    required String custId,
     required String name,
     required String typeDel,
     required String phoneDel,
     required String address,
     required String gender,
     List<String>? phones,
+    String? custDelId,
     String? nName,
     String? nPhone,
-    String? custRelation,
+    String? nomineeId,
     String? gracePeriod,
+    String? custRelation,
+    String? pName,
     String? isProfile,
     String? profileName,
+    String? profileId,
+    String? proofId,
+    String? phoneId,
+    String? eProofId,
+    String? eProfileId,
     List<String>? profileNames,
     List<String>? proofNames,
     List<XFile?>? profileImages,
@@ -39,21 +48,32 @@ class AddcustformServices {
     });
 
     // Prepare fields
+    request.fields[AppString.cusid] = custId;
     request.fields[AppString.name_Body] = name;
     request.fields[AppString.typeDel_Body] = typeDel;
     request.fields[AppString.address_Body] = address;
     request.fields[AppString.gender_Body] = gender;
 
+    if (custDelId != null && custDelId.isNotEmpty)
+      request.fields[AppString.custDelId_Body] = custDelId;
     if (nName != null && nName.isNotEmpty)
       request.fields[AppString.nName_Body] = nName;
     if (nPhone != null && nPhone.isNotEmpty)
       request.fields[AppString.nPhone_Body] = nPhone;
-    if (custRelation != null && custRelation.isNotEmpty)
-      request.fields[AppString.custRelation_Body] = custRelation;
+    if (nomineeId != null && nomineeId.isNotEmpty)
+      request.fields[AppString.nomineeId_Body] = nomineeId;
     if (gracePeriod != null && gracePeriod.isNotEmpty)
       request.fields[AppString.gracePeriod_Body] = gracePeriod;
+    if (custRelation != null && custRelation.isNotEmpty)
+      request.fields[AppString.custRelation_Body] = custRelation;
+    if (pName != null && pName.isNotEmpty)
+      request.fields[AppString.pName_Body] = pName;
     if (isProfile != null && isProfile.isNotEmpty)
       request.fields[AppString.isProfile_Body] = isProfile;
+    if (eProofId != null && eProofId.isNotEmpty)
+      request.fields[AppString.eProofId_Body] = eProofId;
+    if (eProfileId != null && eProfileId.isNotEmpty)
+      request.fields[AppString.eProfileId_Body] = eProfileId;
 
     // Handle Phone Numbers - Pass exactly as JSON array string: ["9999999999"]
     if (phones != null && phones.isNotEmpty) {
@@ -75,6 +95,26 @@ class AddcustformServices {
         if (proofNames[i].isNotEmpty) {
           request.fields['PName[$i]'] = proofNames[i];
         }
+      }
+    }
+
+    // IDs
+    if (profileId != null && profileId.isNotEmpty) {
+      List<String> ids = profileId.split(',');
+      for (int i = 0; i < ids.length; i++) {
+        request.fields['ProfileId[$i]'] = ids[i];
+      }
+    }
+    if (proofId != null && proofId.isNotEmpty) {
+      List<String> ids = proofId.split(',');
+      for (int i = 0; i < ids.length; i++) {
+        request.fields['ProofId[$i]'] = ids[i];
+      }
+    }
+    if (phoneId != null && phoneId.isNotEmpty) {
+      List<String> ids = phoneId.split(',');
+      for (int i = 0; i < ids.length; i++) {
+        request.fields['PhoneId[$i]'] = ids[i];
       }
     }
 
@@ -101,10 +141,10 @@ class AddcustformServices {
     }
 
     if (kDebugMode) {
-      print('--- Add Customer Multipart Request ---');
+      print('--- Update Customer Multipart Request ---');
       print('URL: $url');
       print('Fields: ${request.fields}');
-      print('--- Add Customer Multipart Request ---');
+      print('--- Update Customer Multipart Request ---');
     }
 
     final streamedResponse = await request.send();

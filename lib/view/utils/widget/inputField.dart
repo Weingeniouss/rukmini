@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use, file_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/widget/inputField.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
@@ -14,6 +15,9 @@ Widget inputField({
   bool isPassword = false,
   TextEditingController? inputTextcontroller,
   Widget? suffixIcon,
+  TextInputType? keyboardType,
+  int? maxLength,
+  List<TextInputFormatter>? inputFormatters,
 }) {
   // Use hintText as tag to ensure each field gets its own controller instance
   final isvisorNot = Get.put(InputFieldController(), tag: hintText);
@@ -25,11 +29,17 @@ Widget inputField({
 
   Widget buildTextField(bool obscureText) {
     return TextField(
+      autofocus: false,
+      autocorrect: false,
+      keyboardType: keyboardType,
+      maxLength: maxLength,
+      inputFormatters: inputFormatters,
       controller: inputTextcontroller,
       style: TextStyle(color: AppColor.textField),
       cursorColor: AppColor.textField,
       obscureText: obscureText,
       decoration: InputDecoration(
+        counterText: "",
         prefixIcon: (icon != null)
             ? Icon(icon is IconData ? icon : icon,
                 color: iconColor ?? AppColor.textField)

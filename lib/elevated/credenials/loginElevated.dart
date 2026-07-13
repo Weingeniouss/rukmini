@@ -15,7 +15,12 @@ Future postLogin() async {
   final http.Response? response = await loginApi.login();
 
   if (response != null) {
-    final loginModel = LoginModel.fromJson(jsonDecode(response.body));
+    String body = response.body;
+    // Extract JSON if PHP errors are present
+    if (body.contains('{') && body.contains('}')) {
+      body = body.substring(body.indexOf('{'), body.lastIndexOf('}') + 1);
+    }
+    final loginModel = LoginModel.fromJson(jsonDecode(body));
     if (response.statusCode == 200) {
       if (loginModel.status == true) {
         ToastificationSuccess.Success(loginModel.message!);
@@ -35,5 +40,7 @@ Future postLogin() async {
     } else {
       ToastificationError.Error('${loginModel.message}');
     }
+  } else {
+    ToastificationError.Error('Network error: Please check your internet connection');
   }
 }

@@ -4,12 +4,25 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../../modal/drawer/home/customer/customer_detail_model.dart';
 
-class AddCustFormControllerUI extends GetxController {
+class UpdateCustFormControllerUI extends GetxController {
   final ImagePicker _picker = ImagePicker();
   var isLoading = false.obs;
 
-  // Text Controllers
+  late CustomerDetailData customerData;
+
+  // IDs
+  String custId = '';
+  String custDelId = '';
+  String nomineeId = '';
+  var profileIds = <String>[].obs;
+  var proofIds = <String>[].obs;
+  var phoneIds = <String>[].obs;
+  String eProofId = '';
+  String eProfileId = '';
+
+  // ... (rest of text controllers)
   final nameController = TextEditingController();
   final addressController = TextEditingController();
   final nomineeNameController = TextEditingController();
@@ -28,19 +41,82 @@ class AddCustFormControllerUI extends GetxController {
   final custTypeList = ['Goody', 'Shoppe'].obs;
 
   // Phone numbers list
-  var phoneControllers = <TextEditingController>[TextEditingController()].obs;
+  var phoneControllers = <TextEditingController>[].obs;
 
   // Customer Photos list
-  var customerPhotoControllers = <TextEditingController>[
-    TextEditingController(),
-  ].obs;
-  var customerPhotoImages = <Rx<XFile?>>[Rx<XFile?>(null)].obs;
+  var customerPhotoControllers = <TextEditingController>[].obs;
+  var customerPhotoImages = <Rx<XFile?>>[].obs;
 
   // Identity Proofs list
-  var identityProofControllers = <TextEditingController>[
-    TextEditingController(),
-  ].obs;
-  var identityProofImages = <Rx<XFile?>>[Rx<XFile?>(null)].obs;
+  var identityProofControllers = <TextEditingController>[].obs;
+  var identityProofImages = <Rx<XFile?>>[].obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    customerData = Get.arguments as CustomerDetailData;
+    initData();
+  }
+
+  void initData() {
+    custId = customerData.custId ?? '';
+    nameController.text = customerData.name ?? '';
+    addressController.text = customerData.address ?? '';
+    selectedGender.value = customerData.gender ?? 'Male';
+    selectedGraceDays.value = customerData.gracePeriod ?? '0';
+    if (!graceDaysList.contains(selectedGraceDays.value)) {
+      graceDaysList.add(selectedGraceDays.value);
+    }
+
+    if (customerData.custType != null && customerData.custType!.isNotEmpty) {
+      String typeName = customerData.custType!.first.typeName ?? 'Goody';
+      if (!custTypeList.contains(typeName)) {
+        custTypeList.add(typeName);
+      }
+      selectedCustType.value = typeName;
+      custDelId = customerData.custType!.first.custDelId ?? '';
+    }
+
+    if (customerData.nominee != null) {
+      nomineeNameController.text = customerData.nominee!.name ?? '';
+      nomineePhoneController.text = customerData.nominee!.phone ?? '';
+      nomineeRelationController.text = customerData.nominee!.custRelation ?? '';
+      nomineeId = customerData.nominee!.nomineeId ?? '';
+    }
+
+    if (customerData.phone != null && customerData.phone!.isNotEmpty) {
+      for (var p in customerData.phone!) {
+        phoneIds.add(p.phoneId ?? '');
+        phoneControllers.add(TextEditingController(text: p.phone));
+      }
+    } else {
+      phoneControllers.add(TextEditingController());
+    }
+
+    if (customerData.profile != null && customerData.profile!.isNotEmpty) {
+      eProfileId = customerData.profile!.first.profileId ?? '';
+      for (var p in customerData.profile!) {
+        profileIds.add(p.profileId ?? '');
+        customerPhotoControllers.add(TextEditingController(text: p.name));
+        customerPhotoImages.add(Rx<XFile?>(null));
+      }
+    } else {
+      customerPhotoControllers.add(TextEditingController());
+      customerPhotoImages.add(Rx<XFile?>(null));
+    }
+
+    if (customerData.proof != null && customerData.proof!.isNotEmpty) {
+      eProofId = customerData.proof!.first.proofId ?? '';
+      for (var p in customerData.proof!) {
+        proofIds.add(p.proofId ?? '');
+        identityProofControllers.add(TextEditingController(text: p.name));
+        identityProofImages.add(Rx<XFile?>(null));
+      }
+    } else {
+      identityProofControllers.add(TextEditingController());
+      identityProofImages.add(Rx<XFile?>(null));
+    }
+  }
 
   Future<void> pickCustomerPhoto(int index) async {
     final XFile? image = await _picker.pickImage(source: ImageSource.camera);
@@ -124,7 +200,7 @@ class AddCustFormControllerUI extends GetxController {
     if (value != null) selectedCustType.value = value;
   }
 
-  List<String> getAddPhoneList() {
+  List<String> getEditPhoneList() {
     return phoneControllers
         .map((e) => e.text.trim())
         .where((text) => text.isNotEmpty)

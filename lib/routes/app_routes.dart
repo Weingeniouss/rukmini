@@ -15,6 +15,7 @@ abstract class Routes {
         static const custList = _Paths.custList;
         static const custDetail = _Paths.custDetail;
         static const addCustForm = _Paths.addCustForm;
+        static const updateCustForm = _Paths.updateCustForm;
 }
 
 abstract class _Paths {
@@ -32,4 +33,5 @@ abstract class _Paths {
         static const custList = '/custList';
         static const custDetail = '/custDetail';
         static const addCustForm = '/addCustForm';
+        static const updateCustForm = '/updateCustForm';
 }

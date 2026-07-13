@@ -1,17 +1,29 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 
-Widget clickButton(String name) {
+Widget clickButton(String name, {bool isLoading = false}) {
   return Container(
-    padding: EdgeInsets.all(12),
+    padding: const EdgeInsets.all(12),
     width: Get.width,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(3),
       border: Border.all(color: AppColor.textColor),
     ),
     child: Center(
-      child: Text(name, style: TextStyle(fontWeight: FontWeight.w500)),
+      child: isLoading
+          ? const SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: AppColor.primaryColor,
+              ),
+            )
+          : Text(
+              name,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
     ),
   );
 }

@@ -14,66 +14,64 @@ import 'package:rukmini/view/utils/widget/headingContainer.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:rukmini/view/utils/widget/inputField.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
-import 'package:rukmini/controller/ui/home/customer/addCustForm_controller.dart';
+import 'package:rukmini/controller/ui/home/customer/updateCustForm_controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 
-class AddCustForm extends StatelessWidget {
-  AddCustForm({super.key});
+class UpdateCustForm extends StatelessWidget {
+  UpdateCustForm({super.key});
 
-  final addCustForomUI = Get.put(AddCustFormControllerUI());
+  final updateCustUI = Get.put(UpdateCustFormControllerUI());
 
   @override
   Widget build(BuildContext context) {
     return Fullscreen(
       isPadding: false,
-      appBar: appBar(
-        back: true,
-        centerTitle: true,
-        title: AppString.addCustomerForm,
-      ),
+      appBar: appBar(back: true, centerTitle: true, title: "Update Customer"),
       child: SingleChildScrollView(
         child: Column(
           children: [
-            customerDetails(addCustForomUI),
-            nomineeDetails(addCustForomUI),
+            customerDetails(updateCustUI),
+            nomineeDetails(updateCustUI),
             inputVarticalSpace(),
             identificationProof(
-              addCustForomUI,
+              updateCustUI,
               callSumit: () async {
-                addCustForomUI.isLoading.value = true;
-                final result = await CallApi.callAddCustomer(
-                  name: addCustForomUI.nameController.text,
-                  typeDel: addCustForomUI.selectedCustType.value,
+                updateCustUI.isLoading.value = true;
+                final result = await CallApi.callCustUpdate(
+                  custId: updateCustUI.custId,
+                  name: updateCustUI.nameController.text,
+                  typeDel: updateCustUI.selectedCustType.value,
                   phoneDel: "", // We'll pass the list instead
-                  phones: addCustForomUI.getAddPhoneList(),
-                  address: addCustForomUI.addressController.text,
-                  gender: addCustForomUI.selectedGender.value,
-                  nName: addCustForomUI.nomineeNameController.text,
-                  nPhone: addCustForomUI.nomineePhoneController.text,
-                  custRelation: addCustForomUI.nomineeRelationController.text,
-                  gracePeriod: addCustForomUI.selectedGraceDays.value,
-                  isProfile: addCustForomUI.customerPhotoControllers.isNotEmpty
-                      ? "1"
-                      : "0",
-                  profileName:
-                      addCustForomUI.customerPhotoControllers.isNotEmpty
-                          ? addCustForomUI.customerPhotoControllers[0].text
-                          : "",
-                  profileNames: addCustForomUI.customerPhotoControllers
+                  phones: updateCustUI.getEditPhoneList(),
+                  address: updateCustUI.addressController.text,
+                  gender: updateCustUI.selectedGender.value,
+                  custDelId: updateCustUI.custDelId,
+                  nName: updateCustUI.nomineeNameController.text,
+                  nPhone: updateCustUI.nomineePhoneController.text,
+                  nomineeId: updateCustUI.nomineeId,
+                  gracePeriod: updateCustUI.selectedGraceDays.value,
+                  custRelation: updateCustUI.nomineeRelationController.text,
+                  profileId: updateCustUI.profileIds.join(','),
+                  proofId: updateCustUI.proofIds.join(','),
+                  phoneId: updateCustUI.phoneIds.join(','),
+                  eProofId: updateCustUI.eProofId,
+                  eProfileId: updateCustUI.eProfileId,
+                  profileNames: updateCustUI.customerPhotoControllers
                       .map((e) => e.text)
                       .toList(),
-                  proofNames: addCustForomUI.identityProofControllers
+                  proofNames: updateCustUI.identityProofControllers
                       .map((e) => e.text)
                       .toList(),
-                  profileImages: addCustForomUI.customerPhotoImages
+                  profileImages: updateCustUI.customerPhotoImages
                       .map((e) => e.value)
                       .toList(),
-                  proofImages: addCustForomUI.identityProofImages
+                  proofImages: updateCustUI.identityProofImages
                       .map((e) => e.value)
                       .toList(),
                 );
                 await CallApi.callCustList(isRefresh: true);
-                addCustForomUI.isLoading.value = false;
+                await CallApi.callCustDetail(custId: updateCustUI.custId);
+                updateCustUI.isLoading.value = false;
                 if (result != null && result.status == true) {
                   Get.back();
                 }
@@ -87,7 +85,7 @@ class AddCustForm extends StatelessWidget {
   }
 }
 
-Widget customerDetails(AddCustFormControllerUI controller) {
+Widget customerDetails(UpdateCustFormControllerUI controller) {
   return Column(
     children: [
       headingContainer(AppString.customerDetail),
@@ -215,7 +213,7 @@ Widget customerDetails(AddCustFormControllerUI controller) {
   );
 }
 
-Widget nomineeDetails(AddCustFormControllerUI controller) {
+Widget nomineeDetails(UpdateCustFormControllerUI controller) {
   return Column(
     children: [
       headingContainer(AppString.nomineeDetail),
@@ -252,7 +250,7 @@ Widget nomineeDetails(AddCustFormControllerUI controller) {
 }
 
 Widget identificationProof(
-  AddCustFormControllerUI controller, {
+  UpdateCustFormControllerUI controller, {
   void Function()? callSumit,
 }) {
   return Column(
@@ -287,7 +285,7 @@ Widget identificationProof(
               onTap: controller.isLoading.value ? null : callSumit,
               child: Obx(
                 () => clickButton(
-                  AppString.sumit,
+                  AppString.update,
                   isLoading: controller.isLoading.value,
                 ),
               ),

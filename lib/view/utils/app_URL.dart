@@ -10,9 +10,12 @@ class AppUrl {
   static const login = '${baseAPI}user/login';
   static const forgetPassword = '${baseAPI}user/forgotPassword';
 
-  //home
-  static const dashboard = '${baseAPI}user/Dashboard';
-  static const custList = '${baseAPI}customer/CustList';
-  static const custDetail = '${baseAPI}customer/CustDetail';
-  static const custAdd = '${baseAPI}customer/CustAdd';
+    //home
+    static const dashboard = '${baseAPI}user/Dashboard';
+      //customer
+        static const custList = '${baseAPI}customer/CustList';
+        static const custDetail = '${baseAPI}customer/CustDetail';
+        static const custAdd = '${baseAPI}customer/CustAdd';
+        static const custRemove = '${baseAPI}customer/CustRemove';
+        static const custUpdate = '${baseAPI}customer/CustUpdate';
 }

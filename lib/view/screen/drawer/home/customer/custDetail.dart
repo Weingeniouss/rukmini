@@ -40,7 +40,6 @@ class _CustDetailState extends State<CustDetail> {
   @override
   void dispose() {
     custDetailController.dispose();
-    CallApi.callCustDetail(custId: customer.custId);
     super.dispose();
   }
 
@@ -52,19 +51,58 @@ class _CustDetailState extends State<CustDetail> {
         back: true,
         title: AppString.customerDetail,
         edit: true,
+        editOnPressed: () {
+          final data = custDetailController.custDetailData.value.data;
+          if (data != null) {
+            Get.toNamed('/updateCustForm', arguments: data);
+          }
+        },
         remove: true,
         deletOnPressed: () {
           Get.defaultDialog(
             title: AppString.deleteCustomer,
             middleText: AppString.deleteMessage,
-            textConfirm: AppString.delete,
-            textCancel: AppString.cancel,
-            confirmTextColor: Colors.white,
-            buttonColor: AppColor.deleteColor,
-            onConfirm: () {
-              // TODO: Implement delete API call
-              Get.back();
-            },
+            titleStyle: TextStyle(
+              fontSize: Get.width * 0.05,
+              fontWeight: FontWeight.bold,
+            ),
+            middleTextStyle: TextStyle(fontSize: Get.width * 0.035),
+            contentPadding: EdgeInsets.all(Get.width * 0.04),
+            confirm: Container(
+              width: Get.width * 0.3,
+              decoration: BoxDecoration(
+                color: AppColor.deleteColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextButton(
+                onPressed: () async {
+                  await CallApi.callCustRemove(custId: customer.custId!);
+                  await CallApi.callCustList(isRefresh: true);
+                  Get.back();
+                  Get.back();
+                },
+                child: Text(
+                  AppString.delete,
+                  style: TextStyle(color: AppColor.fullScreenColor),
+                ),
+              ),
+            ),
+            cancel: Container(
+              width: Get.width * 0.3,
+              decoration: BoxDecoration(
+                color: AppColor.baseColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: Text(
+                  AppString.cancel,
+                  style: TextStyle(color: AppColor.primaryColor),
+                ),
+              ),
+            ),
           );
         },
       ),
@@ -359,8 +397,8 @@ class _CustDetailState extends State<CustDetail> {
         backgroundColor: Colors.black,
         appBar: AppBar(
           backgroundColor: Colors.black,
-          iconTheme: const IconThemeData(color: Colors.white),
-          title: Text(title, style: const TextStyle(color: Colors.white)),
+          iconTheme: IconThemeData(color: Colors.white),
+          title: Text(title, style: TextStyle(color: Colors.white)),
         ),
         body: Center(
           child: InteractiveViewer(
@@ -374,9 +412,9 @@ class _CustDetailState extends State<CustDetail> {
               height: double.infinity,
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) return child;
-                return const Center(child: CircularProgressIndicator());
+                return Center(child: CircularProgressIndicator());
               },
-              errorBuilder: (context, error, stackTrace) => const Center(
+              errorBuilder: (context, error, stackTrace) => Center(
                 child: Icon(
                   AppIcon.brokenImage,
                   color: Colors.white,
@@ -427,7 +465,10 @@ class _CustDetailState extends State<CustDetail> {
                   (type) => ListTile(
                     title: Text(type.typeName ?? ''),
                     subtitle: Text(type.status ?? ''),
-                    leading: Icon(AppIcon.category, color: Colors.green),
+                    leading: Icon(
+                      AppIcon.category,
+                      color: AppColor.activeColor,
+                    ),
                   ),
                 ),
               ],
@@ -619,31 +660,42 @@ class _CustDetailState extends State<CustDetail> {
                         children: [
                           Row(
                             children: [
-                              Text(
-                                '${AppString.gvnAmt}: ',
-                                style: TextStyle(
-                                  fontSize: Get.width * 0.035,
-                                  fontWeight: FontWeight.w500,
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  '${AppString.gvnAmt}: ',
+                                  style: TextStyle(
+                                    fontSize: Get.width * 0.035,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
                               Text(
                                 totalGivenAmt,
-                                style: TextStyle(fontSize: Get.width * 0.03),
+                                style: TextStyle(
+                                  fontSize: Get.width * 0.03,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ],
                           ),
                           Row(
                             children: [
-                              Text(
-                                '${AppString.pendingAmt}: ',
-                                style: TextStyle(
-                                  fontSize: Get.width * 0.035,
-                                  fontWeight: FontWeight.w500,
+                              Expanded(
+                                child: Text(
+                                  '${AppString.pendingAmt}: ',
+                                  style: TextStyle(
+                                    fontSize: Get.width * 0.035,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
                               Text(
                                 gracePeriod,
-                                style: TextStyle(fontSize: Get.width * 0.03),
+                                style: TextStyle(
+                                  fontSize: Get.width * 0.03,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ],
                           ),

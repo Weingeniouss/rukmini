@@ -13,7 +13,12 @@ Future<CustomerDetailModel?> getCustDetail({String? custId}) async {
       await custDetailController.fetchCustDetail(custId: custId);
 
   if (response != null) {
-    final decoded = jsonDecode(response.body);
+    String body = response.body;
+    // If the response contains HTML (PHP Errors), extract only the JSON part
+    if (body.contains('{') && body.contains('}')) {
+      body = body.substring(body.indexOf('{'), body.lastIndexOf('}') + 1);
+    }
+    final decoded = jsonDecode(body);
     if (decoded is Map<String, dynamic>) {
       final customerDetailModel = CustomerDetailModel.fromJson(decoded);
       if (response.statusCode == 200) {

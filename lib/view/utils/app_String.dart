@@ -42,12 +42,25 @@ class AppString {
             static const profile_Body = 'Profile[]';
             static const proof_Body = 'Proof[]';
          //Add Cust Form End
+
+         // Update Cust Form Start  _Body
+            static const custDelId_Body = 'CustDelId';
+            static const nomineeId_Body = 'NomineeId';
+            static const profileId_Body = 'ProfileId';
+            static const proofId_Body = 'ProofId';
+            static const phoneId_Body = 'PhoneId';
+            static const eProofId_Body = 'EProofId';
+            static const eProfileId_Body = 'EProfileId';
+         // Update Cust Form End
+
       //Customer
   //Url End
 
   //Error Handilaing
   static const customeraddedsuccessfully = 'Customer added successfully';
+  static const customerremovededsuccessfully = 'Customer removed successfully';
   static const failedtoaddcustomer = 'Failed to add customer';
+  static const failedtoremovecustomer = 'Failed to remove customer';
   static const invalidserverresponseformat = 'Invalid server response format';
 
   //Drawer
@@ -65,17 +78,16 @@ class AppString {
 
   //Buttons
   static const sumit = 'Sumit';
+  static const update = 'Upadte';
   static const delete = 'Delete';
   static const cancel = 'Cancel';
   static const deleteCustomer = 'Delete Customer';
   static const deleteMessage = 'Are you sure you want to delete this customer?';
 
   //Splash
-  static const napoleonHill =
-      "“Strength and growth come only through continuous effort and struggle.”";
+  static const napoleonHill = "“Strength and growth come only through continuous effort and struggle.”";
   static const authorNapoleonHill = "— Napoleon Hill, author";
-  static const andyRooney =
-      "“Everyone wants to live on top of the mountain, but all the happiness and growth occurs while you’re climbing it.”";
+  static const andyRooney = "“Everyone wants to live on top of the mountain, but all the happiness and growth occurs while you’re climbing it.”";
   static const andyRooneyJournalist = "— Andy Rooney, journalist";
   static const williamGeorge = "“Mistakes are the growing pains of wisdom.”";
   static const williamGeorgeJordan = "— William George Jordan";
@@ -97,48 +109,47 @@ class AppString {
   static const totalDueOverGirvi = 'Total Due Over Girvi';
   static const totalPendingProduct = 'Total Pending Product';
   static const totalReturnProduct = 'Total Return Product';
-
-  //Customer
-  static const name = 'Name';
-  static const address = 'Address';
-  static const phone = 'Phone';
-  static const type = 'Type';
-  static const custCode = 'CustCode';
-  static const customerDetail = 'Customer Detail';
-  static const nomineeDetail = 'Nominee Detail';
-  static const gvnAmt = 'Gvn Amt';
-  static const pendingAmt = 'Pending Amt';
-  static const call = 'Call';
-  static const message = 'Message';
-  static const whatsapp = 'Whatsapp';
-  static const customerDetails = 'Customer Details';
-  static const girviDetails = 'Girvi Details';
-  static const transactionDetails = 'Transaction Detail';
-  static const identiyProof = 'Identiy Proof';
-  static const customerProof = ' Customer Identiy Verification Photo';
-  static const identifyProofType = ' Identify Proof Type';
-  static const profilePhotos = 'Profile Photos';
-  static const gender = 'Gender';
-  static const status = 'Status';
-  static const gracePeriod = 'GracePeriod';
-  static const phoneNumbar = 'Phone Numbers';
-  static const customerTypes = 'Customer Types';
-  static const customerRelation = 'Customer Relation';
-  static const customerPhotos = 'Customer Photos';
-  static const uniqueId = 'Unique Id';
-  static const girviDate = 'Girvi Date';
-  static const givenAmt = 'Given Amt';
-  static const balance = 'Balance';
-  static const paidAmt = 'Paid Amt';
-  static const totint = 'Tot int';
-  static const paidint = 'Paid int';
-  static const addCustomerForm = 'Add Customer Form';
-  static const nomineeName = 'Nominee Name';
-  static const nomineePhoneNumber = 'Nominee Phone Number';
-  static const customerName = 'Customer Name';
-  static const male = 'Male';
-  static const female = 'Female';
-  static const gracedDays = 'Grace Days';
-  static const personName = 'Person Name';
-  static const image = 'Image';
+    //Customer
+      static const name = 'Name';
+      static const address = 'Address';
+      static const phone = 'Phone';
+      static const type = 'Type';
+      static const custCode = 'CustCode';
+      static const customerDetail = 'Customer Detail';
+      static const nomineeDetail = 'Nominee Detail';
+      static const gvnAmt = 'Gvn Amt';
+      static const pendingAmt = 'Pending Amt';
+      static const call = 'Call';
+      static const message = 'Message';
+      static const whatsapp = 'Whatsapp';
+      static const customerDetails = 'Customer Details';
+      static const girviDetails = 'Girvi Details';
+      static const transactionDetails = 'Transaction Detail';
+      static const identiyProof = 'Identiy Proof';
+      static const customerProof = ' Customer Identiy Verification Photo';
+      static const identifyProofType = ' Identify Proof Type';
+      static const profilePhotos = 'Profile Photos';
+      static const gender = 'Gender';
+      static const status = 'Status';
+      static const gracePeriod = 'GracePeriod';
+      static const phoneNumbar = 'Phone Numbers';
+      static const customerTypes = 'Customer Types';
+      static const customerRelation = 'Customer Relation';
+      static const customerPhotos = 'Customer Photos';
+      static const uniqueId = 'Unique Id';
+      static const girviDate = 'Girvi Date';
+      static const givenAmt = 'Given Amt';
+      static const balance = 'Balance';
+      static const paidAmt = 'Paid Amt';
+      static const totint = 'Tot int';
+      static const paidint = 'Paid int';
+      static const addCustomerForm = 'Add Customer Form';
+      static const nomineeName = 'Nominee Name';
+      static const nomineePhoneNumber = 'Nominee Phone Number';
+      static const customerName = 'Customer Name';
+      static const male = 'Male';
+      static const female = 'Female';
+      static const gracedDays = 'Grace Days';
+      static const personName = 'Person Name';
+      static const image = 'Image';
 }
