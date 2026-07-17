@@ -55,9 +55,16 @@ class AddcustformServices {
     if (isProfile != null && isProfile.isNotEmpty)
       request.fields[AppString.isProfile_Body] = isProfile;
 
-    // Handle Phone Numbers - Pass exactly as JSON array string: ["9999999999"]
+    // Handle Phone Numbers - Pass as JSON array of objects: [{"Phone": "...", "IsDefault": "1"}]
     if (phones != null && phones.isNotEmpty) {
-      request.fields[AppString.phoneDel_Body] = jsonEncode(phones);
+      List<Map<String, String>> phoneData = [];
+      for (int i = 0; i < phones.length; i++) {
+        phoneData.add({
+          'Phone': phones[i],
+          'IsDefault': i == 0 ? '1' : '0',
+        });
+      }
+      request.fields[AppString.phoneDel_Body] = jsonEncode(phoneData);
     } else if (phoneDel.isNotEmpty) {
       request.fields[AppString.phoneDel_Body] = phoneDel;
     }

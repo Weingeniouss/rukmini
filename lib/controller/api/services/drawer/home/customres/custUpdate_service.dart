@@ -74,10 +74,15 @@ class CustUpdateServices {
       request.fields[AppString.eProofId_Body] = eProofId;
     if (eProfileId != null && eProfileId.isNotEmpty)
       request.fields[AppString.eProfileId_Body] = eProfileId;
-
-    // Handle Phone Numbers - Pass exactly as JSON array string: ["9999999999"]
     if (phones != null && phones.isNotEmpty) {
-      request.fields[AppString.phoneDel_Body] = jsonEncode(phones);
+      List<Map<String, String>> phoneData = [];
+      for (int i = 0; i < phones.length; i++) {
+        phoneData.add({
+          'Phone': phones[i],
+          'IsDefault': i == 0 ? '1' : '0',
+        });
+      }
+      request.fields[AppString.phoneDel_Body] = jsonEncode(phoneData);
     } else if (phoneDel.isNotEmpty) {
       request.fields[AppString.phoneDel_Body] = phoneDel;
     }

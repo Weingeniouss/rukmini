@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use, file_names
 
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,11 +38,19 @@ class UpdateCustForm extends StatelessWidget {
               updateCustUI,
               callSumit: () async {
                 updateCustUI.isLoading.value = true;
+
+                // Show what data is being submitted
+                print('--- Updating Customer Data ---');
+                print('Name: ${updateCustUI.nameController.text}');
+                print('Phones: ${jsonEncode(updateCustUI.getEditPhoneList())}');
+                print('Address: ${updateCustUI.addressController.text}');
+                print('-------------------------------');
+
                 final result = await CallApi.callCustUpdate(
                   custId: updateCustUI.custId,
                   name: updateCustUI.nameController.text,
                   typeDel: updateCustUI.selectedCustType.value,
-                  phoneDel: "", // We'll pass the list instead
+                  phoneDel: "",
                   phones: updateCustUI.getEditPhoneList(),
                   address: updateCustUI.addressController.text,
                   gender: updateCustUI.selectedGender.value,
@@ -108,7 +117,7 @@ Widget customerDetails(UpdateCustFormControllerUI controller) {
                   return Column(
                     children: [
                       inputField(
-                        maxLength: 10,
+                        maxLength: 15,
                         keyboardType: TextInputType.phone,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,

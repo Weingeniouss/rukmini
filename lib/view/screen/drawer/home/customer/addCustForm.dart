@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use, file_names
 
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,10 +42,18 @@ class AddCustForm extends StatelessWidget {
               addCustForomUI,
               callSumit: () async {
                 addCustForomUI.isLoading.value = true;
+                
+                // Show what data is being submitted
+                print('--- Submitting Customer Data ---');
+                print('Name: ${addCustForomUI.nameController.text}');
+                print('Phones: ${jsonEncode(addCustForomUI.getAddPhoneList())}');
+                print('Address: ${addCustForomUI.addressController.text}');
+                print('-------------------------------');
+
                 final result = await CallApi.callAddCustomer(
                   name: addCustForomUI.nameController.text,
                   typeDel: addCustForomUI.selectedCustType.value,
-                  phoneDel: "", // We'll pass the list instead
+                  phoneDel: jsonEncode(addCustForomUI.getAddPhoneList()),
                   phones: addCustForomUI.getAddPhoneList(),
                   address: addCustForomUI.addressController.text,
                   gender: addCustForomUI.selectedGender.value,
@@ -110,7 +119,7 @@ Widget customerDetails(AddCustFormControllerUI controller) {
                   return Column(
                     children: [
                       inputField(
-                        maxLength: 10,
+                        maxLength: 15,
                         keyboardType: TextInputType.phone,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
