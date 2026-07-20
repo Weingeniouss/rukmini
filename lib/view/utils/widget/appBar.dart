@@ -9,10 +9,12 @@ import '../app_Icon.dart';
 AppBar appBar({
   dynamic title,
   bool? searchIcon,
+  bool? filter,
   bool? edit,
   bool? remove,
   bool? back,
   void Function()? searchOnPressed,
+  void Function()? filterOnPressed,
   void Function()? deletOnPressed,
   void Function()? editOnPressed,
   bool? centerTitle,
@@ -59,6 +61,9 @@ AppBar appBar({
     actions: [
       (searchIcon == true)
           ? IconButton(onPressed: searchOnPressed, icon: AppIcon.search)
+          : SizedBox(),
+      (filter == true)
+          ? IconButton(onPressed: filterOnPressed, icon: AppIcon.filter)
           : SizedBox(),
       (edit == true)
           ? IconButton(onPressed: editOnPressed, icon: AppIcon.edit)

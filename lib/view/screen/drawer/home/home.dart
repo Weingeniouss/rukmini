@@ -64,6 +64,7 @@ class _HomeState extends State<Home> {
                 totalValueName(
                   //Value Navigate
                   customerOnTap: () => Get.toNamed('/custList'),
+                  giriviOnTap: () => Get.toNamed('/giriviList'),
 
                   //Value
                   totalCustomer: dataValue.totalCust.toString(),
@@ -99,7 +100,7 @@ Widget loadingWait() {
           varticalSpace(),
           Column(
             children: List.generate(
-              4,
+              6,
               (index) => Padding(
                 padding: EdgeInsets.only(bottom: Get.height * 0.012),
                 child: Row(
@@ -138,6 +139,7 @@ Widget totalValueName({
   required String totalPendingProduct,
   required String totalReturnProduct,
   void Function()? customerOnTap,
+  void Function()? giriviOnTap,
 }) {
   return Column(
     children: [
@@ -154,7 +156,10 @@ Widget totalValueName({
           ),
           horizontalSpace(),
           Expanded(
-            child: totalValue(title: totalGirvi, label: AppString.totalGirvi),
+            child: GestureDetector(
+              onTap: giriviOnTap,
+              child: totalValue(title: totalGirvi, label: AppString.totalGirvi),
+            ),
           ),
         ],
       ),

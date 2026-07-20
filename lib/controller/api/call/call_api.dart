@@ -6,8 +6,12 @@ import 'package:rukmini/elevated/drawer/home/customers/custListElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custRemoveElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custUpdateElevated.dart';
 import 'package:rukmini/elevated/drawer/home/dashboardElevated.dart';
+import 'package:rukmini/elevated/drawer/home/girvi/giriviListElevated.dart';
+import 'package:rukmini/elevated/year/yearListElevated.dart';
 import 'package:rukmini/modal/drawer/home/customer/add_customer_model.dart';
 import 'package:rukmini/modal/drawer/home/customer/update_customer_model.dart';
+import 'package:rukmini/modal/drawer/home/girvi/girvi_list_model.dart';
+import 'package:rukmini/modal/year/year_modal.dart';
 
 class CallApi {
   // Credentials Login
@@ -134,5 +138,31 @@ class CallApi {
             profileImages: profileImages,
             proofImages: proofImages,
           );
+        }
+
+        // Girivi List
+        static Future<GirviListModel?> callGiriviList({
+          bool isRefresh = false,
+          bool isLoadMoreAction = false,
+          String? search,
+          String? filterType,
+          String? yearId,
+          String? formDate,
+          String? toDate,
+        }) async {
+          return await getGiriviList(
+            isRefresh: isRefresh,
+            isLoadMoreAction: isLoadMoreAction,
+            search: search,
+            filterType: filterType,
+            yearId: yearId,
+            formDate: formDate,
+            toDate: toDate,
+          );
+        }
+
+        // Year List
+        static Future<YearModel?> callYearList() async {
+          return await getYearList();
         }
 }

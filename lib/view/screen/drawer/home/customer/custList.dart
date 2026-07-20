@@ -48,7 +48,6 @@ class _CustlistState extends State<Custlist> {
   @override
   void dispose() {
     _scrollController.dispose();
-    _searchController.dispose();
     super.dispose();
   }
 

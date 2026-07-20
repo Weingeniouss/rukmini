@@ -16,10 +16,12 @@ class AppIcon {
   static Icon search = Icon(Icons.search, color: AppColor.fullScreenColor);
   static Icon edit = Icon(Icons.edit, color: AppColor.fullScreenColor);
   static Icon delete = Icon(Icons.delete, color: AppColor.fullScreenColor);
+  static Icon filter = Icon(Icons.filter_alt, color: AppColor.fullScreenColor);
   static Icon back = Icon(Icons.keyboard_arrow_left, color: AppColor.backgroundColor, size: 30);
 
   // Common Icons (IconData)
   static const IconData add = Icons.add;
+  static const IconData girvi = Icons.assignment_outlined;
   static const IconData person = Icons.person;
   static const IconData personPin = Icons.person_pin;
   static const IconData verifiedUser = Icons.verified_user;

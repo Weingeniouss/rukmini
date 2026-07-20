@@ -6,6 +6,9 @@ class AppUrl {
   static const baseAPI = '${baseURL}api/v1/';
   static const apiKey = '0A2CDC5AFCFB7D91432684960959A84D';
 
+  //Year
+  static const yearList = '${baseAPI}years/yearsList';
+
   //Credentials
   static const login = '${baseAPI}user/login';
   static const forgetPassword = '${baseAPI}user/forgotPassword';
@@ -18,4 +21,6 @@ class AppUrl {
         static const custAdd = '${baseAPI}customer/CustAdd';
         static const custRemove = '${baseAPI}customer/CustRemove';
         static const custUpdate = '${baseAPI}customer/CustUpdate';
+     //Girvi
+        static const giriviList = '${baseAPI}girvi_master/GirviList';
 }

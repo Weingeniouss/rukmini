@@ -52,8 +52,20 @@ class AppString {
             static const eProofId_Body = 'EProofId';
             static const eProfileId_Body = 'EProfileId';
          // Update Cust Form End
-
       //Customer
+
+      //Girivi
+           //Girivi List Start
+              static const timezone = 'timezone';
+              static const Search = 'Search';
+              static const page = 'page';
+              static const FilterType = 'FilterType';
+              static const YearId = 'YearId';
+              static const FormDate = 'FormDate';
+              static const ToDate = 'ToDate';
+           //Girivi List End
+      //Girivi
+
   //Url End
 
   //Error Handilaing
@@ -152,4 +164,13 @@ class AppString {
       static const gracedDays = 'Grace Days';
       static const personName = 'Person Name';
       static const image = 'Image';
+    //Givi
+      static const giriviList = 'Girivi List';
+      static const selectYear = 'Select Year';
+      static const allYears = 'All Years';
+      static const closed = 'Closed';
+      static const open = 'Open';
+      static const uiqueId = 'Unique ID';
+      static const givenAmount = 'Given Amount';
+      static const contact = 'Contact';
 }

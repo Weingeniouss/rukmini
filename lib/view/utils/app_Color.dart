@@ -17,4 +17,5 @@ class AppColor {
 
   static const activeColor = Colors.green;
   static const deleteColor = Colors.red;
+  static const boderSideColor = Colors.grey;
 }
