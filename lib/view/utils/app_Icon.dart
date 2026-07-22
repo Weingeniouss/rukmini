@@ -58,6 +58,13 @@ class AppIcon {
   static const IconData contact = Icons.contact_mail_outlined;
   static const IconData logout = Icons.logout;
 
+  static const IconData metal = Icons.layers_outlined;
+  static const IconData productType = Icons.category_outlined;
+  static const IconData weight = Icons.scale_outlined;
+  static const IconData locker = Icons.lock_outlined;
+  static const IconData diamond = Icons.diamond_outlined;
+  static const IconData certificate = Icons.card_membership_outlined;
+
   // Input Icons
   static const IconData visibilityOff = Icons.visibility_off_outlined;
   static const IconData visibilityOn = Icons.visibility_outlined;

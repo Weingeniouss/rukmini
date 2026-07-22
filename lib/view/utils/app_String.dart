@@ -64,6 +64,18 @@ class AppString {
               static const FormDate = 'FormDate';
               static const ToDate = 'ToDate';
            //Girivi List End
+
+           //Girivi Add Start
+              static const custId_body = 'CustId';
+              static const dueDate_body = 'DueDate';
+              static const girviDate_body = 'GirviDate';
+              static const givenMonth_body = 'GivenMonth';
+              static const interest_body = 'Interest';
+              static const givenAmt_body = 'GivenAmt';
+              static const address_body = 'Address';
+              static const productDel_body = 'ProductDel';
+              static const image_body = 'Image_i';
+           //Girivi Add End
       //Girivi
 
   //Url End
@@ -73,6 +85,8 @@ class AppString {
   static const customerremovededsuccessfully = 'Customer removed successfully';
   static const failedtoaddcustomer = 'Failed to add customer';
   static const failedtoremovecustomer = 'Failed to remove customer';
+  static const giriviaddedsuccessfully = 'Girivi added successfully';
+  static const failedtoaddgirivi = 'Failed to add Girivi';
   static const invalidserverresponseformat = 'Invalid server response format';
 
   //Drawer
@@ -164,6 +178,16 @@ class AppString {
       static const gracedDays = 'Grace Days';
       static const personName = 'Person Name';
       static const image = 'Image';
+      static const save = 'Save';
+      static const customerPhoneNumber = 'Customer Phone Number';
+      static const selectDate = 'Select Date';
+      static const durationInMonths = 'Duration(In Months)';
+      static const enterDurationInMonths = 'Enter duration(In months)';
+      static const dueDateLabel = 'Due date';
+      static const interestRate = 'Interest Rate';
+      static const totalAmountGiven = 'Total Amount Given';
+      static const interestAmount = 'Interest Amount';
+      static const totalAmountReceivable = 'Total Amount Receivable';
     //Givi
       static const giriviList = 'Girivi List';
       static const selectYear = 'Select Year';
@@ -173,4 +197,43 @@ class AppString {
       static const uiqueId = 'Unique ID';
       static const givenAmount = 'Given Amount';
       static const contact = 'Contact';
+      static const filterOptions = 'Filter Options';
+      static const all = 'All';
+      static const reset = 'Reset';
+      static const dateRange = 'Date Range';
+      static const fromeDate = 'From Date';
+      static const toDate = 'To Date';
+      static const applyFilter = 'Apply Filter';
+      static const addProduct = 'Add Product';
+      static const category = 'Category';
+      static const selectCategory = 'Select Category';
+      static const metal = 'Metal';
+      static const selectMetal = 'Select Metal';
+      static const productType = 'Product Type';
+      static const selectProductType = 'Select Product Type';
+      static const metalTouch = 'Metal Touch';
+      static const selectMetalTouch = 'Select Metal Touch';
+      static const quantity = 'Quantity';
+      static const enterQuantity = 'Enter quantity';
+      static const weightInGm = 'Weight(in gm)';
+      static const enterWeight = 'Enter Weight';
+      static const todaysRate = 'Today\'s rate';
+      static const originalPriceApprox = 'Orignal Price(Approx)';
+      static const enterApproxOriginalPrice = 'Enter approx orignal price';
+      static const amountGiven = 'Amount Given';
+      static const enterGivenAmount = 'Enter given amount';
+      static const locker = 'Locker';
+      static const selectLocker = 'Select Locker';
+      static const lockerCode = 'Locker Code';
+      static const enterLockerCode = 'Enter Locker code';
+      static const productPhoto = 'Product Photo';
+      static const remark = 'Remark';
+      static const isDiamondAvailable = 'Is Diamond available?';
+      static const diamondDetails = 'Diamond Details';
+      static const diamondPieces = 'Diamond Pieces';
+      static const diamondWeight = 'Diamond Weight';
+      static const certificateNumber = 'Certificate Number';
+      static const diamondPriceApp = 'Diamond Price(App)';
+      static const ok = 'OK';
+      static const selectCustomerName = 'Select Customer Name';
 }

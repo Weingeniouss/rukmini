@@ -9,6 +9,15 @@ class AppUrl {
   //Year
   static const yearList = '${baseAPI}years/yearsList';
 
+  //metal
+  static const metalList = '${baseAPI}metal_touch/metalList';
+
+  //productType
+  static const productTypeList = '${baseAPI}product/ProductTypeList';
+
+  //product
+  static const productList = '${baseAPI}girvi_master/ProductList';
+
   //Credentials
   static const login = '${baseAPI}user/login';
   static const forgetPassword = '${baseAPI}user/forgotPassword';
@@ -23,4 +32,5 @@ class AppUrl {
         static const custUpdate = '${baseAPI}customer/CustUpdate';
      //Girvi
         static const giriviList = '${baseAPI}girvi_master/GirviList';
+        static const girviAdd = '${baseAPI}girvi_master/GirviAdd';
 }

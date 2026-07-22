@@ -3,6 +3,8 @@ import 'package:rukmini/view/screen/drawer/home/customer/addCustForm.dart';
 import 'package:rukmini/view/screen/drawer/home/customer/custDetail.dart';
 import 'package:rukmini/view/screen/drawer/home/customer/custList.dart';
 import 'package:rukmini/view/screen/drawer/home/customer/updateCustForm.dart';
+import 'package:rukmini/view/screen/drawer/home/girvi/addGirivi.dart';
+import 'package:rukmini/view/screen/drawer/home/girvi/addProduct.dart';
 import 'package:rukmini/view/screen/drawer/home/home.dart';
 import '../view/screen/drawer/home/girvi/giriviList.dart';
 import '../view/screen/splash/splash.dart';
@@ -32,5 +34,7 @@ class AppPages {
             GetPage(name: _Paths.updateCustForm, page: () => UpdateCustForm()),
         // Girivi
             GetPage(name: _Paths.giriviList, page: () => GiriviList()),
+            GetPage(name: _Paths.giriviadd, page: () => Addgirivi()),
+            GetPage(name: _Paths.AddProduct, page: () => AddProduct()),
   ];
 }

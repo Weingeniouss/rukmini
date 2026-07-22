@@ -18,6 +18,8 @@ abstract class Routes {
         static const updateCustForm = _Paths.updateCustForm;
       // Girivi
         static const giriviList = _Paths.giriviList;
+        static const giriviadd = _Paths.giriviadd;
+        static const AddProduct = _Paths.AddProduct;
 }
 
 abstract class _Paths {
@@ -38,4 +40,6 @@ abstract class _Paths {
         static const updateCustForm = '/updateCustForm';
      // Girivi
         static const giriviList = '/giriviList';
+        static const giriviadd = '/giriviadd';
+        static const AddProduct = '/AddProduct';
 }

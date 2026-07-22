@@ -12,6 +12,7 @@ import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../utils/app_Icon.dart';
 
@@ -39,14 +40,7 @@ class _GiriviListState extends State<GiriviList> {
           _scrollController.position.maxScrollExtent) {
         if (!giriviListController.isLoadMore.value &&
             giriviListController.hasMoreData.value) {
-          CallApi.callGiriviList(
-            isLoadMoreAction: true,
-            search: giriviListController.searchTextController.text,
-            yearId: giriviListController.selectedYearId.value,
-            filterType: giriviListController.selectedFilterType.value,
-            formDate: giriviListController.fromDateController.text,
-            toDate: giriviListController.toDateController.text,
-          );
+          callApiGirviList(giriviListController);
         }
       }
     });
@@ -85,11 +79,13 @@ class _GiriviListState extends State<GiriviList> {
       isPadding: false,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColor.primaryColor,
-        onPressed: () {},
+        onPressed: () {
+          Get.toNamed('/giriviadd');
+        },
         child: Icon(AppIcon.add, color: AppColor.fullScreenColor),
       ),
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
+        preferredSize: Size.fromHeight(kToolbarHeight),
         child: Obx(
           () => appBar(
             back: true,
@@ -108,27 +104,20 @@ class _GiriviListState extends State<GiriviList> {
       child: Obx(() {
         if (giriviListController.isLoading.value &&
             giriviListController.giriviList.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
+          return _shimmerLoading();
         }
 
         final data = giriviListController.giriviList;
 
         if (data.isEmpty) {
-          return const Center(child: Text('No Data Found'));
+          return Center(child: Text('No Data Found'));
         }
 
         return RefreshIndicator(
           backgroundColor: AppColor.backgroundColor,
           color: AppColor.primaryColor,
           elevation: 2.0,
-          onRefresh: () => CallApi.callGiriviList(
-            isRefresh: true,
-            search: giriviListController.searchTextController.text,
-            yearId: giriviListController.selectedYearId.value,
-            filterType: giriviListController.selectedFilterType.value,
-            formDate: giriviListController.fromDateController.text,
-            toDate: giriviListController.toDateController.text,
-          ),
+          onRefresh: () => callApiGirviList(giriviListController),
           child: Column(
             children: [
               yearListSelector(),
@@ -190,23 +179,7 @@ class _GiriviListState extends State<GiriviList> {
                     }).toList(),
                   ],
                   onChanged: (String? value) {
-                    final api = giriviListController;
-                    if (value != null) {
-                      api.selectedYearId.value = value;
-                      final selected = yearController.yearList.firstWhereOrNull(
-                        (y) => y.yearId == value,
-                      );
-                      api.selectedYearTitle.value =
-                          selected?.title ?? AppString.allYears;
-                      CallApi.callGiriviList(
-                        isRefresh: true,
-                        search: giriviListController.searchTextController.text,
-                        yearId: value,
-                        filterType: api.selectedFilterType.value,
-                        formDate: api.fromDateController.text,
-                        toDate: api.toDateController.text,
-                      );
-                    }
+                    changeYaer(value);
                   },
                 ),
               ),
@@ -215,6 +188,18 @@ class _GiriviListState extends State<GiriviList> {
         ],
       ),
     );
+  }
+
+  void changeYaer(String? value) {
+    final api = giriviListController;
+    if (value != null) {
+      api.selectedYearId.value = value;
+      final selected = yearController.yearList.firstWhereOrNull(
+        (y) => y.yearId == value,
+      );
+      api.selectedYearTitle.value = selected?.title ?? AppString.allYears;
+      callApiGirviList(giriviListController);
+    }
   }
 
   Widget listItem(List<dynamic> data) {
@@ -304,7 +289,7 @@ class _GiriviListState extends State<GiriviList> {
                       padding: EdgeInsets.symmetric(
                         vertical: Get.height * 0.012,
                       ),
-                      child: const Divider(height: 1),
+                      child: Divider(height: 1),
                     ),
                     Row(
                       children: [
@@ -426,10 +411,7 @@ class _GiriviListState extends State<GiriviList> {
             ),
           );
         } else {
-          return Padding(
-            padding: EdgeInsets.symmetric(vertical: Get.height * 0.02),
-            child: const Center(child: CircularProgressIndicator()),
-          );
+          return _paginationShimmer();
         }
       },
     );
@@ -492,7 +474,7 @@ class _GiriviListState extends State<GiriviList> {
       Container(
         height: Get.height * 0.7,
         padding: EdgeInsets.all(Get.width * 0.05),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: AppColor.fullScreenColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(25),
@@ -519,7 +501,7 @@ class _GiriviListState extends State<GiriviList> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Filter Options',
+                    AppString.filterOptions,
                     style: TextStyle(
                       fontSize: Get.width * 0.045,
                       fontWeight: FontWeight.bold,
@@ -528,18 +510,19 @@ class _GiriviListState extends State<GiriviList> {
                   ),
                   TextButton(
                     onPressed: () {
-                      giriviListController.selectedFilterType.value = 'All';
+                      giriviListController.selectedFilterType.value =
+                          AppString.all;
                       giriviListController.fromDateController.clear();
                       giriviListController.toDateController.clear();
                     },
-                    child: const Text('Reset'),
+                    child: Text(AppString.reset),
                   ),
                 ],
               ),
-              const Divider(),
+              Divider(),
               SizedBox(height: Get.height * 0.015),
               Text(
-                'Status',
+                AppString.status,
                 style: TextStyle(
                   fontSize: Get.width * 0.038,
                   fontWeight: FontWeight.w600,
@@ -555,6 +538,7 @@ class _GiriviListState extends State<GiriviList> {
                   ) {
                     bool isSelected =
                         giriviListController.selectedFilterType.value == status;
+
                     return ChoiceChip(
                       label: Text(
                         status,
@@ -564,7 +548,7 @@ class _GiriviListState extends State<GiriviList> {
                         ),
                       ),
                       selected: isSelected,
-                      selectedColor: AppColor.primaryColor,
+                      selectedColor: _getStatusColor(status),
                       backgroundColor: Colors.grey.shade100,
                       onSelected: (selected) {
                         if (selected) {
@@ -578,7 +562,7 @@ class _GiriviListState extends State<GiriviList> {
               ),
               SizedBox(height: Get.height * 0.03),
               Text(
-                'Date Range',
+                AppString.dateRange,
                 style: TextStyle(
                   fontSize: Get.width * 0.038,
                   fontWeight: FontWeight.w600,
@@ -590,14 +574,14 @@ class _GiriviListState extends State<GiriviList> {
                   Expanded(
                     child: _dateTextField(
                       controller: giriviListController.fromDateController,
-                      label: 'From Date',
+                      label: AppString.fromeDate,
                     ),
                   ),
                   SizedBox(width: Get.width * 0.04),
                   Expanded(
                     child: _dateTextField(
                       controller: giriviListController.toDateController,
-                      label: 'To Date',
+                      label: AppString.toDate,
                     ),
                   ),
                 ],
@@ -615,18 +599,11 @@ class _GiriviListState extends State<GiriviList> {
                     elevation: 0,
                   ),
                   onPressed: () {
-                    CallApi.callGiriviList(
-                      isRefresh: true,
-                      search: giriviListController.searchTextController.text,
-                      yearId: giriviListController.selectedYearId.value,
-                      filterType: giriviListController.selectedFilterType.value,
-                      formDate: giriviListController.fromDateController.text,
-                      toDate: giriviListController.toDateController.text,
-                    );
+                    callApiGirviList(giriviListController);
                     Get.back();
                   },
                   child: Text(
-                    'Apply Filter',
+                    AppString.applyFilter,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: Get.width * 0.04,
@@ -649,14 +626,14 @@ class _GiriviListState extends State<GiriviList> {
     return TextField(
       controller: giriviListController.searchTextController,
       autofocus: true,
-      style: const TextStyle(color: Colors.white),
-      cursorColor: Colors.white,
+      style: TextStyle(color: AppColor.fullScreenColor),
+      cursorColor: AppColor.fullScreenColor,
       decoration: InputDecoration(
         hintText: 'Search...',
-        hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+        hintStyle: TextStyle(color: AppColor.fullScreenColor.withOpacity(0.7)),
         border: InputBorder.none,
         suffixIcon: IconButton(
-          icon: const Icon(Icons.close, color: Colors.white),
+          icon: const Icon(Icons.close, color: AppColor.fullScreenColor),
           onPressed: () {
             giriviListController.searchTextController.clear();
             giriviListController.isSearching.value = false;
@@ -700,52 +677,121 @@ class _GiriviListState extends State<GiriviList> {
             hintText: 'YYYY-MM-DD',
             hintStyle: TextStyle(
               fontSize: Get.width * 0.03,
-              color: Colors.grey,
+              color: AppColor.boderSideColor,
             ),
             suffixIcon: const Icon(Icons.calendar_today, size: 18),
             filled: true,
-            fillColor: Colors.grey.shade50,
+            fillColor: AppColor.boderSideColor.shade50,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.grey.shade300),
+              borderSide: BorderSide(color: AppColor.boderSideColor.shade300),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.grey.shade300),
+              borderSide: BorderSide(color: AppColor.boderSideColor.shade300),
             ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 0,
-            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
           ),
-          onTap: () async {
-            DateTime? pickedDate = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime(2000),
-              lastDate: DateTime(2100),
-              builder: (context, child) {
-                return Theme(
-                  data: Theme.of(context).copyWith(
-                    colorScheme: const ColorScheme.light(
-                      primary: AppColor.primaryColor,
-                    ),
-                  ),
-                  child: child!,
-                );
-              },
-            );
-            if (pickedDate != null) {
-              String formattedDate = DateFormat(
-                'yyyy-MM-dd',
-              ).format(pickedDate);
-              controller.text = formattedDate;
-            }
-          },
+          onTap: () => _selectDate(controller),
         ),
       ],
     );
   }
+
+  Future<void> _selectDate(TextEditingController controller) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+      builder: _datePickerTheme,
+    );
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+      controller.text = formattedDate;
+    }
+  }
+
+  Widget _datePickerTheme(BuildContext context, Widget? child) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        colorScheme: const ColorScheme.light(
+          primary: AppColor.primaryColor,
+          onPrimary: Colors.white,
+          onSurface: AppColor.textColor,
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(foregroundColor: AppColor.primaryColor),
+        ),
+      ),
+      child: child!,
+    );
+  }
+
+  Widget _shimmerLoading() {
+    return ListView.builder(
+      itemCount: 6,
+      padding: EdgeInsets.symmetric(
+        horizontal: Get.width * 0.04,
+        vertical: Get.height * 0.01,
+      ),
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+            height: Get.height * 0.25,
+            decoration: BoxDecoration(
+              color: AppColor.textField,
+              borderRadius: BorderRadius.circular(Get.width * 0.035),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _paginationShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        margin: EdgeInsets.symmetric(
+          vertical: Get.height * 0.02,
+          horizontal: Get.width * 0.04,
+        ),
+        height: Get.height * 0.1,
+        decoration: BoxDecoration(
+          color: AppColor.textField,
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'Open':
+        return AppColor.activeColor;
+      case 'Closed':
+        return AppColor.deleteColor;
+      case 'Carry Forward':
+        return Colors.orange;
+      default:
+        return AppColor.primaryColor;
+    }
+  }
 }
 
-// NO TOP LEVEL FUNCTION HERE
+Future<void> callApiGirviList(GiriviListController giriviListController) async {
+  CallApi.callGiriviList(
+    isRefresh: true,
+    search: giriviListController.searchTextController.text,
+    yearId: giriviListController.selectedYearId.value,
+    filterType: giriviListController.selectedFilterType.value,
+    formDate: giriviListController.fromDateController.text,
+    toDate: giriviListController.toDateController.text,
+  );
+  return null;
+}

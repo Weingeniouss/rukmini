@@ -6,11 +6,19 @@ import 'package:rukmini/elevated/drawer/home/customers/custListElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custRemoveElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custUpdateElevated.dart';
 import 'package:rukmini/elevated/drawer/home/dashboardElevated.dart';
+import 'package:rukmini/elevated/drawer/home/girvi/giriviAddElevated.dart';
 import 'package:rukmini/elevated/drawer/home/girvi/giriviListElevated.dart';
+import 'package:rukmini/elevated/metal/metalListElevated.dart' as metal;
+import 'package:rukmini/elevated/product/productListElevated.dart' as product;
+import 'package:rukmini/elevated/product/productTypeElevated.dart' as productType;
 import 'package:rukmini/elevated/year/yearListElevated.dart';
 import 'package:rukmini/modal/drawer/home/customer/add_customer_model.dart';
 import 'package:rukmini/modal/drawer/home/customer/update_customer_model.dart';
+import 'package:rukmini/modal/drawer/home/girvi/girivi_add_model.dart';
 import 'package:rukmini/modal/drawer/home/girvi/girvi_list_model.dart';
+import 'package:rukmini/modal/metal/metalList_Modal.dart';
+import 'package:rukmini/modal/product/productList_Modal.dart';
+import 'package:rukmini/modal/product/productTypeList_Modal.dart';
 import 'package:rukmini/modal/year/year_modal.dart';
 
 class CallApi {
@@ -161,8 +169,54 @@ class CallApi {
           );
         }
 
+        // Add Girivi
+        static Future<GiriviAddModel?> callAddGirivi({
+          String? custId,
+          String? girviDate,
+          String? givenMonth,
+          String? dueDate,
+          String? interest,
+          String? givenAmt,
+          String? address,
+          String? productDel,
+          XFile? image_i,
+        }) async {
+          return await postAddGirivi(
+            custId: custId,
+            girviDate: girviDate,
+            givenMonth: givenMonth,
+            dueDate: dueDate,
+            interest: interest,
+            givenAmt: givenAmt,
+            address: address,
+            productDel: productDel,
+            image_i: image_i,
+          );
+        }
+
         // Year List
         static Future<YearModel?> callYearList() async {
           return await getYearList();
+        }
+
+        // Metal List
+        static Future<MetalListModal?> callMetalList() async {
+          return await metal.getMetalList();
+        }
+
+        // Product Type List
+        static Future<ProductTypeListModal?> callProductTypeList() async {
+          return await productType.getProductTypeList();
+        }
+
+        // Product List
+        static Future<ProductListModal?> callProductList({
+          bool isRefresh = false,
+          String? search,
+        }) async {
+          return await product.getProductList(
+            isRefresh: isRefresh,
+            search: search,
+          );
         }
 }
