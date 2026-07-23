@@ -33,4 +33,5 @@ class AppUrl {
      //Girvi
         static const giriviList = '${baseAPI}girvi_master/GirviList';
         static const girviAdd = '${baseAPI}girvi_master/GirviAdd';
+        static const girviDetail = '${baseAPI}girvi_master/GirviDetail';
 }

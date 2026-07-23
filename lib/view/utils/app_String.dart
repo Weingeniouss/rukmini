@@ -76,6 +76,10 @@ class AppString {
               static const productDel_body = 'ProductDel';
               static const image_body = 'Image_i';
            //Girivi Add End
+
+           //Girivi Detail Start
+              static const girviId_body = 'GirviId';
+           //Girivi Detail End
       //Girivi
 
   //Url End
@@ -236,4 +240,34 @@ class AppString {
       static const diamondPriceApp = 'Diamond Price(App)';
       static const ok = 'OK';
       static const selectCustomerName = 'Select Customer Name';
+      static const noMetalDataFound = 'No Metal Data Found';
+      static const goldContent = 'Gold Content';
+      static const karat = 'Karat';
+      static const girviDetail = 'GIRVI DETAILS';
+      static const productDetail = 'PRODUCT DETAILS';
+      static const transactionDetail = 'TRANSACTION DETAILS';
+      static const girviId = 'Girvi Id';
+      static const totProd = 'Tot Prod';
+      static const girviDt = 'Girvi Dt';
+      static const intRate = 'Int Rate';
+      static const duration = 'Duration';
+      static const month = 'Months';
+      static const dueDate = 'Due Date';
+      static const graceDays = 'Grace Days';
+      static const carryforwrdDt = 'Carryforwrd Dt';
+      static const days = 'Days';
+      static const proTyp = 'Pro Typ';
+      static const relation = 'Relation';
+      static const paidInt = 'Paid Int';
+      static const date = 'date';
+      static const muddal = 'Muddal';
+      static const interest = 'Interest';
+      static const recIntAmt = 'Rec.Int Amt';
+      static const cr = 'Cr/Dr';
+      static const pcs = 'Pcs';
+      static const origPrice = 'Orig Price';
+      static const rate = 'Rate';
+      static const selectCustomer = 'Select Customer';
+      static const nomineeDetails = 'Nominee Details';
+      static const carryforwrdAmt = 'Carryforwrd Amt';
 }

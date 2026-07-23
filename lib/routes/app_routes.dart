@@ -20,6 +20,7 @@ abstract class Routes {
         static const giriviList = _Paths.giriviList;
         static const giriviadd = _Paths.giriviadd;
         static const AddProduct = _Paths.AddProduct;
+        static const giriviDetail = _Paths.giriviDetail;
 }
 
 abstract class _Paths {
@@ -42,4 +43,5 @@ abstract class _Paths {
         static const giriviList = '/giriviList';
         static const giriviadd = '/giriviadd';
         static const AddProduct = '/AddProduct';
+        static const giriviDetail = '/giriviDetail';
 }

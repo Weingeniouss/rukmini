@@ -220,9 +220,7 @@ class _GiriviListState extends State<GiriviList> {
             ),
             margin: EdgeInsets.symmetric(vertical: Get.height * 0.01),
             child: InkWell(
-              onTap: () {
-                // Future Detail Navigation
-              },
+              onTap: () => Get.toNamed('/giriviDetail', arguments: item.girviId),
               borderRadius: BorderRadius.circular(Get.width * 0.035),
               child: Padding(
                 padding: EdgeInsets.all(Get.width * 0.04),

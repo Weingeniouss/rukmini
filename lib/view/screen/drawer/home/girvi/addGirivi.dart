@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -449,14 +451,14 @@ class _AddgiriviState extends State<Addgirivi> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16),
               child: Text(
-                "Select Customer",
+                AppString.selectCustomer,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: 16),
               child: TextField(
                 decoration: InputDecoration(
                   hintText: "Search Customer...",
@@ -503,7 +505,10 @@ class _AddgiriviState extends State<Addgirivi> {
                             customer.phoneList
                                 ?.firstWhereOrNull((p) => p.isDefault == "1")
                                 ?.phone ??
-                            customer.phoneList?.firstOrNull?.phone ??
+                            ((customer.phoneList != null &&
+                                    customer.phoneList!.isNotEmpty)
+                                ? customer.phoneList!.first.phone
+                                : '') ??
                             '';
                         addGiriviUI.address.value = customer.address ?? '';
                         Get.back();

@@ -327,7 +327,7 @@ class _AddProductState extends State<AddProduct> {
         Obx(
           () => ListView.builder(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: addProductUI.productImages.length,
             itemBuilder: (context, index) {
               return horizontalPadding(
@@ -494,12 +494,12 @@ class _AddProductState extends State<AddProduct> {
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(
-                color: Colors.grey.shade400,
+                color: AppColor.boderSideColor.shade400,
                 fontSize: Get.width * 0.035,
               ),
               isDense: true,
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey.shade300),
+                borderSide: BorderSide(color: AppColor.boderSideColor.shade300),
               ),
             ),
           ),
@@ -551,7 +551,7 @@ class _AddProductState extends State<AddProduct> {
       Container(
         height: Get.height * 0.7,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColor.boderSideColor,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
@@ -573,15 +573,17 @@ class _AddProductState extends State<AddProduct> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (metalController.metalList.isEmpty) {
-                  return const Center(child: Text("No Metal Data Found"));
+                  return const Center(child: Text(AppString.noMetalDataFound));
                 }
                 return ListView.builder(
                   itemCount: metalController.metalList.length,
                   itemBuilder: (context, index) {
                     final metal = metalController.metalList[index];
                     return ListTile(
-                      title: Text("${metal.karat} Karat"),
-                      subtitle: Text("Gold Content: ${metal.goldContent}%"),
+                      title: Text("${metal.karat} ${AppString.karat}"),
+                      subtitle: Text(
+                        "${AppString.goldContent}: ${metal.goldContent}%",
+                      ),
                       onTap: () {
                         addProductUI.selectedMetalTouch.value =
                             "${metal.karat}K";
@@ -660,7 +662,7 @@ class _AddProductState extends State<AddProduct> {
       Container(
         height: Get.height * 0.4,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColor.fullScreenColor,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
@@ -730,7 +732,7 @@ class _AddProductState extends State<AddProduct> {
       Container(
         height: Get.height * 0.8,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColor.fullScreenColor,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(

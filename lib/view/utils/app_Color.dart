@@ -18,4 +18,6 @@ class AppColor {
   static const activeColor = Colors.green;
   static const deleteColor = Colors.red;
   static const boderSideColor = Colors.grey;
+  static const errorColor = Colors.red;
+  static final lightBlue = Colors.blue.shade50;
 }
