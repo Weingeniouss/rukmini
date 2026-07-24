@@ -9,6 +9,8 @@ import 'package:rukmini/elevated/drawer/home/dashboardElevated.dart';
 import 'package:rukmini/elevated/drawer/home/girvi/giriviAddElevated.dart';
 import 'package:rukmini/elevated/drawer/home/girvi/giriviDetailElevated.dart';
 import 'package:rukmini/elevated/drawer/home/girvi/giriviListElevated.dart';
+import 'package:rukmini/elevated/drawer/home/girvi/remove_girvie_elevated.dart';
+import 'package:rukmini/elevated/drawer/home/girvi/close_girvie_elevated.dart';
 import 'package:rukmini/elevated/metal/metalListElevated.dart' as metal;
 import 'package:rukmini/elevated/product/productListElevated.dart' as product;
 import 'package:rukmini/elevated/product/productTypeElevated.dart' as productType;
@@ -18,6 +20,8 @@ import 'package:rukmini/modal/drawer/home/customer/update_customer_model.dart';
 import 'package:rukmini/modal/drawer/home/girvi/girivi_add_model.dart';
 import 'package:rukmini/modal/drawer/home/girvi/girvi_detail_modal.dart';
 import 'package:rukmini/modal/drawer/home/girvi/girvi_list_model.dart';
+import 'package:rukmini/modal/drawer/home/girvi/remove_girvie_model.dart';
+import 'package:rukmini/modal/drawer/home/girvi/close_girvie_model.dart';
 import 'package:rukmini/modal/metal/metalList_Modal.dart';
 import 'package:rukmini/modal/product/productList_Modal.dart';
 import 'package:rukmini/modal/product/productTypeList_Modal.dart';
@@ -202,6 +206,20 @@ class CallApi {
             productDel: productDel,
             image_i: image_i,
           );
+        }
+
+        // Remove Girvie
+        static Future<RemoveGirvie?> callRemoveGirvie({
+          required String girviId,
+        }) async {
+          return await postRemoveGirvie(girviId: girviId);
+        }
+
+        // Close Girvie
+        static Future<CloseGirvie?> callCloseGirvie({
+          required String girviId,
+        }) async {
+          return await postCloseGirvie(girviId: girviId);
         }
 
         // Year List

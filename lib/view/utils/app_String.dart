@@ -90,7 +90,11 @@ class AppString {
   static const failedtoaddcustomer = 'Failed to add customer';
   static const failedtoremovecustomer = 'Failed to remove customer';
   static const giriviaddedsuccessfully = 'Girivi added successfully';
+  static const giriviremovedsuccessfully = 'Girvi master details removed successfully';
+  static const giriviclosedsuccessfully = 'Girvi master details closed successfully';
   static const failedtoaddgirivi = 'Failed to add Girivi';
+  static const failedtoremovegirvi = 'Failed to remove Girivi';
+  static const failedtoclosegirvi = 'Failed to close Girivi';
   static const invalidserverresponseformat = 'Invalid server response format';
 
   //Drawer

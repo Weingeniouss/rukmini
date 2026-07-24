@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/girvi/giriviDetail_Controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
@@ -38,43 +39,54 @@ class _GiriviDetailState extends State<GiriviDetail> {
       length: 4,
       child: Fullscreen(
         isPadding: false,
-        appBar: appBar(
-          title: Row(
-            children: [
-              Text(
-                AppString.girviDetail,
-                style: TextStyle(
-                  color: AppColor.fullScreenColor,
-                  fontSize: Get.width * 0.045,
-                ),
-              ),
-              Obx(() {
-                final data = giriviDetailController.giriviDetailData.value.data;
-                bool isOpen = data?.isClosed != "1";
-                return Text(
-                  isOpen
-                      ? ' ( ${AppString.open} )'
-                      : ' ( ${AppString.closed} )',
-                  style: TextStyle(
-                    color: isOpen ? AppColor.activeColor : AppColor.errorColor,
-                    fontSize: Get.width * 0.035,
-                    fontWeight: FontWeight.w500,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Obx(() {
+            final data = giriviDetailController.giriviDetailData.value.data;
+            bool isOpen = data?.isClosed != "1";
+            return appBar(
+              title: Row(
+                children: [
+                  Text(
+                    AppString.girviDetail,
+                    style: TextStyle(
+                      color: AppColor.fullScreenColor,
+                      fontSize: Get.width * 0.045,
+                    ),
                   ),
-                );
-              }),
-            ],
-          ),
-          back: true,
-          edit: true,
-          remove: true,
-          editOnPressed: () {
-            Get.toNamed('/giriviadd');
-          },
-          deletOnPressed: () {},
+                  Text(
+                    isOpen
+                        ? ' ( ${AppString.open} )'
+                        : ' ( ${AppString.closed} )',
+                    style: TextStyle(
+                      color: isOpen
+                          ? AppColor.activeColor
+                          : AppColor.errorColor,
+                      fontSize: Get.width * 0.035,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+              back: true,
+              edit: isOpen,
+              remove: isOpen,
+              close: isOpen,
+              editOnPressed: () {
+                Get.toNamed('/giriviadd');
+              },
+              deletOnPressed: () {
+                CallApi.callRemoveGirvie(girviId: girviId);
+              },
+              closeOnPressed: () {
+                CallApi.callCloseGirvie(girviId: girviId);
+              },
+            );
+          }),
         ),
         child: Obx(() {
           if (giriviDetailController.isLoading.value) {
-            return Center(child: CircularProgressIndicator());
+            return _shimmerLoading();
           }
 
           final data = giriviDetailController.giriviDetailData.value.data;
@@ -509,6 +521,90 @@ class _GiriviDetailState extends State<GiriviDetail> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _shimmerLoading() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(Get.width * 0.04),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: Get.width * 0.3,
+                  height: 20,
+                  color: AppColor.textField,
+                ),
+                Container(
+                  width: Get.width * 0.3,
+                  height: 20,
+                  color: AppColor.textField,
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: List.generate(
+                3,
+                (index) => Column(
+                  children: [
+                    CircleAvatar(radius: Get.width * 0.06),
+                    SizedBox(height: 5),
+                    Container(width: 40, height: 10, color: AppColor.textField),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
+            child: Row(
+              children: List.generate(
+                4,
+                (index) => Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(right: 10),
+                    height: 30,
+                    color: AppColor.textField,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              padding: EdgeInsets.all(Get.width * 0.04),
+              itemCount: 12,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 24,
+                        height: 24,
+                        color: AppColor.textField,
+                      ),
+                      SizedBox(width: 15),
+                      Expanded(
+                        child: Container(height: 15, color: AppColor.textField),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
