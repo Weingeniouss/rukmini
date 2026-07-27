@@ -121,6 +121,7 @@ class AppString {
   static const update = 'Upadte';
   static const delete = 'Delete';
   static const cancel = 'Cancel';
+  static const clear = 'Clear';
   static const deleteCustomer = 'Delete Customer';
   static const deleteMessage = 'Are you sure you want to delete this customer?';
 
@@ -284,4 +285,6 @@ class AppString {
       static const totAmtGvn = 'Tot Amt Gvn';
       static const gvnDt = 'Gvn Dt';
       static const dueDt = 'Due Dt';
+      static const duedateover = 'Due date over';
+      static const oneyearup = 'One year up';
 }

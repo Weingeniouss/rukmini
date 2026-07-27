@@ -150,7 +150,7 @@ class _DueGirviState extends State<DueGirvi> {
         children: [
           _buildLegendItem(
             AppColor.yellow,
-            "Due date over",
+            AppString.duedateover,
             onTap: () {
               pendingTransactionController.currentFilter.value = '1';
               CallApi.callPendingTransaction(
@@ -159,10 +159,10 @@ class _DueGirviState extends State<DueGirvi> {
               );
             },
           ),
-          const SizedBox(width: 16),
+           SizedBox(width: Get.width * 0.05),
           _buildLegendItem(
             AppColor.orange,
-            "One year up",
+            AppString.oneyearup,
             onTap: () {
               pendingTransactionController.currentFilter.value = '2';
               CallApi.callPendingTransaction(
@@ -171,7 +171,7 @@ class _DueGirviState extends State<DueGirvi> {
               );
             },
           ),
-          const Spacer(),
+          Spacer(),
           GestureDetector(
             onTap: () {
               pendingTransactionController.currentFilter.value = null;
@@ -181,12 +181,12 @@ class _DueGirviState extends State<DueGirvi> {
                 isFilterer: pendingTransactionController.currentFilter.value,
               );
             },
-            child: const Text(
-              "Clear",
+            child: Text(
+              AppString.clear,
               style: TextStyle(
                 color: AppColor.activeColor,
                 fontWeight: FontWeight.w500,
-                fontSize: 14,
+                fontSize: Get.width * 0.038,
               ),
             ),
           ),
@@ -201,8 +201,8 @@ class _DueGirviState extends State<DueGirvi> {
       child: Row(
         children: [
           Container(
-            width: 14,
-            height: 14,
+            width: Get.width * 0.035,
+            height: Get.width * 0.035,
             decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.circular(2),
@@ -211,7 +211,10 @@ class _DueGirviState extends State<DueGirvi> {
           const SizedBox(width: 8),
           Text(
             label,
-            style: const TextStyle(fontSize: 13, color: Colors.black87),
+            style: TextStyle(
+              fontSize: Get.width * 0.035,
+              color: AppColor.dark.withOpacity(0.8),
+            ),
           ),
         ],
       ),
@@ -241,19 +244,19 @@ class _DueGirviState extends State<DueGirvi> {
               Expanded(
                 child: Text(
                   data.custName ?? "null",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                    color: Colors.black87,
+                    fontSize: Get.width * 0.041,
+                    color: AppColor.dark.withOpacity(0.8),
                   ),
                 ),
               ),
               Text(
                 data.uniqueId ?? "",
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColor.activeColor,
                   fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                  fontSize: Get.width * 0.038,
                 ),
               ),
             ],
@@ -290,13 +293,13 @@ class _DueGirviState extends State<DueGirvi> {
       text: TextSpan(
         style: TextStyle(
           color: AppColor.dark,
-          fontSize: 13,
+          fontSize: Get.width * 0.035,
           fontFamily: 'Poppins',
         ),
         children: [
           TextSpan(
             text: "$label : ",
-            style: TextStyle(fontWeight: FontWeight.w600),
+            style: const TextStyle(fontWeight: FontWeight.w600),
           ),
           TextSpan(text: value),
         ],
