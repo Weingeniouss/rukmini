@@ -61,8 +61,8 @@ class _DueGirviState extends State<DueGirvi> {
           title: pendingTransactionController.isSearching.value
               ? _buildNameSearchField()
               : pendingTransactionController.isLocalitySearching.value
-                  ? _buildLocalitySearchField()
-                  : AppString.pendingTransaction,
+              ? _buildLocalitySearchField()
+              : AppString.pendingTransaction,
           searchIcon: !pendingTransactionController.isLocalitySearching.value,
           // filter: !pendingTransactionController.isSearching.value,
           // filterOnPressed: () {
@@ -117,7 +117,7 @@ class _DueGirviState extends State<DueGirvi> {
                 pendingTransactionController.pendingTransactionList.length +
                 (pendingTransactionController.isLoadMore.value ? 1 : 0),
             separatorBuilder: (context, index) =>
-                const Divider(height: 1, color: Colors.grey),
+                const Divider(height: 1, color: AppColor.boderSideColor),
             itemBuilder: (context, index) {
               if (index <
                   pendingTransactionController.pendingTransactionList.length) {
@@ -141,13 +141,15 @@ class _DueGirviState extends State<DueGirvi> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
+        color: AppColor.fullScreenColor,
+        border: Border(
+          bottom: BorderSide(color: AppColor.boderSideColor.shade300),
+        ),
       ),
       child: Row(
         children: [
           _buildLegendItem(
-            const Color(0xFFFFD700),
+            AppColor.yellow,
             "Due date over",
             onTap: () {
               pendingTransactionController.currentFilter.value = '1';
@@ -159,7 +161,7 @@ class _DueGirviState extends State<DueGirvi> {
           ),
           const SizedBox(width: 16),
           _buildLegendItem(
-            const Color(0xFFFF8C00),
+            AppColor.orange,
             "One year up",
             onTap: () {
               pendingTransactionController.currentFilter.value = '2';
@@ -182,7 +184,7 @@ class _DueGirviState extends State<DueGirvi> {
             child: const Text(
               "Clear",
               style: TextStyle(
-                color: Color(0xFF2E7D32),
+                color: AppColor.activeColor,
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
               ),
@@ -217,18 +219,17 @@ class _DueGirviState extends State<DueGirvi> {
   }
 
   Widget _buildCard(var data) {
-    // Indicator color based on the selected filter or default
-    Color indicatorColor = const Color(0xFFFF8C00); // Default Orange
+    Color indicatorColor = AppColor.orange;
     if (pendingTransactionController.currentFilter.value == '1') {
-      indicatorColor = const Color(0xFFFFD700); // Yellow for Due date over
+      indicatorColor = AppColor.yellow;
     } else if (pendingTransactionController.currentFilter.value == '2') {
-      indicatorColor = const Color(0xFFFF8C00); // Orange for One year up
+      indicatorColor = AppColor.oneYearup;
     }
 
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF2E1),
+        color: AppColor.whiteOrang,
         border: Border(left: BorderSide(color: indicatorColor, width: 5)),
       ),
       child: Column(
@@ -250,7 +251,7 @@ class _DueGirviState extends State<DueGirvi> {
               Text(
                 data.uniqueId ?? "",
                 style: const TextStyle(
-                  color: Color(0xFF4CAF50),
+                  color: AppColor.activeColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
                 ),
@@ -261,16 +262,22 @@ class _DueGirviState extends State<DueGirvi> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildDetailItem("Gvn Dt", data.girviDate ?? "01 JAN 1970"),
-              _buildDetailItem("Due Dt", data.dueDate ?? "22 JUL 2026"),
+              _buildDetailItem(
+                AppString.gvnDt,
+                data.girviDate ?? "01 JAN 1970",
+              ),
+              _buildDetailItem(AppString.dueDt, data.dueDate ?? "22 JUL 2026"),
             ],
           ),
           const SizedBox(height: 6),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildDetailItem("Tot Amt Gvn", data.givenAmt ?? "0.00"),
-              _buildDetailItem("Balance", data.balance?.toString() ?? "0"),
+              _buildDetailItem(AppString.totAmtGvn, data.givenAmt ?? "0.00"),
+              _buildDetailItem(
+                AppString.balance,
+                data.balance?.toString() ?? "0",
+              ),
             ],
           ),
         ],
@@ -281,15 +288,15 @@ class _DueGirviState extends State<DueGirvi> {
   Widget _buildDetailItem(String label, String value) {
     return RichText(
       text: TextSpan(
-        style: const TextStyle(
-          color: Colors.black87,
+        style: TextStyle(
+          color: AppColor.dark,
           fontSize: 13,
           fontFamily: 'Poppins',
         ),
         children: [
           TextSpan(
             text: "$label : ",
-            style: const TextStyle(fontWeight: FontWeight.w600),
+            style: TextStyle(fontWeight: FontWeight.w600),
           ),
           TextSpan(text: value),
         ],
@@ -299,15 +306,15 @@ class _DueGirviState extends State<DueGirvi> {
 
   Widget _buildShimmerLoading() {
     return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
+      baseColor: AppColor.baseColor!,
+      highlightColor: AppColor.highlightColor!,
       child: ListView.builder(
         itemCount: 8,
         itemBuilder: (context, index) {
           return Container(
             height: 100,
             margin: const EdgeInsets.symmetric(vertical: 2),
-            color: Colors.white,
+            color: AppColor.fullScreenColor,
           );
         },
       ),
@@ -320,9 +327,9 @@ class _DueGirviState extends State<DueGirvi> {
       autofocus: true,
       style: const TextStyle(color: AppColor.fullScreenColor),
       cursorColor: AppColor.fullScreenColor,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         hintText: 'Search Name...',
-        hintStyle: TextStyle(color: Colors.white70),
+        hintStyle: TextStyle(color: AppColor.otherWhite),
         border: InputBorder.none,
       ),
       onChanged: (value) {
@@ -342,9 +349,9 @@ class _DueGirviState extends State<DueGirvi> {
       autofocus: true,
       style: const TextStyle(color: AppColor.fullScreenColor),
       cursorColor: AppColor.fullScreenColor,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         hintText: 'Search Locality...',
-        hintStyle: TextStyle(color: Colors.white70),
+        hintStyle: TextStyle(color: AppColor.otherWhite),
         border: InputBorder.none,
       ),
       onChanged: (value) {

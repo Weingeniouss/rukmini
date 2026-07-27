@@ -280,4 +280,8 @@ class AppString {
       static const selectCustomer = 'Select Customer';
       static const nomineeDetails = 'Nominee Details';
       static const carryforwrdAmt = 'Carryforwrd Amt';
+    //Pending Transaction
+      static const totAmtGvn = 'Tot Amt Gvn';
+      static const gvnDt = 'Gvn Dt';
+      static const dueDt = 'Due Dt';
 }
