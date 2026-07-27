@@ -287,4 +287,15 @@ class AppString {
       static const dueDt = 'Due Dt';
       static const duedateover = 'Due date over';
       static const oneyearup = 'One year up';
+  //Home
+
+  //All Mastaer
+     //All Mastaer
+      static const allMasters = 'All Masters';
+      static const metalMaster = 'Metal Master';
+      static const productCategoryMaster = 'Product Category Master';
+      static const customerTypeMaster = 'Customer Type Master';
+      static const lockerCodeMaster = 'Locker Code Master';
+      static const metalTouchMaster = 'Metal Touch';
+      static const yearMaster = 'Year Master';
 }

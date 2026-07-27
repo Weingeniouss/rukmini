@@ -9,6 +9,7 @@ import 'package:rukmini/view/screen/drawer/home/girvi/addProduct.dart';
 import 'package:rukmini/view/screen/drawer/home/girvi/giriviDetail.dart';
 import 'package:rukmini/view/screen/drawer/home/home.dart';
 import 'package:rukmini/view/screen/drawer/home/pendingProduct/productDetail.dart';
+import 'package:rukmini/view/screen/drawer/allMaster/allMaster.dart';
 import '../view/screen/drawer/home/girvi/giriviList.dart';
 import '../view/screen/splash/splash.dart';
 import '../view/screen/credentials/login.dart';
@@ -28,6 +29,7 @@ class AppPages {
           GetPage(name: _Paths.login, page: () => Login()),
 
     //Drawer
+      GetPage(name: _Paths.allMaster, page: () => AllMaster()),
       // Home
         // Customer
             GetPage(name: _Paths.home, page: () => Home()),

@@ -71,14 +71,17 @@ Widget homeDrawer() {
                   icon: AppIcon.home,
                   onTap: () {
                     navDrawerController.changeIndex(0);
-                    Get.back();
+                    Get.toNamed('/home');
                   },
                 ),
                 listTital(
                   index: 1,
                   title: AppString.allMaster,
                   icon: AppIcon.settings,
-                  onTap: () => navDrawerController.changeIndex(1),
+                  onTap: () {
+                    navDrawerController.changeIndex(1);
+                    Get.toNamed('/allMaster');
+                  },
                 ),
                 listTital(
                   index: 2,
@@ -93,7 +96,10 @@ Widget homeDrawer() {
                   index: 3,
                   title: AppString.girvi,
                   icon: AppIcon.bank,
-                  onTap: () => navDrawerController.changeIndex(3),
+                  onTap: () {
+                    navDrawerController.changeIndex(3);
+                    Get.toNamed('/giriviList');
+                  },
                 ),
                 listTital(
                   index: 4,
@@ -111,7 +117,10 @@ Widget homeDrawer() {
                   index: 6,
                   title: AppString.pendingTransaction,
                   icon: AppIcon.pending,
-                  onTap: () => navDrawerController.changeIndex(6),
+                  onTap: () {
+                    navDrawerController.changeIndex(6);
+                    Get.toNamed('/dueGirvi');
+                  },
                 ),
                 listTital(
                   index: 7,

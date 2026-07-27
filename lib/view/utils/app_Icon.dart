@@ -72,4 +72,9 @@ class AppIcon {
   // Input Icons
   static const IconData visibilityOff = Icons.visibility_off_outlined;
   static const IconData visibilityOn = Icons.visibility_outlined;
+
+  // Master Icons
+  static const IconData security = Icons.security_outlined;
+  static const IconData balance = Icons.balance_outlined;
+  static const IconData rightArrow = Icons.chevron_right;
 }

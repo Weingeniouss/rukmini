@@ -9,6 +9,7 @@ abstract class Routes {
       static const login = _Paths.login;
 
   //Drawer
+    static const allMaster = _Paths.allMaster;
     // Home
       // Customer
         static const home = _Paths.home;
@@ -45,6 +46,7 @@ abstract class _Paths {
      static const login = '/login';
 
   //Drawer
+  static const allMaster = '/allMaster';
     // Home
       // Customer
         static const home = '/home';
