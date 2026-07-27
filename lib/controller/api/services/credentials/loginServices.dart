@@ -14,19 +14,23 @@ class LoginServices {
   final apiKey = AppUrl.apiKey;
 
   Future<http.Response> loginApi() async {
+    final headers = {
+      AppString.apiKey: apiKey,
+    };
+
     final body = {
       AppString.emailBody: loginUI.emailController.text,
       AppString.passwordBody: loginUI.passwordController.text,
-      AppString.apiKey: apiKey,
     };
 
     if (kDebugMode) {
       print('--- Login API Request ---');
       print('URL: $url');
+      print('Headers: $headers');
       print('body: $body');
       print('--- Login API Request ---');
     }
 
-    return await http.post(login, body: body);
+    return await http.post(login, headers: headers, body: body);
   }
 }

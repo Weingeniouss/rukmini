@@ -19,10 +19,17 @@ class LoginControllerAPI extends GetxController {
       isLoading.value = true;
       final http.Response response = await _loginServices.loginApi();
       if (kDebugMode) {
-        print('Login Response: ${response.body}');
+        print('--- Login Response ---');
+        print('Status Code: ${response.statusCode}');
+        print('Body: ${response.body}');
+        print('--- Login Response ---');
       }
       if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
+        String body = response.body;
+        if (body.contains('{') && body.contains('}')) {
+          body = body.substring(body.indexOf('{'), body.lastIndexOf('}') + 1);
+        }
+        final decoded = jsonDecode(body);
         if (decoded is Map<String, dynamic>) {
           loginData.value = LoginModel.fromJson(decoded);
         }

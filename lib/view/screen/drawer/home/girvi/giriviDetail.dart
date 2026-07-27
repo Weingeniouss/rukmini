@@ -46,6 +46,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
             bool isOpen = data?.isClosed != "1";
             return appBar(
               title: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     AppString.girviDetail,
@@ -68,9 +69,10 @@ class _GiriviDetailState extends State<GiriviDetail> {
                   ),
                 ],
               ),
+              centerTitle: !isOpen,
               back: true,
               edit: isOpen,
-              remove: isOpen,
+              remove: true,
               close: isOpen,
               editOnPressed: () {
                 Get.toNamed('/giriviadd');
@@ -526,8 +528,8 @@ class _GiriviDetailState extends State<GiriviDetail> {
 
   Widget _shimmerLoading() {
     return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
+      baseColor: AppColor.boderSideColor[300]!,
+      highlightColor: AppColor.boderSideColor[100]!,
       child: Column(
         children: [
           Padding(

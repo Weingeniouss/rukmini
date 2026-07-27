@@ -21,6 +21,19 @@ abstract class Routes {
         static const giriviadd = _Paths.giriviadd;
         static const AddProduct = _Paths.AddProduct;
         static const giriviDetail = _Paths.giriviDetail;
+      // Pending Product
+        static const pendingProduct = _Paths.pendingProduct;
+      // Return Product
+        static const returnProduct = _Paths.returnProduct;
+      // Karkit Product
+        static const karkitProduct = _Paths.karkitProduct;
+      // Sold Product
+        static const soldProduct = _Paths.soldProduct;
+      // Due Girvi
+        static const dueGirvi = _Paths.dueGirvi;
+      // Due Over Girvi
+        static const dueOverGirvi = _Paths.dueOverGirvi;
+    // Home
 }
 
 abstract class _Paths {
@@ -44,4 +57,17 @@ abstract class _Paths {
         static const giriviadd = '/giriviadd';
         static const AddProduct = '/AddProduct';
         static const giriviDetail = '/giriviDetail';
+     // Pending Product
+        static const pendingProduct = '/pendingProduct';
+     // Return Product
+        static const returnProduct = '/returnProduct';
+     // Karkit Product
+        static const karkitProduct = '/karkitProduct';
+     // Sold Product
+        static const soldProduct = '/soldProduct';
+     // Due Girvi
+        static const dueGirvi = '/dueGirvi';
+     // Due Over Girvi
+        static const dueOverGirvi = '/dueOverGirvi';
+    // Home
 }

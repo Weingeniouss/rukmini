@@ -21,6 +21,7 @@ class ProductController extends GetxController {
   Future<http.Response?> getProductList({
     bool isRefresh = false,
     String? searchQuery,
+    String? filterType,
   }) async {
     try {
       if (isRefresh) {
@@ -39,6 +40,7 @@ class ProductController extends GetxController {
       final http.Response response = await _productListServices.productListApi(
         page: currentPage.toString(),
         search: searchQuery ?? search.value,
+        filterType: filterType,
       );
 
       if (kDebugMode) {

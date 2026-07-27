@@ -20,4 +20,5 @@ class AppColor {
   static const boderSideColor = Colors.grey;
   static const errorColor = Colors.red;
   static final lightBlue = Colors.blue.shade50;
+  static final dark = Colors.black;
 }

@@ -63,8 +63,30 @@ class _HomeState extends State<Home> {
                 varticalSpace(),
                 totalValueName(
                   //Value Navigate
-                  customerOnTap: () => Get.toNamed('/custList'),
-                  giriviOnTap: () => Get.toNamed('/giriviList'),
+                  customerOnTap: () {
+                    Get.toNamed('/custList');
+                  },
+                  giriviOnTap: () {
+                    Get.toNamed('/giriviList');
+                  },
+                  pendingProductOnTap: () {
+                    Get.toNamed('/pendingProduct', arguments: 0);
+                  },
+                  returnProductOnTap: () {
+                    Get.toNamed('/pendingProduct', arguments: 1);
+                  },
+                  totalSoldOnTap: () {
+                    Get.toNamed('/pendingProduct', arguments: 2);
+                  },
+                  totalKarkitOnTap: () {
+                    Get.toNamed('/pendingProduct', arguments: 3);
+                  },
+                  totalDueGirviOnTap: () {
+                    Get.toNamed('/dueGirvi');
+                  },
+                  totalDueOverGirviOnTap: () {
+                    Get.toNamed('/dueOverGirvi');
+                  },
 
                   //Value
                   totalCustomer: dataValue.totalCust.toString(),
@@ -140,6 +162,12 @@ Widget totalValueName({
   required String totalReturnProduct,
   void Function()? customerOnTap,
   void Function()? giriviOnTap,
+  void Function()? pendingProductOnTap,
+  void Function()? returnProductOnTap,
+  void Function()? totalKarkitOnTap,
+  void Function()? totalSoldOnTap,
+  void Function()? totalDueGirviOnTap,
+  void Function()? totalDueOverGirviOnTap,
 }) {
   return Column(
     children: [
@@ -167,16 +195,22 @@ Widget totalValueName({
       Row(
         children: [
           Expanded(
-            child: totalValue(
-              title: totalPendingProduct,
-              label: AppString.totalPendingProduct,
+            child: GestureDetector(
+              onTap: pendingProductOnTap,
+              child: totalValue(
+                title: totalPendingProduct,
+                label: AppString.totalPendingProduct,
+              ),
             ),
           ),
           horizontalSpace(),
           Expanded(
-            child: totalValue(
-              title: totalReturnProduct,
-              label: AppString.totalReturnProduct,
+            child: GestureDetector(
+              onTap: returnProductOnTap,
+              child: totalValue(
+                title: totalReturnProduct,
+                label: AppString.totalReturnProduct,
+              ),
             ),
           ),
         ],
@@ -185,11 +219,20 @@ Widget totalValueName({
       Row(
         children: [
           Expanded(
-            child: totalValue(title: totalKarkit, label: AppString.totalKarkit),
+            child: GestureDetector(
+              onTap: totalKarkitOnTap,
+              child: totalValue(
+                title: totalKarkit,
+                label: AppString.totalKarkit,
+              ),
+            ),
           ),
           horizontalSpace(),
           Expanded(
-            child: totalValue(title: totalSold, label: AppString.totalSold),
+            child: GestureDetector(
+              onTap: totalSoldOnTap,
+              child: totalValue(title: totalSold, label: AppString.totalSold),
+            ),
           ),
         ],
       ),
@@ -197,16 +240,22 @@ Widget totalValueName({
       Row(
         children: [
           Expanded(
-            child: totalValue(
-              title: totalDueGirvi,
-              label: AppString.totalDueGirvi,
+            child: GestureDetector(
+              onTap: totalDueGirviOnTap,
+              child: totalValue(
+                title: totalDueGirvi,
+                label: AppString.totalDueGirvi,
+              ),
             ),
           ),
           horizontalSpace(),
           Expanded(
-            child: totalValue(
-              title: totalDueOverGirvi,
-              label: AppString.totalDueOverGirvi,
+            child: GestureDetector(
+              onTap: totalDueOverGirviOnTap,
+              child: totalValue(
+                title: totalDueOverGirvi,
+                label: AppString.totalDueOverGirvi,
+              ),
             ),
           ),
         ],

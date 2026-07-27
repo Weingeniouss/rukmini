@@ -10,11 +10,13 @@ import '../../view/utils/widget/pop.dart';
 Future<ProductListModal?> getProductList({
   bool isRefresh = false,
   String? search,
+  String? filterType,
 }) async {
   final ProductController productController = Get.put(ProductController());
   final http.Response? response = await productController.getProductList(
     isRefresh: isRefresh,
     searchQuery: search,
+    filterType: filterType,
   );
 
   if (response != null) {
@@ -34,7 +36,8 @@ Future<ProductListModal?> getProductList({
           );
         }
       } else {
-        ToastificationError.Error('Server Error: ${response.statusCode}');
+        // ToastificationError.Error('Server Error: ${response.statusCode}');
+        print("Server Error: ${response.statusCode}");
       }
     } else {
       ToastificationError.Error('Invalid server response format');

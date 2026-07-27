@@ -36,4 +36,6 @@ class AppUrl {
         static const girviDetail = '${baseAPI}girvi_master/GirviDetail';
         static const removeGirvie = '${baseAPI}girvi_master/RemoveGirvie';
         static const closeGirvie = '${baseAPI}girvi_master/CloseGirvi';
+     //PendingTranscation
+        static const pendingTranscation = '${baseAPI}girvi_master/PendingTranscation';
 }

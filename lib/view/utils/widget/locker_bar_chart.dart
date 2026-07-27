@@ -50,100 +50,102 @@ class LockerBarChart extends StatelessWidget {
           varticalSpace(),
           SizedBox(
             height: Get.height * 0.40,
-            child: BarChart(
-              BarChartData(
-                alignment: BarChartAlignment.spaceAround,
-                maxY: _getMaxY(),
-                barTouchData: BarTouchData(
-                  enabled: false,
-                  touchTooltipData: BarTouchTooltipData(
-                    getTooltipColor: (_) => Colors.transparent,
-                    tooltipPadding: EdgeInsets.zero,
-                    tooltipMargin: 5,
-                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                      return BarTooltipItem(
-                        _formatNumber(rod.toY.toString()),
-                        TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                          fontSize: Get.height * 0.012,
-                        ),
-                      );
-                    },
+            child: IgnorePointer(
+              child: BarChart(
+                BarChartData(
+                  alignment: BarChartAlignment.spaceAround,
+                  maxY: _getMaxY(),
+                  barTouchData: BarTouchData(
+                    enabled: false,
+                    touchTooltipData: BarTouchTooltipData(
+                      getTooltipColor: (_) => Colors.transparent,
+                      tooltipPadding: EdgeInsets.zero,
+                      tooltipMargin: 5,
+                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                        return BarTooltipItem(
+                          _formatNumber(rod.toY.toString()),
+                          TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                            fontSize: Get.height * 0.012,
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-                titlesData: FlTitlesData(
-                  show: true,
-                  // Top Titles (D, M, N)
-                  topTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      getTitlesWidget: (value, meta) {
-                        int index = value.toInt();
-                        if (index >= 0 && index < lockerList.length) {
+                  titlesData: FlTitlesData(
+                    show: true,
+                    // Top Titles (D, M, N)
+                    topTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (value, meta) {
+                          int index = value.toInt();
+                          if (index >= 0 && index < lockerList.length) {
+                            return Text(
+                              lockerList[index].lockerCode ?? '',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                                fontSize: Get.height * 0.018,
+                              ),
+                            );
+                          }
+                          return const Text('');
+                        },
+                        reservedSize: 28,
+                      ),
+                    ),
+                    // Left Titles (100,000 etc)
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 60,
+                        getTitlesWidget: (value, meta) {
+                          if (value == 0) return SizedBox();
                           return Text(
-                            lockerList[index].lockerCode ?? '',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                              fontSize: Get.height * 0.018,
-                            ),
+                            _formatNumber(value.toString()),
+                            style: TextStyle(fontSize: Get.height * 0.015),
                           );
-                        }
-                        return const Text('');
-                      },
-                      reservedSize: 28,
+                        },
+                      ),
+                    ),
+                    // Right Titles (Mirror of Left)
+                    rightTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 60,
+                        getTitlesWidget: (value, meta) {
+                          if (value == 0) return const SizedBox();
+                          return Text(
+                            _formatNumber(value.toString()),
+                            style: TextStyle(fontSize: Get.height * 0.015),
+                          );
+                        },
+                      ),
+                    ),
+                    bottomTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
                     ),
                   ),
-                  // Left Titles (100,000 etc)
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 60,
-                      getTitlesWidget: (value, meta) {
-                        if (value == 0) return SizedBox();
-                        return Text(
-                          _formatNumber(value.toString()),
-                          style: TextStyle(fontSize: Get.height * 0.015),
-                        );
-                      },
+                  gridData: FlGridData(
+                    show: true,
+                    drawVerticalLine: true,
+                    getDrawingHorizontalLine: (value) => FlLine(
+                      color: Colors.grey.withOpacity(0.3),
+                      strokeWidth: 1,
+                    ),
+                    getDrawingVerticalLine: (value) => FlLine(
+                      color: Colors.grey.withOpacity(0.3),
+                      strokeWidth: 1,
                     ),
                   ),
-                  // Right Titles (Mirror of Left)
-                  rightTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 60,
-                      getTitlesWidget: (value, meta) {
-                        if (value == 0) return const SizedBox();
-                        return Text(
-                          _formatNumber(value.toString()),
-                          style: TextStyle(fontSize: Get.height * 0.015),
-                        );
-                      },
-                    ),
+                  borderData: FlBorderData(
+                    show: true,
+                    border: Border.all(color: Colors.grey.withOpacity(0.3)),
                   ),
-                  bottomTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
+                  barGroups: _getBarGroups(),
                 ),
-                gridData: FlGridData(
-                  show: true,
-                  drawVerticalLine: true,
-                  getDrawingHorizontalLine: (value) => FlLine(
-                    color: Colors.grey.withOpacity(0.3),
-                    strokeWidth: 1,
-                  ),
-                  getDrawingVerticalLine: (value) => FlLine(
-                    color: Colors.grey.withOpacity(0.3),
-                    strokeWidth: 1,
-                  ),
-                ),
-                borderData: FlBorderData(
-                  show: true,
-                  border: Border.all(color: Colors.grey.withOpacity(0.3)),
-                ),
-                barGroups: _getBarGroups(),
               ),
             ),
           ),
@@ -189,7 +191,7 @@ class LockerBarChart extends StatelessWidget {
       double amt = double.tryParse(locker.totalAmt ?? '0') ?? 0;
       if (amt > max) max = amt;
     }
-    return (max * 1.1).roundToDouble();
+    return max == 0 ? 100.0 : (max * 1.1).roundToDouble();
   }
 
   List<BarChartGroupData> _getBarGroups() {

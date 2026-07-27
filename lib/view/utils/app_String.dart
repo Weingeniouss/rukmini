@@ -63,6 +63,8 @@ class AppString {
               static const YearId = 'YearId';
               static const FormDate = 'FormDate';
               static const ToDate = 'ToDate';
+              static const isFilterer = 'IsFilterer';
+              static const locality = 'Locality';
            //Girivi List End
 
            //Girivi Add Start
@@ -105,6 +107,10 @@ class AppString {
   static const girvi = 'Girvi';
   static const products = 'Products';
   static const productinLocker = 'Product in Locker';
+  static const pendingProduct = 'Pending';
+  static const returnProduct = 'Return';
+  static const soldProduct = 'Sold';
+  static const karkitProduct = 'Karkit';
   static const pendingTransaction = 'Pending Transaction';
   static const lockerTransaction = 'Locker Transaction';
   static const reports = 'Reports';

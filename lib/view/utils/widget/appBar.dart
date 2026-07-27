@@ -20,6 +20,7 @@ AppBar appBar({
   void Function()? editOnPressed,
   void Function()? closeOnPressed,
   bool? centerTitle,
+  PreferredSizeWidget? bottom,
 }) {
   Widget titleWidget;
   if (title is String) {
@@ -81,5 +82,6 @@ AppBar appBar({
     title: titleWidget,
     backgroundColor: AppColor.primaryColor,
     centerTitle: centerTitle,
+    bottom: bottom,
   );
 }

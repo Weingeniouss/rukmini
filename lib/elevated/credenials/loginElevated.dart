@@ -41,6 +41,8 @@ Future postLogin() async {
       ToastificationError.Error('${loginModel.message}');
     }
   } else {
-    ToastificationError.Error('Network error: Please check your internet connection');
+    ToastificationError.Error(
+      'Network error: Please check your internet connection',
+    );
   }
 }
