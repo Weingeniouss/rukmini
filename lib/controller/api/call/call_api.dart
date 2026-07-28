@@ -15,6 +15,8 @@ import 'package:rukmini/elevated/drawer/home/pendingTransaction/pending_transact
 import 'package:rukmini/elevated/metal/metalListElevated.dart' as metal;
 import 'package:rukmini/elevated/product/productListElevated.dart' as product;
 import 'package:rukmini/elevated/product/productTypeElevated.dart' as productType;
+import 'package:rukmini/elevated/product/productTypeAddElevated.dart';
+import 'package:rukmini/elevated/product/productTypeRemoveElevated.dart';
 import 'package:rukmini/elevated/year/yearListElevated.dart';
 import 'package:rukmini/modal/drawer/home/customer/add_customer_model.dart';
 import 'package:rukmini/modal/drawer/home/customer/update_customer_model.dart';
@@ -27,6 +29,8 @@ import 'package:rukmini/modal/drawer/home/pendingTransaction/pending_transaction
 import 'package:rukmini/modal/metal/metalList_Modal.dart';
 import 'package:rukmini/modal/product/productList_Modal.dart';
 import 'package:rukmini/modal/product/productTypeList_Modal.dart';
+import 'package:rukmini/modal/product/productTypeAdd_modal.dart';
+import 'package:rukmini/modal/product/productTypeRemove_modal.dart';
 import 'package:rukmini/modal/year/year_modal.dart';
 
 class CallApi {
@@ -254,6 +258,26 @@ class CallApi {
         // Product Type List
         static Future<ProductTypeListModal?> callProductTypeList() async {
           return await productType.getProductTypeList();
+        }
+
+        // Product Type Add
+        static Future<ProductTypeAddModal?> callProductTypeAdd({
+          required String name,
+          String? productTypeId,
+          required String rate,
+        }) async {
+          return await postProductTypeAdd(
+            name: name,
+            productTypeId: productTypeId,
+            rate: rate,
+          );
+        }
+
+        // Product Type Remove
+        static Future<ProductTypeRemoveModal?> callProductTypeRemove({
+          required String productTypeId,
+        }) async {
+          return await postProductTypeRemove(productTypeId: productTypeId);
         }
 
         // Product List

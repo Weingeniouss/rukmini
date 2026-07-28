@@ -17,16 +17,14 @@ class AllMaster extends StatelessWidget {
     return Fullscreen(
       drawer: homeDrawer(),
       isPadding: false,
-      appBar: appBar(
-        title: AppString.allMasters,
-      ),
+      appBar: appBar(title: AppString.allMasters),
       child: Column(
         children: [
           _buildMasterItem(
             icon: AppIcon.grid,
             title: AppString.metalMaster,
             onTap: () {
-              // TODO: Navigate to Metal Master
+              Get.toNamed('/metalMaster');
             },
           ),
           _buildDivider(),
@@ -34,7 +32,7 @@ class AllMaster extends StatelessWidget {
             icon: AppIcon.category,
             title: AppString.productCategoryMaster,
             onTap: () {
-              // TODO: Navigate to Product Category Master
+              Get.toNamed('/categoryMaster');
             },
           ),
           _buildDivider(),

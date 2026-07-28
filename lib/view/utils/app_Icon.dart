@@ -77,4 +77,6 @@ class AppIcon {
   static const IconData security = Icons.security_outlined;
   static const IconData balance = Icons.balance_outlined;
   static const IconData rightArrow = Icons.chevron_right;
+  static const IconData editNote = Icons.edit_note_outlined;
+  static const IconData remove = Icons.cancel_outlined;
 }

@@ -35,6 +35,12 @@ abstract class Routes {
       // Due Over Girvi
         static const dueOverGirvi = _Paths.dueOverGirvi;
     // Home
+
+    //All Mastart
+      // Metal Master
+        static const metalMaster = _Paths.metalMaster;
+      // Category Master
+        static const categoryMaster = _Paths.categoryMaster;
 }
 
 abstract class _Paths {
@@ -72,4 +78,10 @@ abstract class _Paths {
      // Due Over Girvi
         static const dueOverGirvi = '/dueOverGirvi';
     // Home
+
+    //All Mastart
+        // Metal Master
+          static const metalMaster = '/metalMaster';
+        // Category Master
+          static const categoryMaster = '/categoryMaster';
 }

@@ -14,6 +14,8 @@ class AppUrl {
 
   //productType
   static const productTypeList = '${baseAPI}product/ProductTypeList';
+  static const productTypeAdd = '${baseAPI}product/ProductTypeAdd';
+  static const productTypeRemove = '${baseAPI}product/ProductTypeRemove';
 
   //product
   static const productList = '${baseAPI}girvi_master/ProductList';
@@ -22,7 +24,7 @@ class AppUrl {
   static const login = '${baseAPI}user/login';
   static const forgetPassword = '${baseAPI}user/forgotPassword';
 
-    //home
+  //home
     static const dashboard = '${baseAPI}user/Dashboard';
       //customer
         static const custList = '${baseAPI}customer/CustList';
@@ -38,4 +40,5 @@ class AppUrl {
         static const closeGirvie = '${baseAPI}girvi_master/CloseGirvi';
      //PendingTranscation
         static const pendingTranscation = '${baseAPI}girvi_master/PendingTranscation';
+   //home
 }

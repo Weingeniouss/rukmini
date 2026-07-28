@@ -82,6 +82,11 @@ class AppString {
            //Girivi Detail Start
               static const girviId_body = 'GirviId';
            //Girivi Detail End
+
+           //Product Type Add
+              static const productType_Name = 'Name';
+              static const productType_Id = 'ProductTypeId';
+              static const productType_Rate = 'Rate';
       //Girivi
 
   //Url End
@@ -98,6 +103,7 @@ class AppString {
   static const failedtoremovegirvi = 'Failed to remove Girivi';
   static const failedtoclosegirvi = 'Failed to close Girivi';
   static const invalidserverresponseformat = 'Invalid server response format';
+  static const metalRateError = 'Please enter both Metal name and Rate';
 
   //Drawer
   static const home = 'Home';

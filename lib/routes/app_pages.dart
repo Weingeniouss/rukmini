@@ -10,6 +10,8 @@ import 'package:rukmini/view/screen/drawer/home/girvi/giriviDetail.dart';
 import 'package:rukmini/view/screen/drawer/home/home.dart';
 import 'package:rukmini/view/screen/drawer/home/pendingProduct/productDetail.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/allMaster.dart';
+import 'package:rukmini/view/screen/drawer/allMaster/categoryMataer/categoryMaster.dart';
+import '../view/screen/drawer/allMaster/metalMaster/metal_Master.dart';
 import '../view/screen/drawer/home/girvi/giriviList.dart';
 import '../view/screen/splash/splash.dart';
 import '../view/screen/credentials/login.dart';
@@ -55,5 +57,11 @@ class AppPages {
         // Due Over Girvi
             GetPage(name: _Paths.dueOverGirvi, page: () => DueGirvi()),
     // Home
+
+    //All Master
+        // Metal Master
+            GetPage(name: _Paths.metalMaster, page: () => MetalMaster()),
+        // Category Master
+            GetPage(name: _Paths.categoryMaster, page: () => CategoryMaster()),
   ];
 }
