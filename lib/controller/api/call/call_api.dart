@@ -1,5 +1,7 @@
 import 'package:image_picker/image_picker.dart';
 import 'package:rukmini/elevated/credenials/loginElevated.dart';
+import 'package:rukmini/elevated/drawer/allMaster/category_Master/categoryElevated.dart' as category;
+import 'package:rukmini/elevated/drawer/allMaster/category_Master/categoryRemoveElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/addCustElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custDetailElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custListElevated.dart';
@@ -16,8 +18,14 @@ import 'package:rukmini/elevated/metal/metalListElevated.dart' as metal;
 import 'package:rukmini/elevated/product/productListElevated.dart' as product;
 import 'package:rukmini/elevated/product/productTypeElevated.dart' as productType;
 import 'package:rukmini/elevated/product/productTypeAddElevated.dart';
+import 'package:rukmini/elevated/drawer/allMaster/category_Master/categoryAddElevated.dart';
+import 'package:rukmini/elevated/drawer/allMaster/customer_type_master/customerTypeElevated.dart' as customerType;
+import 'package:rukmini/elevated/drawer/allMaster/customer_type_master/customerTypeAddElevated.dart';
+import 'package:rukmini/elevated/drawer/allMaster/customer_type_master/customerTypeRemoveElevated.dart';
 import 'package:rukmini/elevated/product/productTypeRemoveElevated.dart';
 import 'package:rukmini/elevated/year/yearListElevated.dart';
+import 'package:rukmini/modal/drawer/allMaster/category_Master/categoryAdd_modal.dart';
+import 'package:rukmini/modal/drawer/allMaster/category_Master/categoryRemove_modal.dart';
 import 'package:rukmini/modal/drawer/home/customer/add_customer_model.dart';
 import 'package:rukmini/modal/drawer/home/customer/update_customer_model.dart';
 import 'package:rukmini/modal/drawer/home/girvi/girivi_add_model.dart';
@@ -31,6 +39,10 @@ import 'package:rukmini/modal/product/productList_Modal.dart';
 import 'package:rukmini/modal/product/productTypeList_Modal.dart';
 import 'package:rukmini/modal/product/productTypeAdd_modal.dart';
 import 'package:rukmini/modal/product/productTypeRemove_modal.dart';
+import 'package:rukmini/modal/drawer/allMaster/customer_type_master/customer_type_add_modal.dart';
+import 'package:rukmini/modal/drawer/allMaster/customer_type_master/customer_type_master_modal.dart';
+import 'package:rukmini/modal/drawer/allMaster/customer_type_master/customer_type_remove_modal.dart';
+import 'package:rukmini/modal/drawer/allMaster/category_Master/categoryList_modal.dart';
 import 'package:rukmini/modal/year/year_modal.dart';
 
 class CallApi {
@@ -292,4 +304,39 @@ class CallApi {
             filterType: filterType,
           );
         }
+    //Home
+
+    //All Master
+        //Category Master
+            // Category List
+                static Future<CategoryListModal?> callCategoryList() async {
+                  return await category.getCategoryList();
+                }
+
+            // Category Remove
+                static Future<CategoryRemoveModal?> callCategoryRemove({required String categoryId}) async {
+                  return await postCategoryRemove(categoryId: categoryId);
+                }
+
+            // Category Add
+                static Future<CategoryAddModal?> callCategoryAdd({required String name, String? categoryId}) async {
+                  return await postCategoryAdd(name: name, categoryId: categoryId);
+                }
+
+        //Customer Type Master
+            // Customer Type List
+                static Future<CustomerTypeMaster?> callCustomerTypeList() async {
+                  return await customerType.getCustomerTypeList();
+                }
+
+            // Customer Type Add
+                static Future<CustomerTypeAddModal?> callCustomerTypeAdd({required String name, String? typeId}) async {
+                  return await postCustomerTypeAdd(name: name, typeId: typeId);
+                }
+
+            // Customer Type Remove
+                static Future<CustomerTypeRemoveModal?> callCustomerTypeRemove({required String typeId}) async {
+                  return await postCustomerTypeRemove(typeId: typeId);
+                }
+
 }

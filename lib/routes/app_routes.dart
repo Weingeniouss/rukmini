@@ -41,6 +41,8 @@ abstract class Routes {
         static const metalMaster = _Paths.metalMaster;
       // Category Master
         static const categoryMaster = _Paths.categoryMaster;
+      // Customer Type Master
+        static const customerTypeMaster = _Paths.customerTypeMaster;
 }
 
 abstract class _Paths {
@@ -84,4 +86,6 @@ abstract class _Paths {
           static const metalMaster = '/metalMaster';
         // Category Master
           static const categoryMaster = '/categoryMaster';
+        // Customer Type Master
+          static const customerTypeMaster = '/customerTypeMaster';
 }

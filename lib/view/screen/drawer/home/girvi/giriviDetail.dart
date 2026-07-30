@@ -591,8 +591,8 @@ class _GiriviDetailState extends State<GiriviDetail> {
                   child: Row(
                     children: [
                       Container(
-                        width: 24,
-                        height: 24,
+                        width: Get.width * 0.06,
+                        height: Get.width * 0.06,
                         color: AppColor.textField,
                       ),
                       SizedBox(width: 15),

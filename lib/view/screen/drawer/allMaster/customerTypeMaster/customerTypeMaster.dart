@@ -3,9 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
-import 'package:rukmini/controller/api/controllers/drawer/all_master/category_master/category_Controller.dart';
-import 'package:rukmini/controller/api/controllers/drawer/all_master/category_master/categoryRemove_Controller.dart';
-import 'package:rukmini/controller/ui/home/allMaster/category_Master/categoryMaster_ControllerUI.dart';
+import 'package:rukmini/controller/api/controllers/drawer/all_master/customer_type_master/customerType_Controller.dart';
+import 'package:rukmini/controller/api/controllers/drawer/all_master/customer_type_master/customerTypeRemove_Controller.dart';
+import 'package:rukmini/controller/ui/home/allMaster/customerType_Master/customerTypeMaster_ControllerUI.dart';
+import 'package:rukmini/modal/drawer/allMaster/customer_type_master/customer_type_master_modal.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_String.dart';
@@ -15,23 +16,23 @@ import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:shimmer/shimmer.dart';
 
-class CategoryMaster extends StatefulWidget {
-  const CategoryMaster({super.key});
+class CustomerTypeMaster extends StatefulWidget {
+  const CustomerTypeMaster({super.key});
 
   @override
-  State<CategoryMaster> createState() => _CategoryMasterState();
+  State<CustomerTypeMaster> createState() => _CustomerTypeMasterState();
 }
 
-class _CategoryMasterState extends State<CategoryMaster> {
-  final categoryController = Get.put(CategoryController());
-  final categoryMasterUI = Get.put(CategoryMasterControllerUI());
-  final categoryRemoveController = Get.put(CategoryRemoveController());
+class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
+  final listController = Get.put(CustomerTypeController());
+  final uiController = Get.put(CustomerTypeMasterControllerUI());
+  final removeController = Get.put(CustomerTypeRemoveController());
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      CallApi.callCategoryList();
+      CallApi.callCustomerTypeList();
     });
   }
 
@@ -43,7 +44,7 @@ class _CategoryMasterState extends State<CategoryMaster> {
       appBar: appBar(
         back: true,
         centerTitle: true,
-        title: AppString.productCategoryMaster,
+        title: AppString.customerTypeMaster,
       ),
       child: Column(
         children: [
@@ -51,29 +52,23 @@ class _CategoryMasterState extends State<CategoryMaster> {
           _buildDivider(),
           Expanded(
             child: Obx(() {
-              if (categoryController.isLoading.value &&
-                  categoryController.categoryList.isEmpty) {
+              if (listController.isLoading.value &&
+                  listController.customerTypeList.isEmpty) {
                 return _shimmerLoading();
               }
-
-              final categories = categoryController.categoryList;
-
-              if (categories.isEmpty) {
-                return Center(child: Text("No Data Found"));
+              if (listController.customerTypeList.isEmpty) {
+                return const Center(child: Text("No Data Found"));
               }
-
               return RefreshIndicator(
-                onRefresh: () => CallApi.callCategoryList(),
+                onRefresh: () => CallApi.callCustomerTypeList(),
                 color: AppColor.activeColor,
                 child: ListView.builder(
-                  physics: AlwaysScrollableScrollPhysics(),
+                  physics: const AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
-                  itemCount: categories.length,
+                  itemCount: listController.customerTypeList.length,
                   itemBuilder: (context, index) {
-                    final item = categories[index];
-                    return _buildCategoryListItem(
-                      item.name ?? "",
-                      item.categoryId ?? "",
+                    return _buildListItem(
+                      listController.customerTypeList[index],
                     );
                   },
                 ),
@@ -92,28 +87,28 @@ class _CategoryMasterState extends State<CategoryMaster> {
         child: Row(
           children: [
             Icon(
-              AppIcon.grid,
+              AppIcon.personPin,
               color: AppColor.activeColor.withOpacity(0.6),
               size: Get.width * 0.06,
             ),
             SizedBox(width: Get.width * 0.03),
             Expanded(
               child: _buildTextField(
-                controller: categoryMasterUI.categoryController,
-                hintText: AppString.category,
+                controller: uiController.nameController,
+                hintText: AppString.customerTypes,
               ),
             ),
             Obx(
-              () => categoryMasterUI.isLoading.value
+              () => uiController.isLoading.value
                   ? SizedBox(
                       height: Get.width * 0.06,
                       width: Get.width * 0.06,
-                      child: CircularProgressIndicator(strokeWidth: 2),
+                      child: const CircularProgressIndicator(strokeWidth: 2),
                     )
                   : GestureDetector(
-                      onTap: () => categoryMasterUI.save(),
+                      onTap: () => uiController.save(),
                       child: Container(
-                        padding: EdgeInsets.all(2),
+                        padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
@@ -122,7 +117,7 @@ class _CategoryMasterState extends State<CategoryMaster> {
                           ),
                         ),
                         child: Icon(
-                          categoryMasterUI.editingId.value == null
+                          uiController.editingId.value == null
                               ? AppIcon.add
                               : Icons.check,
                           color: AppColor.activeColor,
@@ -161,7 +156,7 @@ class _CategoryMasterState extends State<CategoryMaster> {
     );
   }
 
-  Widget _buildCategoryListItem(String name, String id) {
+  Widget _buildListItem(CustomerTypeData item) {
     return horizontalPadding(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: Get.height * 0.015),
@@ -175,7 +170,7 @@ class _CategoryMasterState extends State<CategoryMaster> {
             SizedBox(width: Get.width * 0.04),
             Expanded(
               child: Text(
-                name,
+                item.name ?? "",
                 style: TextStyle(
                   fontSize: Get.width * 0.045,
                   fontWeight: FontWeight.w500,
@@ -185,7 +180,7 @@ class _CategoryMasterState extends State<CategoryMaster> {
             ),
             IconButton(
               onPressed: () {
-                categoryMasterUI.startEditing(id, name);
+                uiController.startEditing(item.typeId, item.name);
               },
               icon: Icon(
                 AppIcon.editNote,
@@ -193,12 +188,12 @@ class _CategoryMasterState extends State<CategoryMaster> {
                 size: Get.width * 0.06,
               ),
               padding: EdgeInsets.zero,
-              constraints: BoxConstraints(),
+              constraints: const BoxConstraints(),
             ),
             SizedBox(width: Get.width * 0.04),
             IconButton(
               onPressed: () {
-                _showDeleteDialog(name, id);
+                _showDeleteDialog(item);
               },
               icon: Icon(
                 AppIcon.remove,
@@ -206,7 +201,7 @@ class _CategoryMasterState extends State<CategoryMaster> {
                 size: Get.width * 0.06,
               ),
               padding: EdgeInsets.zero,
-              constraints: BoxConstraints(),
+              constraints: const BoxConstraints(),
             ),
           ],
         ),
@@ -214,12 +209,23 @@ class _CategoryMasterState extends State<CategoryMaster> {
     );
   }
 
-  Widget _buildDivider() {
-    return Divider(
-      height: 1,
-      thickness: 1,
-      color: AppColor.boderSideColor.shade200,
+  void _showDeleteDialog(CustomerTypeData item) {
+    Get.defaultDialog(
+      title: AppString.deleteCustomer,
+      middleText: "${AppString.deleteMessage} \n\n ${item.name}",
+      textConfirm: AppString.delete,
+      textCancel: AppString.cancel,
+      confirmTextColor: Colors.white,
+      buttonColor: AppColor.deleteColor,
+      onConfirm: () async {
+        Get.back();
+        await removeController.removeCustomerType(typeId: item.typeId ?? "");
+      },
     );
+  }
+
+  Widget _buildDivider() {
+    return Divider(height: 1, thickness: 1, color: Colors.grey.shade200);
   }
 
   Widget _shimmerLoading() {
@@ -234,27 +240,12 @@ class _CategoryMasterState extends State<CategoryMaster> {
             height: 45,
             margin: EdgeInsets.only(bottom: Get.height * 0.02),
             decoration: BoxDecoration(
-              color: AppColor.fullScreenColor,
+              color: Colors.white,
               borderRadius: BorderRadius.circular(5),
             ),
           );
         },
       ),
-    );
-  }
-
-  void _showDeleteDialog(String name, String id) {
-    Get.defaultDialog(
-      title: AppString.deleteCustomer,
-      middleText: "${AppString.deleteMessage} \n\n $name",
-      textConfirm: AppString.delete,
-      textCancel: AppString.cancel,
-      confirmTextColor: AppColor.fullScreenColor,
-      buttonColor: AppColor.deleteColor,
-      onConfirm: () async {
-        Get.back();
-        await CallApi.callCategoryRemove(categoryId: id);
-      },
     );
   }
 }

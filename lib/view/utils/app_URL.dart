@@ -41,4 +41,18 @@ class AppUrl {
      //PendingTranscation
         static const pendingTranscation = '${baseAPI}girvi_master/PendingTranscation';
    //home
+
+   //All Master
+      //Metal Master
+        static const categoryList = '${baseAPI}category/CategoryList';
+        static const categoryRemove = '${baseAPI}category/CategoryRemove';
+        static const categoryAdd = '${baseAPI}category/CategoryAdd';
+      //Product Type Master
+        static const customerTypeList = '${baseAPI}customer/CustomerTypeList';
+        static const customerTypeAdd = '${baseAPI}customer/CustomerTypeAdd';
+        static const customerTypeRemove = '${baseAPI}customer/CustomerTypeRemove';
+      //Customer Type Master
+        static const custTypeList = '${baseAPI}customer/CustTypeList';
+        static const custTypeAdd = '${baseAPI}customer/CustTypeAdd';
+        static const custTypeRemove = '${baseAPI}customer/CustTypeRemove';
 }

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:rukmini/view/screen/drawer/allMaster/customerTypeMaster/customerTypeMaster.dart';
 import 'package:rukmini/view/screen/drawer/home/customer/addCustForm.dart';
 import 'package:rukmini/view/screen/drawer/home/customer/custDetail.dart';
 import 'package:rukmini/view/screen/drawer/home/customer/custList.dart';
@@ -63,5 +64,7 @@ class AppPages {
             GetPage(name: _Paths.metalMaster, page: () => MetalMaster()),
         // Category Master
             GetPage(name: _Paths.categoryMaster, page: () => CategoryMaster()),
+        // Customer Type Master
+            GetPage(name: _Paths.customerTypeMaster, page: () => CustomerTypeMaster()),
   ];
 }

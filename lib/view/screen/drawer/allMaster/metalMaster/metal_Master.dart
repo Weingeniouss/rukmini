@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/product/productType_Controller.dart';
 import 'package:rukmini/controller/api/controllers/product/productTypeRemove_Controller.dart';
-import 'package:rukmini/controller/ui/home/allMaster/metalMaster_ControllerUI.dart';
+import 'package:rukmini/controller/ui/home/allMaster/metal_Master/metalMaster_ControllerUI.dart';
 import 'package:rukmini/modal/product/productTypeList_Modal.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
@@ -100,7 +100,7 @@ class _MetalMasterState extends State<MetalMaster> {
               ),
             ),
             Container(
-              height: 24,
+              height: Get.height * 0.03,
               width: 1.2,
               color: AppColor.boderSideColor.shade400,
               margin: EdgeInsets.symmetric(horizontal: Get.width * 0.02),
@@ -115,10 +115,10 @@ class _MetalMasterState extends State<MetalMaster> {
             ),
             Obx(
               () => metalMasterUI.isLoading.value
-                  ? const SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: CircularProgressIndicator(strokeWidth: 2),
+                  ? SizedBox(
+                      height: Get.width * 0.06,
+                      width: Get.width * 0.06,
+                      child: const CircularProgressIndicator(strokeWidth: 2),
                     )
                   : GestureDetector(
                       onTap: () => metalMasterUI.save(),

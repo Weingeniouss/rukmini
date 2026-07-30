@@ -87,6 +87,14 @@ class AppString {
               static const productType_Name = 'Name';
               static const productType_Id = 'ProductTypeId';
               static const productType_Rate = 'Rate';
+
+           //Category Add/Remove
+              static const category_Name = 'Name';
+              static const category_Id = 'CategoryId';
+
+           //Customer Type Add/Remove
+              static const customerType_Name = 'Name';
+              static const customerType_Id = 'TypeId';
       //Girivi
 
   //Url End
@@ -104,6 +112,7 @@ class AppString {
   static const failedtoclosegirvi = 'Failed to close Girivi';
   static const invalidserverresponseformat = 'Invalid server response format';
   static const metalRateError = 'Please enter both Metal name and Rate';
+  static const productCategory = 'Please enter Product Category';
 
   //Drawer
   static const home = 'Home';

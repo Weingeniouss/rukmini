@@ -9,6 +9,7 @@ import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 
+
 class AllMaster extends StatelessWidget {
   const AllMaster({super.key});
 
@@ -40,7 +41,7 @@ class AllMaster extends StatelessWidget {
             icon: AppIcon.personOutline,
             title: AppString.customerTypeMaster,
             onTap: () {
-              // TODO: Navigate to Customer Type Master
+              Get.toNamed('/customerTypeMaster');
             },
           ),
           _buildDivider(),
