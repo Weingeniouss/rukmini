@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/customerTypeMaster/customerTypeMaster.dart';
+import 'package:rukmini/view/screen/drawer/allMaster/lockerCodeMaster/addLockerCode.dart';
+import 'package:rukmini/view/screen/drawer/allMaster/lockerCodeMaster/lockerCodeMaster.dart';
 import 'package:rukmini/view/screen/drawer/home/customer/addCustForm.dart';
 import 'package:rukmini/view/screen/drawer/home/customer/custDetail.dart';
 import 'package:rukmini/view/screen/drawer/home/customer/custList.dart';
@@ -66,5 +68,8 @@ class AppPages {
             GetPage(name: _Paths.categoryMaster, page: () => CategoryMaster()),
         // Customer Type Master
             GetPage(name: _Paths.customerTypeMaster, page: () => CustomerTypeMaster()),
+        //Locker Code Master
+            GetPage(name: _Paths.lockerCodeMaster, page: () => LockerCodeMaster()),
+            GetPage(name: _Paths.addLockerCode, page: () => AddLockerCode()),
   ];
 }

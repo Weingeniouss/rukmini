@@ -79,4 +79,6 @@ class AppIcon {
   static const IconData rightArrow = Icons.chevron_right;
   static const IconData editNote = Icons.edit_note_outlined;
   static const IconData remove = Icons.cancel_outlined;
+  static const IconData business = Icons.business_outlined;
+  static const IconData rate = Icons.price_change_outlined;
 }

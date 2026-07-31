@@ -313,4 +313,14 @@ class AppString {
       static const lockerCodeMaster = 'Locker Code Master';
       static const metalTouchMaster = 'Metal Touch';
       static const yearMaster = 'Year Master';
+      //Locker Master
+      static const code = 'Code';
+      static const company = 'Company';
+      static const number = 'Number';
+      static const addLockerCode = 'Add Locker code';
+      static const companyName = 'Company Name';
+      static const companyAddress = 'Company Address';
+      static const phoneNumber = 'Phone Number';
+      static const setAsDefaultLocker = 'Set as default locker';
+      static const submit = 'Submit';
 }

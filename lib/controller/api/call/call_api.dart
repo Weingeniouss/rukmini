@@ -22,6 +22,8 @@ import 'package:rukmini/elevated/drawer/allMaster/category_Master/categoryAddEle
 import 'package:rukmini/elevated/drawer/allMaster/customer_type_master/customerTypeElevated.dart' as customerType;
 import 'package:rukmini/elevated/drawer/allMaster/customer_type_master/customerTypeAddElevated.dart';
 import 'package:rukmini/elevated/drawer/allMaster/customer_type_master/customerTypeRemoveElevated.dart';
+import 'package:rukmini/elevated/drawer/allMaster/locker_master/lockerElevated.dart' as locker;
+import 'package:rukmini/elevated/drawer/allMaster/locker_master/lockerAddElevated.dart';
 import 'package:rukmini/elevated/product/productTypeRemoveElevated.dart';
 import 'package:rukmini/elevated/year/yearListElevated.dart';
 import 'package:rukmini/modal/drawer/allMaster/category_Master/categoryAdd_modal.dart';
@@ -43,6 +45,8 @@ import 'package:rukmini/modal/drawer/allMaster/customer_type_master/customer_typ
 import 'package:rukmini/modal/drawer/allMaster/customer_type_master/customer_type_master_modal.dart';
 import 'package:rukmini/modal/drawer/allMaster/customer_type_master/customer_type_remove_modal.dart';
 import 'package:rukmini/modal/drawer/allMaster/category_Master/categoryList_modal.dart';
+import 'package:rukmini/modal/drawer/allMaster/locker_master/locker_add_modal.dart';
+import 'package:rukmini/modal/drawer/allMaster/locker_master/locker_master_modal.dart';
 import 'package:rukmini/modal/year/year_modal.dart';
 
 class CallApi {
@@ -314,13 +318,21 @@ class CallApi {
                 }
 
             // Category Remove
-                static Future<CategoryRemoveModal?> callCategoryRemove({required String categoryId}) async {
+                static Future<CategoryRemoveModal?> callCategoryRemove({
+                  required String categoryId,
+                }) async {
                   return await postCategoryRemove(categoryId: categoryId);
                 }
 
             // Category Add
-                static Future<CategoryAddModal?> callCategoryAdd({required String name, String? categoryId}) async {
-                  return await postCategoryAdd(name: name, categoryId: categoryId);
+                static Future<CategoryAddModal?> callCategoryAdd({
+                  required String name,
+                  String? categoryId,
+                }) async {
+                  return await postCategoryAdd(
+                    name: name,
+                    categoryId: categoryId,
+                  );
                 }
 
         //Customer Type Master
@@ -330,13 +342,47 @@ class CallApi {
                 }
 
             // Customer Type Add
-                static Future<CustomerTypeAddModal?> callCustomerTypeAdd({required String name, String? typeId}) async {
+                static Future<CustomerTypeAddModal?> callCustomerTypeAdd({
+                  required String name,
+                  String? typeId,
+                }) async {
                   return await postCustomerTypeAdd(name: name, typeId: typeId);
                 }
 
             // Customer Type Remove
-                static Future<CustomerTypeRemoveModal?> callCustomerTypeRemove({required String typeId}) async {
+                static Future<CustomerTypeRemoveModal?> callCustomerTypeRemove({
+                  required String typeId,
+                }) async {
                   return await postCustomerTypeRemove(typeId: typeId);
+                }
+
+        //Locker Master
+            // Locker List
+                static Future<LockerMasterModal?> callLockerList() async {
+                  return await locker.getLockerList();
+                }
+
+            // Locker Add
+                static Future<LockerAddModal?> callLockerAdd({
+                  required String lockerCode,
+                  required String comName,
+                  required String comAddress,
+                  required String personName,
+                  required String personPhone,
+                  required String interestRate,
+                  required String isDefault,
+                  String? lockerId,
+                }) async {
+                   await postLockerAdd(
+                    lockerCode: lockerCode,
+                    comName: comName,
+                    comAddress: comAddress,
+                    personName: personName,
+                    personPhone: personPhone,
+                    interestRate: interestRate,
+                    isDefault: isDefault,
+                    lockerId: lockerId,
+                  );
                 }
 
 }

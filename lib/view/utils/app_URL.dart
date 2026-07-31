@@ -55,4 +55,8 @@ class AppUrl {
         static const custTypeList = '${baseAPI}customer/CustTypeList';
         static const custTypeAdd = '${baseAPI}customer/CustTypeAdd';
         static const custTypeRemove = '${baseAPI}customer/CustTypeRemove';
+      //Locker Master
+        static const lockerList = '${baseAPI}locker/lockerList';
+        static const lockerAdd = '${baseAPI}locker/lockerAdd';
+        static const lockerRemove = '${baseAPI}locker/LockerRemove';
 }

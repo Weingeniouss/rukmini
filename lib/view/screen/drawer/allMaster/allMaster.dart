@@ -49,7 +49,7 @@ class AllMaster extends StatelessWidget {
             icon: AppIcon.security,
             title: AppString.lockerCodeMaster,
             onTap: () {
-              // TODO: Navigate to Locker Code Master
+              Get.toNamed('/lockerCodeMaster');
             },
           ),
           _buildDivider(),

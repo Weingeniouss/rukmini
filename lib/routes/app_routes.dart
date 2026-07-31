@@ -43,6 +43,9 @@ abstract class Routes {
         static const categoryMaster = _Paths.categoryMaster;
       // Customer Type Master
         static const customerTypeMaster = _Paths.customerTypeMaster;
+      //Locker Code Master
+        static const lockerCodeMaster = _Paths.lockerCodeMaster;
+        static const addLockerCode = _Paths.addLockerCode;
 }
 
 abstract class _Paths {
@@ -88,4 +91,7 @@ abstract class _Paths {
           static const categoryMaster = '/categoryMaster';
         // Customer Type Master
           static const customerTypeMaster = '/customerTypeMaster';
+        //Locker Code Master
+          static const lockerCodeMaster = '/lockerCodeMaster';
+          static const addLockerCode = '/addLockerCode';
 }
