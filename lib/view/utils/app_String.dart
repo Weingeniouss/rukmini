@@ -95,6 +95,11 @@ class AppString {
            //Customer Type Add/Remove
               static const customerType_Name = 'Name';
               static const customerType_Id = 'TypeId';
+
+           //Metal Touch Master
+              static const karat_Name = 'Karat';
+              static const gold_Content = 'GoldContent';
+              static const metal_Id = 'MetalId';
       //Girivi
 
   //Url End
@@ -323,4 +328,5 @@ class AppString {
       static const phoneNumber = 'Phone Number';
       static const setAsDefaultLocker = 'Set as default locker';
       static const submit = 'Submit';
+      static const locker_Id = 'LockerId';
 }

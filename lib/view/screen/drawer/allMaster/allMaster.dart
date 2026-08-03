@@ -9,7 +9,6 @@ import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 
-
 class AllMaster extends StatelessWidget {
   const AllMaster({super.key});
 
@@ -57,7 +56,7 @@ class AllMaster extends StatelessWidget {
             icon: AppIcon.balance,
             title: AppString.metalTouchMaster,
             onTap: () {
-              // TODO: Navigate to Metal Touch
+              Get.toNamed('/metalTouch');
             },
           ),
           _buildDivider(),
@@ -65,7 +64,7 @@ class AllMaster extends StatelessWidget {
             icon: AppIcon.calendar,
             title: AppString.yearMaster,
             onTap: () {
-              // TODO: Navigate to Year Master
+              Get.toNamed('/yearMaster');
             },
           ),
           _buildDivider(),

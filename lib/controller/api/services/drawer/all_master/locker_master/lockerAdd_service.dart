@@ -4,26 +4,9 @@ import '../../../../../../view/utils/app_String.dart';
 import '../../../../../../view/utils/app_URL.dart';
 import '../../../../../../view/utils/app_constants.dart';
 
-class LockerServices {
-  final String listUrl = AppUrl.lockerList;
-  final String addUrl = AppUrl.lockerAdd;
-  final String removeUrl = AppUrl.lockerRemove;
+class LockerAddServices {
+  final String url = AppUrl.lockerAdd;
   final apiKey = AppUrl.apiKey;
-
-  Future<http.Response> lockerListApi() async {
-    final Map<String, String> headers = {
-      AppString.apiKey: apiKey,
-      AppString.logintokan: tokans,
-      AppString.userid: userId,
-    };
-    final uri = Uri.parse(listUrl);
-    if (kDebugMode) {
-      print('--- Locker List API Request ---');
-      print('URL: $uri');
-      print('--- Locker List API Request ---');
-    }
-    return await http.get(uri, headers: headers);
-  }
 
   Future<http.Response> lockerAddApi({
     required String lockerCode,
@@ -35,7 +18,7 @@ class LockerServices {
     required String isDefault,
     String? lockerId,
   }) async {
-    final request = http.MultipartRequest('POST', Uri.parse(addUrl));
+    final request = http.MultipartRequest('POST', Uri.parse(url));
     request.headers.addAll({
       AppString.apiKey: apiKey,
       AppString.logintokan: tokans,
@@ -56,7 +39,7 @@ class LockerServices {
 
     if (kDebugMode) {
       print('--- Locker Add API Request ---');
-      print('URL: $addUrl');
+      print('URL: $url');
       print('Fields: ${request.fields}');
       print('--- Locker Add API Request ---');
     }

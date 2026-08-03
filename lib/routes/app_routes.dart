@@ -46,6 +46,12 @@ abstract class Routes {
       //Locker Code Master
         static const lockerCodeMaster = _Paths.lockerCodeMaster;
         static const addLockerCode = _Paths.addLockerCode;
+      //Metal Touch
+        static const metalTouch = _Paths.metalTouch;
+      //Year Master
+        static const yearMaster = _Paths.yearMaster;
+      //Add Year Master
+        static const addYearMaster = _Paths.addYearMaster;
 }
 
 abstract class _Paths {
@@ -94,4 +100,9 @@ abstract class _Paths {
         //Locker Code Master
           static const lockerCodeMaster = '/lockerCodeMaster';
           static const addLockerCode = '/addLockerCode';
+       //Metal Touch
+          static const metalTouch = '/metalTouch';
+       //Year Master
+          static const yearMaster = '/yearMaster';
+          static const addYearMaster = '/addYearMaster';
 }

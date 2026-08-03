@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rukmini/controller/api/call/call_api.dart';
-import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/locker_Controller.dart';
+import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/lockerAdd_Controller.dart';
 
 class LockerMasterControllerUI extends GetxController {
+  final _addController = Get.put(LockerAddController());
   final lockerCodeController = TextEditingController();
   final companyNameController = TextEditingController();
   final companyAddressController = TextEditingController();
@@ -16,6 +16,22 @@ class LockerMasterControllerUI extends GetxController {
   var isDefaultLocker = false.obs;
   var isLoading = false.obs;
   var editingId = RxnString();
+
+  @override
+  void onInit() {
+    super.onInit();
+    if (Get.arguments != null) {
+      final data = Get.arguments;
+      editingId.value = data.lockerId;
+      lockerCodeController.text = data.lockerCode ?? "";
+      companyNameController.text = data.comName ?? "";
+      companyAddressController.text = data.comAddress ?? "";
+      personNameController.text = data.personName ?? "";
+      phoneNumberController.text = data.personPhone ?? "";
+      interestRateController.text = data.interestRate ?? "";
+      isDefaultLocker.value = data.isDefault == "1";
+    }
+  }
 
   @override
   void onClose() {
@@ -30,7 +46,7 @@ class LockerMasterControllerUI extends GetxController {
 
   Future<void> submit() async {
     isLoading.value = true;
-    final result = await CallApi.callLockerAdd(
+    final result = await _addController.addLocker(
       lockerCode: lockerCodeController.text,
       comName: companyNameController.text,
       comAddress: companyAddressController.text,
@@ -42,10 +58,6 @@ class LockerMasterControllerUI extends GetxController {
     );
 
     if (result != null && result.status == true) {
-      // Refresh the list
-      if (Get.isRegistered<LockerController>()) {
-        await Get.find<LockerController>().getLockerList();
-      }
       Get.back();
     }
     isLoading.value = false;

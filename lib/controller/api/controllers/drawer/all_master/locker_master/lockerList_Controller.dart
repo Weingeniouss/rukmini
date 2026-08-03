@@ -5,11 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:rukmini/controller/api/services/drawer/all_master/locker_master/locker_service.dart';
+import 'package:rukmini/controller/api/services/drawer/all_master/locker_master/lockerList_service.dart';
 import 'package:rukmini/modal/drawer/allMaster/locker_master/locker_master_modal.dart';
 
-class LockerController extends GetxController {
-  final LockerServices _services = LockerServices();
+class LockerListController extends GetxController {
+  final LockerListServices _services = LockerListServices();
   var isLoading = false.obs;
   var lockerList = <LockerData>[].obs;
   var filteredLockerList = <LockerData>[].obs;
@@ -44,7 +44,7 @@ class LockerController extends GetxController {
       }
       return response;
     } catch (e) {
-      if (kDebugMode) print('Locker Error: $e');
+      if (kDebugMode) print('LockerList Error: $e');
       return null;
     } finally {
       isLoading.value = false;

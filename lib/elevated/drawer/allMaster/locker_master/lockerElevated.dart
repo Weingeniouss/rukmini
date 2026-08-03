@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/locker_Controller.dart';
 import 'package:get/get.dart';
+import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/lockerList_Controller.dart';
 import 'package:rukmini/modal/drawer/allMaster/locker_master/locker_master_modal.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
 Future<LockerMasterModal?> getLockerList() async {
-  final controller = Get.put(LockerController());
+  final controller = Get.put(LockerListController());
   final http.Response? response = await controller.getLockerList();
   if (response != null) {
     final decoded = jsonDecode(response.body);

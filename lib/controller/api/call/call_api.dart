@@ -18,14 +18,19 @@ import 'package:rukmini/elevated/metal/metalListElevated.dart' as metal;
 import 'package:rukmini/elevated/product/productListElevated.dart' as product;
 import 'package:rukmini/elevated/product/productTypeElevated.dart' as productType;
 import 'package:rukmini/elevated/product/productTypeAddElevated.dart';
+import 'package:rukmini/elevated/metal/metalAddElevated.dart';
+import 'package:rukmini/elevated/metal/metalRemoveElevated.dart';
 import 'package:rukmini/elevated/drawer/allMaster/category_Master/categoryAddElevated.dart';
 import 'package:rukmini/elevated/drawer/allMaster/customer_type_master/customerTypeElevated.dart' as customerType;
 import 'package:rukmini/elevated/drawer/allMaster/customer_type_master/customerTypeAddElevated.dart';
 import 'package:rukmini/elevated/drawer/allMaster/customer_type_master/customerTypeRemoveElevated.dart';
 import 'package:rukmini/elevated/drawer/allMaster/locker_master/lockerElevated.dart' as locker;
 import 'package:rukmini/elevated/drawer/allMaster/locker_master/lockerAddElevated.dart';
+import 'package:rukmini/elevated/drawer/allMaster/locker_master/lockerRemoveElevated.dart';
 import 'package:rukmini/elevated/product/productTypeRemoveElevated.dart';
 import 'package:rukmini/elevated/year/yearListElevated.dart';
+import 'package:rukmini/elevated/year/addYearElevated.dart';
+import 'package:rukmini/elevated/year/yearRemoveElevated.dart';
 import 'package:rukmini/modal/drawer/allMaster/category_Master/categoryAdd_modal.dart';
 import 'package:rukmini/modal/drawer/allMaster/category_Master/categoryRemove_modal.dart';
 import 'package:rukmini/modal/drawer/home/customer/add_customer_model.dart';
@@ -41,12 +46,16 @@ import 'package:rukmini/modal/product/productList_Modal.dart';
 import 'package:rukmini/modal/product/productTypeList_Modal.dart';
 import 'package:rukmini/modal/product/productTypeAdd_modal.dart';
 import 'package:rukmini/modal/product/productTypeRemove_modal.dart';
+import 'package:rukmini/modal/metal/metalAdd_modal.dart';
 import 'package:rukmini/modal/drawer/allMaster/customer_type_master/customer_type_add_modal.dart';
 import 'package:rukmini/modal/drawer/allMaster/customer_type_master/customer_type_master_modal.dart';
 import 'package:rukmini/modal/drawer/allMaster/customer_type_master/customer_type_remove_modal.dart';
 import 'package:rukmini/modal/drawer/allMaster/category_Master/categoryList_modal.dart';
 import 'package:rukmini/modal/drawer/allMaster/locker_master/locker_add_modal.dart';
+import 'package:rukmini/modal/drawer/allMaster/locker_master/locker_remove_modal.dart';
 import 'package:rukmini/modal/drawer/allMaster/locker_master/locker_master_modal.dart';
+import 'package:rukmini/modal/year/addYear_modal.dart';
+import 'package:rukmini/modal/year/yearRemove_modal.dart';
 import 'package:rukmini/modal/year/year_modal.dart';
 
 class CallApi {
@@ -383,6 +392,56 @@ class CallApi {
                     isDefault: isDefault,
                     lockerId: lockerId,
                   );
+                   return null;
+                }
+
+            // Locker Remove
+                static Future<LockerRemoveModal?> callLockerRemove({required String lockerId}) async {
+                  return await postLockerRemove(lockerId: lockerId);
+                }
+
+        //Metal Master
+            // Metal Add
+                static Future<MetalAddModal?> callMetalAdd({
+                  required String karat,
+                  required String goldContent,
+                  String? metalId,
+                }) async {
+                  return await postMetalAdd(
+                    karat: karat,
+                    goldContent: goldContent,
+                    metalId: metalId,
+                  );
+                }
+
+            // Metal Remove
+                static Future<MetalAddModal?> callMetalRemove({required String metalId}) async {
+                  return await postMetalRemove(metalId: metalId);
+                }
+
+        //Year Master
+            // Year Add
+                static Future<AddYearModal?> callAddYear({
+                  required String title,
+                  required String fromDate,
+                  required String toDate,
+                  String? isCurrent,
+                  String? yearId,
+                }) async {
+                  return await postAddYear(
+                    title: title,
+                    fromDate: fromDate,
+                    toDate: toDate,
+                    isCurrent: isCurrent,
+                    yearId: yearId,
+                  );
+                }
+
+            // Year Remove
+                static Future<YearRemoveModal?> callYearRemove({
+                  required String yearId,
+                }) async {
+                  return await postYearRemove(yearId: yearId);
                 }
 
 }

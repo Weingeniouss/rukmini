@@ -24,7 +24,9 @@ class AddLockerCode extends StatelessWidget {
       appBar: appBar(
         centerTitle: true,
         back: true,
-        title: AppString.addLockerCode,
+        title: uiController.editingId.value == null
+            ? AppString.addLockerCode
+            : "Update Locker Code",
       ),
       child: SingleChildScrollView(
         child: horizontalPadding(

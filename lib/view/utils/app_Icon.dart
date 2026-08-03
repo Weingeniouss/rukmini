@@ -43,6 +43,7 @@ class AppIcon {
   static const IconData percent = Icons.percent;
   static const IconData flag = Icons.flag;
   static const IconData camera_alt = Icons.camera_alt_outlined;
+  static const IconData check = Icons.check;
 
   // Contact Icons
   static const IconData call = Icons.call;

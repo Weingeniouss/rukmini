@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/customerTypeMaster/customerTypeMaster.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/lockerCodeMaster/addLockerCode.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/lockerCodeMaster/lockerCodeMaster.dart';
+import 'package:rukmini/view/screen/drawer/allMaster/year_Master/add_Year_Master.dart';
+import 'package:rukmini/view/screen/drawer/allMaster/year_Master/year_Master.dart';
 import 'package:rukmini/view/screen/drawer/home/customer/addCustForm.dart';
 import 'package:rukmini/view/screen/drawer/home/customer/custDetail.dart';
 import 'package:rukmini/view/screen/drawer/home/customer/custList.dart';
@@ -14,6 +16,7 @@ import 'package:rukmini/view/screen/drawer/home/home.dart';
 import 'package:rukmini/view/screen/drawer/home/pendingProduct/productDetail.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/allMaster.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/categoryMataer/categoryMaster.dart';
+import 'package:rukmini/view/screen/drawer/allMaster/metalTouch/metalTouch.dart';
 import '../view/screen/drawer/allMaster/metalMaster/metal_Master.dart';
 import '../view/screen/drawer/home/girvi/giriviList.dart';
 import '../view/screen/splash/splash.dart';
@@ -71,5 +74,11 @@ class AppPages {
         //Locker Code Master
             GetPage(name: _Paths.lockerCodeMaster, page: () => LockerCodeMaster()),
             GetPage(name: _Paths.addLockerCode, page: () => AddLockerCode()),
+        //Metal Touch
+            GetPage(name: _Paths.metalTouch, page: () => MetalTouch()),
+        //Year Master
+            GetPage(name: _Paths.yearMaster, page: () => YearMaster()),
+            GetPage(name: _Paths.addYearMaster, page: () => AddYearMaster()),
+
   ];
 }

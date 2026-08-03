@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../../../controller/api/services/drawer/all_master/locker_master/locker_service.dart';
+import '../../../../controller/api/services/drawer/all_master/locker_master/lockerAdd_service.dart';
 import '../../../../modal/drawer/allMaster/locker_master/locker_add_modal.dart';
 import '../../../../view/utils/widget/pop.dart';
 
@@ -14,7 +14,7 @@ Future<LockerAddModal?> postLockerAdd({
   required String isDefault,
   String? lockerId,
 }) async {
-  final LockerServices service = LockerServices();
+  final LockerAddServices service = LockerAddServices();
   final http.Response response = await service.lockerAddApi(
     lockerCode: lockerCode,
     comName: comName,

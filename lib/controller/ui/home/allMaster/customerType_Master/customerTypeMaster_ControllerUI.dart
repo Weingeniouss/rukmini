@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/drawer/all_master/customer_type_master/customerType_Controller.dart';
-import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
 class CustomerTypeMasterControllerUI extends GetxController {

@@ -8,9 +8,13 @@ class AppUrl {
 
   //Year
   static const yearList = '${baseAPI}years/yearsList';
+  static const yearAdd = '${baseAPI}years/yearsAdd';
+  static const yearsRemove = '${baseAPI}years/yearsRemove';
 
   //metal
   static const metalList = '${baseAPI}metal_touch/metalList';
+  static const metalAdd = '${baseAPI}metal_touch/metalAdd';
+  static const metalRemove = '${baseAPI}metal_touch/metalRemove';
 
   //productType
   static const productTypeList = '${baseAPI}product/ProductTypeList';
@@ -58,5 +62,5 @@ class AppUrl {
       //Locker Master
         static const lockerList = '${baseAPI}locker/lockerList';
         static const lockerAdd = '${baseAPI}locker/lockerAdd';
-        static const lockerRemove = '${baseAPI}locker/LockerRemove';
+        static const lockerRemove = '${baseAPI}locker/lockerRemove';
 }
