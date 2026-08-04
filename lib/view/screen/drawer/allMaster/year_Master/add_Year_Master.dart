@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/home/allMaster/year_Master/yearMaster_ControllerUI.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/button.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
@@ -18,7 +19,7 @@ class AddYearMaster extends StatelessWidget {
   Widget build(BuildContext context) {
     return Fullscreen(
       isPadding: false,
-      appBar: appBar(title: 'Add Year Master', back: true, centerTitle: true),
+      appBar: appBar(title: AppString.addYearMaster, back: true, centerTitle: true),
       child: SingleChildScrollView(
         child: horizontalPadding(
           child: Column(
@@ -26,14 +27,14 @@ class AddYearMaster extends StatelessWidget {
             children: [
               SizedBox(height: Get.height * 0.03),
               inputField(
-                hintText: 'Title',
+                hintText: AppString.title,
                 icon: Icons.badge_outlined,
                 iconColor: AppColor.activeColor,
                 inputTextcontroller: uiController.titleController,
               ),
               SizedBox(height: Get.height * 0.02),
               inputField(
-                hintText: 'From Date',
+                hintText: AppString.fromDate,
                 icon: AppIcon.calendar,
                 iconColor: AppColor.activeColor,
                 inputTextcontroller: uiController.fromDateController,
@@ -52,7 +53,7 @@ class AddYearMaster extends StatelessWidget {
               ),
               SizedBox(height: Get.height * 0.02),
               inputField(
-                hintText: 'To Date',
+                hintText: AppString.toDate,
                 icon: AppIcon.calendar,
                 iconColor: AppColor.activeColor,
                 inputTextcontroller: uiController.toDateController,
@@ -73,7 +74,7 @@ class AddYearMaster extends StatelessWidget {
               Obx(
                 () => CheckboxListTile(
                   title: Text(
-                    'Set as default year',
+                    AppString.setAsDefaultYear,
                     style: TextStyle(
                       fontSize: Get.width * 0.04,
                       color: AppColor.dark,
@@ -98,7 +99,7 @@ class AddYearMaster extends StatelessWidget {
                     onTap: () => uiController.submit(),
                     child: Obx(
                       () => clickButton(
-                        'Submit',
+                        AppString.submit,
                         isLoading: uiController.isLoading.value,
                       ),
                     ),

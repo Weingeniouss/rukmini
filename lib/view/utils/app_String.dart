@@ -144,6 +144,10 @@ class AppString {
   static const clear = 'Clear';
   static const deleteCustomer = 'Delete Customer';
   static const deleteMessage = 'Are you sure you want to delete this customer?';
+  static const deleteYear = 'Delete Year';
+  static const deleteYearMessage = 'Are you sure you want to delete this year?';
+  static const deleteMetalTouch = 'Delete Metal Touch';
+  static const deleteMetalTouchMessage = 'Are you sure you want to delete this metal touch?';
 
   //Splash
   static const napoleonHill = "“Strength and growth come only through continuous effort and struggle.”";
@@ -223,6 +227,7 @@ class AppString {
       static const totalAmountGiven = 'Total Amount Given';
       static const interestAmount = 'Interest Amount';
       static const totalAmountReceivable = 'Total Amount Receivable';
+      static const title = 'Title';
     //Givi
       static const giriviList = 'Girivi List';
       static const selectYear = 'Select Year';
@@ -237,6 +242,7 @@ class AppString {
       static const reset = 'Reset';
       static const dateRange = 'Date Range';
       static const fromeDate = 'From Date';
+      static const fromDate = 'From Date';
       static const toDate = 'To Date';
       static const applyFilter = 'Apply Filter';
       static const addProduct = 'Add Product';
@@ -318,6 +324,8 @@ class AppString {
       static const lockerCodeMaster = 'Locker Code Master';
       static const metalTouchMaster = 'Metal Touch';
       static const yearMaster = 'Year Master';
+      static const addYearMaster = 'Add Year Master';
+      static const setAsDefaultYear = 'Set as default year';
       //Locker Master
       static const code = 'Code';
       static const company = 'Company';
@@ -329,4 +337,6 @@ class AppString {
       static const setAsDefaultLocker = 'Set as default locker';
       static const submit = 'Submit';
       static const locker_Id = 'LockerId';
+      // //Year Master
+      // static const yearMaster = 'Year Master';
 }

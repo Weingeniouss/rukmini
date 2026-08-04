@@ -116,12 +116,12 @@ class _MetalTouchState extends State<MetalTouch> {
                   ? SizedBox(
                       height: Get.width * 0.06,
                       width: Get.width * 0.06,
-                      child: const CircularProgressIndicator(strokeWidth: 2),
+                      child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : GestureDetector(
                       onTap: () => uiController.save(),
                       child: Container(
-                        padding: const EdgeInsets.all(2),
+                        padding: EdgeInsets.all(2),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
@@ -230,9 +230,9 @@ class _MetalTouchState extends State<MetalTouch> {
 
   void _showDeleteDialog(MetalData item) {
     Get.defaultDialog(
-      title: "Delete Metal Touch",
+      title: AppString.deleteMetalTouch,
       middleText:
-          "Are you sure you want to delete this metal touch?\n\n ${item.karat} Karat",
+          "${AppString.deleteMetalTouchMessage}\n\n ${item.karat} Karat",
       textConfirm: AppString.delete,
       textCancel: AppString.cancel,
       confirmTextColor: AppColor.fullScreenColor,

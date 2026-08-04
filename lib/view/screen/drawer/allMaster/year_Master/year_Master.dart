@@ -7,6 +7,7 @@ import 'package:rukmini/controller/api/controllers/year/year_Controller.dart';
 import 'package:rukmini/modal/year/year_modal.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:shimmer/shimmer.dart';
@@ -34,7 +35,7 @@ class _YearMasterState extends State<YearMaster> {
     return Fullscreen(
       isPadding: false,
       appBar: appBar(
-        title: 'Year Master',
+        title: AppString.yearMaster,
         back: true,
         centerTitle: true,
         searchIcon: true,
@@ -44,8 +45,8 @@ class _YearMasterState extends State<YearMaster> {
           Get.toNamed('/addYearMaster');
         },
         backgroundColor: AppColor.primaryColor,
-        shape: const CircleBorder(),
-        child: const Icon(AppIcon.add, color: AppColor.activeColor, size: 30),
+        shape: CircleBorder(),
+        child: Icon(AppIcon.add, color: AppColor.activeColor, size: 30),
       ),
       child: Column(
         children: [
@@ -57,14 +58,14 @@ class _YearMasterState extends State<YearMaster> {
               }
 
               if (yearController.yearList.isEmpty) {
-                return const Center(child: Text("No Data Found"));
+                return Center(child: Text("No Data Found"));
               }
 
               return RefreshIndicator(
-                onRefresh: () => CallApi.callYearList(),
+                onRefresh: CallApi.callYearList,
                 color: AppColor.activeColor,
                 child: ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(),
+                  physics: AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(
                     vertical: Get.height * 0.02,
                     horizontal: Get.width * 0.03,
@@ -94,10 +95,10 @@ class _YearMasterState extends State<YearMaster> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: AppColor.dark.withOpacity(0.05),
             blurRadius: 5,
             spreadRadius: 1,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -145,10 +146,10 @@ class _YearMasterState extends State<YearMaster> {
 
   void _showDeleteDialog(YearData year) {
     Get.defaultDialog(
-      title: "Delete Year",
-      middleText: "Are you sure you want to delete this year?\n\n${year.title}",
-      textConfirm: "Delete",
-      textCancel: "Cancel",
+      title: AppString.deleteYear,
+      middleText: "${AppString.deleteYearMessage}\n\n${year.title}",
+      textConfirm: AppString.delete,
+      textCancel: AppString.cancel,
       confirmTextColor: AppColor.fullScreenColor,
       buttonColor: AppColor.deleteColor,
       onConfirm: () async {
@@ -166,11 +167,11 @@ class _YearMasterState extends State<YearMaster> {
         children: [
           TextSpan(
             text: '$label ',
-            style: const TextStyle(fontWeight: FontWeight.w400),
+            style: TextStyle(fontWeight: FontWeight.w400),
           ),
           TextSpan(
             text: date,
-            style: const TextStyle(fontWeight: FontWeight.w500),
+            style: TextStyle(fontWeight: FontWeight.w500),
           ),
         ],
       ),

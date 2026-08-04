@@ -56,14 +56,14 @@ class _MetalMasterState extends State<MetalMaster> {
               }
 
               if (productTypeController.productTypeList.isEmpty) {
-                return const Center(child: Text("No Data Found"));
+                return Center(child: Text("No Data Found"));
               }
 
               return RefreshIndicator(
                 onRefresh: () => CallApi.callProductTypeList(),
                 color: AppColor.activeColor,
                 child: ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(),
+                  physics: AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
                   itemCount: productTypeController.productTypeList.length,
                   itemBuilder: (context, index) {
@@ -118,12 +118,12 @@ class _MetalMasterState extends State<MetalMaster> {
                   ? SizedBox(
                       height: Get.width * 0.06,
                       width: Get.width * 0.06,
-                      child: const CircularProgressIndicator(strokeWidth: 2),
+                      child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : GestureDetector(
                       onTap: () => metalMasterUI.save(),
                       child: Container(
-                        padding: const EdgeInsets.all(2),
+                        padding: EdgeInsets.all(2),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
@@ -222,7 +222,7 @@ class _MetalMasterState extends State<MetalMaster> {
                 size: Get.width * 0.06,
               ),
               padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
+              constraints: BoxConstraints(),
             ),
           ],
         ),
