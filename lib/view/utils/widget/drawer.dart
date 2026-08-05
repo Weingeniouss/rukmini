@@ -105,13 +105,19 @@ Widget homeDrawer() {
                   index: 4,
                   title: AppString.products,
                   icon: AppIcon.grid,
-                  onTap: () => navDrawerController.changeIndex(4),
+                  onTap: () {
+                    navDrawerController.changeIndex(4);
+                    Get.toNamed('/pendingProduct');
+                  },
                 ),
                 listTital(
                   index: 5,
                   title: AppString.productinLocker,
                   icon: AppIcon.lockPerson,
-                  onTap: () => navDrawerController.changeIndex(5),
+                  onTap: () {
+                    navDrawerController.changeIndex(5);
+                    Get.toNamed('/productInLocker');
+                  },
                 ),
                 listTital(
                   index: 6,
@@ -147,7 +153,10 @@ Widget homeDrawer() {
         const Divider(color: AppColor.textField, thickness: 0.5),
         ListTile(
           leading: const Icon(AppIcon.logout, color: AppColor.deleteColor),
-          title: const Text('Logout', style: TextStyle(color: AppColor.deleteColor)),
+          title: const Text(
+            'Logout',
+            style: TextStyle(color: AppColor.deleteColor),
+          ),
           onTap: () async {
             await LocalDatabase().logout();
             Get.offAllNamed('/login');

@@ -10,6 +10,7 @@ abstract class Routes {
 
   //Drawer
     static const allMaster = _Paths.allMaster;
+    static const productInLocker = _Paths.productInLocker;
     // Home
       // Customer
         static const home = _Paths.home;
@@ -52,6 +53,10 @@ abstract class Routes {
         static const yearMaster = _Paths.yearMaster;
       //Add Year Master
         static const addYearMaster = _Paths.addYearMaster;
+    //All Mastart
+
+    //Product In Locker
+        static const productInLockerDetail = _Paths.productInLockerDetail;
 }
 
 abstract class _Paths {
@@ -64,6 +69,7 @@ abstract class _Paths {
 
   //Drawer
   static const allMaster = '/allMaster';
+  static const productInLocker = '/productInLocker';
     // Home
       // Customer
         static const home = '/home';
@@ -105,4 +111,8 @@ abstract class _Paths {
        //Year Master
           static const yearMaster = '/yearMaster';
           static const addYearMaster = '/addYearMaster';
+    //All Mastart
+
+    //Product In Locker
+          static const productInLockerDetail = '/productInLockerDetail';
 }

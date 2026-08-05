@@ -17,6 +17,8 @@ import 'package:rukmini/view/screen/drawer/home/pendingProduct/productDetail.dar
 import 'package:rukmini/view/screen/drawer/allMaster/allMaster.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/categoryMataer/categoryMaster.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/metalTouch/metalTouch.dart';
+import 'package:rukmini/view/screen/drawer/productInLocker/productInLocker.dart';
+import 'package:rukmini/view/screen/drawer/productInLocker/productLockerDetail/productInLockerDetail.dart';
 import '../view/screen/drawer/allMaster/metalMaster/metal_Master.dart';
 import '../view/screen/drawer/home/girvi/giriviList.dart';
 import '../view/screen/splash/splash.dart';
@@ -38,6 +40,7 @@ class AppPages {
 
     //Drawer
       GetPage(name: _Paths.allMaster, page: () => AllMaster()),
+      GetPage(name: _Paths.productInLocker, page: () => ProductInLocker()),
       // Home
         // Customer
             GetPage(name: _Paths.home, page: () => Home()),
@@ -79,6 +82,9 @@ class AppPages {
         //Year Master
             GetPage(name: _Paths.yearMaster, page: () => YearMaster()),
             GetPage(name: _Paths.addYearMaster, page: () => AddYearMaster()),
+    //All Master
 
+    //Product In Locker
+        GetPage(name: _Paths.productInLockerDetail, page: () => ProductInLockerDetail()),
   ];
 }

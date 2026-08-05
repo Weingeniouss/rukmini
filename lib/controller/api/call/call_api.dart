@@ -8,6 +8,7 @@ import 'package:rukmini/elevated/drawer/home/customers/custListElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custRemoveElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custUpdateElevated.dart';
 import 'package:rukmini/elevated/drawer/home/dashboardElevated.dart';
+import 'package:rukmini/elevated/drawer/productInLocker/custProductElevated.dart';
 import 'package:rukmini/elevated/drawer/home/girvi/giriviAddElevated.dart';
 import 'package:rukmini/elevated/drawer/home/girvi/giriviDetailElevated.dart';
 import 'package:rukmini/elevated/drawer/home/girvi/giriviListElevated.dart';
@@ -40,6 +41,7 @@ import 'package:rukmini/modal/drawer/home/girvi/girvi_detail_modal.dart';
 import 'package:rukmini/modal/drawer/home/girvi/girvi_list_model.dart';
 import 'package:rukmini/modal/drawer/home/girvi/remove_girvie_model.dart';
 import 'package:rukmini/modal/drawer/home/girvi/close_girvie_model.dart';
+import 'package:rukmini/modal/drawer/productInLocker/cust_product_model.dart';
 import 'package:rukmini/modal/drawer/home/pendingTransaction/pending_transaction_model.dart';
 import 'package:rukmini/modal/metal/metalList_Modal.dart';
 import 'package:rukmini/modal/product/productList_Modal.dart';
@@ -251,6 +253,11 @@ class CallApi {
           required String girviId,
         }) async {
           return await postCloseGirvie(girviId: girviId);
+        }
+
+        // Cust Product In Locker
+        static Future<CustProductModel?> callCustProduct() async {
+          return await getCustProduct();
         }
 
         // Pending Transaction

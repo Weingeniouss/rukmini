@@ -283,6 +283,7 @@ class AppString {
       static const girviDetail = 'GIRVI DETAILS';
       static const productDetail = 'PRODUCT DETAILS';
       static const transactionDetail = 'TRANSACTION DETAILS';
+      static const lockerDetail = 'Locker Detail';
       static const girviId = 'Girvi Id';
       static const totProd = 'Tot Prod';
       static const girviDt = 'Girvi Dt';
@@ -304,6 +305,9 @@ class AppString {
       static const pcs = 'Pcs';
       static const origPrice = 'Orig Price';
       static const rate = 'Rate';
+      static const amtGiven = 'Amt Given';
+      static const actualAmt = 'Actual Amt';
+      static const returnDate = 'Return Date';
       static const selectCustomer = 'Select Customer';
       static const nomineeDetails = 'Nominee Details';
       static const carryforwrdAmt = 'Carryforwrd Amt';
