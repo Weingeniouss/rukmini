@@ -11,6 +11,19 @@ class CustProductController extends GetxController {
   var custProductData = CustProductModel().obs;
   var custList = <CustList>[].obs;
   var productList = <ProductList>[].obs;
+  var selectedProducts = <ProductList>[].obs;
+
+  void toggleSelection(ProductList item) {
+    if (selectedProducts.contains(item)) {
+      selectedProducts.remove(item);
+    } else {
+      selectedProducts.add(item);
+    }
+  }
+
+  void clearSelection() {
+    selectedProducts.clear();
+  }
 
   Future<http.Response?> getCustProduct() async {
     try {

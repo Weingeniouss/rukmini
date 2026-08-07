@@ -1,5 +1,7 @@
 // ignore_for_file: constant_identifier_names, file_names
 
+import 'package:rukmini/view/screen/drawer/home/pendingProduct/productDetail.dart';
+
 class AppString {
   //Url Start
     //Headers
@@ -339,8 +341,13 @@ class AppString {
       static const companyAddress = 'Company Address';
       static const phoneNumber = 'Phone Number';
       static const setAsDefaultLocker = 'Set as default locker';
+      static const lockerSelection = 'Locker Selection';
+      static const tknAmt = 'Tkn Amt';
+      static const done = 'Done';
       static const submit = 'Submit';
       static const locker_Id = 'LockerId';
-      // //Year Master
-      // static const yearMaster = 'Year Master';
+    //All Master
+
+    // //Product In Product
+    //   static const productDetail = 'Product Detail';
 }

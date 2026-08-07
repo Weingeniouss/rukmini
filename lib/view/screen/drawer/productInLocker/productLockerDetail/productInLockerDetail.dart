@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/modal/drawer/productInLocker/cust_product_model.dart';
@@ -13,13 +15,11 @@ class ProductInLockerDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Assuming ProductList data is passed as argument
     final ProductList? item = Get.arguments;
-
     return Fullscreen(
       isPadding: false,
       appBar: appBar(
-        title: "Product Detail",
+        title: AppString.productDetail,
         back: true,
         centerTitle: true,
       ),
@@ -101,7 +101,7 @@ class ProductInLockerDetail extends StatelessWidget {
   Widget _buildSectionHeader(String title) {
     return Column(
       children: [
-        Divider(color: Colors.grey.shade300, thickness: 1),
+        Divider(color: AppColor.boderSideColor.shade300, thickness: 1),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Text(
@@ -122,24 +122,40 @@ class ProductInLockerDetail extends StatelessWidget {
     return horizontalPadding(
       child: Column(
         children: [
-          _buildDetailRow(Icons.badge_outlined, "${AppString.girviId} :",
-              item?.uniqueId ?? "",
-              isValueGreen: true),
-          _buildDetailRow(AppIcon.balance, "Weight :", "${item?.weight}gm"),
-          _buildDetailRow(AppIcon.rupee, "${AppString.amtGiven} :",
-              item?.givenAmount ?? "0.00"),
           _buildDetailRow(
-              AppIcon.rupee, "${AppString.actualAmt} :", item?.balance ?? "0.00"),
-          _buildDetailRow(AppIcon.balance, "${AppString.rate} :", "74500.00"), // Rate is usually from today's rate if not in model
-          _buildDetailRow(AppIcon.calendar, "${AppString.girviDt} :",
-              item?.girviDate ?? ""),
+            AppIcon.badge,
+            "${AppString.girviId} :",
+            item?.uniqueId ?? "",
+            isValueGreen: true,
+          ),
+          _buildDetailRow(AppIcon.balance, "Weight :", "${item?.weight}gm"),
+          _buildDetailRow(
+            AppIcon.rupee,
+            "${AppString.amtGiven} :",
+            item?.givenAmount ?? "0.00",
+          ),
+          _buildDetailRow(
+            AppIcon.rupee,
+            "${AppString.actualAmt} :",
+            item?.balance ?? "0.00",
+          ),
+          _buildDetailRow(AppIcon.balance, "${AppString.rate} :", "74500.00"),
+          _buildDetailRow(
+            AppIcon.calendar,
+            "${AppString.girviDt} :",
+            item?.girviDate ?? "",
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildDetailRow(IconData icon, String label, String value,
-      {bool isValueGreen = false}) {
+  Widget _buildDetailRow(
+    IconData icon,
+    String label,
+    String value, {
+    bool isValueGreen = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
@@ -152,7 +168,7 @@ class ProductInLockerDetail extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: Get.width * 0.04,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
                 color: AppColor.dark,
               ),
             ),
@@ -202,18 +218,11 @@ class ProductInLockerDetail extends StatelessWidget {
               Expanded(
                 child: Text(
                   "${item?.lockerCode}-${item?.code}",
-                  style: TextStyle(
-                    fontSize: Get.width * 0.04,
-                  ),
+                  style: TextStyle(fontSize: Get.width * 0.04),
                 ),
               ),
               Expanded(
-                child: Text(
-                  "-",
-                  style: TextStyle(
-                    fontSize: Get.width * 0.04,
-                  ),
-                ),
+                child: Text("-", style: TextStyle(fontSize: Get.width * 0.04)),
               ),
             ],
           ),

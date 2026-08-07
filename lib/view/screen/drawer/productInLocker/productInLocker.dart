@@ -68,18 +68,37 @@ class _ProductInLockerState extends State<ProductInLocker> {
                   },
                   itemBuilder: (context, index) {
                     final item = custProductController.productList[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Get.toNamed('/productInLockerDetail', arguments: item);
-                      },
-                      child: _buildProductCard(item),
-                    );
+                    return Obx(() {
+                      bool isSelected =
+                          custProductController.selectedProducts.contains(item);
+                      return GestureDetector(
+                        onLongPress: () {
+                          custProductController.toggleSelection(item);
+                        },
+                        onTap: () {
+                          if (custProductController
+                              .selectedProducts.isNotEmpty) {
+                            custProductController.toggleSelection(item);
+                          } else {
+                            Get.toNamed('/productInLockerDetail',
+                                arguments: item);
+                          }
+                        },
+                        child: _buildProductCard(item, isSelected),
+                      );
+                    });
                   },
                 ),
               );
             }),
           ),
-          _buildBottomBar(),
+          Obx(() {
+            if (custProductController.selectedProducts.isNotEmpty) {
+              return _buildBottomBar();
+            } else {
+              return const SizedBox();
+            }
+          }),
         ],
       ),
     );
@@ -120,24 +139,34 @@ class _ProductInLockerState extends State<ProductInLocker> {
             size: Get.width * 0.06,
           ),
           SizedBox(width: Get.width * 0.02),
-          Icon(
-            Icons.cancel_outlined,
-            color: AppColor.activeColor,
-            size: Get.width * 0.05,
+          GestureDetector(
+            onTap: () {
+              custProductController.clearSelection();
+            },
+            child: Icon(
+              Icons.cancel_outlined,
+              color: AppColor.activeColor,
+              size: Get.width * 0.05,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildProductCard(ProductList item) {
+  Widget _buildProductCard(ProductList item, bool isSelected) {
     return horizontalPadding(
       child: Container(
         padding: EdgeInsets.all(Get.width * 0.03),
         decoration: BoxDecoration(
-          color: AppColor.fullScreenColor,
+          color: isSelected
+              ? AppColor.activeColor.withOpacity(0.1)
+              : AppColor.fullScreenColor,
           borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: AppColor.boderSideColor.withOpacity(0.2)),
+          border: Border.all(
+              color: isSelected
+                  ? AppColor.activeColor
+                  : AppColor.boderSideColor.withOpacity(0.2)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -149,7 +178,28 @@ class _ProductInLockerState extends State<ProductInLocker> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildProductImage(item.productImg),
+            Stack(
+              children: [
+                _buildProductImage(item.productImg),
+                if (isSelected)
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: const BoxDecoration(
+                        color: AppColor.activeColor,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 12,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
             SizedBox(width: Get.width * 0.03),
             Expanded(
               child: Column(
@@ -186,8 +236,8 @@ class _ProductInLockerState extends State<ProductInLocker> {
 
   Widget _buildProductImage(String? imageUrl) {
     return Container(
-      width: Get.width * 0.22,
-      height: Get.width * 0.22,
+      width: Get.width * 0.13,
+      height: Get.width * 0.23,
       decoration: BoxDecoration(
         color: AppColor.boderSideColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(5),
@@ -198,8 +248,9 @@ class _ProductInLockerState extends State<ProductInLocker> {
               child: Image.network(
                 imageUrl,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
-                    _buildImagePlaceholder(),
+                errorBuilder: (context, error, stackTrace) {
+                  return _buildImagePlaceholder();
+                },
               ),
             )
           : _buildImagePlaceholder(),
@@ -235,8 +286,8 @@ class _ProductInLockerState extends State<ProductInLocker> {
             name,
             style: TextStyle(
               color: AppColor.activeColor,
-              fontWeight: FontWeight.w500,
-              fontSize: Get.width * 0.038,
+              fontWeight: FontWeight.w600,
+              fontSize: Get.width * 0.035,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -295,7 +346,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
             children: [
               TextSpan(
                 text: label1,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.w500),
               ),
               TextSpan(
                 text: value1,
@@ -310,7 +361,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
             children: [
               TextSpan(
                 text: label2,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.w500),
               ),
               TextSpan(
                 text: value2,
@@ -324,17 +375,22 @@ class _ProductInLockerState extends State<ProductInLocker> {
   }
 
   Widget _buildBottomBar() {
-    return Container(
-      width: Get.width,
-      padding: EdgeInsets.symmetric(vertical: Get.height * 0.015),
-      color: AppColor.primaryColor,
-      child: Center(
-        child: Text(
-          "Change the locker",
-          style: TextStyle(
-            color: AppColor.activeColor,
-            fontSize: Get.width * 0.045,
-            fontWeight: FontWeight.w500,
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed('/changeTheLocker');
+      },
+      child: Container(
+        width: Get.width,
+        padding: EdgeInsets.symmetric(vertical: Get.height * 0.015),
+        color: AppColor.primaryColor,
+        child: Center(
+          child: Text(
+            "Change the locker",
+            style: TextStyle(
+              color: AppColor.activeColor,
+              fontSize: Get.width * 0.045,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ),
@@ -348,8 +404,9 @@ class _ProductInLockerState extends State<ProductInLocker> {
       child: ListView.separated(
         itemCount: 6,
         padding: EdgeInsets.all(Get.width * 0.04),
-        separatorBuilder: (context, index) =>
-            SizedBox(height: Get.height * 0.02),
+        separatorBuilder: (context, index) {
+          return SizedBox(height: Get.height * 0.02);
+        },
         itemBuilder: (context, index) {
           return Container(
             height: 100,

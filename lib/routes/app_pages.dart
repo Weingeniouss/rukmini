@@ -17,6 +17,7 @@ import 'package:rukmini/view/screen/drawer/home/pendingProduct/productDetail.dar
 import 'package:rukmini/view/screen/drawer/allMaster/allMaster.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/categoryMataer/categoryMaster.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/metalTouch/metalTouch.dart';
+import 'package:rukmini/view/screen/drawer/productInLocker/changeTheLocker/changeTheLocker.dart';
 import 'package:rukmini/view/screen/drawer/productInLocker/productInLocker.dart';
 import 'package:rukmini/view/screen/drawer/productInLocker/productLockerDetail/productInLockerDetail.dart';
 import '../view/screen/drawer/allMaster/metalMaster/metal_Master.dart';
@@ -86,5 +87,7 @@ class AppPages {
 
     //Product In Locker
         GetPage(name: _Paths.productInLockerDetail, page: () => ProductInLockerDetail()),
+        GetPage(name: _Paths.changeTheLocker, page: () => ChangeTheLocker()),
+
   ];
 }

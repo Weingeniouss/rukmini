@@ -44,6 +44,9 @@ class AppIcon {
   static const IconData flag = Icons.flag;
   static const IconData camera_alt = Icons.camera_alt_outlined;
   static const IconData check = Icons.check;
+  static const IconData image = Icons.image_outlined;
+  static const IconData badge = Icons.badge_outlined;
+  static const IconData arrow_down = Icons.keyboard_arrow_down;
 
   // Contact Icons
   static const IconData call = Icons.call;

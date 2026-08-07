@@ -67,5 +67,7 @@ class AppUrl {
 
    //Product In Locker
         static const productInLocker = '${baseAPI}girvi_master/CustProduct';
+        static const productInLockerDetail = '${baseAPI}girvi_master/AddProductLocker';
+   //Product In Locker
 
 }
