@@ -13,7 +13,7 @@ class ChangeLockerControllerUI extends GetxController {
   final lockerListController = Get.put(LockerListController());
   var selectedLocker = Rxn<LockerData>();
   final lockerCodeController = TextEditingController();
-  var selectedDate = "".obs; // Formatted for display
+  var selectedDate = "".obs;
   DateTime? lockerDate;
 
   var isLoading = false.obs;

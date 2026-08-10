@@ -58,6 +58,12 @@ abstract class Routes {
     //Product In Locker
         static const productInLockerDetail = _Paths.productInLockerDetail;
         static const changeTheLocker = _Paths.changeTheLocker;
+    //Product In Locker
+
+    //Locker Transaction
+        static const lockerTransaction = _Paths.lockerTransaction;
+        static const lockerTransationDetail = _Paths.lockerTransationDetail;
+    //Locker Transaction
 }
 
 abstract class _Paths {
@@ -117,4 +123,10 @@ abstract class _Paths {
     //Product In Locker
           static const productInLockerDetail = '/productInLockerDetail';
           static const changeTheLocker = '/changeTheLocker';
+    //Product In Locker
+
+    //Locker Transaction
+          static const lockerTransaction = '/lockerTransaction';
+          static const lockerTransationDetail = '/lockerTransationDetail';
+    //Locker Transaction
 }

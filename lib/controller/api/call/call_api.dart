@@ -8,6 +8,8 @@ import 'package:rukmini/elevated/drawer/home/customers/custListElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custRemoveElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custUpdateElevated.dart';
 import 'package:rukmini/elevated/drawer/home/dashboardElevated.dart';
+import 'package:rukmini/elevated/drawer/locker/locker_trans_elevated.dart';
+import 'package:rukmini/elevated/drawer/locker/locker_wise_del_elevated.dart';
 import 'package:rukmini/elevated/drawer/productInLocker/addProductLockerElevated.dart';
 import 'package:rukmini/elevated/drawer/productInLocker/custProductElevated.dart';
 import 'package:rukmini/elevated/drawer/home/girvi/giriviAddElevated.dart';
@@ -42,6 +44,8 @@ import 'package:rukmini/modal/drawer/home/girvi/girvi_detail_modal.dart';
 import 'package:rukmini/modal/drawer/home/girvi/girvi_list_model.dart';
 import 'package:rukmini/modal/drawer/home/girvi/remove_girvie_model.dart';
 import 'package:rukmini/modal/drawer/home/girvi/close_girvie_model.dart';
+import 'package:rukmini/modal/drawer/locker/locker_trans_modal.dart';
+import 'package:rukmini/modal/drawer/locker/locker_wise_del_modal.dart';
 import 'package:rukmini/modal/drawer/productInLocker/add_product_locker_model.dart';
 import 'package:rukmini/modal/drawer/productInLocker/cust_product_model.dart';
 import 'package:rukmini/modal/drawer/home/pendingTransaction/pending_transaction_model.dart';
@@ -276,6 +280,24 @@ class CallApi {
             lockerProdDel: lockerProdDel,
             lockerCode: lockerCode,
             lockerDate: lockerDate,
+          );
+        }
+
+        // Locker List Trans
+        static Future<LockerTransModal?> callLockerListTrans() async {
+          return await getLockerTransList();
+        }
+
+        // Locker Wise Detail
+        static Future<LockerWiseDelModal?> callLockerWiseDel({
+          required String lockerId,
+          String? page,
+          String? search,
+        }) async {
+          return await getLockerWiseDel(
+            lockerId: lockerId,
+            page: page,
+            search: search,
           );
         }
 

@@ -1,6 +1,5 @@
 // ignore_for_file: constant_identifier_names, file_names
 
-import 'package:rukmini/view/screen/drawer/home/pendingProduct/productDetail.dart';
 
 class AppString {
   //Url Start

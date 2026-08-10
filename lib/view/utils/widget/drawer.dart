@@ -18,14 +18,14 @@ Widget homeDrawer() {
     child: Column(
       children: [
         DrawerHeader(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: AppColor.primaryColor,
             border: Border(bottom: BorderSide.none),
           ),
           child: Row(
             children: [
               Image.asset(AppLogo.rukminiLogo2, scale: 7),
-              const SizedBox(width: 20),
+              SizedBox(width: 20),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -48,7 +48,7 @@ Widget homeDrawer() {
                       loginAPI.loginUI.emailController.text,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColor.textField,
                         fontSize: 12,
                         decoration: TextDecoration.none,
@@ -132,7 +132,10 @@ Widget homeDrawer() {
                   index: 7,
                   title: AppString.lockerTransaction,
                   icon: AppIcon.lockReset,
-                  onTap: () => navDrawerController.changeIndex(7),
+                  onTap: () {
+                    navDrawerController.changeIndex(7);
+                    Get.toNamed('/lockerTransaction');
+                  },
                 ),
                 listTital(
                   index: 8,
@@ -183,7 +186,7 @@ Widget listTital({
 
     return ListTile(
       dense: true,
-      visualDensity: const VisualDensity(vertical: -4),
+      visualDensity: VisualDensity(vertical: -4),
       leading: Icon(icon, color: itemColor, size: 20),
       title: Text(
         title,

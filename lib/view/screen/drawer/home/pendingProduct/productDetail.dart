@@ -111,29 +111,29 @@ class _productDetailState extends State<productDetail>
             }
           },
           bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(50),
-          child: Container(
-            color: AppColor.fullScreenColor,
-            child: TabBar(
-              controller: _tabController,
-              onTap: (index) {
-                productController.products.clear();
-                fetchData(index: index, isRefresh: true);
-              },
-              indicatorColor: AppColor.activeColor,
-              labelColor: AppColor.activeColor,
-              unselectedLabelColor: AppColor.dark,
-              indicatorSize: TabBarIndicatorSize.tab,
-              dividerColor: AppColor.boderSideColor.shade300,
-              tabs: [
-                _buildTab(AppString.pendingProduct),
-                _buildTab(AppString.returnProduct),
-                _buildTab(AppString.soldProduct),
-                _buildTab(AppString.karkitProduct, isLast: true),
-              ],
+            preferredSize: const Size.fromHeight(50),
+            child: Container(
+              color: AppColor.fullScreenColor,
+              child: TabBar(
+                controller: _tabController,
+                onTap: (index) {
+                  productController.products.clear();
+                  fetchData(index: index, isRefresh: true);
+                },
+                indicatorColor: AppColor.activeColor,
+                labelColor: AppColor.activeColor,
+                unselectedLabelColor: AppColor.dark,
+                indicatorSize: TabBarIndicatorSize.tab,
+                dividerColor: AppColor.boderSideColor.shade300,
+                tabs: [
+                  _buildTab(AppString.pendingProduct),
+                  _buildTab(AppString.returnProduct),
+                  _buildTab(AppString.soldProduct),
+                  _buildTab(AppString.karkitProduct, isLast: true),
+                ],
+              ),
             ),
           ),
-        ),
         ),
         child: TabBarView(
           physics: NeverScrollableScrollPhysics(),
