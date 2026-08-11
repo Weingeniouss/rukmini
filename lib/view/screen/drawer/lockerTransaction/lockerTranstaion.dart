@@ -160,7 +160,7 @@ class LockerTranStaion extends StatelessWidget {
         height: Get.height * 0.4,
         decoration: BoxDecoration(
           color: AppColor.fullScreenColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
         ),
         child: Column(
           children: [

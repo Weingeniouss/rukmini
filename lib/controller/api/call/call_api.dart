@@ -8,6 +8,7 @@ import 'package:rukmini/elevated/drawer/home/customers/custListElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custRemoveElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custUpdateElevated.dart';
 import 'package:rukmini/elevated/drawer/home/dashboardElevated.dart';
+import 'package:rukmini/elevated/drawer/locker/locker_detail_elevated.dart';
 import 'package:rukmini/elevated/drawer/locker/locker_trans_elevated.dart';
 import 'package:rukmini/elevated/drawer/locker/locker_wise_del_elevated.dart';
 import 'package:rukmini/elevated/drawer/productInLocker/addProductLockerElevated.dart';
@@ -44,6 +45,7 @@ import 'package:rukmini/modal/drawer/home/girvi/girvi_detail_modal.dart';
 import 'package:rukmini/modal/drawer/home/girvi/girvi_list_model.dart';
 import 'package:rukmini/modal/drawer/home/girvi/remove_girvie_model.dart';
 import 'package:rukmini/modal/drawer/home/girvi/close_girvie_model.dart';
+import 'package:rukmini/modal/drawer/locker/locker_detail_modal.dart';
 import 'package:rukmini/modal/drawer/locker/locker_trans_modal.dart';
 import 'package:rukmini/modal/drawer/locker/locker_wise_del_modal.dart';
 import 'package:rukmini/modal/drawer/productInLocker/add_product_locker_model.dart';
@@ -298,6 +300,17 @@ class CallApi {
             lockerId: lockerId,
             page: page,
             search: search,
+          );
+        }
+
+        // Locker Detail
+        static Future<LockerDetailModal?> callLockerDetail({
+          required String lockerId,
+          required String code,
+        }) async {
+          return await getLockerDetail(
+            lockerId: lockerId,
+            code: code,
           );
         }
 

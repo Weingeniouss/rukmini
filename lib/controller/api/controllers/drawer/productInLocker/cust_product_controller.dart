@@ -11,6 +11,7 @@ class CustProductController extends GetxController {
   var custProductData = CustProductModel().obs;
   var custList = <CustList>[].obs;
   var productList = <ProductList>[].obs;
+  var filteredProductList = <ProductList>[].obs;
   var selectedProducts = <ProductList>[].obs;
 
   void toggleSelection(ProductList item) {
@@ -23,6 +24,14 @@ class CustProductController extends GetxController {
 
   void clearSelection() {
     selectedProducts.clear();
+  }
+
+  void filterByLocker(String lockerId) {
+    filteredProductList.assignAll(productList.where((p) => p.prodLockerId == lockerId).toList());
+  }
+
+  void resetFilter() {
+    filteredProductList.assignAll(productList);
   }
 
   Future<http.Response?> getCustProduct() async {
@@ -46,6 +55,7 @@ class CustProductController extends GetxController {
           if (model.data != null) {
             custList.assignAll(model.data?.custList ?? []);
             productList.assignAll(model.data?.productList ?? []);
+            filteredProductList.assignAll(model.data?.productList ?? []);
           }
         }
       }

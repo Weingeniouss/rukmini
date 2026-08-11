@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
+import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/lockerList_Controller.dart';
 import 'package:rukmini/controller/api/controllers/drawer/productInLocker/cust_product_controller.dart';
 import 'package:rukmini/modal/drawer/productInLocker/cust_product_model.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
@@ -23,6 +24,7 @@ class ProductInLocker extends StatefulWidget {
 
 class _ProductInLockerState extends State<ProductInLocker> {
   final custProductController = Get.put(CustProductController());
+  final lockerListController = Get.put(LockerListController());
 
   @override
   void initState() {
@@ -40,6 +42,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
       appBar: appBar(
         title: AppString.productinLocker,
         filter: true,
+        filterOnPressed: () => _showLockerFilterPopup(),
         back: false,
       ),
       child: Column(
@@ -48,40 +51,44 @@ class _ProductInLockerState extends State<ProductInLocker> {
           Expanded(
             child: Obx(() {
               if (custProductController.isLoading.value &&
-                  custProductController.productList.isEmpty) {
+                  custProductController.filteredProductList.isEmpty) {
                 return _shimmerLoading();
               }
 
-              if (custProductController.productList.isEmpty) {
+              if (custProductController.filteredProductList.isEmpty) {
                 return const Center(child: Text("No Products Found"));
               }
 
               return RefreshIndicator(
-                onRefresh: () => CallApi.callCustProduct(),
+                onRefresh: CallApi.callCustProduct,
                 color: AppColor.activeColor,
                 child: ListView.separated(
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
-                  itemCount: custProductController.productList.length,
+                  itemCount: custProductController.filteredProductList.length,
                   separatorBuilder: (context, index) {
                     return SizedBox(height: Get.height * 0.01);
                   },
                   itemBuilder: (context, index) {
-                    final item = custProductController.productList[index];
+                    final item =
+                        custProductController.filteredProductList[index];
                     return Obx(() {
-                      bool isSelected =
-                          custProductController.selectedProducts.contains(item);
+                      bool isSelected = custProductController.selectedProducts
+                          .contains(item);
                       return GestureDetector(
                         onLongPress: () {
                           custProductController.toggleSelection(item);
                         },
                         onTap: () {
                           if (custProductController
-                              .selectedProducts.isNotEmpty) {
+                              .selectedProducts
+                              .isNotEmpty) {
                             custProductController.toggleSelection(item);
                           } else {
-                            Get.toNamed('/productInLockerDetail',
-                                arguments: item);
+                            Get.toNamed(
+                              '/productInLockerDetail',
+                              arguments: item,
+                            );
                           }
                         },
                         child: _buildProductCard(item, isSelected),
@@ -100,6 +107,75 @@ class _ProductInLockerState extends State<ProductInLocker> {
             }
           }),
         ],
+      ),
+    );
+  }
+
+  void _showLockerFilterPopup() {
+    lockerListController.getLockerList();
+    Get.bottomSheet(
+      Container(
+        height: Get.height * 0.45,
+        decoration: BoxDecoration(
+          color: AppColor.fullScreenColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(Get.width * 0.04),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    AppString.selectLocker,
+                    style: TextStyle(
+                      fontSize: Get.width * 0.045,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      custProductController.resetFilter();
+                      Get.back();
+                    },
+                    child: const Text("Reset"),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(),
+            Expanded(
+              child: Obx(() {
+                if (lockerListController.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (lockerListController.lockerList.isEmpty) {
+                  return const Center(child: Text("No lockers available"));
+                }
+                return ListView.builder(
+                  itemCount: lockerListController.lockerList.length,
+                  itemBuilder: (context, index) {
+                    final locker = lockerListController.lockerList[index];
+                    return ListTile(
+                      title: Text(
+                        locker.lockerCode ?? "N/A",
+                        style: TextStyle(fontSize: Get.width * 0.04),
+                      ),
+                      subtitle: Text(locker.comName ?? ""),
+                      onTap: () {
+                        custProductController.filterByLocker(
+                          locker.lockerId ?? "",
+                        );
+                        Get.back();
+                      },
+                    );
+                  },
+                );
+              }),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -164,9 +240,10 @@ class _ProductInLockerState extends State<ProductInLocker> {
               : AppColor.fullScreenColor,
           borderRadius: BorderRadius.circular(5),
           border: Border.all(
-              color: isSelected
-                  ? AppColor.activeColor
-                  : AppColor.boderSideColor.withOpacity(0.2)),
+            color: isSelected
+                ? AppColor.activeColor
+                : AppColor.boderSideColor.withOpacity(0.2),
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -186,14 +263,14 @@ class _ProductInLockerState extends State<ProductInLocker> {
                     right: 0,
                     top: 0,
                     child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: const BoxDecoration(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
                         color: AppColor.activeColor,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
-                        Icons.check,
-                        color: Colors.white,
+                      child: Icon(
+                        AppIcon.check,
+                        color: AppColor.backgroundColor,
                         size: 12,
                       ),
                     ),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rukmini/controller/api/call/call_api.dart';
-import 'package:rukmini/controller/api/controllers/drawer/home/girvi/giriviDetail_Controller.dart';
-import 'package:rukmini/modal/drawer/home/girvi/girvi_detail_modal.dart';
+import 'package:rukmini/controller/api/controllers/drawer/locker/locker_detail_controller.dart';
+import 'package:rukmini/modal/drawer/locker/locker_detail_modal.dart';
 import 'package:rukmini/modal/drawer/locker/locker_wise_del_modal.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
@@ -19,7 +18,7 @@ class LockerTransationDetail extends StatefulWidget {
 }
 
 class _LockerTransationDetailState extends State<LockerTransationDetail> {
-  final giriviDetailController = Get.put(GiriviDetailController());
+  final lockerDetailController = Get.put(LockerDetailController());
   late LockerWiseData? lockerData;
 
   @override
@@ -27,8 +26,11 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
     super.initState();
     lockerData = Get.arguments;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (lockerData?.girviId != null) {
-        CallApi.callGiriviDetail(girviId: lockerData!.girviId!);
+      if (lockerData?.lockerId != null && lockerData?.code != null) {
+        lockerDetailController.getLockerDetail(
+          lockerId: lockerData!.lockerId!,
+          code: lockerData!.code!,
+        );
       }
     });
   }
@@ -42,42 +44,27 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: appBar(
-            title: Obx(() {
-              final detail = giriviDetailController.giriviDetailData.value.data;
-              bool isOpen = detail?.isClosed != "1";
-              return RichText(
-                text: TextSpan(
-                  style: TextStyle(
-                    color: AppColor.fullScreenColor,
-                    fontSize: Get.width * 0.05,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: "${lockerData?.lockerCode}-${lockerData?.code} ",
-                    ),
-                    TextSpan(
-                      text: isOpen ? "( Open )" : "( Closed )",
-                      style: TextStyle(
-                        color: isOpen
-                            ? AppColor.activeColor
-                            : AppColor.errorColor,
-                        fontSize: Get.width * 0.04,
-                      ),
-                    ),
-                  ],
+            title: RichText(
+              text: TextSpan(
+                style: TextStyle(
+                  color: AppColor.fullScreenColor,
+                  fontSize: Get.width * 0.05,
+                  fontWeight: FontWeight.w500,
                 ),
-              );
-            }),
+                children: [
+                  TextSpan(
+                    text: "${lockerData?.lockerCode}-${lockerData?.code} ",
+                  ),
+                  const TextSpan(
+                    text: "( Open )",
+                    style: TextStyle(color: AppColor.errorColor, fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
             centerTitle: true,
             back: true,
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          backgroundColor: AppColor.primaryColor,
-          shape: const CircleBorder(),
-          child: const Icon(AppIcon.add, color: AppColor.activeColor, size: 30),
         ),
         child: Column(
           children: [
@@ -93,19 +80,19 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
             ),
             Expanded(
               child: Obx(() {
-                if (giriviDetailController.isLoading.value) {
+                if (lockerDetailController.isLoading.value) {
                   return _shimmerLoading();
                 }
 
                 final detail =
-                    giriviDetailController.giriviDetailData.value.data;
+                    lockerDetailController.lockerDetailData.value.data;
                 if (detail == null) {
                   return const Center(child: Text("No data found"));
                 }
 
                 return TabBarView(
                   children: [
-                    _buildProductDetails(detail),
+                    _buildProductDetailsList(detail),
                     _buildTransactionDetails(detail),
                   ],
                 );
@@ -117,85 +104,89 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
     );
   }
 
-  Widget _buildProductDetails(GiriviDetailData detail) {
-    // Assuming we want the product detail matching ProdLockerId or the first one
-    final product =
-        detail.productDetail?.firstWhereOrNull(
-          (p) => p.productId == lockerData?.prodLockerId,
-        ) ??
-        (detail.productDetail?.isNotEmpty == true
-            ? detail.productDetail!.first
-            : ProductDetail());
-
-    return ListView(
+  Widget _buildProductDetailsList(LockerDetailData detail) {
+    if (detail.productList == null || detail.productList!.isEmpty) {
+      return const Center(child: Text("No products found"));
+    }
+    return ListView.builder(
       padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
-      children: [
-        Container(
-          margin: EdgeInsets.all(Get.width * 0.03),
-          padding: EdgeInsets.all(Get.width * 0.04),
-          decoration: BoxDecoration(
-            color: AppColor.fullScreenColor,
-            border: Border.all(color: AppColor.boderSideColor.withOpacity(0.2)),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Column(
-            children: [
-              _buildDetailRow(
-                "Pro Typ : ",
-                product.catName ?? "",
-                "Metal : ",
-                "${product.prodType} (${product.metalName} Karat)",
-              ),
-              SizedBox(height: Get.height * 0.015),
-              _buildDetailRow(
-                "Pcs : ",
-                "${product.pieces} (${product.weight}gm)",
-                "Orig Price : ",
-                product.origAmount ?? "0.00",
-              ),
-              SizedBox(height: Get.height * 0.015),
-              _buildDetailRow(
-                "Gvn Amt : ",
-                product.givenAmount ?? "0.00",
-                "Rate : ",
-                product.todayRate ?? "0.00",
-              ),
-              SizedBox(height: Get.height * 0.015),
-              Row(
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      style: TextStyle(
-                        fontSize: Get.width * 0.035,
-                        color: AppColor.dark,
-                      ),
-                      children: [
-                        const TextSpan(
-                          text: "Status : ",
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        TextSpan(
-                          text: product.productStatus ?? "Pending",
-                          style: TextStyle(
-                            color: product.productStatus == "Active"
-                                ? AppColor.orange
-                                : AppColor.activeColor,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
+      itemCount: detail.productList!.length,
+      itemBuilder: (context, index) {
+        final product = detail.productList![index];
+        return _buildProductDetailCard(product);
+      },
     );
   }
 
-  Widget _buildTransactionDetails(GiriviDetailData detail) {
+  Widget _buildProductDetailCard(ProductListDetail product) {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: Get.width * 0.03,
+        vertical: Get.height * 0.005,
+      ),
+      padding: EdgeInsets.all(Get.width * 0.04),
+      decoration: BoxDecoration(
+        color: AppColor.fullScreenColor,
+        border: Border.all(color: AppColor.boderSideColor.withOpacity(0.2)),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Column(
+        children: [
+          _buildDetailRow(
+            "Pro Typ : ",
+            product.catName ?? "",
+            "Metal : ",
+            "${product.prodType} (${product.metalName} Karat)",
+          ),
+          SizedBox(height: Get.height * 0.015),
+          _buildDetailRow(
+            "Pcs : ",
+            "${product.pieces} (${product.weight}gm)",
+            "Orig Price : ",
+            product.origAmount ?? "0.00",
+          ),
+          SizedBox(height: Get.height * 0.015),
+          _buildDetailRow(
+            "Gvn Amt : ",
+            product.givenAmount ?? "0.00",
+            "Rate : ",
+            product.todayRate ?? "0.00",
+          ),
+          SizedBox(height: Get.height * 0.015),
+          Row(
+            children: [
+              RichText(
+                text: TextSpan(
+                  style: TextStyle(
+                    fontSize: Get.width * 0.035,
+                    color: AppColor.dark,
+                  ),
+                  children: [
+                    const TextSpan(
+                      text: "Status : ",
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    TextSpan(
+                      text: product.productStatus ?? "Pending",
+                      style: TextStyle(
+                        color: AppColor.orange,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTransactionDetails(LockerDetailData detail) {
+    final trans = detail.transObj;
+    if (trans == null) return const Center(child: Text("No transaction info"));
+
     return ListView(
       padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
       children: [
@@ -215,17 +206,17 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
                 children: [
                   _buildTransItem(
                     "Tkn Amt : ",
-                    "${detail.givenAmt} (${detail.interest} %)",
+                    "${trans.givenAmt} (${trans.interestRate} %)",
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       _buildTransItem(
                         "Tot Int : ",
-                        "${detail.tillInterest} (${detail.tillMonth} mon.)",
+                        "${trans.tillInterest} (${trans.tillMonth} mon.)",
                       ),
                       Text(
-                        "Till ${detail.tillDate}",
+                        "Till ${trans.tillDate}",
                         style: TextStyle(
                           fontSize: Get.width * 0.025,
                           color: AppColor.textColor,
@@ -238,14 +229,14 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
               SizedBox(height: Get.height * 0.015),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [_buildTransItem("Bal. Amt : ", "${detail.balance}")],
+                children: [_buildTransItem("Bal. Amt : ", "${trans.balance}")],
               ),
               SizedBox(height: Get.height * 0.015),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildTransItem("Paid Amt : ", "${detail.totalPaidAmt}"),
-                  _buildTransItem("Paid Int : ", "${detail.paidInterset}"),
+                  _buildTransItem("Paid Amt : ", "${trans.totalPaidAmt}"),
+                  _buildTransItem("Paid Int : ", "${trans.paidInterset}"),
                 ],
               ),
             ],

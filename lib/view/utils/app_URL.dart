@@ -74,5 +74,6 @@ class AppUrl {
         static const lockerListTrans = '${baseAPI}locker/lockerListTrans';
         static const lockerWiseDel = '${baseAPI}locker/lockerWiseDel';
         static const lockerDetail = '${baseAPI}locker/LockerDetail';
-
+        static const lockerTrans = '${baseAPI}locker/LockerTrans';
+   //LockerListTrans
 }
