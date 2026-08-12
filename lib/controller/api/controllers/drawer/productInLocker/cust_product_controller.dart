@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:rukmini/controller/api/services/drawer/productInLocker/cust_product_service.dart';
@@ -14,6 +15,14 @@ class CustProductController extends GetxController {
   var filteredProductList = <ProductList>[].obs;
   var selectedProducts = <ProductList>[].obs;
 
+  var searchQuery = "".obs;
+  var selectedLockerCode = "".obs;
+  var selectedCustId = "".obs;
+  var selectedCustName = "Select customer".obs;
+
+  var isSearching = false.obs;
+  final searchController = TextEditingController();
+
   void toggleSelection(ProductList item) {
     if (selectedProducts.contains(item)) {
       selectedProducts.remove(item);
@@ -26,12 +35,70 @@ class CustProductController extends GetxController {
     selectedProducts.clear();
   }
 
-  void filterByLocker(String lockerId) {
-    filteredProductList.assignAll(productList.where((p) => p.prodLockerId == lockerId).toList());
+  void updateSearch(String query) {
+    searchQuery.value = query;
+    applyFilters();
   }
 
-  void resetFilter() {
-    filteredProductList.assignAll(productList);
+  void toggleSearch() {
+    isSearching.value = true;
+  }
+
+  void closeSearch() {
+    isSearching.value = false;
+    searchController.clear();
+    updateSearch("");
+  }
+
+  void filterByLocker(String lockerCode) {
+    selectedLockerCode.value = lockerCode;
+    applyFilters();
+  }
+
+  void filterByCustomer(String custId, String name) {
+    selectedCustId.value = custId;
+    selectedCustName.value = name;
+    applyFilters();
+  }
+
+  void resetLockerFilter() {
+    selectedLockerCode.value = "";
+    applyFilters();
+  }
+
+  void clearCustomerFilter() {
+    selectedCustId.value = "";
+    selectedCustName.value = "Select customer";
+    applyFilters();
+  }
+
+  void applyFilters() {
+    var list = productList.where((p) {
+      bool matchesSearch =
+          searchQuery.value.isEmpty ||
+          (p.custName?.toLowerCase().contains(
+                searchQuery.value.toLowerCase(),
+              ) ??
+              false) ||
+          (p.uniqueId?.contains(searchQuery.value) ?? false);
+
+      bool matchesLocker =
+          selectedLockerCode.value.isEmpty ||
+          p.lockerCode?.toUpperCase() == selectedLockerCode.value.toUpperCase();
+
+      bool matchesCust =
+          selectedCustId.value.isEmpty || p.custId == selectedCustId.value;
+
+      return matchesSearch && matchesLocker && matchesCust;
+    }).toList();
+
+    filteredProductList.assignAll(list);
+  }
+
+  @override
+  void onClose() {
+    searchController.dispose();
+    super.onClose();
   }
 
   Future<http.Response?> getCustProduct() async {
@@ -55,7 +122,7 @@ class CustProductController extends GetxController {
           if (model.data != null) {
             custList.assignAll(model.data?.custList ?? []);
             productList.assignAll(model.data?.productList ?? []);
-            filteredProductList.assignAll(model.data?.productList ?? []);
+            applyFilters(); // Apply filters to initial data
           }
         }
       }

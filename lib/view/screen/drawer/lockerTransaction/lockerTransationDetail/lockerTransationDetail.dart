@@ -1,10 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/controllers/drawer/locker/locker_detail_controller.dart';
 import 'package:rukmini/modal/drawer/locker/locker_detail_modal.dart';
 import 'package:rukmini/modal/drawer/locker/locker_wise_del_modal.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
-import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
