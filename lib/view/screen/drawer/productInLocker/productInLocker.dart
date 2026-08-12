@@ -38,13 +38,18 @@ class ProductInLocker extends StatelessWidget {
                 ? TextField(
                     controller: custProductController.searchController,
                     autofocus: true,
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                    style: TextStyle(
+                      color: AppColor.backgroundColor,
+                      fontSize: Get.width * 0.045,
+                    ),
                     decoration: InputDecoration(
                       hintText: "Search...",
-                      hintStyle: TextStyle(color: Colors.white70),
+                      hintStyle: TextStyle(color: AppColor.backgroundColor),
                       border: InputBorder.none,
                     ),
-                    onChanged: (val) => custProductController.updateSearch(val),
+                    onChanged: (val) {
+                      custProductController.updateSearch(val);
+                    },
                   )
                 : AppString.productinLocker,
             searchIcon: !custProductController.isSearching.value,
@@ -169,7 +174,7 @@ class ProductInLocker extends StatelessWidget {
                 custProductController.clearCustomerFilter();
               },
               child: Icon(
-                AppIcon.close as IconData?,
+                AppIcon.remove,
                 color: AppColor.activeColor,
                 size: Get.width * 0.05,
               ),

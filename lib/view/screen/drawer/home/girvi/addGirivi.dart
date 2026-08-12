@@ -454,7 +454,7 @@ class _AddgiriviState extends State<Addgirivi> {
               padding: EdgeInsets.all(16),
               child: Text(
                 AppString.selectCustomer,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: Get.width * 0.045, fontWeight: FontWeight.bold),
               ),
             ),
             Padding(

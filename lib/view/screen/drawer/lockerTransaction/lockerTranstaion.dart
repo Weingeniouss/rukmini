@@ -31,7 +31,7 @@ class LockerTranStaion extends StatelessWidget {
                 ? TextField(
                     controller: uiController.searchController,
                     autofocus: true,
-                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                    style: TextStyle(color: Colors.white, fontSize: Get.width * 0.045),
                     decoration: const InputDecoration(
                       hintText: "Search...",
                       hintStyle: TextStyle(color: Colors.white70),
