@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: unnecessary_non_null_assertion, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -56,7 +56,7 @@ class _MetalMasterState extends State<MetalMaster> {
               }
 
               if (productTypeController.productTypeList.isEmpty) {
-                return Center(child: Text("No Data Found"));
+                return Center(child: Text(AppString.noDataFound));
               }
 
               return RefreshIndicator(
@@ -134,7 +134,7 @@ class _MetalMasterState extends State<MetalMaster> {
                         child: Icon(
                           metalMasterUI.editingId.value == null
                               ? AppIcon.add
-                              : Icons.check,
+                              : AppIcon.check,
                           color: AppColor.activeColor,
                           size: Get.width * 0.045,
                         ),

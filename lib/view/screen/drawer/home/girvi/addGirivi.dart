@@ -96,7 +96,7 @@ class _AddgiriviState extends State<Addgirivi> {
                   ),
                   _buildDivider(),
                   _buildInputRow(
-                    icon: Icons.percent,
+                    icon: AppIcon.percent,
                     label: AppString.interestRate,
                     controller: addGiriviUI.interestRateController,
                     hint: AppString.interestRate,
@@ -182,14 +182,14 @@ class _AddgiriviState extends State<Addgirivi> {
                             value.value.isEmpty
                                 ? "Select Customer"
                                 : value.value,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
                       ),
-                      Icon(Icons.keyboard_arrow_down, color: Colors.black54),
+                      const Icon(AppIcon.arrow_down, color: AppColor.black54),
                     ],
                   ),
                 ],
@@ -242,7 +242,7 @@ class _AddgiriviState extends State<Addgirivi> {
 
     if (isGrayBackground) {
       return Container(
-        color: AppColor.boderSideColor.shade100,
+        color: AppColor.grey200,
         width: double.infinity,
         child: content,
       );
@@ -303,7 +303,7 @@ class _AddgiriviState extends State<Addgirivi> {
 
     if (isGrayBackground) {
       return Container(
-        color: Colors.grey.shade100,
+        color: AppColor.grey200,
         width: double.infinity,
         child: content,
       );
@@ -319,13 +319,13 @@ class _AddgiriviState extends State<Addgirivi> {
           width: Get.width * 0.3,
           height: Get.width * 0.3,
           decoration: BoxDecoration(
-            color: AppColor.boderSideColor.shade200,
+            color: AppColor.grey200,
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: AppColor.black.withOpacity(0.1),
                 blurRadius: 10,
-                offset: Offset(0, 4),
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -340,12 +340,12 @@ class _AddgiriviState extends State<Addgirivi> {
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(AppIcon.camera, size: 40, color: Colors.grey.shade400),
-                    SizedBox(height: 8),
+                    Icon(AppIcon.camera, size: 40, color: AppColor.grey400),
+                    const SizedBox(height: 8),
                     Text(
                       "Images",
                       style: TextStyle(
-                        color: Colors.grey.shade500,
+                        color: AppColor.grey500,
                         fontSize: 12,
                       ),
                     ),
@@ -360,7 +360,7 @@ class _AddgiriviState extends State<Addgirivi> {
     return Divider(
       height: 1,
       thickness: 1,
-      color: AppColor.boderSideColor.shade200,
+      color: AppColor.grey200,
     );
   }
 
@@ -445,24 +445,24 @@ class _AddgiriviState extends State<Addgirivi> {
       Container(
         height: Get.height * 0.8,
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          color: AppColor.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Text(
                 AppString.selectCustomer,
                 style: TextStyle(fontSize: Get.width * 0.045, fontWeight: FontWeight.bold),
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: "Search Customer...",
-                  prefixIcon: Icon(Icons.search),
+                  hintText: AppString.search,
+                  prefixIcon: const Icon(AppIcon.searchIcon),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -479,7 +479,7 @@ class _AddgiriviState extends State<Addgirivi> {
                   return Center(child: CircularProgressIndicator());
                 }
                 if (addGiriviUI.custListController.customers.isEmpty) {
-                  return Center(child: Text("No Customers Found"));
+                  return Center(child: Text(AppString.noCustomersAvailable));
                 }
                 return ListView.builder(
                   itemCount: addGiriviUI.custListController.customers.length,
@@ -492,7 +492,7 @@ class _AddgiriviState extends State<Addgirivi> {
                             ? NetworkImage(customer.imagePath!)
                             : null,
                         child: customer.imagePath == null
-                            ? Icon(Icons.person)
+                            ? const Icon(AppIcon.person)
                             : null,
                       ),
                       title: Text(customer.name ?? ""),

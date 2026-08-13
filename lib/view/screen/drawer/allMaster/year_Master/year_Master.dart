@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: unnecessary_non_null_assertion, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -58,7 +58,7 @@ class _YearMasterState extends State<YearMaster> {
               }
 
               if (yearController.yearList.isEmpty) {
-                return Center(child: Text("No Data Found"));
+                return Center(child: Text(AppString.noDataFound));
               }
 
               return RefreshIndicator(
@@ -122,9 +122,9 @@ class _YearMasterState extends State<YearMaster> {
                   SizedBox(height: Get.height * 0.015),
                   Row(
                     children: [
-                      _buildDateText("From :", year.formDate ?? ''),
+                      _buildDateText(AppString.fromColon, year.formDate ?? ''),
                       SizedBox(width: Get.width * 0.05),
-                      _buildDateText("To:", year.toDate ?? ''),
+                      _buildDateText(AppString.toColon, year.toDate ?? ''),
                     ],
                   ),
                 ],

@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: unnecessary_non_null_assertion, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -56,9 +56,9 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
                   TextSpan(
                     text: "${lockerData?.lockerCode}-${lockerData?.code} ",
                   ),
-                  const TextSpan(
-                    text: "( Open )",
-                    style: TextStyle(color: AppColor.errorColor, fontSize: 14),
+                  TextSpan(
+                    text: "( ${AppString.open} )",
+                    style: const TextStyle(color: AppColor.errorColor, fontSize: 14),
                   ),
                 ],
               ),
@@ -88,7 +88,7 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
                 final detail =
                     lockerDetailController.lockerDetailData.value.data;
                 if (detail == null) {
-                  return const Center(child: Text("No data found"));
+                  return const Center(child: Text(AppString.noTransactionsFound));
                 }
 
                 return TabBarView(
@@ -107,7 +107,7 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
 
   Widget _buildProductDetailsList(LockerDetailData detail) {
     if (detail.productList == null || detail.productList!.isEmpty) {
-      return const Center(child: Text("No products found"));
+      return const Center(child: Text(AppString.noProductsFound));
     }
     return ListView.builder(
       padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
@@ -134,23 +134,23 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
       child: Column(
         children: [
           _buildDetailRow(
-            "Pro Typ : ",
+            AppString.proTypColon,
             product.catName ?? "",
-            "Metal : ",
+            AppString.metalColon,
             "${product.prodType} (${product.metalName} Karat)",
           ),
           SizedBox(height: Get.height * 0.015),
           _buildDetailRow(
-            "Pcs : ",
-            "${product.pieces} (${product.weight}gm)",
-            "Orig Price : ",
+            AppString.pcsColon,
+            "${product.pieces} (${product.weight}${AppString.gm})",
+            AppString.origPriceColon,
             product.origAmount ?? "0.00",
           ),
           SizedBox(height: Get.height * 0.015),
           _buildDetailRow(
-            "Gvn Amt : ",
+            AppString.gvnAmtColon,
             product.givenAmount ?? "0.00",
-            "Rate : ",
+            AppString.rateColon,
             product.todayRate ?? "0.00",
           ),
           SizedBox(height: Get.height * 0.015),
@@ -164,11 +164,11 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
                   ),
                   children: [
                     const TextSpan(
-                      text: "Status : ",
+                      text: AppString.statusColon,
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     TextSpan(
-                      text: product.productStatus ?? "Pending",
+                      text: product.productStatus ?? AppString.pendingProduct,
                       style: TextStyle(
                         color: AppColor.orange,
                         fontWeight: FontWeight.w500,
@@ -186,7 +186,7 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
 
   Widget _buildTransactionDetails(LockerDetailData detail) {
     final trans = detail.transObj;
-    if (trans == null) return const Center(child: Text("No transaction info"));
+    if (trans == null) return const Center(child: Text(AppString.noTransactionsFound));
 
     return ListView(
       padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
@@ -206,18 +206,18 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildTransItem(
-                    "Tkn Amt : ",
+                    "${AppString.tknAmtLabel} : ",
                     "${trans.givenAmt} (${trans.interestRate} %)",
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       _buildTransItem(
-                        "Tot Int : ",
-                        "${trans.tillInterest} (${trans.tillMonth} mon.)",
+                        "${AppString.totIntLabel} : ",
+                        "${trans.tillInterest} (${trans.tillMonth} ${AppString.month})",
                       ),
                       Text(
-                        "Till ${trans.tillDate}",
+                        "${AppString.till} ${trans.tillDate}",
                         style: TextStyle(
                           fontSize: Get.width * 0.025,
                           color: AppColor.textColor,
@@ -230,14 +230,14 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
               SizedBox(height: Get.height * 0.015),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [_buildTransItem("Bal. Amt : ", "${trans.balance}")],
+                children: [_buildTransItem("${AppString.balAmtLabel} : ", "${trans.balance}")],
               ),
               SizedBox(height: Get.height * 0.015),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildTransItem("Paid Amt : ", "${trans.totalPaidAmt}"),
-                  _buildTransItem("Paid Int : ", "${trans.paidInterset}"),
+                  _buildTransItem("${AppString.paidAmtLabel} : ", "${trans.totalPaidAmt}"),
+                  _buildTransItem("${AppString.paidIntLabel} : ", "${trans.paidInterset}"),
                 ],
               ),
             ],

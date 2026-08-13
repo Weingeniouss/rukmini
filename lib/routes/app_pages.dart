@@ -22,6 +22,7 @@ import 'package:rukmini/view/screen/drawer/lockerTransaction/lockerTranstaion.da
 import 'package:rukmini/view/screen/drawer/productInLocker/changeTheLocker/changeTheLocker.dart';
 import 'package:rukmini/view/screen/drawer/productInLocker/productInLocker.dart';
 import 'package:rukmini/view/screen/drawer/productInLocker/productLockerDetail/productInLockerDetail.dart';
+import 'package:rukmini/view/screen/drawer/report/reports.dart';
 import '../view/screen/drawer/allMaster/metalMaster/metal_Master.dart';
 import '../view/screen/drawer/home/girvi/giriviList.dart';
 import '../view/screen/splash/splash.dart';
@@ -97,5 +98,9 @@ class AppPages {
         GetPage(name: _Paths.lockerTransationDetail, page: () => LockerTransationDetail()),
     //Locker Transaction
 
+    //Report
+        GetPage(name: _Paths.report, page: () => Reports()),
+    //Report
+  //Drawer
   ];
 }

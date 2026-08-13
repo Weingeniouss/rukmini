@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: unnecessary_non_null_assertion, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,7 +43,7 @@ class ProductInLocker extends StatelessWidget {
                       fontSize: Get.width * 0.045,
                     ),
                     decoration: InputDecoration(
-                      hintText: "Search...",
+                      hintText: AppString.search,
                       hintStyle: TextStyle(color: AppColor.backgroundColor),
                       border: InputBorder.none,
                     ),
@@ -73,7 +73,7 @@ class ProductInLocker extends StatelessWidget {
               }
 
               if (custProductController.filteredProductList.isEmpty) {
-                return Center(child: Text("No Products Found"));
+                return Center(child: Text(AppString.noProductsFound));
               }
 
               return RefreshIndicator(
@@ -164,7 +164,7 @@ class ProductInLocker extends StatelessWidget {
               ),
             ),
             Icon(
-              Icons.keyboard_arrow_down,
+              AppIcon.arrow_down,
               color: AppColor.activeColor,
               size: Get.width * 0.06,
             ),
@@ -187,8 +187,9 @@ class ProductInLocker extends StatelessWidget {
 
   void _showCustomerSelectionPopup() {
     Get.bottomSheet(
+      isScrollControlled: true,
       Container(
-        height: Get.height * 0.5,
+        height: Get.height * 0.8,
         decoration: BoxDecoration(
           color: AppColor.fullScreenColor,
           borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
@@ -209,7 +210,7 @@ class ProductInLocker extends StatelessWidget {
             Expanded(
               child: Obx(() {
                 if (custProductController.custList.isEmpty) {
-                  return Center(child: Text("No customers available"));
+                  return const Center(child: Text(AppString.noCustomersAvailable));
                 }
                 return ListView.builder(
                   itemCount: custProductController.custList.length,
@@ -246,7 +247,7 @@ class ProductInLocker extends StatelessWidget {
         height: Get.height * 0.45,
         decoration: BoxDecoration(
           color: AppColor.fullScreenColor,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
         ),
         child: Column(
           children: [
@@ -267,19 +268,19 @@ class ProductInLocker extends StatelessWidget {
                       custProductController.resetLockerFilter();
                       Get.back();
                     },
-                    child: Text("Reset"),
+                    child: const Text(AppString.reset),
                   ),
                 ],
               ),
             ),
-            Divider(),
+            const Divider(),
             Expanded(
               child: Obx(() {
                 if (lockerListController.isLoading.value) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 if (lockerListController.lockerList.isEmpty) {
-                  return Center(child: Text("No lockers available"));
+                  return const Center(child: Text(AppString.noLockersAvailable));
                 }
                 return ListView.builder(
                   itemCount: lockerListController.lockerList.length,
@@ -324,9 +325,9 @@ class ProductInLocker extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: AppColor.black.withOpacity(0.05),
               blurRadius: 5,
-              offset: Offset(0, 2),
+              offset: const Offset(0, 2),
             ),
           ],
         ),
@@ -341,8 +342,8 @@ class ProductInLocker extends StatelessWidget {
                     right: 0,
                     top: 0,
                     child: Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(
+                      padding: const EdgeInsets.all(2),
+                      decoration: const BoxDecoration(
                         color: AppColor.activeColor,
                         shape: BoxShape.circle,
                       ),
@@ -368,16 +369,16 @@ class ProductInLocker extends StatelessWidget {
                   ),
                   SizedBox(height: Get.height * 0.008),
                   _buildInfoRow(
-                    "Pcs : ",
+                    AppString.pcsColon,
                     item.pieces ?? "0",
-                    "Wgt : ",
-                    "${item.weight} gm",
+                    AppString.wgtColon,
+                    "${item.weight} ${AppString.gm}",
                   ),
                   SizedBox(height: Get.height * 0.005),
                   _buildInfoRow(
-                    "Gvn Amt: ",
+                    AppString.gvnAmtColon,
                     item.givenAmount ?? "0.00",
-                    "Locker Code: ",
+                    AppString.lockerCodeColon,
                     "${item.lockerCode}-${item.code}",
                   ),
                 ],
@@ -422,7 +423,7 @@ class ProductInLocker extends StatelessWidget {
           color: AppColor.textColor.withOpacity(0.5),
         ),
         Text(
-          "Images",
+          AppString.images,
           style: TextStyle(
             fontSize: Get.width * 0.025,
             color: AppColor.textColor.withOpacity(0.5),

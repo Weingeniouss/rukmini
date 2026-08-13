@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: unnecessary_non_null_assertion, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -57,7 +57,7 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
                 return _shimmerLoading();
               }
               if (listController.customerTypeList.isEmpty) {
-                return const Center(child: Text("No Data Found"));
+                return const Center(child: Text(AppString.noDataFound));
               }
               return RefreshIndicator(
                 onRefresh: () => CallApi.callCustomerTypeList(),
@@ -119,7 +119,7 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
                         child: Icon(
                           uiController.editingId.value == null
                               ? AppIcon.add
-                              : Icons.check,
+                              : AppIcon.check,
                           color: AppColor.activeColor,
                           size: Get.width * 0.045,
                         ),
@@ -215,7 +215,7 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
       middleText: "${AppString.deleteMessage} \n\n ${item.name}",
       textConfirm: AppString.delete,
       textCancel: AppString.cancel,
-      confirmTextColor: Colors.white,
+      confirmTextColor: AppColor.white,
       buttonColor: AppColor.deleteColor,
       onConfirm: () async {
         Get.back();
@@ -225,7 +225,7 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
   }
 
   Widget _buildDivider() {
-    return Divider(height: 1, thickness: 1, color: Colors.grey.shade200);
+    return Divider(height: 1, thickness: 1, color: AppColor.grey200);
   }
 
   Widget _shimmerLoading() {
@@ -240,7 +240,7 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
             height: 45,
             margin: EdgeInsets.only(bottom: Get.height * 0.02),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColor.white,
               borderRadius: BorderRadius.circular(5),
             ),
           );

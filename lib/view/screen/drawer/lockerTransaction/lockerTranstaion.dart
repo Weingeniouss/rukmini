@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: unnecessary_non_null_assertion, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -31,10 +31,10 @@ class LockerTranStaion extends StatelessWidget {
                 ? TextField(
                     controller: uiController.searchController,
                     autofocus: true,
-                    style: TextStyle(color: Colors.white, fontSize: Get.width * 0.045),
-                    decoration: const InputDecoration(
-                      hintText: "Search...",
-                      hintStyle: TextStyle(color: Colors.white70),
+                    style: TextStyle(color: AppColor.white, fontSize: Get.width * 0.045),
+                    decoration: InputDecoration(
+                      hintText: AppString.search,
+                      hintStyle: TextStyle(color: AppColor.otherWhite),
                       border: InputBorder.none,
                     ),
                     onChanged: (val) => uiController.updateSearch(val),
@@ -59,7 +59,7 @@ class LockerTranStaion extends StatelessWidget {
               }
 
               if (uiController.lockerWiseDelController.lockerWiseList.isEmpty) {
-                return const Center(child: Text("No transactions found"));
+                return const Center(child: Text(AppString.noTransactionsFound));
               }
 
               return RefreshIndicator(
@@ -144,7 +144,7 @@ class LockerTranStaion extends StatelessWidget {
               }),
             ),
             Icon(
-              Icons.keyboard_arrow_down,
+              AppIcon.arrow_down,
               color: AppColor.activeColor,
               size: Get.width * 0.06,
             ),
@@ -184,7 +184,7 @@ class LockerTranStaion extends StatelessWidget {
                     .lockerTransController
                     .lockerTransList
                     .isEmpty) {
-                  return const Center(child: Text("No lockers available"));
+                  return const Center(child: Text(AppString.noLockersAvailable));
                 }
                 return ListView.builder(
                   itemCount:
@@ -198,7 +198,7 @@ class LockerTranStaion extends StatelessWidget {
                         "${locker.lockerCode} (${locker.comName})",
                         style: TextStyle(fontSize: Get.width * 0.04),
                       ),
-                      subtitle: Text("Total Amount: ${locker.totalAmt}"),
+                      subtitle: Text("${AppString.totalAmt}: ${locker.totalAmt}"),
                       onTap: () {
                         uiController.selectLocker(locker);
                         Get.back();
@@ -246,7 +246,7 @@ class LockerTranStaion extends StatelessWidget {
               children: [
                 _buildRichText(
                   "${AppString.proTyp} : ",
-                  "${data.tatalProd} Item",
+                  "${data.tatalProd} ${AppString.pcs}",
                 ),
                 _buildRichText(
                   "${AppString.tknAmt} : ",

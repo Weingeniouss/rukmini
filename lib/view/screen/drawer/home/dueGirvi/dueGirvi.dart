@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: unnecessary_non_null_assertion, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -105,7 +105,7 @@ class _DueGirviState extends State<DueGirvi> {
           return _buildShimmerLoading();
         }
         if (pendingTransactionController.pendingTransactionList.isEmpty) {
-          return const Center(child: Text("No Data Found"));
+          return const Center(child: Text(AppString.noDataFound));
         }
         return RefreshIndicator(
           onRefresh: () => CallApi.callPendingTransaction(
@@ -333,7 +333,7 @@ class _DueGirviState extends State<DueGirvi> {
       style: const TextStyle(color: AppColor.fullScreenColor),
       cursorColor: AppColor.fullScreenColor,
       decoration: InputDecoration(
-        hintText: 'Search Name...',
+        hintText: AppString.searchName,
         hintStyle: TextStyle(color: AppColor.otherWhite),
         border: InputBorder.none,
       ),
@@ -355,7 +355,7 @@ class _DueGirviState extends State<DueGirvi> {
       style: const TextStyle(color: AppColor.fullScreenColor),
       cursorColor: AppColor.fullScreenColor,
       decoration: InputDecoration(
-        hintText: 'Search Locality...',
+        hintText: AppString.searchLocality,
         hintStyle: TextStyle(color: AppColor.otherWhite),
         border: InputBorder.none,
       ),

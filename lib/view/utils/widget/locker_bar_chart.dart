@@ -14,9 +14,9 @@ class LockerBarChart extends StatelessWidget {
   LockerBarChart({super.key, required this.lockerList});
 
   final List<Color> barColors = [
-    const Color(0xFFC22E54), // Crimson/Pink
-    const Color(0xFF7B3F00), // Brown
-    const Color(0xFFF1C40F), // Gold
+    AppColor.crimson,
+    AppColor.brown,
+    AppColor.gold,
   ];
 
   String _formatNumber(String value) {
@@ -44,7 +44,7 @@ class LockerBarChart extends StatelessWidget {
             style: TextStyle(
               fontSize: Get.height * 0.022,
               fontWeight: FontWeight.w500,
-              color: Colors.black87,
+              color: AppColor.black87,
             ),
           ),
           varticalSpace(),
@@ -58,14 +58,14 @@ class LockerBarChart extends StatelessWidget {
                   barTouchData: BarTouchData(
                     enabled: false,
                     touchTooltipData: BarTouchTooltipData(
-                      getTooltipColor: (_) => Colors.transparent,
+                      getTooltipColor: (_) => AppColor.transparent,
                       tooltipPadding: EdgeInsets.zero,
                       tooltipMargin: 5,
                       getTooltipItem: (group, groupIndex, rod, rodIndex) {
                         return BarTooltipItem(
                           _formatNumber(rod.toY.toString()),
                           TextStyle(
-                            color: Colors.black,
+                            color: AppColor.black,
                             fontWeight: FontWeight.w400,
                             fontSize: Get.height * 0.012,
                           ),
@@ -85,7 +85,7 @@ class LockerBarChart extends StatelessWidget {
                             return Text(
                               lockerList[index].lockerCode ?? '',
                               style: TextStyle(
-                                color: Colors.black,
+                                color: AppColor.black,
                                 fontWeight: FontWeight.w400,
                                 fontSize: Get.height * 0.018,
                               ),
@@ -132,17 +132,17 @@ class LockerBarChart extends StatelessWidget {
                     show: true,
                     drawVerticalLine: true,
                     getDrawingHorizontalLine: (value) => FlLine(
-                      color: Colors.grey.withOpacity(0.3),
+                      color: AppColor.grey.withOpacity(0.3),
                       strokeWidth: 1,
                     ),
                     getDrawingVerticalLine: (value) => FlLine(
-                      color: Colors.grey.withOpacity(0.3),
+                      color: AppColor.grey.withOpacity(0.3),
                       strokeWidth: 1,
                     ),
                   ),
                   borderData: FlBorderData(
                     show: true,
-                    border: Border.all(color: Colors.grey.withOpacity(0.3)),
+                    border: Border.all(color: AppColor.grey.withOpacity(0.3)),
                   ),
                   barGroups: _getBarGroups(),
                 ),
@@ -174,7 +174,7 @@ class LockerBarChart extends StatelessWidget {
                   'Description',
                   style: TextStyle(
                     fontSize: Get.width * 0.035,
-                    color: Colors.black54,
+                    color: AppColor.black54,
                   ),
                 ),
               ],

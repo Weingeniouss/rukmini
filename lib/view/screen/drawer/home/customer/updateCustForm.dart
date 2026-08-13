@@ -135,7 +135,7 @@ Widget customerDetails(UpdateCustFormControllerUI controller) {
                             }
                           },
                           icon: Icon(
-                            index == 0 ? AppIcon.add : Icons.remove_circle,
+                            index == 0 ? AppIcon.add : AppIcon.removeCircle,
                             color: index == 0
                                 ? AppColor.activeColor
                                 : AppColor.deleteColor,
@@ -413,7 +413,7 @@ Widget photoListSection({
                                     padding: EdgeInsets.zero,
                                     onPressed: () => onRemove(index),
                                     icon: const Icon(
-                                      Icons.remove_circle,
+                                      AppIcon.removeCircle,
                                       color: AppColor.deleteColor,
                                     ),
                                   ),

@@ -34,7 +34,7 @@ class ChangeTheLocker extends StatelessWidget {
           Expanded(
             child: Obx(() {
               if (custProductController.selectedProducts.isEmpty) {
-                return const Center(child: Text("No products selected"));
+                return const Center(child: Text(AppString.noProductsSelected));
               }
               return ListView.separated(
                 padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
@@ -100,7 +100,7 @@ class ChangeTheLocker extends StatelessWidget {
                     ),
                   ),
                   Icon(
-                    Icons.keyboard_arrow_down,
+                    AppIcon.arrow_down,
                     color: AppColor.activeColor,
                     size: Get.width * 0.05,
                   ),
@@ -173,7 +173,7 @@ class ChangeTheLocker extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (uiController.lockerListController.lockerList.isEmpty) {
-                  return const Center(child: Text("No lockers available"));
+                  return const Center(child: Text(AppString.noLockersAvailable));
                 }
                 return ListView.builder(
                   itemCount:
@@ -325,15 +325,15 @@ class ChangeTheLocker extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildLabelValue("Pcs : ", item.pieces ?? "0"),
-                      _buildLabelValue("Wgt : ", "${item.weight} gm"),
+                      _buildLabelValue(AppString.pcsColon, item.pieces ?? "0"),
+                      _buildLabelValue(AppString.wgtColon, "${item.weight} ${AppString.gm}"),
                     ],
                   ),
                   SizedBox(height: Get.height * 0.005),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildLabelValue("Gvn Amt: ", item.givenAmount ?? "0.00"),
+                      _buildLabelValue(AppString.gvnAmtColon, item.givenAmount ?? "0.00"),
                       Row(
                         children: [
                           Text(

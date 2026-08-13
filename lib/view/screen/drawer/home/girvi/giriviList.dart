@@ -137,7 +137,7 @@ class _GiriviListState extends State<GiriviList> {
       ),
       decoration: BoxDecoration(
         color: AppColor.fullScreenColor,
-        border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
+        border: Border(bottom: BorderSide(color: AppColor.grey200)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,7 +155,7 @@ class _GiriviListState extends State<GiriviList> {
               padding: EdgeInsets.symmetric(horizontal: Get.width * 0.03),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey.shade300),
+                border: Border.all(color: AppColor.grey300),
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
@@ -489,7 +489,7 @@ class _GiriviListState extends State<GiriviList> {
                   width: Get.width * 0.1,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: AppColor.grey300,
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
@@ -541,7 +541,7 @@ class _GiriviListState extends State<GiriviList> {
                       label: Text(
                         status,
                         style: TextStyle(
-                          color: isSelected ? Colors.white : Colors.black87,
+                          color: isSelected ? AppColor.white : AppColor.black87,
                           fontSize: Get.width * 0.032,
                         ),
                       ),
@@ -603,7 +603,7 @@ class _GiriviListState extends State<GiriviList> {
                   child: Text(
                     AppString.applyFilter,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColor.white,
                       fontSize: Get.width * 0.04,
                       fontWeight: FontWeight.bold,
                     ),
@@ -631,7 +631,7 @@ class _GiriviListState extends State<GiriviList> {
         hintStyle: TextStyle(color: AppColor.fullScreenColor.withOpacity(0.7)),
         border: InputBorder.none,
         suffixIcon: IconButton(
-          icon: const Icon(Icons.close, color: AppColor.fullScreenColor),
+          icon: const Icon(AppIcon.closeIcon, color: AppColor.fullScreenColor),
           onPressed: () {
             giriviListController.searchTextController.clear();
             giriviListController.isSearching.value = false;
@@ -677,7 +677,7 @@ class _GiriviListState extends State<GiriviList> {
               fontSize: Get.width * 0.03,
               color: AppColor.boderSideColor,
             ),
-            suffixIcon: const Icon(Icons.calendar_today, size: 18),
+            suffixIcon: const Icon(AppIcon.date, size: 18),
             filled: true,
             fillColor: AppColor.boderSideColor.shade50,
             border: OutlineInputBorder(
@@ -715,7 +715,7 @@ class _GiriviListState extends State<GiriviList> {
       data: Theme.of(context).copyWith(
         colorScheme: const ColorScheme.light(
           primary: AppColor.primaryColor,
-          onPrimary: Colors.white,
+          onPrimary: AppColor.white,
           onSurface: AppColor.textColor,
         ),
         textButtonTheme: TextButtonThemeData(
@@ -752,8 +752,8 @@ class _GiriviListState extends State<GiriviList> {
 
   Widget _paginationShimmer() {
     return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
+      baseColor: AppColor.baseColor,
+      highlightColor: AppColor.highlightColor,
       child: Container(
         margin: EdgeInsets.symmetric(
           vertical: Get.height * 0.02,
@@ -775,7 +775,7 @@ class _GiriviListState extends State<GiriviList> {
       case 'Closed':
         return AppColor.deleteColor;
       case 'Carry Forward':
-        return Colors.orange;
+        return AppColor.orange;
       default:
         return AppColor.primaryColor;
     }

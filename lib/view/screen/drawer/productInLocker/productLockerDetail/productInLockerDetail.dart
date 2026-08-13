@@ -82,10 +82,10 @@ class ProductInLockerDetail extends StatelessWidget {
                 ),
               ),
               Text(
-                item?.status ?? "Pending",
+                item?.status ?? AppString.pending,
                 style: TextStyle(
-                  color: (item?.status == "Active" || item?.status == "Open")
-                      ? Colors.red
+                  color: (item?.status == AppString.active || item?.status == AppString.open)
+                      ? AppColor.deleteColor
                       : AppColor.activeColor,
                   fontSize: Get.width * 0.045,
                   fontWeight: FontWeight.w500,
@@ -128,7 +128,7 @@ class ProductInLockerDetail extends StatelessWidget {
             item?.uniqueId ?? "",
             isValueGreen: true,
           ),
-          _buildDetailRow(AppIcon.balance, "Weight :", "${item?.weight}gm"),
+          _buildDetailRow(AppIcon.balance, AppString.weightColon, "${item?.weight}${AppString.gm}"),
           _buildDetailRow(
             AppIcon.rupee,
             "${AppString.amtGiven} :",

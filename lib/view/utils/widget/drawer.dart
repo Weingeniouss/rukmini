@@ -141,7 +141,10 @@ Widget homeDrawer() {
                   index: 8,
                   title: AppString.reports,
                   icon: AppIcon.description,
-                  onTap: () => navDrawerController.changeIndex(8),
+                  onTap: () {
+                    navDrawerController.changeIndex(8);
+                    Get.toNamed('/report');
+                  },
                 ),
                 listTital(
                   index: 9,

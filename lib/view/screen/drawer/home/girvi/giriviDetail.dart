@@ -94,7 +94,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
           final data = giriviDetailController.giriviDetailData.value.data;
 
           if (data == null) {
-            return Center(child: Text("No data found"));
+            return Center(child: Text(AppString.noDataFound));
           }
 
           return Column(
@@ -258,7 +258,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
     if (data.productDetail == null || data.productDetail.isEmpty) {
       return Center(
         child: Text(
-          "No products found",
+          AppString.noProductsFound,
           style: TextStyle(fontSize: Get.width * 0.04),
         ),
       );
@@ -518,7 +518,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
         const Divider(),
         Center(
           child: Text(
-            "No transaction history",
+            AppString.noTransactionHistory,
             style: TextStyle(fontSize: Get.width * 0.035),
           ),
         ),

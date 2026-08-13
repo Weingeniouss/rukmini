@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: unnecessary_non_null_assertion, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -53,11 +53,11 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
               ? TextField(
                   controller: lockerController.searchTextController,
                   autofocus: true,
-                  style: const TextStyle(color: AppColor.fullScreenColor),
+                  style: TextStyle(color: AppColor.fullScreenColor),
                   cursorColor: AppColor.fullScreenColor,
-                  decoration: const InputDecoration(
-                    hintText: 'Search Locker...',
-                    hintStyle: TextStyle(color: Colors.white70),
+                  decoration: InputDecoration(
+                    hintText: AppString.searchLocker,
+                    hintStyle: TextStyle(color: AppColor.otherWhite),
                     border: InputBorder.none,
                   ),
                 )
@@ -80,7 +80,7 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
           final list = lockerController.filteredLockerList;
 
           if (list.isEmpty) {
-            return const Center(child: Text("No Data Found"));
+            return const Center(child: Text(AppString.noDataFound));
           }
 
           return RefreshIndicator(
@@ -107,10 +107,10 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
       ),
       decoration: BoxDecoration(
         color: AppColor.fullScreenColor,
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: AppColor.grey300),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: AppColor.black.withOpacity(0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -183,7 +183,7 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
       middleText: "${AppString.deleteMessage} \n\n ${item.lockerCode}",
       textConfirm: AppString.delete,
       textCancel: AppString.cancel,
-      confirmTextColor: Colors.white,
+      confirmTextColor: AppColor.white,
       buttonColor: AppColor.deleteColor,
       onConfirm: () async {
         Get.back();
@@ -235,7 +235,7 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
             height: 100,
             margin: EdgeInsets.only(bottom: Get.height * 0.02),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColor.white,
               borderRadius: BorderRadius.circular(5),
             ),
           );

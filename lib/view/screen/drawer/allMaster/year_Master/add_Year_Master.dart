@@ -28,7 +28,7 @@ class AddYearMaster extends StatelessWidget {
               SizedBox(height: Get.height * 0.03),
               inputField(
                 hintText: AppString.title,
-                icon: Icons.badge_outlined,
+                icon: AppIcon.badge,
                 iconColor: AppColor.activeColor,
                 inputTextcontroller: uiController.titleController,
               ),
@@ -46,8 +46,8 @@ class AddYearMaster extends StatelessWidget {
                     true,
                   ),
                   icon: const Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Colors.black54,
+                    AppIcon.arrow_down,
+                    color: AppColor.black54,
                   ),
                 ),
               ),
@@ -65,8 +65,8 @@ class AddYearMaster extends StatelessWidget {
                     false,
                   ),
                   icon: const Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Colors.black54,
+                    AppIcon.arrow_down,
+                    color: AppColor.black54,
                   ),
                 ),
               ),

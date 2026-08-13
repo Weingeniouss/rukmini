@@ -83,7 +83,7 @@ class _CustDetailState extends State<CustDetail> {
                 },
                 child: Text(
                   AppString.delete,
-                  style: TextStyle(color: AppColor.fullScreenColor),
+                  style: const TextStyle(color: AppColor.white),
                 ),
               ),
             ),
@@ -99,7 +99,7 @@ class _CustDetailState extends State<CustDetail> {
                 },
                 child: Text(
                   AppString.cancel,
-                  style: TextStyle(color: AppColor.primaryColor),
+                  style: const TextStyle(color: AppColor.primaryColor),
                 ),
               ),
             ),
@@ -203,7 +203,7 @@ class _CustDetailState extends State<CustDetail> {
                     children: [
                       SizedBox(height: Get.height * 0.02),
                       if (data.girviList == null || data.girviList!.isEmpty)
-                        const Center(child: Text('No Girvi Records Found'))
+                        const Center(child: Text(AppString.noGirviRecordsFound))
                       else
                         ...data.girviList!.map(
                           (girvi) => girviDetail(girvi: girvi),
@@ -220,7 +220,7 @@ class _CustDetailState extends State<CustDetail> {
                     children: [
                       SizedBox(height: Get.height * 0.02),
                       if (data.girviList == null || data.girviList!.isEmpty)
-                        const Center(child: Text('No Girvi Records Found'))
+                        const Center(child: Text(AppString.noGirviRecordsFound))
                       else
                         ...data.girviList!.map(
                           (girvi) => translationDetail(girvi: girvi),
@@ -267,7 +267,7 @@ class _CustDetailState extends State<CustDetail> {
                         onTap: () => _showFullScreenImage(
                           context,
                           proof.imagePath!,
-                          proof.name ?? 'Proof Image',
+                          proof.name ?? AppString.proofImage,
                         ),
                         child: Padding(
                           padding: EdgeInsets.all(Get.width * 0.02),
@@ -313,7 +313,7 @@ class _CustDetailState extends State<CustDetail> {
                         onTap: () => _showFullScreenImage(
                           context,
                           profile.imagePath!,
-                          profile.name ?? 'Profile Image',
+                          profile.name ?? AppString.profileImage,
                         ),
                         child: Padding(
                           padding: EdgeInsets.all(Get.width * 0.02),
@@ -324,7 +324,7 @@ class _CustDetailState extends State<CustDetail> {
                                 width: Get.width * 0.25,
                                 height: Get.width * 0.45,
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[200],
+                                  color: AppColor.grey200,
                                   borderRadius: BorderRadius.circular(10),
                                   image: DecorationImage(
                                     image: NetworkImage(profile.imagePath!),
@@ -355,7 +355,7 @@ class _CustDetailState extends State<CustDetail> {
                                     ),
                                     SizedBox(height: Get.height * 0.005),
                                     Text(
-                                      "ID: ${profile.custId ?? ''}",
+                                      "${AppString.idColon}${profile.custId ?? ''}",
                                       style: TextStyle(
                                         color: AppColor.activeColor,
                                         fontSize: Get.width * 0.035,
@@ -379,7 +379,7 @@ class _CustDetailState extends State<CustDetail> {
             const Center(
               child: Padding(
                 padding: EdgeInsets.all(20.0),
-                child: Text('No Identity Proofs Found'),
+                child: Text(AppString.noIdentityProofsFound),
               ),
             ),
         ],
@@ -394,11 +394,11 @@ class _CustDetailState extends State<CustDetail> {
   ) {
     Get.to(
       () => Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColor.black,
         appBar: AppBar(
-          backgroundColor: Colors.black,
-          iconTheme: IconThemeData(color: Colors.white),
-          title: Text(title, style: TextStyle(color: Colors.white)),
+          backgroundColor: AppColor.black,
+          iconTheme: const IconThemeData(color: AppColor.white),
+          title: Text(title, style: const TextStyle(color: AppColor.white)),
         ),
         body: Center(
           child: InteractiveViewer(
@@ -483,8 +483,8 @@ class _CustDetailState extends State<CustDetail> {
               ...phone.map(
                 (p) => ListTile(
                   title: Text(p.phone ?? ''),
-                  subtitle: Text(p.isDefault == "1" ? "Default" : ""),
-                  leading: Icon(AppIcon.phone, color: Colors.green),
+                  subtitle: Text(p.isDefault == "1" ? AppString.defaultLabel : ""),
+                  leading: const Icon(AppIcon.phone, color: AppColor.activeColor),
                 ),
               ),
             ],
@@ -621,7 +621,7 @@ class _CustDetailState extends State<CustDetail> {
                     : null,
               ),
               child: customer.imagePath == null
-                  ? Icon(AppIcon.person, color: Colors.white, size: 40)
+                  ? const Icon(AppIcon.person, color: AppColor.white, size: 40)
                   : null,
             ),
           ),
@@ -712,7 +712,7 @@ class _CustDetailState extends State<CustDetail> {
                       children: [
                         _contactIcon(
                           AppIcon.call,
-                          Colors.green,
+                          AppColor.activeColor,
                           () => _makeCall(phone),
                         ),
                         SizedBox(height: Get.height * 0.003),
@@ -727,7 +727,7 @@ class _CustDetailState extends State<CustDetail> {
                       children: [
                         _contactIcon(
                           AppIcon.message,
-                          Colors.blue,
+                          AppColor.blue,
                           () => _sendSMS(phone),
                         ),
                         SizedBox(height: Get.height * 0.003),
@@ -742,7 +742,7 @@ class _CustDetailState extends State<CustDetail> {
                       children: [
                         _contactIcon(
                           AppIcon.chat,
-                          Colors.green,
+                          AppColor.activeColor,
                           () => _launchWhatsApp(phone),
                         ),
                         SizedBox(height: Get.height * 0.003),
@@ -768,13 +768,13 @@ class _CustDetailState extends State<CustDetail> {
       child: Container(
         padding: EdgeInsets.all(Get.width * 0.02),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColor.white,
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: Colors.black12,
+              color: AppColor.black12,
               blurRadius: 4,
-              offset: Offset(0, 2),
+              offset: const Offset(0, 2),
             ),
           ],
         ),
@@ -820,7 +820,7 @@ class _CustDetailState extends State<CustDetail> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: Get.width * 0.06, color: Colors.green),
+          Icon(icon, size: Get.width * 0.06, color: AppColor.activeColor),
           SizedBox(width: Get.width * 0.02),
           Expanded(
             flex: 3,
@@ -835,7 +835,7 @@ class _CustDetailState extends State<CustDetail> {
           Expanded(
             flex: 7,
             child: Text(
-              value ?? 'N/A',
+              value ?? AppString.na,
               style: TextStyle(
                 color: valueColor,
                 fontFamily: fontFamily,
@@ -851,8 +851,8 @@ class _CustDetailState extends State<CustDetail> {
 
 Widget loadingState() {
   return Shimmer.fromColors(
-    baseColor: AppColor.baseColor ?? Colors.grey[300]!,
-    highlightColor: AppColor.highlightColor ?? Colors.grey[100]!,
+    baseColor: AppColor.baseColor,
+    highlightColor: AppColor.highlightColor,
     child: SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

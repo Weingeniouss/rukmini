@@ -85,4 +85,7 @@ class AppIcon {
   static const IconData remove = Icons.cancel_outlined;
   static const IconData business = Icons.business_outlined;
   static const IconData rate = Icons.price_change_outlined;
+  static const IconData removeCircle = Icons.remove_circle;
+  static const IconData searchIcon = Icons.search;
+  static const IconData closeIcon = Icons.close;
 }

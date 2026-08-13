@@ -64,6 +64,11 @@ abstract class Routes {
         static const lockerTransaction = _Paths.lockerTransaction;
         static const lockerTransationDetail = _Paths.lockerTransationDetail;
     //Locker Transaction
+
+    //Report
+        static const report = _Paths.report;
+    //Report
+  //Drawer
 }
 
 abstract class _Paths {
@@ -129,4 +134,9 @@ abstract class _Paths {
           static const lockerTransaction = '/lockerTransaction';
           static const lockerTransationDetail = '/lockerTransationDetail';
     //Locker Transaction
+
+    //Report
+          static const report = '/report';
+    //Report
+  //Drawer
 }

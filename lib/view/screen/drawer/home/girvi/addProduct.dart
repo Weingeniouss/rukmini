@@ -207,8 +207,8 @@ class _AddProductState extends State<AddProduct> {
                           ),
                         ),
                         Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Colors.black54,
+                          AppIcon.arrow_down,
+                          color: AppColor.black54,
                           size: Get.width * 0.06,
                         ),
                       ],
@@ -280,7 +280,7 @@ class _AddProductState extends State<AddProduct> {
 
     if (isGrayBackground) {
       return Container(
-        color: Colors.grey.shade100,
+        color: AppColor.grey200,
         width: double.infinity,
         child: content,
       );
@@ -317,7 +317,7 @@ class _AddProductState extends State<AddProduct> {
                 IconButton(
                   onPressed: addProductUI.pickImage,
                   icon: Icon(
-                    Icons.add,
+                    AppIcon.add,
                     color: AppColor.activeColor,
                     size: Get.width * 0.06,
                   ),
@@ -358,7 +358,7 @@ class _AddProductState extends State<AddProduct> {
                             horizontal: Get.width * 0.02,
                           ),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade400),
+                            border: Border.all(color: AppColor.grey400),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: TextField(
@@ -378,7 +378,7 @@ class _AddProductState extends State<AddProduct> {
                       IconButton(
                         onPressed: () => addProductUI.removeImage(index),
                         icon: Icon(
-                          Icons.cancel_outlined,
+                          AppIcon.remove,
                           color: AppColor.deleteColor,
                           size: Get.width * 0.06,
                         ),
@@ -541,11 +541,7 @@ class _AddProductState extends State<AddProduct> {
   }
 
   Widget _buildDivider() {
-    return Divider(
-      height: 1,
-      thickness: 1,
-      color: AppColor.boderSideColor.shade200,
-    );
+    return Divider(height: 1, thickness: 1, color: AppColor.grey200);
   }
 
   void _showMetalSelection() {
@@ -609,8 +605,8 @@ class _AddProductState extends State<AddProduct> {
       Container(
         height: Get.height * 0.4,
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          color: AppColor.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
           children: [
@@ -631,7 +627,9 @@ class _AddProductState extends State<AddProduct> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (productTypeController.productTypeList.isEmpty) {
-                  return const Center(child: Text("No Product Type Found"));
+                  return const Center(
+                    child: Text(AppString.noProductTypeFound),
+                  );
                 }
                 return ListView.builder(
                   itemCount: productTypeController.productTypeList.length,
@@ -639,7 +637,7 @@ class _AddProductState extends State<AddProduct> {
                     final type = productTypeController.productTypeList[index];
                     return ListTile(
                       title: Text(type.name ?? ""),
-                      subtitle: Text("Rate: ${type.rate}"),
+                      subtitle: Text("${AppString.rate}: ${type.rate}"),
                       onTap: () {
                         addProductUI.selectedMetal.value = type.name ?? "";
                         addProductUI.selectedProductTypeId.value =
@@ -686,7 +684,7 @@ class _AddProductState extends State<AddProduct> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (productController.products.isEmpty) {
-                  return const Center(child: Text("No Products Found"));
+                  return const Center(child: Text(AppString.noProductsFound));
                 }
                 return ListView.builder(
                   itemCount: productController.products.length,
@@ -695,7 +693,7 @@ class _AddProductState extends State<AddProduct> {
                     return ListTile(
                       title: Text(product.prodType ?? ""),
                       subtitle: Text(
-                        "Rate: ${product.todayRate} | Weight: ${product.weight}",
+                        "${AppString.rate}: ${product.todayRate} | ${AppString.weightColon}: ${product.weight}",
                       ),
                       onTap: () {
                         addProductUI.selectedProductType.value =
@@ -761,7 +759,7 @@ class _AddProductState extends State<AddProduct> {
                     .toSet()
                     .toList();
                 if (categories.isEmpty) {
-                  return const Center(child: Text("No Categories Found"));
+                  return const Center(child: Text(AppString.noCategoriesFound));
                 }
                 return ListView.builder(
                   itemCount: categories.length,
@@ -800,26 +798,26 @@ class _AddProductState extends State<AddProduct> {
               children: [
                 TextField(
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search),
-                    hintText: 'Search...',
+                    prefixIcon: const Icon(AppIcon.searchIcon),
+                    hintText: AppString.search,
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade300),
+                      borderSide: BorderSide(color: AppColor.grey300),
                     ),
                   ),
                 ),
                 const SizedBox(height: 10),
-                const ListTile(title: Text('D')),
-                const ListTile(title: Text('M')),
-                const ListTile(title: Text('N')),
+                ListTile(title: Text(AppString.lockerD)),
+                ListTile(title: Text(AppString.lockerM)),
+                ListTile(title: Text(AppString.lockerN)),
               ],
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text(
-                'OK',
-                style: TextStyle(color: AppColor.activeColor),
+              child: Text(
+                AppString.ok,
+                style: const TextStyle(color: AppColor.activeColor),
               ),
             ),
           ],

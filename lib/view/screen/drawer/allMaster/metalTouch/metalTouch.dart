@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: unnecessary_non_null_assertion, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -56,7 +56,7 @@ class _MetalTouchState extends State<MetalTouch> {
               }
 
               if (metalController.metalList.isEmpty) {
-                return const Center(child: Text("No Data Found"));
+                return const Center(child: Text(AppString.noDataFound));
               }
 
               return RefreshIndicator(
@@ -107,7 +107,7 @@ class _MetalTouchState extends State<MetalTouch> {
               flex: 2,
               child: _buildTextField(
                 controller: uiController.goldContentController,
-                hintText: "Content %",
+                hintText: AppString.contentPercent,
                 keyboardType: TextInputType.number,
               ),
             ),

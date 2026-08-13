@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: unnecessary_non_null_assertion, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -93,8 +93,8 @@ class _productDetailState extends State<productDetail>
                   style: TextStyle(color: AppColor.fullScreenColor),
                   cursorColor: AppColor.fullScreenColor,
                   decoration: InputDecoration(
-                    hintText: 'Search Product...',
-                    hintStyle: TextStyle(color: Colors.white70),
+                    hintText: AppString.searchProduct,
+                    hintStyle: TextStyle(color: AppColor.otherWhite),
                     border: InputBorder.none,
                   ),
                   onChanged: (value) {
@@ -154,7 +154,7 @@ class _productDetailState extends State<productDetail>
       }
       final data = productController.products;
       if (data.isEmpty) {
-        return const Center(child: Text("No Data Found"));
+        return const Center(child: Text(AppString.noDataFound));
       }
       return RefreshIndicator(
         onRefresh: () => fetchData(isRefresh: true),
@@ -167,7 +167,7 @@ class _productDetailState extends State<productDetail>
     return Container(
       width: double.infinity,
       alignment: Alignment.center,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         // border: isLast
         //     ? null
         //     : Border(right: BorderSide(color: Colors.grey.shade300, width: 1)),
@@ -295,19 +295,19 @@ class _productDetailState extends State<productDetail>
             SizedBox(height: Get.height * 0.015),
             _detailRow(
               "${AppString.date} :",
-              item.givenDate ?? "N/A",
-              "Wgt :",
-              "${item.weight ?? '0.00'} gm",
+              item.givenDate ?? AppString.na,
+              AppString.wgtColon,
+              "${item.weight ?? '0.00'} ${AppString.gm}",
             ),
             _detailRow(
               "${AppString.gvnAmt}:",
               item.givenAmount ?? "0.00",
-              "Rate :",
+              AppString.rateColon,
               "${item.todayRate ?? '0.00'}",
             ),
             _detailRow(
-              "Locker :",
-              item.lockerCode ?? "N/A",
+              "${AppString.locker} :",
+              item.lockerCode ?? AppString.na,
               "${AppString.pcs} :",
               item.pieces ?? "0",
             ),
@@ -378,9 +378,9 @@ class _productDetailState extends State<productDetail>
         itemBuilder: (context, index) {
           return Card(
             elevation: 0,
-            margin: EdgeInsets.symmetric(vertical: 5),
+            margin: const EdgeInsets.symmetric(vertical: 5),
             shape: RoundedRectangleBorder(
-              side: BorderSide(color: AppColor.textField),
+              side: const BorderSide(color: AppColor.textField),
               borderRadius: BorderRadius.circular(5),
             ),
             child: Container(

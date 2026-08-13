@@ -120,6 +120,14 @@ class AppString {
   static const metalRateError = 'Please enter both Metal name and Rate';
   static const productCategory = 'Please enter Product Category';
 
+  //Search
+  static const search = 'Search...';
+  static const searchLocker = 'Search Locker...';
+  static const searchCustomer = 'Search Customer...';
+  static const searchProduct = 'Search Product...';
+  static const searchName = 'Search Name...';
+  static const searchLocality = 'Search Locality...';
+
   //Drawer
   static const home = 'Home';
   static const logout = 'Logout';
@@ -136,6 +144,55 @@ class AppString {
   static const lockerTransaction = 'Locker Transaction';
   static const reports = 'Reports';
   static const exportCustomersContacts = "Export Customer's Contacts";
+
+  //Empty Messages
+  static const noProductsFound = 'No Products Found';
+  static const noProductsSelected = 'No products selected';
+  static const noCustomersAvailable = 'No customers available';
+  static const noLockersAvailable = 'No lockers available';
+  static const noProductTypeFound = 'No Product Type Found';
+  static const noCategoriesFound = 'No Categories Found';
+  static const noTransactionsFound = 'No transactions found';
+  static const noTransactionHistory = 'No transaction history';
+  static const noDataFound = 'No Data Found';
+  static const noMetalDataFound = 'No Metal Data Found';
+  static const noCustomersFound = 'No Customers Found';
+  static const noName = 'No Name';
+  static const na = 'N/A';
+
+  //Units & Labels
+  static const gm = 'gm';
+  static const images = 'Images';
+  static const changeTheLocker = 'Change the locker';
+  static const lockerCodeColon = 'Locker Code: ';
+  static const gvnAmtColon = 'Gvn Amt: ';
+  static const pcsColon = 'Pcs : ';
+  static const wgtColon = 'Wgt : ';
+  static const mudal = 'Muddal';
+  static const recIntAmt = 'Rec.Int Amt';
+  static const crDr = 'Cr/Dr';
+  static const mudalAmt = 'Muddal Amt';
+  static const totalAmt = 'Total Amt';
+  static const contentPercent = 'Content %';
+  static const tknAmtLabel = 'Tkn Amt';
+  static const balAmtLabel = 'Bal. Amt';
+  static const paidAmtLabel = 'Paid Amt';
+  static const totIntLabel = 'Tot Int';
+  static const paidIntLabel = 'Paid Int';
+  static const till = 'Till';
+  static const proTypColon = 'Pro Typ : ';
+  static const metalColon = 'Metal : ';
+  static const origPriceColon = 'Orig Price : ';
+  static const rateColon = 'Rate : ';
+  static const statusColon = 'Status : ';
+
+  //Locker Codes
+  static const lockerM = 'M';
+  static const lockerD = 'D';
+  static const lockerN = 'N';
+  static const lockerMCode = 'M';
+  static const lockerDCode = 'D';
+  static const lockerNCode = 'N';
 
   //Buttons
   static const sumit = 'Sumit';
@@ -278,7 +335,6 @@ class AppString {
       static const diamondPriceApp = 'Diamond Price(App)';
       static const ok = 'OK';
       static const selectCustomerName = 'Select Customer Name';
-      static const noMetalDataFound = 'No Metal Data Found';
       static const goldContent = 'Gold Content';
       static const karat = 'Karat';
       static const girviDetail = 'GIRVI DETAILS';
@@ -301,7 +357,6 @@ class AppString {
       static const date = 'date';
       static const muddal = 'Muddal';
       static const interest = 'Interest';
-      static const recIntAmt = 'Rec.Int Amt';
       static const cr = 'Cr/Dr';
       static const pcs = 'Pcs';
       static const origPrice = 'Orig Price';
@@ -312,6 +367,15 @@ class AppString {
       static const selectCustomer = 'Select Customer';
       static const nomineeDetails = 'Nominee Details';
       static const carryforwrdAmt = 'Carryforwrd Amt';
+      static const noDetailsFound = 'No Details Found';
+      static const noGirviRecordsFound = 'No Girvi Records Found';
+      static const noIdentityProofsFound = 'No Identity Proofs Found';
+      static const proofImage = 'Proof Image';
+      static const profileImage = 'Profile Image';
+      static const idColon = 'ID: ';
+      static const defaultLabel = 'Default';
+      static const fromColon = 'From :';
+      static const toColon = 'To:';
     //Pending Transaction
       static const totAmtGvn = 'Tot Amt Gvn';
       static const gvnDt = 'Gvn Dt';
@@ -336,6 +400,7 @@ class AppString {
       static const company = 'Company';
       static const number = 'Number';
       static const addLockerCode = 'Add Locker code';
+      static const updateLockerCode = 'Update Locker Code';
       static const companyName = 'Company Name';
       static const companyAddress = 'Company Address';
       static const phoneNumber = 'Phone Number';
@@ -349,4 +414,15 @@ class AppString {
 
     // //Product In Product
     //   static const productDetail = 'Product Detail';
+    static const weightColon = 'Weight :';
+    static const active = 'Active';
+    static const pending = 'Pending';
+
+  //Reports
+  static const customerReport = 'Customer Report';
+  static const girviReport = 'Girvi Report';
+  static const lockerWiseReport = 'Locker wise Report';
+  static const viewReport = 'View Report';
+  static const selectLockerTitle = 'Select Locker';
+  static const searchLockerHint = 'Search Locker...';
 }

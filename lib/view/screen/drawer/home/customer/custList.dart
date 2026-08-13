@@ -63,8 +63,8 @@ class _CustlistState extends State<Custlist> {
                   style: TextStyle(color: AppColor.fullScreenColor),
                   cursorColor: AppColor.fullScreenColor,
                   decoration: InputDecoration(
-                    hintText: 'Search Customer...',
-                    hintStyle: TextStyle(color: Colors.white70),
+                    hintText: AppString.searchCustomer,
+                    hintStyle: TextStyle(color: AppColor.otherWhite),
                     border: InputBorder.none,
                   ),
                   onChanged: (value) {
@@ -89,7 +89,7 @@ class _CustlistState extends State<Custlist> {
           onPressed: () {
             Get.toNamed('/addCustForm');
           },
-          child: Icon(AppIcon.add, color: Colors.white),
+          child: const Icon(AppIcon.add, color: AppColor.white),
         ),
         child: Obx(() {
           final loading = custListController.isLoading.value;
@@ -100,7 +100,7 @@ class _CustlistState extends State<Custlist> {
           }
 
           if (!loading && list.isEmpty) {
-            return Center(child: Text('No Customers Found'));
+            return Center(child: Text(AppString.noCustomersFound));
           }
 
           return RefreshIndicator(
@@ -145,7 +145,7 @@ Widget customersList({
             : null;
 
         // Logic for Section Headers (A, B, C...)
-        final String name = customer.name ?? 'No Name';
+        final String name = customer.name ?? AppString.noName;
         final String currentInitial = name.isNotEmpty
             ? name[0].toUpperCase()
             : '?';
@@ -276,7 +276,7 @@ Widget nextPageLoading() {
 }
 
 Widget marqueeText(String text) {
-  final String displayText = text.isEmpty ? 'N/A' : text;
+  final String displayText = text.isEmpty ? AppString.na : text;
   final TextStyle textStyle = TextStyle(
     fontWeight: FontWeight.normal,
     fontSize: Get.width * 0.035,
@@ -316,8 +316,8 @@ Widget customerLoading() {
     itemCount: 10,
     itemBuilder: (context, index) {
       return Shimmer.fromColors(
-        baseColor: AppColor.baseColor ?? Colors.grey[300]!,
-        highlightColor: AppColor.highlightColor ?? Colors.grey[100]!,
+        baseColor: AppColor.baseColor,
+        highlightColor: AppColor.highlightColor,
         child: Card(
           child: ListTile(
             leading: Container(

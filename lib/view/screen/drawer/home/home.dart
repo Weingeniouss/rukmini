@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, strict_top_level_inference, avoid_unnecessary_containers
+// ignore_for_file: unnecessary_non_null_assertion, deprecated_member_use, strict_top_level_inference, avoid_unnecessary_containers
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -140,7 +140,7 @@ Widget loadingWait() {
             height: Get.height * 0.35,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColor.white,
               borderRadius: BorderRadius.circular(Get.width * 0.025),
             ),
           ),
