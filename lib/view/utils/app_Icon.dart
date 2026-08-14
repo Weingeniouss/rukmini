@@ -88,4 +88,5 @@ class AppIcon {
   static const IconData removeCircle = Icons.remove_circle;
   static const IconData searchIcon = Icons.search;
   static const IconData closeIcon = Icons.close;
+  static const IconData addCircle = Icons.add_circle_outline;
 }

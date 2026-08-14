@@ -87,7 +87,7 @@ class Reports extends StatelessWidget {
                   ),
                 ),
                 trailing: Icon(
-                  isExpanded ? Icons.cancel_outlined : Icons.add_circle_outline,
+                  isExpanded ? AppIcon.remove : AppIcon.addCircle,
                   color: isExpanded
                       ? AppColor.deleteColor
                       : AppColor.activeColor,
