@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, file_names
+// ignore_for_file: avoid_print, deprecated_member_use, file_names
 
 import 'dart:convert';
 import 'dart:io';

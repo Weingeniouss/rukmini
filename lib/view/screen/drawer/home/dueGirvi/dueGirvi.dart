@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_non_null_assertion, deprecated_member_use
+// ignore_for_file: file_names, strict_top_level_inference, unnecessary_non_null_assertion, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

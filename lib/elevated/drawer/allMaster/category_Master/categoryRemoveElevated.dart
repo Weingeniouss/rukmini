@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../../controller/api/services/drawer/all_master/category_master/categoryRemove_service.dart';

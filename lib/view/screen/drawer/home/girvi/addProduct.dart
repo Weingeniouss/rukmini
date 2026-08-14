@@ -1,4 +1,4 @@
-// ignore_for_file: unused_element
+// ignore_for_file: file_names, prefer_interpolation_to_compose_strings, unused_element
 
 import 'dart:io';
 import 'package:flutter/material.dart';

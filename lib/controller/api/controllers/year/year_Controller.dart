@@ -1,3 +1,6 @@
+// ignore: file_names
+// ignore_for_file: duplicate_ignore, file_names
+
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';

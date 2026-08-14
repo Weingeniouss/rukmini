@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable
+// ignore_for_file: file_names, unused_local_variable
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;

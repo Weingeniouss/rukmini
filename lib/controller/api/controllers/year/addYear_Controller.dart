@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;

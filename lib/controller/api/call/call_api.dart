@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, library_prefixes
+
 import 'package:image_picker/image_picker.dart';
 import 'package:rukmini/elevated/credenials/loginElevated.dart';
 import 'package:rukmini/elevated/drawer/allMaster/category_Master/categoryElevated.dart' as category;

@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: curly_braces_in_flow_control_structures, file_names
 
 import 'dart:convert';
 import 'package:flutter/foundation.dart';

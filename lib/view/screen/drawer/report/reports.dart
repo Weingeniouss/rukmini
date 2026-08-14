@@ -68,7 +68,7 @@ class Reports extends StatelessWidget {
               BoxShadow(
                 color: AppColor.black.withOpacity(0.1),
                 blurRadius: 4,
-                offset: const Offset(0, 2),
+                offset: Offset(0, 2),
               ),
             ],
             border: Border.all(color: AppColor.grey200),
@@ -95,7 +95,7 @@ class Reports extends StatelessWidget {
                 ),
               ),
               if (isExpanded) ...[
-                const Divider(height: 1),
+                Divider(height: 1),
                 Padding(
                   padding: EdgeInsets.all(Get.width * 0.04),
                   child: child,
@@ -120,7 +120,7 @@ class Reports extends StatelessWidget {
                           vertical: Get.height * 0.01,
                         ),
                       ),
-                      child: const Text(AppString.viewReport),
+                      child: Text(AppString.viewReport),
                     ),
                   ),
                 ),
@@ -145,7 +145,7 @@ class Reports extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
           child: Text(
             "-",
             style: TextStyle(fontSize: 20, color: AppColor.grey500),
@@ -170,7 +170,7 @@ class Reports extends StatelessWidget {
     return GestureDetector(
       onTap: () => uiController.selectDate(context, controller),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: AppColor.grey300)),
         ),
@@ -195,7 +195,7 @@ class Reports extends StatelessWidget {
         GestureDetector(
           onTap: () => _showLockerSelectionDialog(context),
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(
               border: Border(bottom: BorderSide(color: AppColor.grey300)),
             ),
@@ -233,10 +233,10 @@ class Reports extends StatelessWidget {
       builder: (context) {
         return AlertDialog(
           backgroundColor: AppColor.white,
-          titlePadding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          titlePadding: EdgeInsets.fromLTRB(16, 16, 16, 8),
           contentPadding: EdgeInsets.zero,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          title: const Text(
+          title: Text(
             AppString.selectLockerTitle,
             style: TextStyle(color: AppColor.activeColor, fontSize: 18),
           ),
@@ -246,22 +246,22 @@ class Reports extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: 16),
                   child: TextField(
                     controller: uiController.searchLockerController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(
+                      prefixIcon: Icon(
                         AppIcon.searchIcon,
                         color: AppColor.black,
                         size: 20,
                       ),
-                      prefixIconConstraints: const BoxConstraints(
+                      prefixIconConstraints: BoxConstraints(
                         minWidth: 30,
                         minHeight: 0,
                       ),
                       hintText: AppString.searchLockerHint,
                       isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                      contentPadding: EdgeInsets.symmetric(vertical: 8),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: AppColor.grey300),
                       ),
@@ -278,13 +278,14 @@ class Reports extends StatelessWidget {
                         shrinkWrap: true,
                         padding: EdgeInsets.zero,
                         itemCount: uiController.filteredLockers.length,
-                        separatorBuilder: (context, index) =>
-                            const Divider(height: 1, indent: 16, endIndent: 16),
+                        separatorBuilder: (context, index) {
+                          return Divider(height: 1, indent: 16, endIndent: 16);
+                        },
                         itemBuilder: (context, index) {
                           final locker = uiController.filteredLockers[index];
                           return ListTile(
                             dense: true,
-                            contentPadding: const EdgeInsets.symmetric(
+                            contentPadding: EdgeInsets.symmetric(
                               horizontal: 16,
                             ),
                             title: Text(
@@ -307,7 +308,7 @@ class Reports extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text(
+              child: Text(
                 AppString.ok,
                 style: TextStyle(color: AppColor.activeColor),
               ),

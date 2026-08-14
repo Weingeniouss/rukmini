@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/foundation.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/app_URL.dart';

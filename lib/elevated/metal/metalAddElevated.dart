@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../controller/api/services/metal/metalAdd_service.dart';
@@ -21,10 +23,14 @@ Future<MetalAddModal?> postMetalAdd({
     final model = MetalAddModal.fromJson(decoded);
     if (response.statusCode == 200) {
       if (model.status == true) {
-        ToastificationSuccess.Success(model.message ?? 'Metal details saved successfully');
+        ToastificationSuccess.Success(
+          model.message ?? 'Metal details saved successfully',
+        );
         return model;
       } else {
-        ToastificationError.Error(model.message ?? 'Failed to save metal details');
+        ToastificationError.Error(
+          model.message ?? 'Failed to save metal details',
+        );
       }
     } else {
       ToastificationError.Error('Server Error: ${response.statusCode}');
