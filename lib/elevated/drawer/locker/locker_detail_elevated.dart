@@ -27,15 +27,15 @@ Future<LockerDetailModal?> getLockerDetail({
       if (decoded is Map<String, dynamic>) {
         final model = LockerDetailModal.fromJson(decoded);
         if (model.status == false) {
-          ToastificationError.Error(model.message?.toString() ?? 'Failed to load locker details');
+          ToastificationError.Error(model.message?.toString() ?? AppString.failedToLoadLockerDetails);
         }
         return model;
       }
     } else {
-      ToastificationError.Error('Server Error: ${response.statusCode}');
+      ToastificationError.Error('${AppString.serverError}${response.statusCode}');
     }
   } else {
-    ToastificationError.Error('Invalid server response format');
+    ToastificationError.Error(AppString.invalidserverresponseformat);
   }
   return null;
 }

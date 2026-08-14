@@ -3,9 +3,10 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:rukmini/controller/api/controllers/year/yearRemove_Controller.dart';
-import 'package:rukmini/modal/year/yearRemove_modal.dart';
-import 'package:rukmini/view/utils/widget/pop.dart';
+import 'package:rukmini/view/utils/app_String.dart';
+import '../../controller/api/controllers/year/yearRemove_Controller.dart';
+import '../../modal/year/yearRemove_modal.dart';
+import '../../view/utils/widget/pop.dart';
 
 Future<YearRemoveModal?> postYearRemove({required String yearId}) async {
   final YearRemoveController removeController = Get.put(YearRemoveController());
@@ -24,7 +25,7 @@ Future<YearRemoveModal?> postYearRemove({required String yearId}) async {
       if (model.status == true) {
         ToastificationSuccess.Success(model.message?.toString() ?? 'Year removed successfully');
       } else {
-        ToastificationError.Error(model.message?.toString() ?? 'Failed to remove year');
+        ToastificationError.Error(model.message?.toString() ?? AppString.failedToRemoveYear);
       }
       return model;
     }

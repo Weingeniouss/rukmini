@@ -57,7 +57,7 @@ Future<GiriviAddModel?> postAddGirivi({
           );
         }
       } else {
-        ToastificationError.Error('${giriviAddModel.message}');
+        ToastificationError.Error('${AppString.serverError}${giriviAddModel.message}');
       }
     } else {
       ToastificationError.Error(AppString.invalidserverresponseformat);

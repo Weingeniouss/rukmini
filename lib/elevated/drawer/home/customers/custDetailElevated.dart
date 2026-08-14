@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/view/utils/app_String.dart';
 import '../../../../controller/api/controllers/drawer/home/customers/custDetail_Controller.dart';
 import '../../../../modal/drawer/home/customer/customer_detail_model.dart';
 import '../../../../view/utils/widget/pop.dart';
@@ -26,10 +27,10 @@ Future<CustomerDetailModel?> getCustDetail({String? custId}) async {
           return customerDetailModel;
         } else {
           ToastificationError.Error(
-              customerDetailModel.message ?? 'Failed to load customer details');
+              customerDetailModel.message ?? AppString.noDetailsFound);
         }
       } else {
-        ToastificationError.Error('Server Error: ${response.statusCode}');
+        ToastificationError.Error('${AppString.serverError}${response.statusCode}');
       }
     } else {
       ToastificationError.Error('Invalid server response format');

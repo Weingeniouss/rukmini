@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../../controller/api/services/drawer/all_master/locker_master/lockerRemove_service.dart';
 import '../../../../modal/drawer/allMaster/locker_master/locker_remove_modal.dart';
+import '../../../../view/utils/app_String.dart';
 import '../../../../view/utils/widget/pop.dart';
 
 Future<LockerRemoveModal?> postLockerRemove({required String lockerId}) async {
@@ -14,12 +15,12 @@ Future<LockerRemoveModal?> postLockerRemove({required String lockerId}) async {
     final model = LockerRemoveModal.fromJson(decoded);
     if (response.statusCode == 200) {
       if (model.status == true) {
-        ToastificationSuccess.Success(model.message ?? 'Locker removed successfully');
+        ToastificationSuccess.Success(model.message ?? AppString.lockerRemovedSuccessfully);
         return model;
       }
-      ToastificationError.Error(model.message ?? 'Failed to remove locker');
+      ToastificationError.Error(model.message ?? AppString.failedToRemoveLocker);
     } else {
-      ToastificationError.Error('Server Error: ${response.statusCode}');
+      ToastificationError.Error('${AppString.serverError}${response.statusCode}');
     }
   }
   return null;

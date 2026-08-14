@@ -119,6 +119,37 @@ class AppString {
   static const invalidserverresponseformat = 'Invalid server response format';
   static const metalRateError = 'Please enter both Metal name and Rate';
   static const productCategory = 'Please enter Product Category';
+  static const failedToSaveLocker = 'Failed to save locker';
+  static const failedToLoadLockerDetails = 'Failed to load locker details';
+  static const serverError = 'Server Error: ';
+  static const failedToLoadList = 'Failed to load list';
+  static const failedToUpdateCustomer = 'Failed to update customer';
+  static const failedToLoadDashboard = 'Failed to load dashboard';
+  static const failedToRemoveLocker = 'Failed to remove locker';
+  static const failedToAddYear = 'Failed to add year';
+  static const failedToRemoveYear = 'Failed to remove year';
+  static const failedToLoadMetalList = 'Failed to load metal list';
+  static const failedToAddMetal = 'Failed to add metal';
+  static const failedToRemoveMetal = 'Failed to remove metal';
+  static const failedToLoadProductTypeList = 'Failed to load product type list';
+  static const failedToAddProductType = 'Failed to add product type';
+  static const failedToRemoveProductType = 'Failed to remove product type';
+  static const failedToLoadProductList = 'Failed to load product list';
+  static const failedToLoadCategoryList = 'Failed to load category list';
+  static const failedToAddCategory = 'Failed to add category';
+  static const failedToRemoveCategory = 'Failed to remove category';
+  static const failedToLoadCustomerTypeList = 'Failed to load customer type list';
+  static const failedToAddCustomerType = 'Failed to add customer type';
+  static const failedToRemoveCustomerType = 'Failed to remove customer type';
+  static const lockerDetailsSavedSuccessfully = 'Locker details saved successfully';
+  static const failedToLoadTransactions = 'Failed to load transactions';
+  static const failedToLoadLockerTransList = 'Failed to load locker transaction list';
+  static const lockerRemovedSuccessfully = 'Locker removed successfully';
+  static const loginFailed = 'Login failed';
+  static const networkError = 'Network error: Please check your internet connection';
+  static const failedToLoadCustomerProducts = 'Failed to load customer products';
+  static const lockerChangedSuccessfully = 'Locker changed successfully';
+  static const failedToChangeLocker = 'Failed to change locker';
 
   //Search
   static const search = 'Search...';

@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/view/utils/app_String.dart';
 import '../../../../controller/api/controllers/drawer/home/customers/custList_Controller.dart';
 import '../../../../modal/drawer/home/customer/customer_list_model.dart';
 import '../../../../view/utils/widget/pop.dart';
@@ -26,10 +27,10 @@ Future<CustomerListModel?> getCustList({bool isRefresh = false, String? search})
           return customerListModel;
         } else {
           ToastificationError.Error(
-              customerListModel.message ?? 'Failed to load customer list');
+              customerListModel.message ?? AppString.noCustomersFound);
         }
       } else {
-        ToastificationError.Error('Server Error: ${response.statusCode}');
+        ToastificationError.Error('${AppString.serverError}${response.statusCode}');
       }
     } else {
       ToastificationError.Error('Invalid server response format');

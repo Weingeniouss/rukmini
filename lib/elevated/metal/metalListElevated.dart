@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../controller/api/controllers/metal/metal_Controller.dart';
 import '../../modal/metal/metalList_Modal.dart';
+import 'package:rukmini/view/utils/app_String.dart';
 import '../../view/utils/widget/pop.dart';
 
 Future<MetalListModal?> getMetalList() async {
@@ -24,10 +25,10 @@ Future<MetalListModal?> getMetalList() async {
           return metalListModal;
         } else {
           ToastificationError.Error(
-              metalListModal.message ?? 'Failed to load metal list');
+              metalListModal.message ?? AppString.failedToLoadMetalList);
         }
       } else {
-        ToastificationError.Error('Server Error: ${response.statusCode}');
+        ToastificationError.Error('${AppString.serverError}${response.statusCode}');
       }
     } else {
       ToastificationError.Error('Invalid server response format');

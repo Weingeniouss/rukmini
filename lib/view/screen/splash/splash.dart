@@ -9,10 +9,26 @@ import 'package:rukmini/view/utils/app_constants.dart';
 import 'package:rukmini/view/utils/app_logo.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 
-class Splash extends StatelessWidget {
+class Splash extends StatefulWidget {
   const Splash({super.key});
 
-  //Splash Screen
+  @override
+  State<Splash> createState() => _SplashState();
+}
+
+class _SplashState extends State<Splash> {
+  @override
+  void initState() {
+    super.initState();
+    // Auto-navigation after 3 seconds
+    Future.delayed(const Duration(seconds: 3), () {
+      if (islogin) {
+        Get.offAllNamed('/home');
+      } else {
+        Get.offAllNamed('/login');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +43,9 @@ class Splash extends StatelessWidget {
           //quote
           Expanded(
             child: ListView(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               children: [
-                QuoteWidget(
+                const QuoteWidget(
                   quote: AppString.napoleonHill,
                   author: AppString.authorNapoleonHill,
                   goldColor: AppColor.goldColor,
@@ -42,7 +58,7 @@ class Splash extends StatelessWidget {
                     islogin ? Get.toNamed('/home') : Get.toNamed('/login');
                   },
                 ),
-                QuoteWidget(
+                const QuoteWidget(
                   quote: AppString.williamGeorge,
                   author: AppString.williamGeorgeJordan,
                   goldColor: AppColor.goldColor,

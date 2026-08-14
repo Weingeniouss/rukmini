@@ -71,7 +71,7 @@ Future<AddCustomerModel?> postAddCustomer({
           );
         }
       } else {
-        ToastificationError.Error('${addCustomerModel.message}');
+        ToastificationError.Error('${AppString.serverError}${addCustomerModel.message}');
       }
     } else {
       ToastificationError.Error(AppString.invalidserverresponseformat);

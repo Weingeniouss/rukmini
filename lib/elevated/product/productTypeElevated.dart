@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/view/utils/app_String.dart';
 import '../../controller/api/controllers/product/productType_Controller.dart';
 import '../../modal/product/productTypeList_Modal.dart';
 import '../../view/utils/widget/pop.dart';
@@ -24,10 +25,10 @@ Future<ProductTypeListModal?> getProductTypeList() async {
           return productTypeListModal;
         } else {
           ToastificationError.Error(
-              productTypeListModal.message ?? 'Failed to load product type list');
+              productTypeListModal.message ?? AppString.failedToLoadProductTypeList);
         }
       } else {
-        ToastificationError.Error('Server Error: ${response.statusCode}');
+        ToastificationError.Error('${AppString.serverError}${response.statusCode}');
       }
     } else {
       ToastificationError.Error('Invalid server response format');

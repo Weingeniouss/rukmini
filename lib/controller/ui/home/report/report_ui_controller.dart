@@ -50,6 +50,8 @@ class ReportUIController extends GetxController {
     }
   }
 
+import 'package:rukmini/view/utils/app_String.dart';
+...
   void selectLocker(dynamic locker) {
     selectedLocker.value = "${locker.lockerCode} (${locker.comName})";
     selectedLockerId.value = locker.lockerId ?? "";

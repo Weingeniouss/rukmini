@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../../controller/api/services/drawer/all_master/customer_type_master/customerType_service.dart';
 import '../../../../modal/drawer/allMaster/customer_type_master/customer_type_add_modal.dart';
+import 'package:rukmini/view/utils/app_String.dart';
 import '../../../../view/utils/widget/pop.dart';
 
 Future<CustomerTypeAddModal?> postCustomerTypeAdd({
@@ -23,9 +24,9 @@ Future<CustomerTypeAddModal?> postCustomerTypeAdd({
         ToastificationSuccess.Success(model.message ?? 'Saved successfully');
         return model;
       }
-      ToastificationError.Error(model.message ?? 'Failed to save');
+      ToastificationError.Error(model.message ?? AppString.failedToAddCustomerType);
     } else {
-      ToastificationError.Error('Server Error: ${response.statusCode}');
+      ToastificationError.Error('${AppString.serverError}${response.statusCode}');
     }
   }
   return null;

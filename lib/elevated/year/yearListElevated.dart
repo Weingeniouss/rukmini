@@ -3,6 +3,8 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/widget/pop.dart';
 import 'package:rukmini/controller/api/controllers/year/year_Controller.dart';
 import 'package:rukmini/modal/year/year_modal.dart';
 
@@ -19,8 +21,17 @@ Future<YearModel?> getYearList() async {
 
     final decoded = jsonDecode(body);
     if (decoded is Map<String, dynamic>) {
-      return YearModel.fromJson(decoded);
+      final model = YearModel.fromJson(decoded);
+      if (response.statusCode == 200) {
+        if (model.status == true) return model;
+        ToastificationError.Error(model.message ?? AppString.failedToLoadList);
+      } else {
+        ToastificationError.Error('${AppString.serverError}${response.statusCode}');
+      }
+      return model;
     }
+  } else {
+    ToastificationError.Error(AppString.invalidserverresponseformat);
   }
   return null;
 }

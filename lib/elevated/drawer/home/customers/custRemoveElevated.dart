@@ -38,7 +38,7 @@ Future<RemoveCustomerModel?> postRemoveCustomer({
           );
         }
       } else {
-        ToastificationError.Error('${removeModel.message}');
+        ToastificationError.Error('${AppString.serverError}${removeModel.message}');
       }
     } else {
       ToastificationError.Error(AppString.invalidserverresponseformat);

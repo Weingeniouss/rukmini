@@ -33,12 +33,12 @@ Future<LockerAddModal?> postLockerAdd({
     final model = LockerAddModal.fromJson(decoded);
     if (response.statusCode == 200) {
       if (model.status == true) {
-        ToastificationSuccess.Success(model.message ?? 'Locker details saved successfully');
+        ToastificationSuccess.Success(model.message ?? AppString.lockerDetailsSavedSuccessfully);
         return model;
       }
-      ToastificationError.Error(model.message ?? 'Failed to save locker');
+      ToastificationError.Error(model.message ?? AppString.failedToSaveLocker);
     } else {
-      ToastificationError.Error('Server Error: ${response.statusCode}');
+      ToastificationError.Error('${AppString.serverError}${response.statusCode}');
     }
   }
   return null;

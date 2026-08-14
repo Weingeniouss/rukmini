@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:rukmini/controller/local/localDatabase.dart';
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/app_constants.dart';
 import '../../controller/api/controllers/credentials/login_controller.dart';
 import '../../modal/credentials/login_model.dart';
@@ -35,14 +36,14 @@ Future postLogin() async {
           uId: loginModel.data!.userId,
         );
       } else {
-        ToastificationError.Error(loginModel.message ?? 'Login failed');
+        ToastificationError.Error(loginModel.message ?? AppString.loginFailed);
       }
     } else {
       ToastificationError.Error('${loginModel.message}');
     }
   } else {
     ToastificationError.Error(
-      'Network error: Please check your internet connection',
+      AppString.networkError,
     );
   }
 }

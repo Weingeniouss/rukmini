@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:rukmini/controller/api/controllers/drawer/productInLocker/cust_product_controller.dart';
 import 'package:rukmini/modal/drawer/productInLocker/cust_product_model.dart';
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
 Future<CustProductModel?> getCustProduct() async {
@@ -23,15 +24,15 @@ Future<CustProductModel?> getCustProduct() async {
       if (decoded is Map<String, dynamic>) {
         final model = CustProductModel.fromJson(decoded);
         if (model.status == false) {
-          ToastificationError.Error(model.message ?? 'Failed to load customer products');
+          ToastificationError.Error(model.message ?? AppString.failedToLoadCustomerProducts);
         }
         return model;
       }
     } else {
-      ToastificationError.Error('Server Error: ${response.statusCode}');
+      ToastificationError.Error('${AppString.serverError}${response.statusCode}');
     }
   } else {
-    ToastificationError.Error('Invalid server response format');
+    ToastificationError.Error(AppString.invalidserverresponseformat);
   }
   return null;
 }

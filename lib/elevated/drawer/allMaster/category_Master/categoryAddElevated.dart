@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/view/utils/app_String.dart';
 import '../../../../controller/api/services/drawer/all_master/category_master/categoryAdd_service.dart';
 import '../../../../modal/drawer/allMaster/category_Master/categoryAdd_modal.dart';
 import '../../../../view/utils/widget/pop.dart';
@@ -24,10 +25,10 @@ Future<CategoryAddModal?> postCategoryAdd({
         ToastificationSuccess.Success(model.message ?? 'Category details saved successfully');
         return model;
       } else {
-        ToastificationError.Error(model.message ?? 'Failed to save category');
+        ToastificationError.Error(model.message ?? AppString.failedToAddCategory);
       }
     } else {
-      ToastificationError.Error('Server Error: ${response.statusCode}');
+      ToastificationError.Error('${AppString.serverError}${response.statusCode}');
     }
   } else {
     ToastificationError.Error('Invalid server response format');

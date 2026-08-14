@@ -2,9 +2,10 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/controller/api/services/product/ProductTypeAdd_service.dart';
 import 'package:rukmini/modal/product/productTypeAdd_modal.dart';
-import 'package:rukmini/view/utils/widget/pop.dart';
+import '../../view/utils/widget/pop.dart';
 
 Future<ProductTypeAddModal?> postProductTypeAdd({
   required String name,
@@ -27,12 +28,12 @@ Future<ProductTypeAddModal?> postProductTypeAdd({
         return model;
       } else {
         ToastificationError.Error(
-          model.message ?? 'Failed to add product type',
+          model.message ?? AppString.failedToAddProductType,
         );
       }
     } else {
       ToastificationError.Error(
-        model.message ?? 'Server Error: ${response.statusCode}',
+        '${AppString.serverError}${response.statusCode}',
       );
     }
   } else {

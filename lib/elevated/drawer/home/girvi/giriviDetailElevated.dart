@@ -35,11 +35,11 @@ Future<GiriviDetailModal?> getGiriviDetail({
           return model;
         } else {
           ToastificationError.Error(
-            model.message ?? "Failed to fetch Girivi details",
+            model.message ?? AppString.failedToLoadList,
           );
         }
       } else {
-        ToastificationError.Error('${model.message}');
+        ToastificationError.Error('${AppString.serverError}${response.statusCode}');
       }
     } else {
       ToastificationError.Error(AppString.invalidserverresponseformat);

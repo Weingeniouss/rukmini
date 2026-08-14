@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../../controller/api/services/drawer/all_master/customer_type_master/customerType_service.dart';
 import '../../../../modal/drawer/allMaster/customer_type_master/customer_type_remove_modal.dart';
+import 'package:rukmini/view/utils/app_String.dart';
 import '../../../../view/utils/widget/pop.dart';
 
 Future<CustomerTypeRemoveModal?> postCustomerTypeRemove({
@@ -21,9 +22,9 @@ Future<CustomerTypeRemoveModal?> postCustomerTypeRemove({
         ToastificationSuccess.Success(model.message ?? 'Removed successfully');
         return model;
       }
-      ToastificationError.Error(model.message ?? 'Failed to remove');
+      ToastificationError.Error(model.message ?? AppString.failedToRemoveCustomerType);
     } else {
-      ToastificationError.Error('Server Error: ${response.statusCode}');
+      ToastificationError.Error('${AppString.serverError}${response.statusCode}');
     }
   }
   return null;

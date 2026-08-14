@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:rukmini/controller/api/controllers/drawer/all_master/category_master/category_Controller.dart';
+import 'package:rukmini/view/utils/app_String.dart';
 import '../../../../modal/drawer/allMaster/category_Master/categoryList_modal.dart';
 import '../../../../view/utils/widget/pop.dart';
 
@@ -24,10 +25,10 @@ Future<CategoryListModal?> getCategoryList() async {
           return categoryListModal;
         } else {
           ToastificationError.Error(
-              categoryListModal.message ?? 'Failed to load category list');
+              categoryListModal.message ?? AppString.failedToLoadCategoryList);
         }
       } else {
-        ToastificationError.Error('Server Error: ${response.statusCode}');
+        ToastificationError.Error('${AppString.serverError}${response.statusCode}');
       }
     } else {
       ToastificationError.Error('Invalid server response format');

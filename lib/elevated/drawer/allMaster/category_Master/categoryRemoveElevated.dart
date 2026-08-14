@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/view/utils/app_String.dart';
 import '../../../../controller/api/services/drawer/all_master/category_master/categoryRemove_service.dart';
 import '../../../../modal/drawer/allMaster/category_Master/categoryRemove_modal.dart';
 import '../../../../view/utils/widget/pop.dart';
@@ -18,10 +19,10 @@ Future<CategoryRemoveModal?> postCategoryRemove({required String categoryId}) as
         ToastificationSuccess.Success(model.message ?? 'Category removed successfully');
         return model;
       } else {
-        ToastificationError.Error(model.message ?? 'Failed to remove category');
+        ToastificationError.Error(model.message ?? AppString.failedToRemoveCategory);
       }
     } else {
-      ToastificationError.Error('Server Error: ${response.statusCode}');
+      ToastificationError.Error('${AppString.serverError}${response.statusCode}');
     }
   } else {
     ToastificationError.Error('Invalid server response format');
