@@ -1,6 +1,14 @@
+import 'dart:io';
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/lockerList_Controller.dart';
+import 'package:rukmini/controller/api/controllers/drawer/home/customers/custList_Controller.dart';
+import 'package:rukmini/view/utils/widget/pop.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ReportUIController extends GetxController {
   var expandedIndex = (-1).obs;
@@ -70,5 +78,135 @@ class ReportUIController extends GetxController {
       controller.text =
           "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
     }
+  }
+
+  Future<void> exportReport(int index) async {
+    try {
+      if (Platform.isAndroid) {
+        if (await Permission.storage.request().isGranted ||
+            await Permission.manageExternalStorage.request().isGranted) {
+          // Permission granted
+        } else {
+          ToastificationError.Error(
+            "Storage permission is required to save files.",
+          );
+          return;
+        }
+      }
+
+      var excel = Excel.createExcel();
+      Sheet sheetObject = excel['Sheet1'];
+
+      String fileName = "";
+      List<String> headers = [];
+
+      if (index == 0) {
+        fileName = "Customer_Report.xlsx";
+        headers = ["Name", "Cust Code", "Gvn Amt", "Pending Amt", "Phone"];
+      } else if (index == 1) {
+        fileName = "Girvi_Report.xlsx";
+        headers = ["Unique ID", "Customer", "Date", "Given Amt", "Balance"];
+      } else if (index == 2) {
+        if (selectedLockerId.isEmpty) {
+          ToastificationError.Error("Please select a locker first");
+          return;
+        }
+        fileName = "Locker_Report_${selectedLocker.value}.xlsx";
+        headers = ["Unique ID", "Weight", "Category", "Metal", "Date"];
+      }
+
+      sheetObject.appendRow(headers.map((e) => TextCellValue(e)).toList());
+
+      // Add actual data
+      await fetchReport(index);
+      for (var item in reportList) {
+        if (index == 0) {
+          sheetObject.appendRow([
+            item.name ?? '',
+            item.custCode ?? '',
+            item.gracePeriod ?? '',
+            '',
+            (item.phoneList != null && item.phoneList.isNotEmpty) ? item.phoneList[0].phone ?? '' : ''
+          ].map((e) => TextCellValue(e.toString())).toList());
+        } else if (index == 1) {
+          sheetObject.appendRow([
+            item.uniqueId ?? '',
+            item.custName ?? '',
+            item.girviDate ?? '',
+            item.givenAmt ?? '',
+            item.balance ?? ''
+          ].map((e) => TextCellValue(e.toString())).toList());
+        } else if (index == 2) {
+          sheetObject.appendRow([
+            item.uniqueId ?? '',
+            '',
+            '',
+            '',
+            item.code ?? ''
+          ].map((e) => TextCellValue(e.toString())).toList());
+        }
+      }
+
+      var fileBytes = excel.save();
+      if (fileBytes == null) return;
+
+      final directory = await getTemporaryDirectory();
+      final path = "${directory.path}/$fileName";
+      final file = File(path);
+      await file.writeAsBytes(fileBytes);
+
+      await Share.shareXFiles([XFile(path)], text: 'Exported $fileName');
+    } catch (e) {
+      ToastificationError.Error("Export Failed: ${e.toString()}");
+    }
+  }
+
+  var reportList = <dynamic>[].obs;
+  var isReportLoading = false.obs;
+
+  Future<void> fetchReport(int index) async {
+    try {
+      isReportLoading.value = true;
+      reportList.clear();
+
+      if (index == 0) {
+        await CallApi.callCustList(isRefresh: true);
+        final controller = Get.find<CustListController>();
+        reportList.assignAll(controller.customers);
+      } else if (index == 1) {
+        final result = await CallApi.callGiriviList(
+          isRefresh: true,
+          formDate: fromDateController.text,
+          toDate: toDateController.text,
+        );
+        if (result != null && result.data != null) {
+          reportList.assignAll(result.data!);
+        }
+      } else if (index == 2) {
+        if (selectedLockerId.isEmpty) {
+          ToastificationError.Error("Please select a locker first");
+          isReportLoading.value = false;
+          return;
+        }
+        final result = await CallApi.callLockerWiseDel(
+          lockerId: selectedLockerId.value,
+        );
+        if (result != null && result.data != null) {
+          reportList.assignAll(result.data!);
+        }
+      }
+    } catch (e) {
+      ToastificationError.Error("Failed to fetch report: $e");
+    } finally {
+      isReportLoading.value = false;
+    }
+  }
+
+  @override
+  void onClose() {
+    fromDateController.dispose();
+    toDateController.dispose();
+    searchLockerController.dispose();
+    super.onClose();
   }
 }

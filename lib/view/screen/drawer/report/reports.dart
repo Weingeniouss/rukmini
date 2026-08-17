@@ -11,9 +11,11 @@ import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
+import 'package:rukmini/view/utils/widget/report_helper.dart';
 
 class Reports extends StatelessWidget {
   final ReportUIController uiController;
+
   const Reports({super.key, required this.uiController});
 
   @override
@@ -27,18 +29,21 @@ class Reports extends StatelessWidget {
         child: Column(
           children: [
             _buildReportCard(
+              context: context,
               index: 0,
               title: AppString.customerReport,
               icon: AppIcon.person,
               child: _buildDateRangeFilter(context),
             ),
             _buildReportCard(
+              context: context,
               index: 1,
               title: AppString.girviReport,
               icon: AppIcon.grid,
               child: _buildDateRangeFilter(context),
             ),
             _buildReportCard(
+              context: context,
               index: 2,
               title: AppString.lockerWiseReport,
               icon: AppIcon.locker,
@@ -51,6 +56,7 @@ class Reports extends StatelessWidget {
   }
 
   Widget _buildReportCard({
+    required BuildContext context,
     required int index,
     required String title,
     required IconData icon,
@@ -96,10 +102,7 @@ class Reports extends StatelessWidget {
               ),
               if (isExpanded) ...[
                 const Divider(height: 1),
-                Padding(
-                  padding: EdgeInsets.all(AppSize.p16),
-                  child: child,
-                ),
+                Padding(padding: EdgeInsets.all(AppSize.p16), child: child),
                 Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
@@ -107,20 +110,47 @@ class Reports extends StatelessWidget {
                       right: AppSize.p16,
                       bottom: AppSize.p16,
                     ),
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColor.activeColor,
-                        foregroundColor: AppColor.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: () => uiController.exportReport(index),
+                          icon: const Icon(Icons.download, size: 18),
+                          label: const Text("Export Excel"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColor.activeColor,
+                            foregroundColor: AppColor.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppSize.p16,
+                              vertical: AppSize.p4,
+                            ),
+                          ),
                         ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: AppSize.p24,
-                          vertical: AppSize.p4,
+                        SizedBox(width: AppSize.p8),
+                        ElevatedButton(
+                          onPressed: () => ReportHelper.showReportDialog(
+                            context: context,
+                            uiController: uiController,
+                            index: index,
+                            title: title,
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColor.activeColor,
+                            foregroundColor: AppColor.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppSize.p16,
+                              vertical: AppSize.p4,
+                            ),
+                          ),
+                          child: Text(AppString.viewReport),
                         ),
-                      ),
-                      child: Text(AppString.viewReport),
+                      ],
                     ),
                   ),
                 ),
@@ -148,10 +178,7 @@ class Reports extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 8.0),
           child: Text(
             "-",
-            style: TextStyle(
-              fontSize: AppSize.p20,
-              color: AppColor.grey500,
-            ),
+            style: TextStyle(fontSize: AppSize.p20, color: AppColor.grey500),
           ),
         ),
         Expanded(
