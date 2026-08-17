@@ -17,13 +17,14 @@ Future<PendingTransactionModel?> getPendingTransaction({
     PendingTransactionController(),
   );
 
-  final http.Response? response = await pendingTransactionController.pendingTransaction(
-    isRefresh: isRefresh,
-    isLoadMoreAction: isLoadMoreAction,
-    search: search,
-    isFilterer: isFilterer,
-    locality: locality,
-  );
+  final http.Response? response = await pendingTransactionController
+      .pendingTransaction(
+        isRefresh: isRefresh,
+        isLoadMoreAction: isLoadMoreAction,
+        search: search,
+        isFilterer: isFilterer,
+        locality: locality,
+      );
 
   if (response != null) {
     String body = response.body;
@@ -36,9 +37,13 @@ Future<PendingTransactionModel?> getPendingTransaction({
       final model = PendingTransactionModel.fromJson(decoded);
       if (response.statusCode == 200) {
         if (model.status == true) return model;
-        ToastificationError.Error(model.message ?? AppString.failedToLoadTransactions);
+        ToastificationError.Error(
+          model.message ?? AppString.failedToLoadTransactions,
+        );
       } else {
-        ToastificationError.Error('${AppString.serverError}${response.statusCode}');
+        // ToastificationError.Error(
+        //   '${AppString.serverError}${response.statusCode}',
+        // );
       }
       return model;
     }

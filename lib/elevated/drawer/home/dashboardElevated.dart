@@ -38,7 +38,9 @@ Future<DashboardModel?> getDashboard() async {
           );
         }
       } else {
-        ToastificationError.Error('${AppString.serverError}${response.statusCode}');
+        ToastificationError.Error(
+          '${AppString.serverError}${response.statusCode}',
+        );
       }
     } else {
       ToastificationError.Error(AppString.invalidserverresponseformat);

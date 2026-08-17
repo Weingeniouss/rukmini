@@ -13,9 +13,8 @@ import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 
 class Reports extends StatelessWidget {
-  const Reports({super.key});
-
-  static final uiController = Get.put(ReportUIController());
+  final ReportUIController uiController;
+  const Reports({super.key, required this.uiController});
 
   @override
   Widget build(BuildContext context) {

@@ -264,7 +264,7 @@ class _productDetailState extends State<productDetail>
                               style: TextStyle(
                                 color: AppColor.primaryColor,
                                 fontWeight: FontWeight.w500,
-                                fontSize: AppSize.size15,
+                                fontSize: AppSize.size12,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -275,7 +275,7 @@ class _productDetailState extends State<productDetail>
                             style: TextStyle(
                               color: AppColor.activeColor,
                               fontWeight: FontWeight.w500,
-                              fontSize: AppSize.size15,
+                              fontSize: AppSize.size12,
                             ),
                           ),
                         ],

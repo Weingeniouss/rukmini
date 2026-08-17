@@ -8,6 +8,7 @@ import 'package:rukmini/controller/ui/home/customer/addCustForm_controller.dart'
 import 'package:rukmini/controller/ui/home/customer/updateCustForm_controller.dart';
 import 'package:rukmini/controller/ui/home/locker/locker_trans_ui_controller.dart';
 import 'package:rukmini/controller/ui/home/productInLocker/changeLocker_ControllerUI.dart';
+import 'package:rukmini/controller/ui/home/report/report_ui_controller.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/customerTypeMaster/customerTypeMaster.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/lockerCodeMaster/addLockerCode.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/lockerCodeMaster/lockerCodeMaster.dart';
@@ -154,7 +155,10 @@ class AppPages {
     //Locker Transaction
 
     //Report
-    GetPage(name: _Paths.report, page: () => Reports()),
+    GetPage(
+      name: _Paths.report,
+      page: () => Reports(uiController: Get.put(ReportUIController())),
+    ),
     //Report
     //Drawer
   ];

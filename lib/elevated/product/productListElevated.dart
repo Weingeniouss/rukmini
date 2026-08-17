@@ -37,7 +37,9 @@ Future<ProductListModal?> getProductList({
           );
         }
       } else {
-        ToastificationError.Error('${AppString.serverError}${response.statusCode}');
+        // ToastificationError.Error(
+        //   '${AppString.serverError}${response.statusCode}',
+        // );
       }
     } else {
       ToastificationError.Error('Invalid server response format');
