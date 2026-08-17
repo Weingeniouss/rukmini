@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/lockerList_Controller.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/customers/custList_Controller.dart';
@@ -80,18 +81,34 @@ class ReportUIController extends GetxController {
     }
   }
 
+  Future<bool> _requestPermissions() async {
+    if (!Platform.isAndroid) return true;
+
+    final deviceInfo = DeviceInfoPlugin();
+    final androidInfo = await deviceInfo.androidInfo;
+    final sdkInt = androidInfo.version.sdkInt;
+
+    if (sdkInt >= 33) {
+      // Android 13+ (API 33) doesn't need WRITE_EXTERNAL_STORAGE for temp files or sharing
+      // Photos/Videos/Audio permissions are not needed for Excel docs
+      return true;
+    } else if (sdkInt >= 30) {
+      // Android 11 & 12 (API 30-32) use Scoped Storage
+      // Writing to temp directory is always allowed
+      return true;
+    } else {
+      // Android 10 and below (API < 30)
+      final status = await Permission.storage.request();
+      return status.isGranted;
+    }
+  }
+
   Future<void> exportReport(int index) async {
     try {
-      if (Platform.isAndroid) {
-        if (await Permission.storage.request().isGranted ||
-            await Permission.manageExternalStorage.request().isGranted) {
-          // Permission granted
-        } else {
-          ToastificationError.Error(
-            "Storage permission is required to save files.",
-          );
-          return;
-        }
+      final hasPermission = await _requestPermissions();
+      if (!hasPermission) {
+        ToastificationError.Error("Storage permission is required to save files.");
+        return;
       }
 
       var excel = Excel.createExcel();
