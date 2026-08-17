@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:rukmini/view/utils/app_String.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -47,7 +48,7 @@ class AddGiriviControllerUI extends GetxController {
 
   Future<void> submitGirivi() async {
     if (selectedCustomerId.value.isEmpty) {
-      ToastificationError.Error('Please select a customer');
+      ToastificationError.Error(AppString.pleaseSelectCustomer);
       return;
     }
 

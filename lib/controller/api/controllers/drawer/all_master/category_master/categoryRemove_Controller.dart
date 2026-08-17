@@ -2,6 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/drawer/all_master/category_master/category_Controller.dart';
 
@@ -19,7 +20,7 @@ class CategoryRemoveController extends GetxController {
         }
       }
     } catch (e) {
-      if (kDebugMode) print('CategoryRemove Error: $e');
+      if (kDebugMode) print('CategoryRemove ${AppString.errorLog}$e');
     } finally {
       isLoading.value = false;
     }

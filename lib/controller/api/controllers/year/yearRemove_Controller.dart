@@ -3,6 +3,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/controller/api/services/year/yearRemove_service.dart';
 
 class YearRemoveController extends GetxController {
@@ -15,12 +16,12 @@ class YearRemoveController extends GetxController {
       final http.Response response = await _yearRemoveService.yearRemoveApi(yearId: yearId);
 
       if (kDebugMode) {
-        print('YearRemove Response: ${response.body}');
+        print('YearRemove ${AppString.responseLog}${response.body}');
       }
 
       return response;
     } catch (e) {
-      if (kDebugMode) print('YearRemove Error: $e');
+      if (kDebugMode) print('YearRemove ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

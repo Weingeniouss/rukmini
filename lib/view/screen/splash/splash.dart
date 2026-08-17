@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/app_background.dart';
 import 'package:rukmini/view/utils/app_constants.dart';
@@ -38,7 +39,7 @@ class _SplashState extends State<Splash> {
         children: [
           //Logo
           logo(AppLogo.rukminiLogo),
-          SizedBox(height: Get.height * 0.05),
+          SizedBox(height: AppSize.size20),
 
           //quote
           Expanded(
@@ -91,7 +92,7 @@ class QuoteWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 28.0),
+      padding: const EdgeInsets.only(bottom: 28.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -99,7 +100,7 @@ class QuoteWidget extends StatelessWidget {
             quote,
             style: TextStyle(
               color: goldColor.withOpacity(0.9),
-              fontSize: context.width * 0.045,
+              fontSize: AppSize.headingText,
               height: 1.4,
               fontWeight: FontWeight.w400,
             ),
@@ -111,7 +112,7 @@ class QuoteWidget extends StatelessWidget {
               author,
               style: TextStyle(
                 color: goldColor.withOpacity(0.7),
-                fontSize: context.width * 0.04,
+                fontSize: AppSize.largeText,
                 fontStyle: FontStyle.italic,
               ),
             ),

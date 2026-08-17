@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/controller/api/services/drawer/locker/locker_wise_del_service.dart';
 import 'package:rukmini/modal/drawer/locker/locker_wise_del_modal.dart';
 
@@ -24,7 +25,7 @@ class LockerWiseDelController extends GetxController {
       );
 
       if (kDebugMode) {
-        print('LockerWiseDel Response: ${response.body}');
+        print('LockerWiseDel ${AppString.responseLog}${response.body}');
       }
 
       if (response.statusCode == 200) {
@@ -36,7 +37,7 @@ class LockerWiseDelController extends GetxController {
       }
       return response;
     } catch (e) {
-      if (kDebugMode) print('LockerWiseDel Error: $e');
+      if (kDebugMode) print('LockerWiseDel ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

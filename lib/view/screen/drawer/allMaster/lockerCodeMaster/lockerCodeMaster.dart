@@ -8,6 +8,7 @@ import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_mast
 import 'package:rukmini/modal/drawer/allMaster/locker_master/locker_master_modal.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
@@ -87,7 +88,7 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
             onRefresh: () => CallApi.callLockerList(),
             color: AppColor.activeColor,
             child: ListView.builder(
-              padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+              padding: EdgeInsets.symmetric(vertical: AppSize.p4),
               itemCount: list.length,
               itemBuilder: (context, index) {
                 return _buildLockerCard(list[index]);
@@ -102,8 +103,8 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
   Widget _buildLockerCard(LockerData item) {
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: Get.width * 0.04,
-        vertical: Get.height * 0.008,
+        horizontal: AppSize.p16,
+        vertical: AppSize.p4,
       ),
       decoration: BoxDecoration(
         color: AppColor.fullScreenColor,
@@ -121,7 +122,7 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
           _showDeleteDialog(item);
         },
         child: Padding(
-          padding: EdgeInsets.all(Get.width * 0.04),
+          padding: EdgeInsets.all(AppSize.p16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -135,7 +136,7 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
                 item.comName ?? "",
                 isGreenValue: true,
               ),
-              SizedBox(height: Get.height * 0.01),
+              SizedBox(height: AppSize.p4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -143,7 +144,7 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
                   _buildRichText(AppString.number, item.personPhone ?? ""),
                 ],
               ),
-              SizedBox(height: Get.height * 0.01),
+              SizedBox(height: AppSize.p4),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Row(
@@ -162,10 +163,10 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
                       icon: Icon(
                         AppIcon.editNote,
                         color: AppColor.activeColor,
-                        size: Get.width * 0.06,
+                        size: AppSize.p24,
                       ),
                       padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
+                      constraints: BoxConstraints(),
                     ),
                   ],
                 ),
@@ -203,13 +204,13 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
       text: TextSpan(
         style: TextStyle(
           color: AppColor.dark,
-          fontSize: Get.width * 0.038,
+          fontSize: AppSize.size12,
           fontFamily: 'Poppins',
         ),
         children: [
           TextSpan(
             text: "$label : ",
-            style: const TextStyle(fontWeight: FontWeight.w500),
+            style: TextStyle(fontWeight: FontWeight.w500),
           ),
           TextSpan(
             text: value,
@@ -229,11 +230,11 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
       highlightColor: AppColor.highlightColor!,
       child: ListView.builder(
         itemCount: 5,
-        padding: EdgeInsets.all(Get.width * 0.04),
+        padding: EdgeInsets.all(AppSize.p16),
         itemBuilder: (context, index) {
           return Container(
             height: 100,
-            margin: EdgeInsets.only(bottom: Get.height * 0.02),
+            margin: EdgeInsets.only(bottom: AppSize.p8),
             decoration: BoxDecoration(
               color: AppColor.white,
               borderRadius: BorderRadius.circular(5),

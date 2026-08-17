@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 
 Widget clickButton(String name, {bool isLoading = false}) {
   return Container(
     padding: const EdgeInsets.all(12),
-    width: Get.width,
+    width: AppSize.width,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(3),
       border: Border.all(color: AppColor.textColor),

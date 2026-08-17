@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:rukmini/modal/drawer/productInLocker/cust_product_model.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
@@ -25,9 +26,9 @@ class ProductInLockerDetail extends StatelessWidget {
       ),
       child: Column(
         children: [
-          SizedBox(height: Get.height * 0.02),
+          SizedBox(height: AppSize.p8),
           _buildTopInfo(item),
-          SizedBox(height: Get.height * 0.02),
+          SizedBox(height: AppSize.p8),
           _buildSectionHeader(AppString.productDetail),
           Expanded(
             child: ListView(
@@ -35,7 +36,7 @@ class ProductInLockerDetail extends StatelessWidget {
               children: [
                 _buildProductDetailsList(item),
                 _buildSectionHeader(AppString.lockerDetail),
-                SizedBox(height: Get.height * 0.02),
+                SizedBox(height: AppSize.p8),
                 _buildLockerDetailTable(item),
               ],
             ),
@@ -57,7 +58,7 @@ class ProductInLockerDetail extends StatelessWidget {
                 item?.custName ?? "N/A",
                 style: TextStyle(
                   color: AppColor.activeColor,
-                  fontSize: Get.width * 0.05,
+                  fontSize: AppSize.size18,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -65,7 +66,7 @@ class ProductInLockerDetail extends StatelessWidget {
                 item?.girviDate ?? "",
                 style: TextStyle(
                   color: AppColor.textColor,
-                  fontSize: Get.width * 0.04,
+                  fontSize: AppSize.mediumText,
                 ),
               ),
             ],
@@ -78,16 +79,18 @@ class ProductInLockerDetail extends StatelessWidget {
                 "${item?.metalName} Karat ${item?.prodType} ${item?.catName}",
                 style: TextStyle(
                   color: AppColor.dark.withOpacity(0.7),
-                  fontSize: Get.width * 0.045,
+                  fontSize: AppSize.size18,
                 ),
               ),
               Text(
                 item?.status ?? AppString.pending,
                 style: TextStyle(
-                  color: (item?.status == AppString.active || item?.status == AppString.open)
+                  color:
+                      (item?.status == AppString.active ||
+                          item?.status == AppString.open)
                       ? AppColor.deleteColor
                       : AppColor.activeColor,
-                  fontSize: Get.width * 0.045,
+                  fontSize: AppSize.size18,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -128,7 +131,11 @@ class ProductInLockerDetail extends StatelessWidget {
             item?.uniqueId ?? "",
             isValueGreen: true,
           ),
-          _buildDetailRow(AppIcon.balance, AppString.weightColon, "${item?.weight}${AppString.gm}"),
+          _buildDetailRow(
+            AppIcon.balance,
+            AppString.weightColon,
+            "${item?.weight}${AppString.gm}",
+          ),
           _buildDetailRow(
             AppIcon.rupee,
             "${AppString.amtGiven} :",
@@ -161,13 +168,13 @@ class ProductInLockerDetail extends StatelessWidget {
       child: Row(
         children: [
           Icon(icon, color: AppColor.activeColor, size: 22),
-          SizedBox(width: 15),
+          SizedBox(width: AppSize.p16),
           SizedBox(
             width: Get.width * 0.28,
             child: Text(
               label,
               style: TextStyle(
-                fontSize: Get.width * 0.04,
+                fontSize: AppSize.mediumText,
                 fontWeight: FontWeight.w500,
                 color: AppColor.dark,
               ),
@@ -176,7 +183,7 @@ class ProductInLockerDetail extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              fontSize: Get.width * 0.04,
+              fontSize: AppSize.mediumText,
               color: isValueGreen ? AppColor.activeColor : AppColor.dark,
               fontWeight: isValueGreen ? FontWeight.w500 : FontWeight.w400,
             ),
@@ -197,7 +204,7 @@ class ProductInLockerDetail extends StatelessWidget {
                   AppString.locker,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: Get.width * 0.04,
+                    fontSize: AppSize.mediumText,
                   ),
                 ),
               ),
@@ -206,23 +213,26 @@ class ProductInLockerDetail extends StatelessWidget {
                   AppString.returnDate,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: Get.width * 0.04,
+                    fontSize: AppSize.mediumText,
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 15),
+          SizedBox(height: AppSize.p8),
           Row(
             children: [
               Expanded(
                 child: Text(
                   "${item?.lockerCode}-${item?.code}",
-                  style: TextStyle(fontSize: Get.width * 0.04),
+                  style: TextStyle(fontSize: AppSize.mediumText),
                 ),
               ),
               Expanded(
-                child: Text("-", style: TextStyle(fontSize: Get.width * 0.04)),
+                child: Text(
+                  "-",
+                  style: TextStyle(fontSize: AppSize.mediumText),
+                ),
               ),
             ],
           ),

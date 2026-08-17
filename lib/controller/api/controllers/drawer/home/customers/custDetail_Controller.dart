@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/controller/api/services/drawer/home/customres/custDetail_service.dart';
 import 'package:rukmini/modal/drawer/home/customer/customer_detail_model.dart';
 
@@ -19,7 +20,7 @@ class CustdetailController extends GetxController {
         cusid: custId,
       );
       if (kDebugMode) {
-        print('CustDetail Response: ${response.body}');
+        print('CustDetail ${AppString.responseLog}${response.body}');
       }
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
@@ -29,7 +30,7 @@ class CustdetailController extends GetxController {
       }
       return response;
     } catch (e) {
-      if (kDebugMode) print('CustDetail Error: $e');
+      if (kDebugMode) print('CustDetail ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

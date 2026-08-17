@@ -6,12 +6,13 @@ import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/customers/custList_Controller.dart';
 import 'package:rukmini/modal/drawer/home/customer/customer_list_model.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:marquee/marquee.dart';
-import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:shimmer/shimmer.dart';
 
 class Custlist extends StatefulWidget {
@@ -64,7 +65,7 @@ class _CustlistState extends State<Custlist> {
                   cursorColor: AppColor.fullScreenColor,
                   decoration: InputDecoration(
                     hintText: AppString.searchCustomer,
-                    hintStyle: TextStyle(color: AppColor.otherWhite),
+                    hintStyle: const TextStyle(color: AppColor.otherWhite),
                     border: InputBorder.none,
                   ),
                   onChanged: (value) {
@@ -182,15 +183,15 @@ Widget dataValue(showHeader, currentInitial, customer, phoneData, custType) {
       if (showHeader)
         Padding(
           padding: EdgeInsets.fromLTRB(
-            Get.width * 0.02,
-            Get.height * 0.02,
-            Get.width * 0.02,
-            Get.width * 0.02,
+            AppSize.p8,
+            AppSize.p8,
+            AppSize.p8,
+            AppSize.p8,
           ),
           child: Text(
             currentInitial,
             style: TextStyle(
-              fontSize: Get.width * 0.045,
+              fontSize: AppSize.size18,
               fontWeight: FontWeight.normal,
               color: AppColor.activeColor,
             ),
@@ -201,11 +202,11 @@ Widget dataValue(showHeader, currentInitial, customer, phoneData, custType) {
         margin: EdgeInsets.symmetric(vertical: 6),
         child: ListTile(
           leading: Container(
-            width: Get.width * 0.12,
-            height: Get.height * 0.1,
+            width: AppSize.width * 0.12,
+            height: AppSize.height * 0.1,
             decoration: BoxDecoration(
               color: AppColor.primaryColor,
-              borderRadius: BorderRadius.circular(Get.width * 0.015),
+              borderRadius: BorderRadius.circular(AppSize.width * 0.015),
               image: customer.imagePath != null
                   ? DecorationImage(
                       image: NetworkImage(customer.imagePath!),
@@ -258,7 +259,7 @@ Widget valueText({String? key, String? value}) {
         '$key: ',
         style: TextStyle(
           fontWeight: FontWeight.w500,
-          fontSize: Get.width * 0.030,
+          fontSize: AppSize.size12,
         ),
       ),
       marqueeText(value ?? ''),
@@ -268,7 +269,7 @@ Widget valueText({String? key, String? value}) {
 
 Widget nextPageLoading() {
   return Padding(
-    padding: EdgeInsets.all(8.0),
+    padding: const EdgeInsets.all(8.0),
     child: Center(
       child: CircularProgressIndicator(color: AppColor.primaryColor),
     ),
@@ -279,7 +280,7 @@ Widget marqueeText(String text) {
   final String displayText = text.isEmpty ? AppString.na : text;
   final TextStyle textStyle = TextStyle(
     fontWeight: FontWeight.normal,
-    fontSize: Get.width * 0.035,
+    fontSize: AppSize.size14,
     color: AppColor.textColor,
   );
 
@@ -294,11 +295,11 @@ Widget marqueeText(String text) {
               crossAxisAlignment: CrossAxisAlignment.start,
               blankSpace: 30.0,
               velocity: 30.0,
-              pauseAfterRound: Duration(seconds: 2),
-              startPadding: Get.width * 0.025,
-              accelerationDuration: Duration(seconds: 1),
+              pauseAfterRound: const Duration(seconds: 2),
+              startPadding: AppSize.p10,
+              accelerationDuration: const Duration(seconds: 1),
               accelerationCurve: Curves.linear,
-              decelerationDuration: Duration(milliseconds: 500),
+              decelerationDuration: const Duration(milliseconds: 500),
               decelerationCurve: Curves.easeOut,
             )
           : Text(
@@ -321,11 +322,11 @@ Widget customerLoading() {
         child: Card(
           child: ListTile(
             leading: Container(
-              width: Get.width * 0.12,
-              height: Get.height * 0.1,
+              width: AppSize.width * 0.12,
+              height: AppSize.height * 0.1,
               decoration: BoxDecoration(
                 color: AppColor.textField,
-                borderRadius: BorderRadius.circular(Get.width * 0.015),
+                borderRadius: BorderRadius.circular(AppSize.width * 0.015),
               ),
             ),
             title: Column(
@@ -333,30 +334,30 @@ Widget customerLoading() {
               children: [
                 Container(
                   width: double.infinity,
-                  height: Get.height * 0.02,
+                  height: AppSize.p8,
                   color: AppColor.textField,
                 ),
-                SizedBox(height: Get.height * 0.012),
+                SizedBox(height: AppSize.p4 * 1.2), // 0.012
                 Container(
-                  width: Get.width * 0.5,
-                  height: Get.height * 0.02,
+                  width: AppSize.width * 0.5,
+                  height: AppSize.p8,
                   color: AppColor.textField,
                 ),
               ],
             ),
             subtitle: Padding(
-              padding: EdgeInsets.only(top: Get.height * 0.01),
+              padding: EdgeInsets.only(top: AppSize.p4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    width: Get.width * 0.2,
-                    height: Get.height * 0.02,
+                    width: AppSize.width * 0.2,
+                    height: AppSize.p8,
                     color: AppColor.textField,
                   ),
                   Container(
-                    width: Get.width * 0.2,
-                    height: Get.height * 0.02,
+                    width: AppSize.width * 0.2,
+                    height: AppSize.p8,
                     color: AppColor.textField,
                   ),
                 ],

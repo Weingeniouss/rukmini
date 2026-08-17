@@ -7,6 +7,7 @@ import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/girvi/giriviDetail_Controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
@@ -52,7 +53,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
                     AppString.girviDetail,
                     style: TextStyle(
                       color: AppColor.fullScreenColor,
-                      fontSize: Get.width * 0.045,
+                      fontSize: AppSize.size18,
                     ),
                   ),
                   Text(
@@ -63,7 +64,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
                       color: isOpen
                           ? AppColor.activeColor
                           : AppColor.errorColor,
-                      fontSize: Get.width * 0.035,
+                      fontSize: AppSize.size14,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -137,7 +138,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
 
   Widget _buildTopHeader(data) {
     return Padding(
-      padding: EdgeInsets.all(Get.width * 0.04),
+      padding: EdgeInsets.all(AppSize.p16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -145,14 +146,14 @@ class _GiriviDetailState extends State<GiriviDetail> {
             "${AppString.girviId}: ${data.uniqueId}",
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              fontSize: Get.width * 0.04,
+              fontSize: AppSize.p16,
             ),
           ),
           Text(
             "${AppString.pendingAmt}: ${data.balance}",
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              fontSize: Get.width * 0.04,
+              fontSize: AppSize.p16,
             ),
           ),
         ],
@@ -162,7 +163,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
 
   Widget _buildActionButtons() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+      padding: EdgeInsets.symmetric(vertical: AppSize.p4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -178,23 +179,19 @@ class _GiriviDetailState extends State<GiriviDetail> {
     return Column(
       children: [
         CircleAvatar(
-          radius: Get.width * 0.06,
+          radius: AppSize.p24,
           backgroundColor: AppColor.primaryColor,
-          child: Icon(
-            icon,
-            color: AppColor.fullScreenColor,
-            size: Get.width * 0.06,
-          ),
+          child: Icon(icon, color: AppColor.fullScreenColor, size: AppSize.p24),
         ),
         SizedBox(height: Get.height * 0.005),
-        Text(label, style: TextStyle(fontSize: Get.width * 0.03)),
+        Text(label, style: TextStyle(fontSize: AppSize.p12)),
       ],
     );
   }
 
   Widget _buildGirviDetailsTab(data) {
     return ListView(
-      padding: EdgeInsets.all(Get.width * 0.04),
+      padding: EdgeInsets.all(AppSize.p16),
       children: [
         _buildInfoRow(
           AppIcon.category,
@@ -235,20 +232,20 @@ class _GiriviDetailState extends State<GiriviDetail> {
 
   Widget _buildInfoRow(IconData icon, String label, String value) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: Get.height * 0.015),
+      padding: EdgeInsets.symmetric(vertical: AppSize.p4 * 1.5),
       child: Row(
         children: [
-          Icon(icon, color: AppColor.activeColor, size: Get.width * 0.05),
-          SizedBox(width: Get.width * 0.04),
+          Icon(icon, color: AppColor.activeColor, size: AppSize.p20),
+          SizedBox(width: AppSize.p16),
           Text(
             "$label :",
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: Get.width * 0.035,
+              fontSize: AppSize.size14,
             ),
           ),
-          SizedBox(width: Get.width * 0.02),
-          Text(value, style: TextStyle(fontSize: Get.width * 0.035)),
+          SizedBox(width: AppSize.p8),
+          Text(value, style: TextStyle(fontSize: AppSize.size14)),
         ],
       ),
     );
@@ -401,23 +398,23 @@ class _GiriviDetailState extends State<GiriviDetail> {
 
   Widget _buildCustomerInfoRow(IconData icon, String label, String? value) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+      padding: EdgeInsets.symmetric(vertical: AppSize.p4),
       child: Row(
         children: [
-          Icon(icon, color: AppColor.activeColor, size: Get.width * 0.05),
-          SizedBox(width: Get.width * 0.02),
+          Icon(icon, color: AppColor.activeColor, size: AppSize.p20),
+          SizedBox(width: AppSize.p8),
           Text(
             "$label :",
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: Get.width * 0.035,
+              fontSize: AppSize.size14,
             ),
           ),
-          SizedBox(width: Get.width * 0.02),
+          SizedBox(width: AppSize.p8),
           Expanded(
             child: Text(
               value ?? "-",
-              style: TextStyle(fontSize: Get.width * 0.035),
+              style: TextStyle(fontSize: AppSize.size14),
             ),
           ),
         ],
@@ -595,9 +592,12 @@ class _GiriviDetailState extends State<GiriviDetail> {
                         height: Get.width * 0.06,
                         color: AppColor.textField,
                       ),
-                      SizedBox(width: 15),
+                      SizedBox(width: Get.width * 0.04),
                       Expanded(
-                        child: Container(height: 15, color: AppColor.textField),
+                        child: Container(
+                          height: Get.height * 0.02,
+                          color: AppColor.textField,
+                        ),
                       ),
                     ],
                   ),

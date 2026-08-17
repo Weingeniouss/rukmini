@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:rukmini/view/utils/app_String.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -25,7 +26,7 @@ class CustomerTypeController extends GetxController {
       }
       return response;
     } catch (e) {
-      if (kDebugMode) print('CustomerType Error: $e');
+      if (kDebugMode) print('CustomerType ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

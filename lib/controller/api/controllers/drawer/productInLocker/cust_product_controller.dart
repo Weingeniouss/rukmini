@@ -108,7 +108,7 @@ class CustProductController extends GetxController {
       final http.Response response = await _custProductService.custProductApi();
 
       if (kDebugMode) {
-        print('CustProduct Response: ${response.body}');
+        print('CustProduct ${AppString.responseLog}${response.body}');
       }
 
       if (response.statusCode == 200) {
@@ -129,7 +129,7 @@ class CustProductController extends GetxController {
       }
       return response;
     } catch (e) {
-      if (kDebugMode) print('CustProduct Error: $e');
+      if (kDebugMode) print('CustProduct ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

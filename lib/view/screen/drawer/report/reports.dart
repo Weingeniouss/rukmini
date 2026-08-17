@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/home/report/report_ui_controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
@@ -12,9 +13,9 @@ import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 
 class Reports extends StatelessWidget {
-  Reports({super.key});
+  const Reports({super.key});
 
-  final uiController = Get.put(ReportUIController());
+  static final uiController = Get.put(ReportUIController());
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class Reports extends StatelessWidget {
       drawer: homeDrawer(),
       appBar: appBar(title: AppString.reports, back: false),
       child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: Get.height * 0.02),
+        padding: EdgeInsets.symmetric(vertical: AppSize.p8),
         child: Column(
           children: [
             _buildReportCard(
@@ -60,7 +61,7 @@ class Reports extends StatelessWidget {
       child: Obx(() {
         bool isExpanded = uiController.expandedIndex.value == index;
         return Container(
-          margin: EdgeInsets.only(bottom: Get.height * 0.02),
+          margin: EdgeInsets.only(bottom: AppSize.p8),
           decoration: BoxDecoration(
             color: AppColor.white,
             borderRadius: BorderRadius.circular(8),
@@ -68,7 +69,7 @@ class Reports extends StatelessWidget {
               BoxShadow(
                 color: AppColor.black.withOpacity(0.1),
                 blurRadius: 4,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
             border: Border.all(color: AppColor.grey200),
@@ -81,7 +82,7 @@ class Reports extends StatelessWidget {
                 title: Text(
                   title,
                   style: TextStyle(
-                    fontSize: Get.width * 0.04,
+                    fontSize: AppSize.size18,
                     fontWeight: FontWeight.w500,
                     color: AppColor.dark,
                   ),
@@ -95,17 +96,17 @@ class Reports extends StatelessWidget {
                 ),
               ),
               if (isExpanded) ...[
-                Divider(height: 1),
+                const Divider(height: 1),
                 Padding(
-                  padding: EdgeInsets.all(Get.width * 0.04),
+                  padding: EdgeInsets.all(AppSize.p16),
                   child: child,
                 ),
                 Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
                     padding: EdgeInsets.only(
-                      right: Get.width * 0.04,
-                      bottom: Get.width * 0.04,
+                      right: AppSize.p16,
+                      bottom: AppSize.p16,
                     ),
                     child: ElevatedButton(
                       onPressed: () {},
@@ -116,8 +117,8 @@ class Reports extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         padding: EdgeInsets.symmetric(
-                          horizontal: Get.width * 0.06,
-                          vertical: Get.height * 0.01,
+                          horizontal: AppSize.p24,
+                          vertical: AppSize.p4,
                         ),
                       ),
                       child: Text(AppString.viewReport),
@@ -136,7 +137,7 @@ class Reports extends StatelessWidget {
     return Row(
       children: [
         Icon(AppIcon.calendar, color: AppColor.activeColor, size: 24),
-        SizedBox(width: Get.width * 0.04),
+        SizedBox(width: AppSize.p16),
         Expanded(
           child: _buildInlineDateField(
             context: context,
@@ -148,7 +149,10 @@ class Reports extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 8.0),
           child: Text(
             "-",
-            style: TextStyle(fontSize: 20, color: AppColor.grey500),
+            style: TextStyle(
+              fontSize: AppSize.p20,
+              color: AppColor.grey500,
+            ),
           ),
         ),
         Expanded(
@@ -177,7 +181,7 @@ class Reports extends StatelessWidget {
         child: TextField(
           controller: controller,
           enabled: false,
-          style: TextStyle(fontSize: Get.width * 0.038),
+          style: TextStyle(fontSize: AppSize.size18),
           decoration: InputDecoration(
             hintText: hint,
             isDense: true,
@@ -202,7 +206,7 @@ class Reports extends StatelessWidget {
             child: Row(
               children: [
                 Icon(AppIcon.locker, color: AppColor.activeColor, size: 24),
-                SizedBox(width: Get.width * 0.04),
+                SizedBox(width: AppSize.p16),
                 Expanded(
                   child: Obx(
                     () => Text(
@@ -210,7 +214,7 @@ class Reports extends StatelessWidget {
                           ? AppString.selectLocker
                           : uiController.selectedLocker.value,
                       style: TextStyle(
-                        fontSize: Get.width * 0.038,
+                        fontSize: AppSize.size18,
                         color: uiController.selectedLocker.value.isEmpty
                             ? AppColor.textColor
                             : AppColor.dark,
@@ -238,7 +242,10 @@ class Reports extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
           title: Text(
             AppString.selectLockerTitle,
-            style: TextStyle(color: AppColor.activeColor, fontSize: 18),
+            style: TextStyle(
+              color: AppColor.activeColor,
+              fontSize: AppSize.size18,
+            ),
           ),
           content: SizedBox(
             width: double.maxFinite,
@@ -290,7 +297,7 @@ class Reports extends StatelessWidget {
                             ),
                             title: Text(
                               "${locker.lockerCode} (${locker.comName})",
-                              style: TextStyle(fontSize: 15),
+                              style: TextStyle(fontSize: AppSize.size18),
                             ),
                             onTap: () {
                               uiController.selectLocker(locker);

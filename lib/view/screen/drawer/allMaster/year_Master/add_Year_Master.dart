@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/home/allMaster/year_Master/yearMaster_ControllerUI.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/button.dart';
@@ -13,9 +14,8 @@ import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:rukmini/view/utils/widget/inputField.dart';
 
 class AddYearMaster extends StatelessWidget {
-  AddYearMaster({super.key});
-
-  final uiController = Get.put(YearMasterControllerUI());
+  final YearMasterControllerUI uiController;
+  const AddYearMaster({super.key, required this.uiController});
 
   @override
   Widget build(BuildContext context) {
@@ -27,14 +27,14 @@ class AddYearMaster extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: Get.height * 0.03),
+              SizedBox(height: AppSize.p12),
               inputField(
                 hintText: AppString.title,
                 icon: AppIcon.badge,
                 iconColor: AppColor.activeColor,
                 inputTextcontroller: uiController.titleController,
               ),
-              SizedBox(height: Get.height * 0.02),
+              SizedBox(height: AppSize.p8),
               inputField(
                 hintText: AppString.fromDate,
                 icon: AppIcon.calendar,
@@ -53,7 +53,7 @@ class AddYearMaster extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: Get.height * 0.02),
+              SizedBox(height: AppSize.p8),
               inputField(
                 hintText: AppString.toDate,
                 icon: AppIcon.calendar,
@@ -72,13 +72,13 @@ class AddYearMaster extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: Get.height * 0.03),
+              SizedBox(height: AppSize.p12),
               Obx(
                 () => CheckboxListTile(
                   title: Text(
                     AppString.setAsDefaultYear,
                     style: TextStyle(
-                      fontSize: Get.width * 0.04,
+                      fontSize: AppSize.largeText,
                       color: AppColor.dark,
                     ),
                   ),
@@ -93,10 +93,10 @@ class AddYearMaster extends StatelessWidget {
                   dense: true,
                 ),
               ),
-              SizedBox(height: Get.height * 0.05),
+              SizedBox(height: AppSize.p20),
               Center(
                 child: SizedBox(
-                  width: Get.width * 0.6,
+                  width: AppSize.width * 0.6,
                   child: GestureDetector(
                     onTap: () => uiController.submit(),
                     child: Obx(

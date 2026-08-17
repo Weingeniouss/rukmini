@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import '../app_Icon.dart';
 
@@ -28,7 +29,7 @@ AppBar appBar({
       title,
       style: TextStyle(
         color: AppColor.fullScreenColor,
-        fontSize: Get.width * 0.05,
+        fontSize: AppSize.size20,
         fontWeight: FontWeight.w500,
       ),
     );
@@ -55,7 +56,7 @@ AppBar appBar({
                   Scaffold.of(context).openDrawer();
                 },
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: Get.width * 0.03),
+                  padding: EdgeInsets.symmetric(horizontal: AppSize.p12),
                   child: SvgPicture.asset(AppIcon.openMenu),
                 ),
               );
@@ -64,19 +65,19 @@ AppBar appBar({
     actions: [
       (searchIcon == true)
           ? IconButton(onPressed: searchOnPressed, icon: AppIcon.search)
-          : SizedBox(),
+          : const SizedBox(),
       (filter == true)
           ? IconButton(onPressed: filterOnPressed, icon: AppIcon.filter)
-          : SizedBox(),
+          : const SizedBox(),
       (edit == true)
           ? IconButton(onPressed: editOnPressed, icon: AppIcon.edit)
-          : SizedBox(),
+          : const SizedBox(),
       (close == true)
           ? IconButton(onPressed: closeOnPressed, icon: AppIcon.close)
-          : SizedBox(),
+          : const SizedBox(),
       (remove == true)
           ? IconButton(onPressed: deletOnPressed, icon: AppIcon.delete)
-          : SizedBox(),
+          : const SizedBox(),
     ],
     primary: true,
     title: titleWidget,

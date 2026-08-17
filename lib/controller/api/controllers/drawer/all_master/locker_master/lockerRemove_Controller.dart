@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
@@ -19,7 +20,7 @@ class LockerRemoveController extends GetxController {
         }
       }
     } catch (e) {
-      if (kDebugMode) print('LockerRemove Error: $e');
+      if (kDebugMode) print('LockerRemove ${AppString.errorLog}$e');
     } finally {
       isLoading.value = false;
     }

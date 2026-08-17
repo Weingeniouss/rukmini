@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, non_constant_identifier_names
 
+import 'package:rukmini/view/utils/app_String.dart';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -53,7 +54,7 @@ class AddcustformController extends GetxController {
         proofImages: proofImages,
       );
       if (kDebugMode) {
-        print('AddCustForm Response: ${response.body}');
+        print('AddCustForm ${AppString.responseLog}${response.body}');
       }
       if (response.statusCode == 200) {
         String body = response.body;
@@ -68,7 +69,7 @@ class AddcustformController extends GetxController {
       }
       return response;
     } catch (e) {
-      if (kDebugMode) print('AddCustData Error: $e');
+      if (kDebugMode) print('AddCustData ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

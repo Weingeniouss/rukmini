@@ -1,10 +1,8 @@
 // ignore_for_file: file_names, camel_case_types
 
 import 'package:flutter/foundation.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/get.dart';
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/controller/api/services/credentials/forgotPasswordServices.dart';
 import '../../../ui/credentials/login_controllerUI.dart';
 import 'package:http/http.dart' as http;
@@ -23,7 +21,7 @@ class ForgotPassword_ControllerAPI extends GetxController {
           .forgotPasswordApi();
       return response;
     } catch (e) {
-      if (kDebugMode) print('forgotPassword Error: $e');
+      if (kDebugMode) print('forgotPassword ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

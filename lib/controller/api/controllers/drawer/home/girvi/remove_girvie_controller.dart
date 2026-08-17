@@ -1,3 +1,4 @@
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -18,12 +19,12 @@ class RemoveGirvieController extends GetxController {
       );
 
       if (kDebugMode) {
-        print('Remove Girvie Response: ${response.body}');
+        print('Remove Girvie ${AppString.responseLog}${response.body}');
       }
 
       return response;
     } catch (e) {
-      if (kDebugMode) print('Remove Girvie Error: $e');
+      if (kDebugMode) print('Remove Girvie ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

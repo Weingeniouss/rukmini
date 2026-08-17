@@ -1,3 +1,4 @@
+import 'package:rukmini/view/utils/app_String.dart';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -61,7 +62,7 @@ class PendingTransactionController extends GetxController {
       );
 
       if (kDebugMode) {
-        print('PendingTransaction Response: ${response.body}');
+        print('PendingTransaction ${AppString.responseLog}${response.body}');
       }
 
       if (response.statusCode == 200) {
@@ -89,7 +90,7 @@ class PendingTransactionController extends GetxController {
       }
       return response;
     } catch (e) {
-      if (kDebugMode) print('PendingTransaction Error: $e');
+      if (kDebugMode) print('PendingTransaction ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

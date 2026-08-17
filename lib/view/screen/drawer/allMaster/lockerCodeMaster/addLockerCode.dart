@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/home/allMaster/locker_master/lockerMaster_ControllerUI.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/button.dart';
@@ -13,9 +14,8 @@ import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:rukmini/view/utils/widget/inputField.dart';
 
 class AddLockerCode extends StatelessWidget {
-  AddLockerCode({super.key});
-
-  final uiController = Get.put(LockerMasterControllerUI());
+  final LockerMasterControllerUI uiController;
+  const AddLockerCode({super.key, required this.uiController});
 
   @override
   Widget build(BuildContext context) {
@@ -32,35 +32,35 @@ class AddLockerCode extends StatelessWidget {
         child: horizontalPadding(
           child: Column(
             children: [
-              SizedBox(height: Get.height * 0.02),
+              SizedBox(height: AppSize.p8),
               inputField(
                 hintText: AppString.lockerCode,
                 icon: AppIcon.locker,
                 iconColor: AppColor.activeColor,
                 inputTextcontroller: uiController.lockerCodeController,
               ),
-              SizedBox(height: Get.height * 0.015),
+              SizedBox(height: AppSize.p8),
               inputField(
                 hintText: AppString.companyName,
                 icon: AppIcon.business,
                 iconColor: AppColor.activeColor,
                 inputTextcontroller: uiController.companyNameController,
               ),
-              SizedBox(height: Get.height * 0.015),
+              SizedBox(height: AppSize.p8),
               inputField(
                 hintText: AppString.companyAddress,
                 icon: AppIcon.location,
                 iconColor: AppColor.activeColor,
                 inputTextcontroller: uiController.companyAddressController,
               ),
-              SizedBox(height: Get.height * 0.015),
+              SizedBox(height: AppSize.p8),
               inputField(
                 hintText: AppString.personName,
                 icon: AppIcon.person,
                 iconColor: AppColor.activeColor,
                 inputTextcontroller: uiController.personNameController,
               ),
-              SizedBox(height: Get.height * 0.015),
+              SizedBox(height: AppSize.p8),
               inputField(
                 hintText: AppString.phoneNumber,
                 icon: AppIcon.phone,
@@ -68,7 +68,7 @@ class AddLockerCode extends StatelessWidget {
                 keyboardType: TextInputType.phone,
                 inputTextcontroller: uiController.phoneNumberController,
               ),
-              SizedBox(height: Get.height * 0.015),
+              SizedBox(height: AppSize.p8),
               inputField(
                 hintText: AppString.interestRate,
                 icon: AppIcon.rate,
@@ -76,13 +76,13 @@ class AddLockerCode extends StatelessWidget {
                 keyboardType: TextInputType.number,
                 inputTextcontroller: uiController.interestRateController,
               ),
-              SizedBox(height: Get.height * 0.02),
+              SizedBox(height: AppSize.p8),
               Obx(
                 () => CheckboxListTile(
                   title: Text(
                     AppString.setAsDefaultLocker,
                     style: TextStyle(
-                      fontSize: Get.width * 0.038,
+                      fontSize: AppSize.size12,
                       color: AppColor.dark,
                     ),
                   ),
@@ -96,7 +96,7 @@ class AddLockerCode extends StatelessWidget {
                   dense: true,
                 ),
               ),
-              SizedBox(height: Get.height * 0.04),
+              SizedBox(height: AppSize.p16),
               GestureDetector(
                 onTap: () => uiController.submit(),
                 child: Obx(

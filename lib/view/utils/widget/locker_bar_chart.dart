@@ -2,18 +2,18 @@
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get.dart';
 import 'package:rukmini/modal/drawer/home/dashboard_model.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import '../app_Color.dart';
 
 class LockerBarChart extends StatelessWidget {
   final List<LockerList> lockerList;
 
-  LockerBarChart({super.key, required this.lockerList});
+  const LockerBarChart({super.key, required this.lockerList});
 
-  final List<Color> barColors = [
+  static const List<Color> barColors = [
     AppColor.crimson,
     AppColor.brown,
     AppColor.gold,
@@ -34,7 +34,7 @@ class LockerBarChart extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColor.fullScreenColor,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(AppSize.p16),
         boxShadow: kElevationToShadow[2],
       ),
       child: Column(
@@ -102,7 +102,7 @@ class LockerBarChart extends StatelessWidget {
                         showTitles: true,
                         reservedSize: 60,
                         getTitlesWidget: (value, meta) {
-                          if (value == 0) return SizedBox();
+                          if (value == 0) return const SizedBox();
                           return Text(
                             _formatNumber(value.toString()),
                             style: TextStyle(fontSize: Get.height * 0.015),
@@ -157,23 +157,23 @@ class LockerBarChart extends StatelessWidget {
                 ...barColors.map(
                   (color) => Container(
                     width: Get.height * 0.019,
-                    height: Get.width * 0.025,
-                    margin: EdgeInsets.only(right: 5),
+                    height: AppSize.p10,
+                    margin: const EdgeInsets.only(right: 5),
                     color: color,
                   ),
                 ),
                 Text(
                   'Lockers',
                   style: TextStyle(
-                    fontSize: Get.width * 0.035,
+                    fontSize: AppSize.size14,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
                   'Description',
                   style: TextStyle(
-                    fontSize: Get.width * 0.035,
+                    fontSize: AppSize.size14,
                     color: AppColor.black54,
                   ),
                 ),
@@ -199,7 +199,7 @@ class LockerBarChart extends StatelessWidget {
       double amt = double.tryParse(lockerList[index].totalAmt ?? '0') ?? 0;
       return BarChartGroupData(
         x: index,
-        showingTooltipIndicators: [0],
+        showingTooltipIndicators: const [0],
         barRods: [
           BarChartRodData(
             toY: amt,
@@ -213,4 +213,4 @@ class LockerBarChart extends StatelessWidget {
   }
 }
 
-Widget varticalSpace() => SizedBox(height: Get.height * 0.025);
+Widget varticalSpace() => SizedBox(height: AppSize.p8);

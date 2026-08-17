@@ -8,6 +8,7 @@ import 'package:rukmini/controller/api/controllers/drawer/productInLocker/cust_p
 import 'package:rukmini/modal/drawer/productInLocker/cust_product_model.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
@@ -16,10 +17,13 @@ import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProductInLocker extends StatelessWidget {
-  ProductInLocker({super.key});
-
-  final custProductController = Get.put(CustProductController());
-  final lockerListController = Get.put(LockerListController());
+  final CustProductController custProductController;
+  final LockerListController lockerListController;
+  const ProductInLocker({
+    super.key,
+    required this.custProductController,
+    required this.lockerListController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +44,7 @@ class ProductInLocker extends StatelessWidget {
                     autofocus: true,
                     style: TextStyle(
                       color: AppColor.backgroundColor,
-                      fontSize: Get.width * 0.045,
+                      fontSize: AppSize.p12,
                     ),
                     decoration: InputDecoration(
                       hintText: AppString.search,
@@ -84,7 +88,7 @@ class ProductInLocker extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
                   itemCount: custProductController.filteredProductList.length,
                   separatorBuilder: (context, index) {
-                    return SizedBox(height: Get.height * 0.01);
+                    return SizedBox(height: AppSize.p4);
                   },
                   itemBuilder: (context, index) {
                     final item =
@@ -133,8 +137,8 @@ class ProductInLocker extends StatelessWidget {
       onTap: () => _showCustomerSelectionPopup(),
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: Get.width * 0.04,
-          vertical: Get.height * 0.015,
+          horizontal: AppSize.p16,
+          vertical: AppSize.p4 * 1.5,
         ),
         decoration: BoxDecoration(
           color: AppColor.fullScreenColor,
@@ -147,9 +151,9 @@ class ProductInLocker extends StatelessWidget {
             Icon(
               AppIcon.person,
               color: AppColor.activeColor,
-              size: Get.width * 0.06,
+              size: AppSize.p24,
             ),
-            SizedBox(width: Get.width * 0.03),
+            SizedBox(width: AppSize.p12),
             Expanded(
               child: Obx(
                 () => Text(
@@ -158,7 +162,7 @@ class ProductInLocker extends StatelessWidget {
                     color: custProductController.selectedCustId.value.isEmpty
                         ? AppColor.textColor
                         : AppColor.dark,
-                    fontSize: Get.width * 0.042,
+                    fontSize: AppSize.p16 * 1.05, // 0.042
                   ),
                 ),
               ),
@@ -166,9 +170,9 @@ class ProductInLocker extends StatelessWidget {
             Icon(
               AppIcon.arrow_down,
               color: AppColor.activeColor,
-              size: Get.width * 0.06,
+              size: AppSize.p24,
             ),
-            SizedBox(width: Get.width * 0.02),
+            SizedBox(width: AppSize.p8),
             GestureDetector(
               onTap: () {
                 custProductController.clearCustomerFilter();
@@ -176,7 +180,7 @@ class ProductInLocker extends StatelessWidget {
               child: Icon(
                 AppIcon.remove,
                 color: AppColor.activeColor,
-                size: Get.width * 0.05,
+                size: AppSize.p20,
               ),
             ),
           ],
@@ -189,19 +193,19 @@ class ProductInLocker extends StatelessWidget {
     Get.bottomSheet(
       isScrollControlled: true,
       Container(
-        height: Get.height * 0.8,
+        height: AppSize.height * 0.8,
         decoration: BoxDecoration(
           color: AppColor.fullScreenColor,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(Get.width * 0.04),
+              padding: EdgeInsets.all(AppSize.p16),
               child: Text(
                 AppString.selectCustomer,
                 style: TextStyle(
-                  fontSize: Get.width * 0.045,
+                  fontSize: AppSize.size18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -210,7 +214,9 @@ class ProductInLocker extends StatelessWidget {
             Expanded(
               child: Obx(() {
                 if (custProductController.custList.isEmpty) {
-                  return const Center(child: Text(AppString.noCustomersAvailable));
+                  return const Center(
+                    child: Text(AppString.noCustomersAvailable),
+                  );
                 }
                 return ListView.builder(
                   itemCount: custProductController.custList.length,
@@ -247,7 +253,7 @@ class ProductInLocker extends StatelessWidget {
         height: Get.height * 0.45,
         decoration: BoxDecoration(
           color: AppColor.fullScreenColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
           children: [
@@ -259,7 +265,7 @@ class ProductInLocker extends StatelessWidget {
                   Text(
                     AppString.selectLocker,
                     style: TextStyle(
-                      fontSize: Get.width * 0.045,
+                      fontSize: Get.width * 0.03,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -280,7 +286,9 @@ class ProductInLocker extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (lockerListController.lockerList.isEmpty) {
-                  return const Center(child: Text(AppString.noLockersAvailable));
+                  return const Center(
+                    child: Text(AppString.noLockersAvailable),
+                  );
                 }
                 return ListView.builder(
                   itemCount: lockerListController.lockerList.length,
@@ -312,7 +320,7 @@ class ProductInLocker extends StatelessWidget {
   Widget _buildProductCard(ProductList item, bool isSelected) {
     return horizontalPadding(
       child: Container(
-        padding: EdgeInsets.all(Get.width * 0.03),
+        padding: EdgeInsets.all(AppSize.p12),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColor.activeColor.withOpacity(0.1)
@@ -356,7 +364,7 @@ class ProductInLocker extends StatelessWidget {
                   ),
               ],
             ),
-            SizedBox(width: Get.width * 0.03),
+            SizedBox(width: AppSize.p12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -443,7 +451,7 @@ class ProductInLocker extends StatelessWidget {
             style: TextStyle(
               color: AppColor.activeColor,
               fontWeight: FontWeight.w600,
-              fontSize: Get.width * 0.035,
+              fontSize: AppSize.size14,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -453,7 +461,7 @@ class ProductInLocker extends StatelessWidget {
           code,
           style: TextStyle(
             color: AppColor.activeColor,
-            fontSize: Get.width * 0.03,
+            fontSize: AppSize.p12,
           ),
         ),
       ],
@@ -470,7 +478,7 @@ class ProductInLocker extends StatelessWidget {
             style: TextStyle(
               color: AppColor.dark,
               fontWeight: FontWeight.w400,
-              fontSize: Get.width * 0.038,
+              fontSize: Get.width * 0.02,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -544,7 +552,7 @@ class ProductInLocker extends StatelessWidget {
             "Change the locker",
             style: TextStyle(
               color: AppColor.activeColor,
-              fontSize: Get.width * 0.045,
+              fontSize: AppSize.p12,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -559,9 +567,9 @@ class ProductInLocker extends StatelessWidget {
       highlightColor: AppColor.highlightColor!,
       child: ListView.separated(
         itemCount: 6,
-        padding: EdgeInsets.all(Get.width * 0.04),
+        padding: EdgeInsets.all(AppSize.p16),
         separatorBuilder: (context, index) {
-          return SizedBox(height: Get.height * 0.02);
+          return SizedBox(height: AppSize.p8);
         },
         itemBuilder: (context, index) {
           return Container(

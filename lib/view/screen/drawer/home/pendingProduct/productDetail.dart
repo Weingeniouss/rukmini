@@ -7,6 +7,7 @@ import 'package:rukmini/controller/api/controllers/product/product_Controller.da
 import 'package:rukmini/modal/product/productList_Modal.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
@@ -178,7 +179,7 @@ class _productDetailState extends State<productDetail>
             text,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: Get.width * 0.035,
+              fontSize: AppSize.size14,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -191,7 +192,7 @@ class _productDetailState extends State<productDetail>
     return ListView.builder(
       controller: _scrollController,
       itemCount: data.length + (productController.isMoreLoading.value ? 1 : 0),
-      padding: EdgeInsets.all(Get.width * 0.02),
+      padding: EdgeInsets.all(AppSize.p8),
       itemBuilder: (context, index) {
         if (index < data.length) {
           return _productCard(data[index]);
@@ -216,7 +217,7 @@ class _productDetailState extends State<productDetail>
         borderRadius: BorderRadius.circular(5),
       ),
       child: Padding(
-        padding: EdgeInsets.all(Get.width * 0.03),
+        padding: EdgeInsets.all(AppSize.p12),
         child: Column(
           children: [
             Row(
@@ -236,12 +237,12 @@ class _productDetailState extends State<productDetail>
                         Icon(
                           AppIcon.camera_alt,
                           color: AppColor.boderSideColor.shade600,
-                          size: Get.width * 0.06,
+                          size: AppSize.p24,
                         ),
                         Text(
                           AppString.image,
                           style: TextStyle(
-                            fontSize: Get.width * 0.02,
+                            fontSize: AppSize.size15,
                             color: AppColor.boderSideColor.shade600,
                           ),
                         ),
@@ -249,7 +250,7 @@ class _productDetailState extends State<productDetail>
                     ),
                   ),
                 ),
-                SizedBox(width: Get.width * 0.03),
+                SizedBox(width: AppSize.p12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,7 +264,7 @@ class _productDetailState extends State<productDetail>
                               style: TextStyle(
                                 color: AppColor.primaryColor,
                                 fontWeight: FontWeight.w500,
-                                fontSize: Get.width * 0.038,
+                                fontSize: AppSize.size15,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -274,7 +275,7 @@ class _productDetailState extends State<productDetail>
                             style: TextStyle(
                               color: AppColor.activeColor,
                               fontWeight: FontWeight.w500,
-                              fontSize: Get.width * 0.038,
+                              fontSize: AppSize.size15,
                             ),
                           ),
                         ],
@@ -333,7 +334,7 @@ class _productDetailState extends State<productDetail>
               text: TextSpan(
                 style: TextStyle(
                   color: AppColor.dark,
-                  fontSize: Get.width * 0.035,
+                  fontSize: AppSize.size14,
                   fontFamily: 'Poppins',
                 ),
                 children: [
@@ -351,7 +352,7 @@ class _productDetailState extends State<productDetail>
             text: TextSpan(
               style: TextStyle(
                 color: AppColor.dark,
-                fontSize: Get.width * 0.035,
+                fontSize: AppSize.size14,
                 fontFamily: 'Poppins',
               ),
               children: [
@@ -374,7 +375,7 @@ class _productDetailState extends State<productDetail>
       highlightColor: AppColor.highlightColor!,
       child: ListView.builder(
         itemCount: 6,
-        padding: EdgeInsets.all(Get.width * 0.02),
+        padding: EdgeInsets.all(AppSize.p8),
         itemBuilder: (context, index) {
           return Card(
             elevation: 0,

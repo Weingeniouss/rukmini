@@ -6,6 +6,7 @@ import 'package:rukmini/controller/api/controllers/drawer/locker/locker_detail_c
 import 'package:rukmini/modal/drawer/locker/locker_detail_modal.dart';
 import 'package:rukmini/modal/drawer/locker/locker_wise_del_modal.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
@@ -49,7 +50,7 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
               text: TextSpan(
                 style: TextStyle(
                   color: AppColor.fullScreenColor,
-                  fontSize: Get.width * 0.05,
+                  fontSize: AppSize.size20,
                   fontWeight: FontWeight.w500,
                 ),
                 children: [
@@ -58,7 +59,10 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
                   ),
                   TextSpan(
                     text: "( ${AppString.open} )",
-                    style: const TextStyle(color: AppColor.errorColor, fontSize: 14),
+                    style: TextStyle(
+                      color: AppColor.errorColor,
+                      fontSize: AppSize.size14,
+                    ),
                   ),
                 ],
               ),
@@ -110,7 +114,7 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
       return const Center(child: Text(AppString.noProductsFound));
     }
     return ListView.builder(
-      padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+      padding: EdgeInsets.symmetric(vertical: AppSize.p4),
       itemCount: detail.productList!.length,
       itemBuilder: (context, index) {
         final product = detail.productList![index];
@@ -122,10 +126,10 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
   Widget _buildProductDetailCard(ProductListDetail product) {
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: Get.width * 0.03,
+        horizontal: AppSize.p12,
         vertical: Get.height * 0.005,
       ),
-      padding: EdgeInsets.all(Get.width * 0.04),
+      padding: EdgeInsets.all(AppSize.p16),
       decoration: BoxDecoration(
         color: AppColor.fullScreenColor,
         border: Border.all(color: AppColor.boderSideColor.withOpacity(0.2)),
@@ -159,7 +163,7 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
               RichText(
                 text: TextSpan(
                   style: TextStyle(
-                    fontSize: Get.width * 0.035,
+                    fontSize: AppSize.size14,
                     color: AppColor.dark,
                   ),
                   children: [
@@ -189,11 +193,11 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
     if (trans == null) return const Center(child: Text(AppString.noTransactionsFound));
 
     return ListView(
-      padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+      padding: EdgeInsets.symmetric(vertical: AppSize.p4),
       children: [
         Container(
-          margin: EdgeInsets.all(Get.width * 0.03),
-          padding: EdgeInsets.all(Get.width * 0.04),
+          margin: EdgeInsets.all(AppSize.p12),
+          padding: EdgeInsets.all(AppSize.p16),
           decoration: BoxDecoration(
             color: AppColor.fullScreenColor,
             border: Border.all(color: AppColor.boderSideColor.withOpacity(0.2)),
@@ -219,7 +223,7 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
                       Text(
                         "${AppString.till} ${trans.tillDate}",
                         style: TextStyle(
-                          fontSize: Get.width * 0.025,
+                          fontSize: AppSize.p10,
                           color: AppColor.textColor,
                         ),
                       ),
@@ -265,7 +269,7 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
   Widget _buildRichItem(String label, String value) {
     return RichText(
       text: TextSpan(
-        style: TextStyle(fontSize: Get.width * 0.035, color: AppColor.dark),
+        style: TextStyle(fontSize: AppSize.size14, color: AppColor.dark),
         children: [
           TextSpan(
             text: label,
@@ -283,7 +287,7 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
   Widget _buildTransItem(String label, String value) {
     return RichText(
       text: TextSpan(
-        style: TextStyle(fontSize: Get.width * 0.035, color: AppColor.dark),
+        style: TextStyle(fontSize: AppSize.size14, color: AppColor.dark),
         children: [
           TextSpan(
             text: label,
@@ -304,11 +308,11 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
       highlightColor: AppColor.highlightColor!,
       child: ListView.builder(
         itemCount: 3,
-        padding: EdgeInsets.all(Get.width * 0.04),
+        padding: EdgeInsets.all(AppSize.p16),
         itemBuilder: (context, index) {
           return Container(
             height: 120,
-            margin: EdgeInsets.only(bottom: Get.height * 0.02),
+            margin: EdgeInsets.only(bottom: AppSize.p8),
             decoration: BoxDecoration(
               color: AppColor.fullScreenColor,
               borderRadius: BorderRadius.circular(5),

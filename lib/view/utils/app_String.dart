@@ -150,6 +150,12 @@ class AppString {
   static const failedToLoadCustomerProducts = 'Failed to load customer products';
   static const lockerChangedSuccessfully = 'Locker changed successfully';
   static const failedToChangeLocker = 'Failed to change locker';
+  static const pleaseSelectLocker = 'Please select a locker';
+  static const lockerCodeFieldRequired = 'The Locker Code field is required.';
+  static const pleaseSelectDate = 'Please select a date';
+  static const pleaseSelectCustomer = 'Please select a customer';
+  static const pleaseEnterCustomerType = 'Please enter Customer Type';
+  static const pleaseFillAllFields = 'Please fill all fields';
 
   //Search
   static const search = 'Search...';
@@ -456,4 +462,10 @@ class AppString {
   static const viewReport = 'View Report';
   static const selectLockerTitle = 'Select Locker';
   static const searchLockerHint = 'Search Locker...';
+
+  //Logging
+  static const errorLog = 'Error: ';
+  static const responseLog = 'Response: ';
+  static const statusCodeLog = 'Status Code: ';
+  static const bodyLog = 'Body: ';
 }

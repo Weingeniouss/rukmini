@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/home/girivi/addGirivi_Controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/button.dart';
@@ -31,7 +32,7 @@ class _AddgiriviState extends State<Addgirivi> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.symmetric(vertical: 20),
               child: Column(
                 children: [
                   horizontalPadding(
@@ -57,7 +58,7 @@ class _AddgiriviState extends State<Addgirivi> {
                             ],
                           ),
                         ),
-                        SizedBox(width: 15),
+                        SizedBox(width: AppSize.p16),
                         _buildImagePicker(),
                       ],
                     ),
@@ -128,7 +129,7 @@ class _AddgiriviState extends State<Addgirivi> {
                     isGrayBackground: true,
                     readOnly: true,
                   ),
-                  SizedBox(height: Get.height * 0.03),
+                  SizedBox(height: AppSize.p12),
                   addProductButtons(),
                 ],
               ),
@@ -142,7 +143,7 @@ class _AddgiriviState extends State<Addgirivi> {
 
   Widget addProductButtons() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: Get.width * 0.20),
+      padding: EdgeInsets.symmetric(horizontal: AppSize.width * 0.20),
       child: GestureDetector(
         onTap: () {
           Get.toNamed('/AddProduct');
@@ -165,14 +166,14 @@ class _AddgiriviState extends State<Addgirivi> {
         child: Row(
           children: [
             Icon(icon, color: AppColor.activeColor, size: 24),
-            SizedBox(width: 15),
+            SizedBox(width: AppSize.p16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     label,
-                    style: TextStyle(color: AppColor.textColor, fontSize: 12),
+                    style: TextStyle(color: AppColor.textColor, fontSize: AppSize.p12),
                   ),
                   Row(
                     children: [
@@ -182,8 +183,8 @@ class _AddgiriviState extends State<Addgirivi> {
                             value.value.isEmpty
                                 ? "Select Customer"
                                 : value.value,
-                            style: const TextStyle(
-                              fontSize: 16,
+                            style: TextStyle(
+                              fontSize: AppSize.p16,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -211,26 +212,29 @@ class _AddgiriviState extends State<Addgirivi> {
     Widget content = Padding(
       padding: EdgeInsets.symmetric(
         vertical: 10,
-        horizontal: isPadding ? Get.width * 0.04 : 0,
+        horizontal: isPadding ? AppSize.p16 : 0,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: AppColor.activeColor, size: 24),
-          SizedBox(width: 15),
+          SizedBox(width: AppSize.p16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   label,
-                  style: TextStyle(color: AppColor.textColor, fontSize: 12),
+                  style: TextStyle(
+                    color: AppColor.textColor,
+                    fontSize: AppSize.p12,
+                  ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Obx(
                   () => Text(
-                    value.value.isEmpty ? "N/A" : value.value,
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                    value.value.isEmpty ? AppString.na : value.value,
+                    style: TextStyle(fontSize: AppSize.size14, fontWeight: FontWeight.w400),
                   ),
                 ),
               ],
@@ -267,31 +271,31 @@ class _AddgiriviState extends State<Addgirivi> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(icon, color: AppColor.activeColor, size: 24),
-            SizedBox(width: 15),
+            SizedBox(width: AppSize.p16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     label,
-                    style: TextStyle(color: AppColor.textColor, fontSize: 12),
+                    style: TextStyle(color: AppColor.textColor, fontSize: AppSize.p12),
                   ),
                   TextField(
                     controller: controller,
                     readOnly: readOnly,
                     onTap: onTap,
                     keyboardType: keyboardType,
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
-                    decoration: InputDecoration(
-                      hintText: hint,
-                      hintStyle: TextStyle(
-                        color: AppColor.boderSideColor.shade400,
-                        fontSize: 15,
+                    style: TextStyle(fontSize: AppSize.size15, fontWeight: FontWeight.w400),
+                      decoration: InputDecoration(
+                        hintText: hint,
+                        hintStyle: TextStyle(
+                          color: AppColor.boderSideColor.shade400,
+                          fontSize: AppSize.size15,
+                        ),
+                        isDense: true,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                        border: InputBorder.none,
                       ),
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(vertical: 8),
-                      border: InputBorder.none,
-                    ),
                   ),
                 ],
               ),
@@ -316,8 +320,8 @@ class _AddgiriviState extends State<Addgirivi> {
       return GestureDetector(
         onTap: addGiriviUI.pickImage,
         child: Container(
-          width: Get.width * 0.3,
-          height: Get.width * 0.3,
+          width: AppSize.width * 0.3,
+          height: AppSize.width * 0.3,
           decoration: BoxDecoration(
             color: AppColor.grey200,
             borderRadius: BorderRadius.circular(8),
@@ -346,7 +350,7 @@ class _AddgiriviState extends State<Addgirivi> {
                       "Images",
                       style: TextStyle(
                         color: AppColor.grey500,
-                        fontSize: 12,
+                        fontSize: AppSize.p12,
                       ),
                     ),
                   ],
@@ -366,7 +370,7 @@ class _AddgiriviState extends State<Addgirivi> {
 
   Widget _buildBottomButtons() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: Get.height * 0.015),
+      padding: EdgeInsets.symmetric(vertical: AppSize.p8),
       decoration: BoxDecoration(
         color: AppColor.primaryColor,
         border: Border(
@@ -383,7 +387,7 @@ class _AddgiriviState extends State<Addgirivi> {
                   AppString.cancel,
                   style: TextStyle(
                     color: AppColor.activeColor,
-                    fontSize: Get.width * 0.035,
+                    fontSize: AppSize.size14,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -401,7 +405,7 @@ class _AddgiriviState extends State<Addgirivi> {
                   AppString.save,
                   style: TextStyle(
                     color: AppColor.activeColor,
-                    fontSize: Get.width * 0.035,
+                    fontSize: AppSize.size14,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -443,7 +447,7 @@ class _AddgiriviState extends State<Addgirivi> {
     addGiriviUI.custListController.custList(isRefresh: true);
     Get.bottomSheet(
       Container(
-        height: Get.height * 0.8,
+        height: AppSize.height * 0.8,
         decoration: BoxDecoration(
           color: AppColor.white,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -454,7 +458,7 @@ class _AddgiriviState extends State<Addgirivi> {
               padding: const EdgeInsets.all(16),
               child: Text(
                 AppString.selectCustomer,
-                style: TextStyle(fontSize: Get.width * 0.045, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: AppSize.p12, fontWeight: FontWeight.bold),
               ),
             ),
             Padding(

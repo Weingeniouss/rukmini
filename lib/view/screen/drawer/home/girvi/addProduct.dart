@@ -10,6 +10,7 @@ import 'package:rukmini/controller/api/controllers/product/product_Controller.da
 import 'package:rukmini/controller/ui/home/girivi/addProduct_Controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
@@ -55,7 +56,7 @@ class _AddProductState extends State<AddProduct> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(vertical: Get.height * 0.02),
+              padding: EdgeInsets.symmetric(vertical: AppSize.p8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -156,7 +157,7 @@ class _AddProductState extends State<AddProduct> {
                   ),
                   const SizedBox(height: 20),
                   _buildSubmitButton(),
-                  SizedBox(height: Get.height * 0.03),
+                  SizedBox(height: AppSize.p12),
                 ],
               ),
             ),
@@ -177,11 +178,11 @@ class _AddProductState extends State<AddProduct> {
       child: GestureDetector(
         onTap: onTap,
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+          padding: EdgeInsets.symmetric(vertical: AppSize.p4),
           child: Row(
             children: [
-              Icon(icon, color: AppColor.activeColor, size: Get.width * 0.06),
-              SizedBox(width: Get.width * 0.04),
+              Icon(icon, color: AppColor.activeColor, size: AppSize.p24),
+              SizedBox(width: AppSize.p16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,7 +191,7 @@ class _AddProductState extends State<AddProduct> {
                       label,
                       style: TextStyle(
                         color: AppColor.textColor,
-                        fontSize: Get.width * 0.03,
+                        fontSize: AppSize.size18,
                       ),
                     ),
                     Row(
@@ -200,7 +201,7 @@ class _AddProductState extends State<AddProduct> {
                             child: Text(
                               value.value.isEmpty ? hint : value.value,
                               style: TextStyle(
-                                fontSize: Get.width * 0.04,
+                                fontSize: AppSize.largeText,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -209,7 +210,7 @@ class _AddProductState extends State<AddProduct> {
                         Icon(
                           AppIcon.arrow_down,
                           color: AppColor.black54,
-                          size: Get.width * 0.06,
+                          size: AppSize.p24,
                         ),
                       ],
                     ),
@@ -233,12 +234,12 @@ class _AddProductState extends State<AddProduct> {
   }) {
     Widget content = horizontalPadding(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+        padding: EdgeInsets.symmetric(vertical: AppSize.p4),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: AppColor.activeColor, size: Get.width * 0.06),
-            SizedBox(width: Get.width * 0.04),
+            Icon(icon, color: AppColor.activeColor, size: AppSize.p24),
+            SizedBox(width: AppSize.p16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,25 +248,25 @@ class _AddProductState extends State<AddProduct> {
                     label,
                     style: TextStyle(
                       color: AppColor.textColor,
-                      fontSize: Get.width * 0.03,
+                      fontSize: AppSize.size18,
                     ),
                   ),
                   TextField(
                     controller: controller,
                     keyboardType: keyboardType,
                     style: TextStyle(
-                      fontSize: Get.width * 0.038,
+                      fontSize: AppSize.size15,
                       fontWeight: FontWeight.w400,
                     ),
                     decoration: InputDecoration(
                       hintText: hint,
                       hintStyle: TextStyle(
                         color: AppColor.boderSideColor.shade400,
-                        fontSize: Get.width * 0.038,
+                        fontSize: AppSize.size15,
                       ),
                       isDense: true,
                       contentPadding: EdgeInsets.symmetric(
-                        vertical: Get.height * 0.01,
+                        vertical: AppSize.p4,
                       ),
                       border: InputBorder.none,
                     ),
@@ -293,7 +294,7 @@ class _AddProductState extends State<AddProduct> {
       children: [
         horizontalPadding(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: Get.height * 0.015),
+            padding: EdgeInsets.symmetric(vertical: AppSize.p8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -302,13 +303,13 @@ class _AddProductState extends State<AddProduct> {
                     Icon(
                       AppIcon.camera,
                       color: AppColor.activeColor,
-                      size: Get.width * 0.06,
+                      size: AppSize.p24,
                     ),
-                    SizedBox(width: Get.width * 0.04),
+                    SizedBox(width: AppSize.p16),
                     Text(
                       AppString.productPhoto + " :",
                       style: TextStyle(
-                        fontSize: Get.width * 0.04,
+                        fontSize: AppSize.largeText,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -319,7 +320,7 @@ class _AddProductState extends State<AddProduct> {
                   icon: Icon(
                     AppIcon.add,
                     color: AppColor.activeColor,
-                    size: Get.width * 0.06,
+                    size: AppSize.p24,
                   ),
                 ),
               ],
@@ -334,12 +335,12 @@ class _AddProductState extends State<AddProduct> {
             itemBuilder: (context, index) {
               return horizontalPadding(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: Get.height * 0.015),
+                  padding: EdgeInsets.only(bottom: AppSize.p8),
                   child: Row(
                     children: [
                       Container(
-                        width: Get.width * 0.15,
-                        height: Get.width * 0.15,
+                        width: AppSize.width * 0.15,
+                        height: AppSize.width * 0.15,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
                           image: DecorationImage(
@@ -350,26 +351,26 @@ class _AddProductState extends State<AddProduct> {
                           ),
                         ),
                       ),
-                      SizedBox(width: Get.width * 0.03),
+                      SizedBox(width: AppSize.p12),
                       Expanded(
                         child: Container(
-                          height: Get.height * 0.05,
+                          height: AppSize.p20,
                           padding: EdgeInsets.symmetric(
-                            horizontal: Get.width * 0.02,
+                            horizontal: AppSize.p8,
                           ),
                           decoration: BoxDecoration(
                             border: Border.all(color: AppColor.grey400),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: TextField(
-                            style: TextStyle(fontSize: Get.width * 0.035),
+                            style: TextStyle(fontSize: AppSize.size14),
                             decoration: InputDecoration(
                               hintText: AppString.remark,
-                              hintStyle: TextStyle(fontSize: Get.width * 0.035),
+                              hintStyle: TextStyle(fontSize: AppSize.size14),
                               border: InputBorder.none,
                               isDense: true,
                               contentPadding: EdgeInsets.symmetric(
-                                vertical: Get.height * 0.01,
+                                vertical: AppSize.p4,
                               ),
                             ),
                           ),
@@ -380,7 +381,7 @@ class _AddProductState extends State<AddProduct> {
                         icon: Icon(
                           AppIcon.remove,
                           color: AppColor.deleteColor,
-                          size: Get.width * 0.06,
+                          size: AppSize.p24,
                         ),
                       ),
                     ],
@@ -400,8 +401,8 @@ class _AddProductState extends State<AddProduct> {
         children: [
           Obx(
             () => SizedBox(
-              height: Get.width * 0.06,
-              width: Get.width * 0.06,
+              height: AppSize.p24,
+              width: AppSize.p24,
               child: Checkbox(
                 value: addProductUI.isDiamondAvailable.value,
                 onChanged: (val) {
@@ -411,11 +412,11 @@ class _AddProductState extends State<AddProduct> {
               ),
             ),
           ),
-          SizedBox(width: Get.width * 0.03),
+          SizedBox(width: AppSize.p12),
           Text(
             AppString.isDiamondAvailable,
             style: TextStyle(
-              fontSize: Get.width * 0.04,
+              fontSize: AppSize.largeText,
               fontWeight: FontWeight.w400,
             ),
           ),
@@ -428,9 +429,9 @@ class _AddProductState extends State<AddProduct> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: Get.height * 0.02),
+        SizedBox(height: AppSize.p8),
         headingContainer(AppString.diamondDetails),
-        SizedBox(height: Get.height * 0.02),
+        SizedBox(height: AppSize.p8),
         horizontalPadding(
           child: Column(
             children: [
@@ -443,7 +444,7 @@ class _AddProductState extends State<AddProduct> {
                       controller: addProductUI.diamondPiecesController,
                     ),
                   ),
-                  SizedBox(width: Get.width * 0.03),
+                  SizedBox(width: AppSize.p12),
                   Expanded(
                     child: _buildSmallInput(
                       icon: AppIcon.diamond,
@@ -453,7 +454,7 @@ class _AddProductState extends State<AddProduct> {
                   ),
                 ],
               ),
-              SizedBox(height: Get.height * 0.02),
+              SizedBox(height: AppSize.p8),
               Row(
                 children: [
                   Expanded(
@@ -463,7 +464,7 @@ class _AddProductState extends State<AddProduct> {
                       controller: addProductUI.certificateNumberController,
                     ),
                   ),
-                  SizedBox(height: Get.height * 0.02),
+                  SizedBox(height: AppSize.p8),
                   Expanded(
                     child: _buildSmallInput(
                       icon: AppIcon.rupee,
@@ -487,17 +488,17 @@ class _AddProductState extends State<AddProduct> {
   }) {
     return Row(
       children: [
-        Icon(icon, color: AppColor.activeColor, size: Get.width * 0.05),
-        SizedBox(width: Get.width * 0.02),
+        Icon(icon, color: AppColor.activeColor, size: AppSize.p20),
+        SizedBox(width: AppSize.p8),
         Expanded(
           child: TextField(
             controller: controller,
-            style: TextStyle(fontSize: Get.width * 0.035),
+            style: TextStyle(fontSize: AppSize.size14),
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(
                 color: AppColor.boderSideColor.shade400,
-                fontSize: Get.width * 0.035,
+                fontSize: AppSize.size14,
               ),
               isDense: true,
               enabledBorder: UnderlineInputBorder(
@@ -512,7 +513,7 @@ class _AddProductState extends State<AddProduct> {
 
   Widget _buildSubmitButton() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: Get.width * 0.20),
+      padding: EdgeInsets.symmetric(horizontal: AppSize.width * 0.20),
       child: GestureDetector(
         onTap: () {
           final product = {
@@ -547,7 +548,7 @@ class _AddProductState extends State<AddProduct> {
   void _showMetalSelection() {
     Get.bottomSheet(
       Container(
-        height: Get.height * 0.7,
+        height: AppSize.height * 0.7,
         decoration: BoxDecoration(
           color: AppColor.boderSideColor,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -555,11 +556,11 @@ class _AddProductState extends State<AddProduct> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(Get.width * 0.04),
+              padding: EdgeInsets.all(AppSize.p16),
               child: Text(
                 AppString.selectMetal,
                 style: TextStyle(
-                  fontSize: Get.width * 0.045,
+                  fontSize: AppSize.size18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -603,7 +604,7 @@ class _AddProductState extends State<AddProduct> {
   void _showProductTypeSelection() {
     Get.bottomSheet(
       Container(
-        height: Get.height * 0.4,
+        height: AppSize.height * 0.4,
         decoration: BoxDecoration(
           color: AppColor.white,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -611,11 +612,11 @@ class _AddProductState extends State<AddProduct> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(Get.width * 0.04),
+              padding: EdgeInsets.all(AppSize.p16),
               child: Text(
                 AppString.selectProductType,
                 style: TextStyle(
-                  fontSize: Get.width * 0.045,
+                  fontSize: AppSize.size18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -660,7 +661,7 @@ class _AddProductState extends State<AddProduct> {
   void _showProductSelection() {
     Get.bottomSheet(
       Container(
-        height: Get.height * 0.4,
+        height: AppSize.height * 0.4,
         decoration: BoxDecoration(
           color: AppColor.fullScreenColor,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -668,11 +669,11 @@ class _AddProductState extends State<AddProduct> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(Get.width * 0.04),
+              padding: EdgeInsets.all(AppSize.p16),
               child: Text(
                 AppString.selectProductType,
                 style: TextStyle(
-                  fontSize: Get.width * 0.045,
+                  fontSize: AppSize.size18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -730,7 +731,7 @@ class _AddProductState extends State<AddProduct> {
   void _showCategorySelection() {
     Get.bottomSheet(
       Container(
-        height: Get.height * 0.8,
+        height: AppSize.height * 0.8,
         decoration: BoxDecoration(
           color: AppColor.fullScreenColor,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -738,11 +739,11 @@ class _AddProductState extends State<AddProduct> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(Get.width * 0.04),
+              padding: EdgeInsets.all(AppSize.p16),
               child: Text(
                 AppString.selectCategory,
                 style: TextStyle(
-                  fontSize: Get.width * 0.045,
+                  fontSize: AppSize.size18,
                   fontWeight: FontWeight.bold,
                 ),
               ),

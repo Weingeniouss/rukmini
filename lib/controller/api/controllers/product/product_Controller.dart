@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/controller/api/services/product/productList_service.dart';
 import 'package:rukmini/modal/product/productList_Modal.dart';
 
@@ -44,7 +45,7 @@ class ProductController extends GetxController {
       );
 
       if (kDebugMode) {
-        print('ProductList Response: ${response.body}');
+        print('ProductList ${AppString.responseLog}${response.body}');
       }
 
       if (response.statusCode == 200) {
@@ -72,7 +73,7 @@ class ProductController extends GetxController {
       }
       return response;
     } catch (e) {
-      if (kDebugMode) print('ProductList Error: $e');
+      if (kDebugMode) print('ProductList ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

@@ -7,6 +7,7 @@ import 'package:rukmini/controller/api/controllers/year/year_Controller.dart';
 import 'package:rukmini/modal/year/year_modal.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
@@ -67,8 +68,8 @@ class _YearMasterState extends State<YearMaster> {
                 child: ListView.builder(
                   physics: AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(
-                    vertical: Get.height * 0.02,
-                    horizontal: Get.width * 0.03,
+                    vertical: AppSize.p8,
+                    horizontal: AppSize.p12,
                   ),
                   itemCount: yearController.yearList.length,
                   itemBuilder: (context, index) {
@@ -85,8 +86,8 @@ class _YearMasterState extends State<YearMaster> {
 
   Widget _buildYearCard(YearData year) {
     return Container(
-      margin: EdgeInsets.only(bottom: Get.height * 0.02),
-      padding: EdgeInsets.all(Get.width * 0.04),
+      margin: EdgeInsets.only(bottom: AppSize.p8),
+      padding: EdgeInsets.all(AppSize.p16),
       decoration: BoxDecoration(
         color: AppColor.fullScreenColor,
         border: Border.all(
@@ -115,15 +116,15 @@ class _YearMasterState extends State<YearMaster> {
                     year.title ?? '',
                     style: TextStyle(
                       color: AppColor.activeColor,
-                      fontSize: Get.width * 0.045,
+                      fontSize: AppSize.size18,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(height: Get.height * 0.015),
+                  SizedBox(height: AppSize.p8),
                   Row(
                     children: [
                       _buildDateText(AppString.fromColon, year.formDate ?? ''),
-                      SizedBox(width: Get.width * 0.05),
+                      SizedBox(width: AppSize.p20),
                       _buildDateText(AppString.toColon, year.toDate ?? ''),
                     ],
                   ),
@@ -134,7 +135,7 @@ class _YearMasterState extends State<YearMaster> {
                 icon: Icon(
                   AppIcon.remove,
                   color: AppColor.activeColor,
-                  size: Get.width * 0.07,
+                  size: AppSize.p24,
                 ),
               ),
             ],
@@ -163,7 +164,7 @@ class _YearMasterState extends State<YearMaster> {
   Widget _buildDateText(String label, String date) {
     return RichText(
       text: TextSpan(
-        style: TextStyle(fontSize: Get.width * 0.04, color: AppColor.dark),
+        style: TextStyle(fontSize: AppSize.largeText, color: AppColor.dark),
         children: [
           TextSpan(
             text: '$label ',
@@ -184,11 +185,11 @@ class _YearMasterState extends State<YearMaster> {
       highlightColor: AppColor.highlightColor!,
       child: ListView.builder(
         itemCount: 6,
-        padding: EdgeInsets.all(Get.width * 0.04),
+        padding: EdgeInsets.all(AppSize.p16),
         itemBuilder: (context, index) {
           return Container(
             height: 80,
-            margin: EdgeInsets.only(bottom: Get.height * 0.02),
+            margin: EdgeInsets.only(bottom: AppSize.p8),
             decoration: BoxDecoration(
               color: AppColor.fullScreenColor,
               borderRadius: BorderRadius.circular(5),

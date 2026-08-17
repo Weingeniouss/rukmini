@@ -35,7 +35,7 @@ void main() async {
     DeviceOrientation.portraitUp,
   ]);
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

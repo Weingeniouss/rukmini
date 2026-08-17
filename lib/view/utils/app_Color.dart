@@ -27,9 +27,9 @@ class AppColor {
   static const deleteColor = Colors.red;
   static const boderSideColor = Colors.grey;
   static const errorColor = Colors.red;
-  static final lightBlue = Colors.blue.shade50;
-  static final dark = Colors.black;
-  static final otherWhite = Colors.white70;
+  static const lightBlue = Color(0xFFE3F2FD); // blue.shade50
+  static const dark = Colors.black;
+  static const otherWhite = Colors.white70;
 
   static const white = Colors.white;
   static const black = Colors.black;
@@ -37,10 +37,10 @@ class AppColor {
   static const black54 = Colors.black54;
   static const black87 = Colors.black87;
   static const grey = Colors.grey;
-  static final grey200 = Colors.grey.shade200;
-  static final grey300 = Colors.grey.shade300;
-  static final grey400 = Colors.grey.shade400;
-  static final grey500 = Colors.grey.shade500;
+  static const grey200 = Color(0xFFEEEEEE); // grey.shade200
+  static const grey300 = Color(0xFFE0E0E0); // grey.shade300
+  static const grey400 = Color(0xFFBDBDBD); // grey.shade400
+  static const grey500 = Color(0xFF9E9E9E); // grey.shade500
   static const red = Colors.red;
   static const blue = Colors.blue;
   static const transparent = Colors.transparent;

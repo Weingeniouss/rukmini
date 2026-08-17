@@ -6,6 +6,7 @@ import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/credentials/login_controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/app_logo.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
@@ -14,9 +15,8 @@ import 'package:rukmini/view/utils/widget/inputField.dart';
 import '../../utils/app_background.dart';
 
 class Login extends StatelessWidget {
-  Login({super.key});
-
-  final loginAPI = Get.put(LoginControllerAPI());
+  final LoginControllerAPI loginAPI;
+  const Login({super.key, required this.loginAPI});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class Login extends StatelessWidget {
       backgroundImage: AppBackground.loginImage,
       child: horizontalPadding(
         child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,7 +63,7 @@ Widget logo(logo) {
 
 Widget heding() {
   return Padding(
-    padding: EdgeInsets.symmetric(vertical: Get.height * 0.020),
+    padding: EdgeInsets.symmetric(vertical: AppSize.p8),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,14 +72,14 @@ Widget heding() {
           AppString.welcome,
           style: TextStyle(
             color: AppColor.fullScreenColor,
-            fontSize: Get.width * 0.04,
+            fontSize: AppSize.largeText,
           ),
         ),
         Text(
           AppString.rukminiJewellers,
           style: TextStyle(
             color: AppColor.fullScreenColor,
-            fontSize: Get.width * 0.05,
+            fontSize: AppSize.size20,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -93,7 +93,7 @@ Widget loginTextField({
   TextEditingController? passwordInput,
 }) {
   return Padding(
-    padding: EdgeInsets.only(right: Get.width * 0.2),
+    padding: EdgeInsets.only(right: AppSize.width * 0.2),
     child: Column(
       children: [
         inputField(
@@ -117,13 +117,13 @@ Widget loginButton(LoginControllerAPI loginUI) {
     mainAxisAlignment: MainAxisAlignment.end,
     children: [
       Padding(
-        padding: EdgeInsets.symmetric(vertical: Get.height * 0.10),
+        padding: EdgeInsets.symmetric(vertical: AppSize.height * 0.10),
         child: GestureDetector(
           onTap: () {
             CallApi.callLogin();
           },
           child: loginUI.isLoading.value
-              ? CircularProgressIndicator(color: AppColor.fullScreenColor)
+              ? const CircularProgressIndicator(color: AppColor.fullScreenColor)
               : Image.asset(AppIcon.btLogin, scale: 2.3),
         ),
       ),
@@ -136,7 +136,7 @@ Widget forgetpasswod({required void Function()? onPressed}) {
     onPressed: onPressed,
     child: Text(
       AppString.forgetPassword,
-      style: TextStyle(color: AppColor.fullScreenColor),
+      style: const TextStyle(color: AppColor.fullScreenColor),
     ),
   );
 }

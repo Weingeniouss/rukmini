@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/controller/api/services/product/productType_service.dart';
 import 'package:rukmini/modal/product/productTypeList_Modal.dart';
 
@@ -20,7 +21,7 @@ class ProductTypeController extends GetxController {
           .productTypeApi();
 
       if (kDebugMode) {
-        print('ProductType Response: ${response.body}');
+        print('ProductType ${AppString.responseLog}${response.body}');
       }
 
       if (response.statusCode == 200) {
@@ -37,7 +38,7 @@ class ProductTypeController extends GetxController {
       }
       return response;
     } catch (e) {
-      if (kDebugMode) print('ProductType Error: $e');
+      if (kDebugMode) print('ProductType ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

@@ -2,6 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/drawer/all_master/category_master/category_Controller.dart';
 
@@ -25,7 +26,7 @@ class CategoryAddController extends GetxController {
         }
       }
     } catch (e) {
-      if (kDebugMode) print('CategoryAdd Error: $e');
+      if (kDebugMode) print('CategoryAdd ${AppString.errorLog}$e');
     } finally {
       isLoading.value = false;
     }

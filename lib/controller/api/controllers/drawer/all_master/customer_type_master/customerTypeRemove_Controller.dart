@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
@@ -19,7 +20,7 @@ class CustomerTypeRemoveController extends GetxController {
         }
       }
     } catch (e) {
-      if (kDebugMode) print('CustomerTypeRemove Error: $e');
+      if (kDebugMode) print('CustomerTypeRemove ${AppString.errorLog}$e');
     } finally {
       isLoading.value = false;
     }

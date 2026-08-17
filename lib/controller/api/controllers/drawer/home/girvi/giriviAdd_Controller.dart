@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, file_names
 
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -37,12 +38,12 @@ class GiriviAddController extends GetxController {
       );
 
       if (kDebugMode) {
-        print('GiriviAdd Response: ${response.body}');
+        print('GiriviAdd ${AppString.responseLog}${response.body}');
       }
 
       return response;
     } catch (e) {
-      if (kDebugMode) print('GiriviAdd Error: $e');
+      if (kDebugMode) print('GiriviAdd ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

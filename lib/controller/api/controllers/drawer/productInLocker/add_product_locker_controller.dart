@@ -1,3 +1,4 @@
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -25,12 +26,12 @@ class AddProductLockerController extends GetxController {
       );
 
       if (kDebugMode) {
-        print('AddProductLocker Response: ${response.body}');
+        print('AddProductLocker ${AppString.responseLog}${response.body}');
       }
 
       return response;
     } catch (e) {
-      if (kDebugMode) print('AddProductLocker Error: $e');
+      if (kDebugMode) print('AddProductLocker ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

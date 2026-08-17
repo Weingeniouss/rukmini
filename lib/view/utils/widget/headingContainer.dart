@@ -1,18 +1,20 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 
 Widget headingContainer(String title) {
   return Container(
-    padding: EdgeInsets.all(Get.width * 0.04),
-    decoration: BoxDecoration(color: AppColor.subHeadingContainerColor),
-    width: Get.width,
+    padding: EdgeInsets.all(AppSize.p16),
+    decoration: BoxDecoration(
+      color: AppColor.subHeadingContainerColor,
+    ),
+    width: AppSize.width,
     child: Text(
       title,
       style: TextStyle(
-        fontSize: Get.width * 0.038,
+        fontSize: AppSize.size18,
         fontWeight: FontWeight.w500,
       ),
     ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
@@ -83,24 +84,24 @@ class AllMaster extends StatelessWidget {
       leading: Icon(
         icon,
         color: AppColor.activeColor.withOpacity(0.7),
-        size: Get.width * 0.06,
+        size: AppSize.p24,
       ),
       title: Text(
         title,
         style: TextStyle(
           color: AppColor.activeColor,
-          fontSize: Get.width * 0.042,
+          fontSize: AppSize.p16,
           fontWeight: FontWeight.w400,
         ),
       ),
       trailing: Icon(
         AppIcon.rightArrow,
         color: AppColor.activeColor.withOpacity(0.7),
-        size: Get.width * 0.06,
+        size: AppSize.p24,
       ),
       contentPadding: EdgeInsets.symmetric(
-        horizontal: Get.width * 0.05,
-        vertical: Get.height * 0.005,
+        horizontal: AppSize.p20,
+        vertical: AppSize.p4,
       ),
     );
   }

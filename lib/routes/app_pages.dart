@@ -1,4 +1,13 @@
 import 'package:get/get.dart';
+import 'package:rukmini/controller/api/controllers/credentials/login_controller.dart';
+import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/lockerList_Controller.dart';
+import 'package:rukmini/controller/api/controllers/drawer/productInLocker/cust_product_controller.dart';
+import 'package:rukmini/controller/ui/home/allMaster/locker_master/lockerMaster_ControllerUI.dart';
+import 'package:rukmini/controller/ui/home/allMaster/year_Master/yearMaster_ControllerUI.dart';
+import 'package:rukmini/controller/ui/home/customer/addCustForm_controller.dart';
+import 'package:rukmini/controller/ui/home/customer/updateCustForm_controller.dart';
+import 'package:rukmini/controller/ui/home/locker/locker_trans_ui_controller.dart';
+import 'package:rukmini/controller/ui/home/productInLocker/changeLocker_ControllerUI.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/customerTypeMaster/customerTypeMaster.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/lockerCodeMaster/addLockerCode.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/lockerCodeMaster/lockerCodeMaster.dart';
@@ -34,73 +43,119 @@ class AppPages {
   static const initial = Routes.splash;
 
   static final routes = [
-
     //Splash
-    GetPage(name: _Paths.splash, page: () => Splash()),
+    GetPage(name: _Paths.splash, page: () => const Splash()),
 
     //Credentials
-      //Login
-          GetPage(name: _Paths.login, page: () => Login()),
+    //Login
+    GetPage(
+      name: _Paths.login,
+      page: () => Login(loginAPI: Get.put(LoginControllerAPI())),
+    ),
 
     //Drawer
-      GetPage(name: _Paths.allMaster, page: () => AllMaster()),
-      GetPage(name: _Paths.productInLocker, page: () => ProductInLocker()),
-      // Home
-        // Customer
-            GetPage(name: _Paths.home, page: () => Home()),
-            GetPage(name: _Paths.custList, page: () => Custlist()),
-            GetPage(name: _Paths.custDetail, page: () => CustDetail()),
-            GetPage(name: _Paths.addCustForm, page: () => AddCustForm()),
-            GetPage(name: _Paths.updateCustForm, page: () => UpdateCustForm()),
-        // Girivi
-            GetPage(name: _Paths.giriviList, page: () => GiriviList()),
-            GetPage(name: _Paths.giriviadd, page: () => Addgirivi()),
-            GetPage(name: _Paths.AddProduct, page: () => AddProduct()),
-            GetPage(name: _Paths.giriviDetail, page: () => GiriviDetail()),
-        //Pending Product
-            GetPage(name: _Paths.pendingProduct, page: () => productDetail()),
-        // Return Product
-            GetPage(name: _Paths.returnProduct, page: () => productDetail()),
-        // total Karkit
-            GetPage(name: _Paths.karkitProduct, page: () => productDetail()),
-        // Sold Product
-            GetPage(name: _Paths.soldProduct, page: () => productDetail()),
-        // Due Girvi
-            GetPage(name: _Paths.dueGirvi, page: () => DueGirvi()),
-        // Due Over Girvi
-            GetPage(name: _Paths.dueOverGirvi, page: () => DueGirvi()),
+    GetPage(name: _Paths.allMaster, page: () => const AllMaster()),
+    GetPage(
+      name: _Paths.productInLocker,
+      page: () => ProductInLocker(
+        custProductController: Get.put(CustProductController()),
+        lockerListController: Get.put(LockerListController()),
+      ),
+    ),
+    // Home
+    // Customer
+    GetPage(name: _Paths.home, page: () => const Home()),
+    GetPage(name: _Paths.custList, page: () => const Custlist()),
+    GetPage(name: _Paths.custDetail, page: () => const CustDetail()),
+    GetPage(
+      name: _Paths.addCustForm,
+      page: () =>
+          AddCustForm(addCustForomUI: Get.put(AddCustFormControllerUI())),
+    ),
+    GetPage(
+      name: _Paths.updateCustForm,
+      page: () =>
+          UpdateCustForm(updateCustUI: Get.put(UpdateCustFormControllerUI())),
+    ),
+    // Girivi
+    GetPage(name: _Paths.giriviList, page: () => const GiriviList()),
+    GetPage(name: _Paths.giriviadd, page: () => const Addgirivi()),
+    GetPage(name: _Paths.AddProduct, page: () => const AddProduct()),
+    GetPage(name: _Paths.giriviDetail, page: () => const GiriviDetail()),
+    //Pending Product
+    GetPage(name: _Paths.pendingProduct, page: () => const productDetail()),
+    // Return Product
+    GetPage(name: _Paths.returnProduct, page: () => const productDetail()),
+    // total Karkit
+    GetPage(name: _Paths.karkitProduct, page: () => const productDetail()),
+    // Sold Product
+    GetPage(name: _Paths.soldProduct, page: () => const productDetail()),
+    // Due Girvi
+    GetPage(name: _Paths.dueGirvi, page: () => const DueGirvi()),
+    // Due Over Girvi
+    GetPage(name: _Paths.dueOverGirvi, page: () => const DueGirvi()),
     // Home
 
     //All Master
-        // Metal Master
-            GetPage(name: _Paths.metalMaster, page: () => MetalMaster()),
-        // Category Master
-            GetPage(name: _Paths.categoryMaster, page: () => CategoryMaster()),
-        // Customer Type Master
-            GetPage(name: _Paths.customerTypeMaster, page: () => CustomerTypeMaster()),
-        //Locker Code Master
-            GetPage(name: _Paths.lockerCodeMaster, page: () => LockerCodeMaster()),
-            GetPage(name: _Paths.addLockerCode, page: () => AddLockerCode()),
-        //Metal Touch
-            GetPage(name: _Paths.metalTouch, page: () => MetalTouch()),
-        //Year Master
-            GetPage(name: _Paths.yearMaster, page: () => YearMaster()),
-            GetPage(name: _Paths.addYearMaster, page: () => AddYearMaster()),
+    // Metal Master
+    GetPage(name: _Paths.metalMaster, page: () => const MetalMaster()),
+    // Category Master
+    GetPage(name: _Paths.categoryMaster, page: () => const CategoryMaster()),
+    // Customer Type Master
+    GetPage(
+      name: _Paths.customerTypeMaster,
+      page: () => const CustomerTypeMaster(),
+    ),
+    //Locker Code Master
+    GetPage(
+      name: _Paths.lockerCodeMaster,
+      page: () => const LockerCodeMaster(),
+    ),
+    GetPage(
+      name: _Paths.addLockerCode,
+      page: () =>
+          AddLockerCode(uiController: Get.put(LockerMasterControllerUI())),
+    ),
+    //Metal Touch
+    GetPage(name: _Paths.metalTouch, page: () => const MetalTouch()),
+    //Year Master
+    GetPage(name: _Paths.yearMaster, page: () => const YearMaster()),
+    GetPage(
+      name: _Paths.addYearMaster,
+      page: () =>
+          AddYearMaster(uiController: Get.put(YearMasterControllerUI())),
+    ),
     //All Master
 
     //Product In Locker
-        GetPage(name: _Paths.productInLockerDetail, page: () => ProductInLockerDetail()),
-        GetPage(name: _Paths.changeTheLocker, page: () => ChangeTheLocker()),
+    GetPage(
+      name: _Paths.productInLockerDetail,
+      page: () => const ProductInLockerDetail(),
+    ),
+    GetPage(
+      name: _Paths.changeTheLocker,
+      page: () => ChangeTheLocker(
+        uiController: Get.put(ChangeLockerControllerUI()),
+        custProductController: Get.find<CustProductController>(),
+      ),
+    ),
     //Product In Locker
 
     //Locker Transaction
-        GetPage(name: _Paths.lockerTransaction, page: () => LockerTranStaion()),
-        GetPage(name: _Paths.lockerTransationDetail, page: () => LockerTransationDetail()),
+    GetPage(
+      name: _Paths.lockerTransaction,
+      page: () =>
+          LockerTranStaion(uiController: Get.put(LockerTransUIController())),
+    ),
+    GetPage(
+      name: _Paths.lockerTransationDetail,
+      page: () => const LockerTransationDetail(),
+    ),
     //Locker Transaction
 
     //Report
-        GetPage(name: _Paths.report, page: () => Reports()),
+    GetPage(name: _Paths.report, page: () => Reports()),
     //Report
-  //Drawer
+    //Drawer
   ];
 }

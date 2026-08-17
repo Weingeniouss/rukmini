@@ -7,16 +7,20 @@ import 'package:rukmini/controller/ui/home/productInLocker/changeLocker_Controll
 import 'package:rukmini/modal/drawer/productInLocker/cust_product_model.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 
 class ChangeTheLocker extends StatelessWidget {
-  ChangeTheLocker({super.key});
-
-  final uiController = Get.put(ChangeLockerControllerUI());
-  final custProductController = Get.find<CustProductController>();
+  final ChangeLockerControllerUI uiController;
+  final CustProductController custProductController;
+  const ChangeTheLocker({
+    super.key,
+    required this.uiController,
+    required this.custProductController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +66,8 @@ class ChangeTheLocker extends StatelessWidget {
   Widget _buildTopSelectors() {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: Get.width * 0.04,
-        vertical: Get.height * 0.01,
+        horizontal: AppSize.p16,
+        vertical: AppSize.p4,
       ),
       decoration: BoxDecoration(
         color: AppColor.fullScreenColor,
@@ -76,9 +80,9 @@ class ChangeTheLocker extends StatelessWidget {
           Icon(
             AppIcon.security,
             color: AppColor.activeColor,
-            size: Get.width * 0.06,
+            size: AppSize.p24,
           ),
-          SizedBox(width: Get.width * 0.025),
+          SizedBox(width: AppSize.p10),
           Expanded(
             flex: 2,
             child: GestureDetector(
@@ -94,7 +98,7 @@ class ChangeTheLocker extends StatelessWidget {
                           color: uiController.selectedLocker.value == null
                               ? AppColor.textColor
                               : AppColor.dark,
-                          fontSize: Get.width * 0.038,
+                          fontSize: AppSize.size15,
                         ),
                       ),
                     ),
@@ -102,9 +106,9 @@ class ChangeTheLocker extends StatelessWidget {
                   Icon(
                     AppIcon.arrow_down,
                     color: AppColor.activeColor,
-                    size: Get.width * 0.05,
+                    size: AppSize.p20,
                   ),
-                  SizedBox(width: Get.width * 0.01),
+                  SizedBox(width: AppSize.p4),
                   GestureDetector(
                     onTap: () {
                       uiController.clearLocker();
@@ -112,7 +116,7 @@ class ChangeTheLocker extends StatelessWidget {
                     child: Icon(
                       AppIcon.remove,
                       color: AppColor.activeColor,
-                      size: Get.width * 0.05,
+                      size: AppSize.p20,
                     ),
                   ),
                 ],
@@ -123,7 +127,7 @@ class ChangeTheLocker extends StatelessWidget {
             height: Get.height * 0.035,
             width: 1,
             color: AppColor.boderSideColor.shade400,
-            margin: EdgeInsets.symmetric(horizontal: Get.width * 0.025),
+            margin: EdgeInsets.symmetric(horizontal: AppSize.p10),
           ),
           Expanded(
             flex: 1,
@@ -133,7 +137,7 @@ class ChangeTheLocker extends StatelessWidget {
                 hintText: AppString.lockerCode,
                 hintStyle: TextStyle(
                   color: AppColor.textColor,
-                  fontSize: Get.width * 0.038,
+                  fontSize: AppSize.size15,
                 ),
                 border: InputBorder.none,
                 isDense: true,
@@ -152,7 +156,7 @@ class ChangeTheLocker extends StatelessWidget {
         height: Get.height * 0.4,
         decoration: BoxDecoration(
           color: AppColor.fullScreenColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
           children: [
@@ -161,7 +165,7 @@ class ChangeTheLocker extends StatelessWidget {
               child: Text(
                 AppString.selectLocker,
                 style: TextStyle(
-                  fontSize: Get.width * 0.045,
+                  fontSize: Get.width * 0.03,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -205,7 +209,7 @@ class ChangeTheLocker extends StatelessWidget {
   Widget _buildFilterRow(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: Get.width * 0.04,
+        horizontal: AppSize.p16,
         vertical: Get.height * 0.015,
       ),
       child: Row(
@@ -214,7 +218,7 @@ class ChangeTheLocker extends StatelessWidget {
             "${AppString.date}  ",
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: Get.width * 0.038,
+              fontSize: AppSize.size15,
               color: AppColor.dark,
             ),
           ),
@@ -232,14 +236,14 @@ class ChangeTheLocker extends StatelessWidget {
                         color: uiController.selectedDate.value.isEmpty
                             ? AppColor.textColor
                             : AppColor.dark,
-                        fontSize: Get.width * 0.038,
+                        fontSize: AppSize.size15,
                       ),
                     ),
                   ),
                   Icon(
                     AppIcon.arrow_down,
                     color: AppColor.textColor,
-                    size: Get.width * 0.045,
+                    size: AppSize.headingText,
                   ),
                 ],
               ),
@@ -249,7 +253,7 @@ class ChangeTheLocker extends StatelessWidget {
             "${AppString.interestRate}  ",
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: Get.width * 0.038,
+              fontSize: AppSize.size15,
               color: AppColor.dark,
             ),
           ),
@@ -263,14 +267,14 @@ class ChangeTheLocker extends StatelessWidget {
                     color: uiController.selectedLocker.value == null
                         ? AppColor.textColor
                         : AppColor.dark,
-                    fontSize: Get.width * 0.038,
+                    fontSize: AppSize.size15,
                   ),
                 ),
               ),
               Icon(
                 AppIcon.arrow_down,
                 color: AppColor.textColor,
-                size: Get.width * 0.045,
+                size: AppSize.headingText,
               ),
             ],
           ),
@@ -296,7 +300,7 @@ class ChangeTheLocker extends StatelessWidget {
                     "${item.metalName} Karat ${item.prodType} ${item.catName}",
                     style: TextStyle(
                       color: AppColor.dark.withOpacity(0.7),
-                      fontSize: Get.width * 0.04,
+                      fontSize: AppSize.p16,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -308,7 +312,7 @@ class ChangeTheLocker extends StatelessWidget {
                         item.custName ?? "N/A",
                         style: TextStyle(
                           color: AppColor.dark,
-                          fontSize: Get.width * 0.038,
+                          fontSize: AppSize.size15,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -346,9 +350,9 @@ class ChangeTheLocker extends StatelessWidget {
                           ),
                           Container(
                             width: Get.width * 0.18,
-                            height: Get.height * 0.04,
+                            height: AppSize.p16,
                             padding: EdgeInsets.symmetric(
-                              horizontal: Get.width * 0.01,
+                              horizontal: AppSize.p4,
                             ),
                             decoration: BoxDecoration(
                               border: Border.all(
@@ -477,7 +481,7 @@ class ChangeTheLocker extends StatelessWidget {
                     AppString.done,
                     style: TextStyle(
                       color: AppColor.activeColor,
-                      fontSize: Get.width * 0.045,
+                      fontSize: Get.width * 0.03,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

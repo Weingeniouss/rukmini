@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/controller/api/services/drawer/home/customres/custList_service.dart';
 import 'package:rukmini/modal/drawer/home/customer/customer_list_model.dart';
 
@@ -42,7 +43,7 @@ class CustListController extends GetxController {
       );
 
       if (kDebugMode) {
-        print('CustList Response (Page $currentPage): ${response.body}');
+        print('CustList ${AppString.responseLog}(Page $currentPage): ${response.body}');
       }
 
       if (response.statusCode == 200) {
@@ -67,7 +68,7 @@ class CustListController extends GetxController {
       }
       return response;
     } catch (e) {
-      if (kDebugMode) print('CustList Error: $e');
+      if (kDebugMode) print('CustList ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

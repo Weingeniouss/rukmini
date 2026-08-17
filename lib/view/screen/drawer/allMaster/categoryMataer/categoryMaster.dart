@@ -8,6 +8,7 @@ import 'package:rukmini/controller/api/controllers/drawer/all_master/category_ma
 import 'package:rukmini/controller/ui/home/allMaster/category_Master/categoryMaster_ControllerUI.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
@@ -67,7 +68,7 @@ class _CategoryMasterState extends State<CategoryMaster> {
                 color: AppColor.activeColor,
                 child: ListView.builder(
                   physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                  padding: EdgeInsets.symmetric(vertical: AppSize.p4),
                   itemCount: categories.length,
                   itemBuilder: (context, index) {
                     final item = categories[index];
@@ -88,15 +89,15 @@ class _CategoryMasterState extends State<CategoryMaster> {
   Widget _buildInputSection() {
     return horizontalPadding(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: Get.height * 0.02),
+        padding: EdgeInsets.symmetric(vertical: AppSize.p8),
         child: Row(
           children: [
             Icon(
               AppIcon.grid,
               color: AppColor.activeColor.withOpacity(0.6),
-              size: Get.width * 0.06,
+              size: AppSize.p24,
             ),
-            SizedBox(width: Get.width * 0.03),
+            SizedBox(width: AppSize.p12),
             Expanded(
               child: _buildTextField(
                 controller: categoryMasterUI.categoryController,
@@ -106,8 +107,8 @@ class _CategoryMasterState extends State<CategoryMaster> {
             Obx(
               () => categoryMasterUI.isLoading.value
                   ? SizedBox(
-                      height: Get.width * 0.06,
-                      width: Get.width * 0.06,
+                      height: AppSize.p24,
+                      width: AppSize.p24,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : GestureDetector(
@@ -126,7 +127,7 @@ class _CategoryMasterState extends State<CategoryMaster> {
                               ? AppIcon.add
                               : Icons.check,
                           color: AppColor.activeColor,
-                          size: Get.width * 0.045,
+                          size: AppSize.headingText,
                         ),
                       ),
                     ),
@@ -144,7 +145,7 @@ class _CategoryMasterState extends State<CategoryMaster> {
     return TextField(
       controller: controller,
       style: TextStyle(
-        fontSize: Get.width * 0.042,
+        fontSize: AppSize.p16,
         color: AppColor.textColor,
         fontWeight: FontWeight.w400,
       ),
@@ -152,7 +153,7 @@ class _CategoryMasterState extends State<CategoryMaster> {
         hintText: hintText,
         hintStyle: TextStyle(
           color: AppColor.textColor.withOpacity(0.5),
-          fontSize: Get.width * 0.042,
+          fontSize: AppSize.p16,
         ),
         border: InputBorder.none,
         isDense: true,
@@ -164,20 +165,20 @@ class _CategoryMasterState extends State<CategoryMaster> {
   Widget _buildCategoryListItem(String name, String id) {
     return horizontalPadding(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: Get.height * 0.015),
+        padding: EdgeInsets.symmetric(vertical: AppSize.p8),
         child: Row(
           children: [
             Icon(
               AppIcon.checkCircle,
               color: AppColor.activeColor,
-              size: Get.width * 0.055,
+              size: AppSize.p24,
             ),
-            SizedBox(width: Get.width * 0.04),
+            SizedBox(width: AppSize.p16),
             Expanded(
               child: Text(
                 name,
                 style: TextStyle(
-                  fontSize: Get.width * 0.045,
+                  fontSize: AppSize.size18,
                   fontWeight: FontWeight.w500,
                   color: AppColor.dark,
                 ),
@@ -190,12 +191,12 @@ class _CategoryMasterState extends State<CategoryMaster> {
               icon: Icon(
                 AppIcon.editNote,
                 color: AppColor.activeColor,
-                size: Get.width * 0.06,
+                size: AppSize.p24,
               ),
               padding: EdgeInsets.zero,
               constraints: BoxConstraints(),
             ),
-            SizedBox(width: Get.width * 0.04),
+            SizedBox(width: AppSize.p16),
             IconButton(
               onPressed: () {
                 _showDeleteDialog(name, id);
@@ -203,7 +204,7 @@ class _CategoryMasterState extends State<CategoryMaster> {
               icon: Icon(
                 AppIcon.remove,
                 color: AppColor.activeColor,
-                size: Get.width * 0.06,
+                size: AppSize.p24,
               ),
               padding: EdgeInsets.zero,
               constraints: BoxConstraints(),
@@ -228,11 +229,11 @@ class _CategoryMasterState extends State<CategoryMaster> {
       highlightColor: AppColor.highlightColor!,
       child: ListView.builder(
         itemCount: 10,
-        padding: EdgeInsets.all(Get.width * 0.04),
+        padding: EdgeInsets.all(AppSize.p16),
         itemBuilder: (context, index) {
           return Container(
             height: 45,
-            margin: EdgeInsets.only(bottom: Get.height * 0.02),
+            margin: EdgeInsets.only(bottom: AppSize.p8),
             decoration: BoxDecoration(
               color: AppColor.fullScreenColor,
               borderRadius: BorderRadius.circular(5),

@@ -7,6 +7,7 @@ import 'package:rukmini/modal/drawer/locker/locker_wise_del_modal.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
@@ -14,9 +15,8 @@ import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 
 class LockerTranStaion extends StatelessWidget {
-  LockerTranStaion({super.key});
-
-  final uiController = Get.put(LockerTransUIController());
+  final LockerTransUIController uiController;
+  const LockerTranStaion({super.key, required this.uiController});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class LockerTranStaion extends StatelessWidget {
                 ? TextField(
                     controller: uiController.searchController,
                     autofocus: true,
-                    style: TextStyle(color: AppColor.white, fontSize: Get.width * 0.045),
+                    style: TextStyle(color: AppColor.white, fontSize: AppSize.headingText),
                     decoration: InputDecoration(
                       hintText: AppString.search,
                       hintStyle: TextStyle(color: AppColor.otherWhite),
@@ -69,7 +69,7 @@ class LockerTranStaion extends StatelessWidget {
                 color: AppColor.activeColor,
                 child: ListView.separated(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                  padding: EdgeInsets.symmetric(vertical: AppSize.p4),
                   itemCount: uiController
                       .lockerWiseDelController
                       .lockerWiseList
@@ -105,7 +105,7 @@ class LockerTranStaion extends StatelessWidget {
       onTap: () => _showLockerSelection(),
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: Get.width * 0.04,
+          horizontal: AppSize.p16,
           vertical: Get.height * 0.015,
         ),
         decoration: BoxDecoration(
@@ -119,9 +119,9 @@ class LockerTranStaion extends StatelessWidget {
             Icon(
               AppIcon.locker,
               color: AppColor.activeColor,
-              size: Get.width * 0.06,
+              size: AppSize.p24,
             ),
-            SizedBox(width: Get.width * 0.03),
+            SizedBox(width: AppSize.p12),
             Expanded(
               child: Obx(() {
                 final selected = uiController.selectedLocker.value;
@@ -146,7 +146,7 @@ class LockerTranStaion extends StatelessWidget {
             Icon(
               AppIcon.arrow_down,
               color: AppColor.activeColor,
-              size: Get.width * 0.06,
+              size: AppSize.p24,
             ),
           ],
         ),
@@ -160,7 +160,7 @@ class LockerTranStaion extends StatelessWidget {
         height: Get.height * 0.4,
         decoration: BoxDecoration(
           color: AppColor.fullScreenColor,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
           children: [
@@ -169,7 +169,7 @@ class LockerTranStaion extends StatelessWidget {
               child: Text(
                 AppString.selectLocker,
                 style: TextStyle(
-                  fontSize: Get.width * 0.045,
+                  fontSize: Get.width * 0.03,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -226,7 +226,7 @@ class LockerTranStaion extends StatelessWidget {
               style: TextStyle(
                 color: AppColor.activeColor,
                 fontWeight: FontWeight.w600,
-                fontSize: Get.width * 0.04,
+                fontSize: AppSize.p16,
               ),
             ),
             SizedBox(height: Get.height * 0.005),
@@ -263,7 +263,7 @@ class LockerTranStaion extends StatelessWidget {
   Widget _buildRichText(String label, String value) {
     return RichText(
       text: TextSpan(
-        style: TextStyle(fontSize: Get.width * 0.035, color: AppColor.dark),
+        style: TextStyle(fontSize: AppSize.size14, color: AppColor.dark),
         children: [
           TextSpan(
             text: label,
@@ -287,9 +287,9 @@ class LockerTranStaion extends StatelessWidget {
       highlightColor: AppColor.highlightColor!,
       child: ListView.separated(
         itemCount: 6,
-        padding: EdgeInsets.all(Get.width * 0.04),
+        padding: EdgeInsets.all(AppSize.p16),
         separatorBuilder: (context, index) =>
-            SizedBox(height: Get.height * 0.02),
+            SizedBox(height: AppSize.p8),
         itemBuilder: (context, index) {
           return Container(
             height: 80,

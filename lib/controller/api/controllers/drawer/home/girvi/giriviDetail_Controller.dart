@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:rukmini/view/utils/app_String.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -25,7 +26,7 @@ class GiriviDetailController extends GetxController {
       );
 
       if (kDebugMode) {
-        print('GiriviDetail Response: ${response.body}');
+        print('GiriviDetail ${AppString.responseLog}${response.body}');
       }
 
       if (response.statusCode == 200) {
@@ -40,7 +41,7 @@ class GiriviDetailController extends GetxController {
       }
       return response;
     } catch (e) {
-      if (kDebugMode) print('GiriviDetail Error: $e');
+      if (kDebugMode) print('GiriviDetail ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

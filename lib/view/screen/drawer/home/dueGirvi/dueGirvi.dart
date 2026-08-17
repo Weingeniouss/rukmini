@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/pendingTransaction/pending_transaction_controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
@@ -188,7 +189,7 @@ class _DueGirviState extends State<DueGirvi> {
               style: TextStyle(
                 color: AppColor.activeColor,
                 fontWeight: FontWeight.w500,
-                fontSize: Get.width * 0.038,
+                fontSize: AppSize.size12,
               ),
             ),
           ),
@@ -203,8 +204,8 @@ class _DueGirviState extends State<DueGirvi> {
       child: Row(
         children: [
           Container(
-            width: Get.width * 0.035,
-            height: Get.width * 0.035,
+            width: AppSize.size14,
+            height: AppSize.size14,
             decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.circular(2),
@@ -214,7 +215,7 @@ class _DueGirviState extends State<DueGirvi> {
           Text(
             label,
             style: TextStyle(
-              fontSize: Get.width * 0.035,
+              fontSize: AppSize.size14,
               color: AppColor.dark.withOpacity(0.8),
             ),
           ),
@@ -248,7 +249,7 @@ class _DueGirviState extends State<DueGirvi> {
                   data.custName ?? "null",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: Get.width * 0.041,
+                    fontSize: AppSize.p16 * 1.025, // 0.041
                     color: AppColor.dark.withOpacity(0.8),
                   ),
                 ),
@@ -258,7 +259,7 @@ class _DueGirviState extends State<DueGirvi> {
                 style: TextStyle(
                   color: AppColor.activeColor,
                   fontWeight: FontWeight.bold,
-                  fontSize: Get.width * 0.038,
+                  fontSize: AppSize.size15,
                 ),
               ),
             ],
@@ -295,7 +296,7 @@ class _DueGirviState extends State<DueGirvi> {
       text: TextSpan(
         style: TextStyle(
           color: AppColor.dark,
-          fontSize: Get.width * 0.035,
+          fontSize: AppSize.size14,
           fontFamily: 'Poppins',
         ),
         children: [
@@ -334,7 +335,7 @@ class _DueGirviState extends State<DueGirvi> {
       cursorColor: AppColor.fullScreenColor,
       decoration: InputDecoration(
         hintText: AppString.searchName,
-        hintStyle: TextStyle(color: AppColor.otherWhite),
+        hintStyle: const TextStyle(color: AppColor.otherWhite),
         border: InputBorder.none,
       ),
       onChanged: (value) {
@@ -356,7 +357,7 @@ class _DueGirviState extends State<DueGirvi> {
       cursorColor: AppColor.fullScreenColor,
       decoration: InputDecoration(
         hintText: AppString.searchLocality,
-        hintStyle: TextStyle(color: AppColor.otherWhite),
+        hintStyle: const TextStyle(color: AppColor.otherWhite),
         border: InputBorder.none,
       ),
       onChanged: (value) {

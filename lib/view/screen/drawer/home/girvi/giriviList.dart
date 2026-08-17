@@ -8,6 +8,7 @@ import 'package:rukmini/controller/api/controllers/drawer/home/girvi/giriviList_
 import 'package:rukmini/controller/api/controllers/year/year_Controller.dart';
 import 'package:rukmini/modal/year/year_modal.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
@@ -85,7 +86,7 @@ class _GiriviListState extends State<GiriviList> {
         child: Icon(AppIcon.add, color: AppColor.fullScreenColor),
       ),
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
+        preferredSize: const Size.fromHeight(kToolbarHeight),
         child: Obx(
           () => appBar(
             back: true,
@@ -132,8 +133,8 @@ class _GiriviListState extends State<GiriviList> {
   Widget yearListSelector() {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: Get.width * 0.04,
-        vertical: Get.height * 0.01,
+        horizontal: AppSize.p16,
+        vertical: AppSize.p4,
       ),
       decoration: BoxDecoration(
         color: AppColor.fullScreenColor,
@@ -146,13 +147,13 @@ class _GiriviListState extends State<GiriviList> {
             '${AppString.selectYear}:',
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              fontSize: Get.width * 0.035,
+              fontSize: AppSize.size14,
               color: AppColor.textColor,
             ),
           ),
           Obx(
             () => Container(
-              padding: EdgeInsets.symmetric(horizontal: Get.width * 0.03),
+              padding: EdgeInsets.symmetric(horizontal: AppSize.p12),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: AppColor.grey300),
@@ -165,7 +166,7 @@ class _GiriviListState extends State<GiriviList> {
                       value: '0',
                       child: Text(
                         AppString.allYears,
-                        style: TextStyle(fontSize: Get.width * 0.035),
+                        style: TextStyle(fontSize: AppSize.size14),
                       ),
                     ),
                     ...yearController.yearList.map((YearData year) {
@@ -173,7 +174,7 @@ class _GiriviListState extends State<GiriviList> {
                         value: year.yearId,
                         child: Text(
                           year.title ?? '',
-                          style: TextStyle(fontSize: Get.width * 0.035),
+                          style: TextStyle(fontSize: AppSize.size14),
                         ),
                       );
                     }).toList(),
@@ -215,15 +216,15 @@ class _GiriviListState extends State<GiriviList> {
             elevation: 0,
             color: AppColor.fullScreenColor,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(Get.width * 0.035),
+              borderRadius: BorderRadius.circular(AppSize.size14),
               side: BorderSide(color: AppColor.boderSideColor.shade200),
             ),
-            margin: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+            margin: EdgeInsets.symmetric(vertical: AppSize.p4),
             child: InkWell(
               onTap: () => Get.toNamed('/giriviDetail', arguments: item.girviId),
-              borderRadius: BorderRadius.circular(Get.width * 0.035),
+              borderRadius: BorderRadius.circular(AppSize.size14),
               child: Padding(
-                padding: EdgeInsets.all(Get.width * 0.04),
+                padding: EdgeInsets.all(AppSize.p16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -234,22 +235,22 @@ class _GiriviListState extends State<GiriviList> {
                           child: Row(
                             children: [
                               CircleAvatar(
-                                radius: Get.width * 0.045,
+                                radius: AppSize.headingText,
                                 backgroundColor: AppColor.primaryColor
                                     .withOpacity(0.05),
                                 child: Icon(
                                   AppIcon.person,
-                                  size: Get.width * 0.045,
+                                  size: AppSize.headingText,
                                   color: AppColor.primaryColor,
                                 ),
                               ),
-                              SizedBox(width: Get.width * 0.03),
+                              SizedBox(width: AppSize.p12),
                               Expanded(
                                 child: Text(
                                   item.custName ?? '',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: Get.width * 0.04,
+                                    fontSize: AppSize.p16,
                                     color: AppColor.primaryColor,
                                   ),
                                   maxLines: 1,
@@ -261,8 +262,8 @@ class _GiriviListState extends State<GiriviList> {
                         ),
                         Container(
                           padding: EdgeInsets.symmetric(
-                            horizontal: Get.width * 0.025,
-                            vertical: Get.height * 0.005,
+                            horizontal: AppSize.p10,
+                            vertical: AppSize.p4 * 0.5,
                           ),
                           decoration: BoxDecoration(
                             color: isClosed
@@ -276,7 +277,7 @@ class _GiriviListState extends State<GiriviList> {
                               color: isClosed
                                   ? AppColor.deleteColor
                                   : AppColor.activeColor,
-                              fontSize: Get.width * 0.025,
+                              fontSize: AppSize.p10,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -285,9 +286,9 @@ class _GiriviListState extends State<GiriviList> {
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
-                        vertical: Get.height * 0.012,
+                        vertical: AppSize.p4 * 1.2,
                       ),
-                      child: Divider(height: 1),
+                      child: const Divider(height: 1),
                     ),
                     Row(
                       children: [
@@ -303,13 +304,13 @@ class _GiriviListState extends State<GiriviList> {
                         ),
                       ],
                     ),
-                    SizedBox(height: Get.height * 0.02),
+                    SizedBox(height: AppSize.p8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: Container(
-                            padding: EdgeInsets.all(Get.width * 0.025),
+                            padding: EdgeInsets.all(AppSize.p10),
                             decoration: BoxDecoration(
                               color: isClosed
                                   ? Colors.grey.withOpacity(0.05)
@@ -332,17 +333,17 @@ class _GiriviListState extends State<GiriviList> {
                                   children: [
                                     Icon(
                                       AppIcon.rupee,
-                                      size: Get.width * 0.04,
+                                      size: AppSize.p16,
                                       color: isClosed
                                           ? AppColor.textColor
                                           : AppColor.activeColor,
                                     ),
-                                    SizedBox(width: Get.width * 0.01),
+                                    SizedBox(width: AppSize.p4),
                                     Text(
                                       '${item.givenAmt ?? '0.00'}',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: Get.width * 0.045,
+                                        fontSize: AppSize.p12,
                                         color: isClosed
                                             ? AppColor.textColor
                                             : AppColor.activeColor,
@@ -352,8 +353,8 @@ class _GiriviListState extends State<GiriviList> {
                                     Text(
                                       '(${item.interest ?? '0.00'}%)',
                                       style: TextStyle(
-                                        fontSize: Get.width * 0.028,
                                         color: AppColor.textColor,
+                                        fontSize: Get.width * 0.028,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -363,7 +364,7 @@ class _GiriviListState extends State<GiriviList> {
                             ),
                           ),
                         ),
-                        SizedBox(width: Get.width * 0.03),
+                        SizedBox(width: AppSize.p12),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -379,16 +380,16 @@ class _GiriviListState extends State<GiriviList> {
                             Row(
                               children: [
                                 CircleAvatar(
-                                  radius: Get.width * 0.03,
+                                  radius: AppSize.p12,
                                   backgroundColor: AppColor.primaryColor
                                       .withOpacity(0.1),
                                   child: Icon(
                                     AppIcon.phone,
-                                    size: Get.width * 0.03,
+                                    size: AppSize.p12,
                                     color: AppColor.primaryColor,
                                   ),
                                 ),
-                                SizedBox(width: Get.width * 0.02),
+                                SizedBox(width: AppSize.p8),
                                 Text(
                                   item.custPhone ?? '',
                                   style: TextStyle(
@@ -423,10 +424,10 @@ class _GiriviListState extends State<GiriviList> {
           if (icon != null) ...[
             Icon(
               icon,
-              size: Get.width * 0.035,
+              size: AppSize.size14,
               color: AppColor.primaryColor.withOpacity(0.5),
             ),
-            SizedBox(width: Get.width * 0.02),
+            SizedBox(width: AppSize.p8),
           ],
           Expanded(
             child: Column(
@@ -474,7 +475,7 @@ class _GiriviListState extends State<GiriviList> {
         padding: EdgeInsets.all(Get.width * 0.05),
         decoration: BoxDecoration(
           color: AppColor.fullScreenColor,
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(25),
             topRight: Radius.circular(25),
           ),
@@ -501,7 +502,7 @@ class _GiriviListState extends State<GiriviList> {
                   Text(
                     AppString.filterOptions,
                     style: TextStyle(
-                      fontSize: Get.width * 0.045,
+                      fontSize: Get.width * 0.03,
                       fontWeight: FontWeight.bold,
                       color: AppColor.primaryColor,
                     ),
@@ -522,7 +523,7 @@ class _GiriviListState extends State<GiriviList> {
               Text(
                 AppString.status,
                 style: TextStyle(
-                  fontSize: Get.width * 0.038,
+                  fontSize: Get.width * 0.02,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -562,7 +563,7 @@ class _GiriviListState extends State<GiriviList> {
               Text(
                 AppString.dateRange,
                 style: TextStyle(
-                  fontSize: Get.width * 0.038,
+                  fontSize: Get.width * 0.02,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -688,7 +689,7 @@ class _GiriviListState extends State<GiriviList> {
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(color: AppColor.boderSideColor.shade300),
             ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
           ),
           onTap: () => _selectDate(controller),
         ),
@@ -730,19 +731,19 @@ class _GiriviListState extends State<GiriviList> {
     return ListView.builder(
       itemCount: 6,
       padding: EdgeInsets.symmetric(
-        horizontal: Get.width * 0.04,
-        vertical: Get.height * 0.01,
+        horizontal: AppSize.p16,
+        vertical: AppSize.p4,
       ),
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
           baseColor: Colors.grey[300]!,
           highlightColor: Colors.grey[100]!,
           child: Container(
-            margin: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+            margin: EdgeInsets.symmetric(vertical: AppSize.p4),
             height: Get.height * 0.25,
             decoration: BoxDecoration(
               color: AppColor.textField,
-              borderRadius: BorderRadius.circular(Get.width * 0.035),
+              borderRadius: BorderRadius.circular(AppSize.size14),
             ),
           ),
         );

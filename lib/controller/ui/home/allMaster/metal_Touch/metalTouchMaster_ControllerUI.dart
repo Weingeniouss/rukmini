@@ -1,5 +1,6 @@
 // ignore_for_file: unused_import, file_names
 
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';

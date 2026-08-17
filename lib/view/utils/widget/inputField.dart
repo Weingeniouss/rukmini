@@ -45,7 +45,7 @@ Widget inputField({
                 color: iconColor ?? AppColor.textField)
             : (prefixIcon != null && prefixIcon.isNotEmpty)
                 ? Padding(
-                    padding: EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.all(12.0),
                     child: Image.asset(prefixIcon,
                         scale: 28, color: iconColor ?? AppColor.textField),
                   )

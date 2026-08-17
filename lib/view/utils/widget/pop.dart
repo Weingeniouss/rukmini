@@ -13,7 +13,7 @@ class ToastificationSuccess {
         dismissDirection: DismissDirection.startToEnd,
         type: ToastificationType.success,
         style: ToastificationStyle.minimal,
-        autoCloseDuration: Duration(seconds: 5),
+        autoCloseDuration: const Duration(seconds: 5),
         boxShadow: kElevationToShadow[2],
         primaryColor: AppColor.primaryColor,
       );

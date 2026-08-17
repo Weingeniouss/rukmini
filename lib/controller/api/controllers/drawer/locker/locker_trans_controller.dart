@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/controller/api/services/drawer/locker/locker_trans_service.dart';
 import 'package:rukmini/modal/drawer/locker/locker_trans_modal.dart';
 
@@ -16,7 +17,7 @@ class LockerTransController extends GetxController {
       final http.Response response = await _services.lockerListTransApi();
 
       if (kDebugMode) {
-        print('LockerListTrans Response: ${response.body}');
+        print('LockerListTrans ${AppString.responseLog}${response.body}');
       }
 
       if (response.statusCode == 200) {
@@ -28,7 +29,7 @@ class LockerTransController extends GetxController {
       }
       return response;
     } catch (e) {
-      if (kDebugMode) print('LockerListTrans Error: $e');
+      if (kDebugMode) print('LockerListTrans ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

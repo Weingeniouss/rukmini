@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:rukmini/view/utils/app_String.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -78,17 +79,17 @@ class ChangeLockerControllerUI extends GetxController {
 
   Future<void> submit() async {
     if (selectedLocker.value == null) {
-      ToastificationError.Error("Please select a locker");
+      ToastificationError.Error(AppString.pleaseSelectLocker);
       return;
     }
 
     if (lockerCodeController.text.isEmpty) {
-      ToastificationError.Error("The Locker Code field is required.");
+      ToastificationError.Error(AppString.lockerCodeFieldRequired);
       return;
     }
 
     if (lockerDate == null) {
-      ToastificationError.Error("Please select a date");
+      ToastificationError.Error(AppString.pleaseSelectDate);
       return;
     }
 
@@ -107,7 +108,7 @@ class ChangeLockerControllerUI extends GetxController {
 
     final String lockerProdDel = jsonEncode(lockerProdDelList);
 
-    debugPrint('--- AddProductLocker API Body ---');
+    debugPrint('--- AddProductLocker API ${AppString.bodyLog} ---');
     debugPrint('LockerId: ${selectedLocker.value?.lockerId}');
     debugPrint('InterestRate: ${selectedLocker.value?.interestRate}');
     debugPrint('LockerCode: ${lockerCodeController.text}');

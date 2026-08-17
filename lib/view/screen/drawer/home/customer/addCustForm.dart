@@ -17,11 +17,12 @@ import 'package:rukmini/view/utils/widget/inputField.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/controller/ui/home/customer/addCustForm_controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 
 class AddCustForm extends StatelessWidget {
-  AddCustForm({super.key});
+  final AddCustFormControllerUI addCustForomUI;
 
-  final addCustForomUI = Get.put(AddCustFormControllerUI());
+  const AddCustForm({super.key, required this.addCustForomUI});
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +43,13 @@ class AddCustForm extends StatelessWidget {
               addCustForomUI,
               callSumit: () async {
                 addCustForomUI.isLoading.value = true;
-                
+
                 // Show what data is being submitted
                 print('--- Submitting Customer Data ---');
                 print('Name: ${addCustForomUI.nameController.text}');
-                print('Phones: ${jsonEncode(addCustForomUI.getAddPhoneList())}');
+                print(
+                  'Phones: ${jsonEncode(addCustForomUI.getAddPhoneList())}',
+                );
                 print('Address: ${addCustForomUI.addressController.text}');
                 print('-------------------------------');
 
@@ -66,8 +69,8 @@ class AddCustForm extends StatelessWidget {
                       : "0",
                   profileName:
                       addCustForomUI.customerPhotoControllers.isNotEmpty
-                          ? addCustForomUI.customerPhotoControllers[0].text
-                          : "",
+                      ? addCustForomUI.customerPhotoControllers[0].text
+                      : "",
                   profileNames: addCustForomUI.customerPhotoControllers
                       .map((e) => e.text)
                       .toList(),
@@ -164,7 +167,7 @@ Widget customerDetails(AddCustFormControllerUI controller) {
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 color: AppColor.textField,
-                fontSize: Get.width * 0.035,
+                fontSize: AppSize.size14,
               ),
             ),
             Obx(
@@ -326,7 +329,7 @@ Widget photoListSection({
             title,
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              fontSize: Get.width * 0.038,
+              fontSize: AppSize.size12,
             ),
           ),
           IconButton(
@@ -373,7 +376,7 @@ Widget photoListSection({
                                     Text(
                                       AppString.image,
                                       style: TextStyle(
-                                        fontSize: Get.width * 0.02,
+                                        fontSize: AppSize.size15,
                                         color: AppColor.fullScreenColor,
                                       ),
                                     ),
@@ -383,7 +386,7 @@ Widget photoListSection({
                         ),
                       ),
                     ),
-                    SizedBox(width: Get.width * 0.04),
+                    SizedBox(width: AppSize.p16),
                     Expanded(
                       child: SizedBox(
                         height: 40,
@@ -397,7 +400,7 @@ Widget photoListSection({
                             ),
                             hintText: hintText,
                             hintStyle: TextStyle(
-                              fontSize: Get.width * 0.035,
+                              fontSize: AppSize.size14,
                               color: AppColor.textField.withOpacity(0.6),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -450,7 +453,7 @@ Widget dropDownField({
         style: TextStyle(
           fontWeight: FontWeight.w500,
           color: AppColor.textField,
-          fontSize: Get.width * 0.035,
+          fontSize: AppSize.size14,
         ),
       ),
       Obx(
@@ -478,4 +481,4 @@ Widget dropDownField({
   );
 }
 
-Widget inputVarticalSpace() => SizedBox(height: Get.height * 0.02);
+Widget inputVarticalSpace() => SizedBox(height: AppSize.p8);

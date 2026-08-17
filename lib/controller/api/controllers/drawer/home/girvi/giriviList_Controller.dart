@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:rukmini/view/utils/app_String.dart';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -67,7 +68,7 @@ class GiriviListController extends GetxController {
       );
 
       if (kDebugMode) {
-        print('GiriviList Response: ${response.body}');
+        print('GiriviList ${AppString.responseLog}${response.body}');
       }
 
       if (response.statusCode == 200) {
@@ -95,7 +96,7 @@ class GiriviListController extends GetxController {
       }
       return response;
     } catch (e) {
-      if (kDebugMode) print('GiriviList Error: $e');
+      if (kDebugMode) print('GiriviList ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

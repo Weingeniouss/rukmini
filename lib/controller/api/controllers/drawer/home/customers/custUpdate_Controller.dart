@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/controller/api/services/drawer/home/customres/custUpdate_service.dart';
 import 'package:rukmini/modal/drawer/home/customer/update_customer_model.dart';
 
@@ -71,7 +72,7 @@ class CustUpdateController extends GetxController {
       );
 
       if (kDebugMode) {
-        print('CustUpdate Response: ${response.body}');
+        print('CustUpdate ${AppString.responseLog}${response.body}');
       }
 
       if (response.statusCode == 200) {
@@ -86,7 +87,7 @@ class CustUpdateController extends GetxController {
       }
       return response;
     } catch (e) {
-      if (kDebugMode) print('CustUpdate Error: $e');
+      if (kDebugMode) print('CustUpdate ${AppString.errorLog}$e');
       return null;
     } finally {
       isLoading.value = false;

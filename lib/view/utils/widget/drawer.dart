@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/controllers/credentials/login_controller.dart';
 import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import '../../../controller/local/localDatabase.dart';
 import '../app_Color.dart';
@@ -18,14 +19,14 @@ Widget homeDrawer() {
     child: Column(
       children: [
         DrawerHeader(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: AppColor.primaryColor,
             border: Border(bottom: BorderSide.none),
           ),
           child: Row(
             children: [
               Image.asset(AppLogo.rukminiLogo2, scale: 7),
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -50,7 +51,7 @@ Widget homeDrawer() {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: AppColor.textField,
-                        fontSize: 12,
+                        fontSize: AppSize.size15,
                         decoration: TextDecoration.none,
                       ),
                     ),
@@ -189,7 +190,7 @@ Widget listTital({
 
     return ListTile(
       dense: true,
-      visualDensity: VisualDensity(vertical: -4),
+      visualDensity: const VisualDensity(vertical: -4),
       leading: Icon(icon, color: itemColor, size: 20),
       title: Text(
         title,

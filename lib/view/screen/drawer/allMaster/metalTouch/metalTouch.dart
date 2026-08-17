@@ -8,6 +8,7 @@ import 'package:rukmini/controller/ui/home/allMaster/metal_Touch/metalTouchMaste
 import 'package:rukmini/modal/metal/metalList_Modal.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
@@ -64,7 +65,7 @@ class _MetalTouchState extends State<MetalTouch> {
                 color: AppColor.activeColor,
                 child: ListView.builder(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                  padding: EdgeInsets.symmetric(vertical: AppSize.p4),
                   itemCount: metalController.metalList.length,
                   itemBuilder: (context, index) {
                     return _buildListItem(metalController.metalList[index]);
@@ -81,15 +82,15 @@ class _MetalTouchState extends State<MetalTouch> {
   Widget _buildInputSection() {
     return horizontalPadding(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: Get.height * 0.02),
+        padding: EdgeInsets.symmetric(vertical: AppSize.p8),
         child: Row(
           children: [
             Icon(
               AppIcon.balance,
               color: AppColor.activeColor.withOpacity(0.6),
-              size: Get.width * 0.06,
+              size: AppSize.p24,
             ),
-            SizedBox(width: Get.width * 0.03),
+            SizedBox(width: AppSize.p12),
             Expanded(
               flex: 3,
               child: _buildTextField(
@@ -98,10 +99,10 @@ class _MetalTouchState extends State<MetalTouch> {
               ),
             ),
             Container(
-              height: Get.height * 0.03,
+              height: AppSize.p12,
               width: 1.2,
               color: AppColor.boderSideColor.shade400,
-              margin: EdgeInsets.symmetric(horizontal: Get.width * 0.02),
+              margin: EdgeInsets.symmetric(horizontal: AppSize.p8),
             ),
             Expanded(
               flex: 2,
@@ -114,8 +115,8 @@ class _MetalTouchState extends State<MetalTouch> {
             Obx(
               () => uiController.isLoading.value
                   ? SizedBox(
-                      height: Get.width * 0.06,
-                      width: Get.width * 0.06,
+                      height: AppSize.p24,
+                      width: AppSize.p24,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : GestureDetector(
@@ -134,7 +135,7 @@ class _MetalTouchState extends State<MetalTouch> {
                               ? AppIcon.add
                               : AppIcon.check,
                           color: AppColor.activeColor,
-                          size: Get.width * 0.045,
+                          size: AppSize.headingText,
                         ),
                       ),
                     ),
@@ -154,7 +155,7 @@ class _MetalTouchState extends State<MetalTouch> {
       controller: controller,
       keyboardType: keyboardType,
       style: TextStyle(
-        fontSize: Get.width * 0.042,
+        fontSize: AppSize.p16,
         color: AppColor.textColor,
         fontWeight: FontWeight.w400,
       ),
@@ -162,7 +163,7 @@ class _MetalTouchState extends State<MetalTouch> {
         hintText: hintText,
         hintStyle: TextStyle(
           color: AppColor.textColor.withOpacity(0.5),
-          fontSize: Get.width * 0.042,
+          fontSize: AppSize.p16,
         ),
         border: InputBorder.none,
         isDense: true,
@@ -174,20 +175,20 @@ class _MetalTouchState extends State<MetalTouch> {
   Widget _buildListItem(MetalData item) {
     return horizontalPadding(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: Get.height * 0.015),
+        padding: EdgeInsets.symmetric(vertical: AppSize.p8),
         child: Row(
           children: [
             Icon(
               AppIcon.checkCircle,
               color: AppColor.activeColor,
-              size: Get.width * 0.055,
+              size: AppSize.p24,
             ),
-            SizedBox(width: Get.width * 0.04),
+            SizedBox(width: AppSize.p16),
             Expanded(
               child: Text(
                 "${item.karat} Karat (${item.goldContent}%)",
                 style: TextStyle(
-                  fontSize: Get.width * 0.045,
+                  fontSize: AppSize.size18,
                   fontWeight: FontWeight.w500,
                   color: AppColor.dark,
                 ),
@@ -204,12 +205,12 @@ class _MetalTouchState extends State<MetalTouch> {
               icon: Icon(
                 AppIcon.editNote,
                 color: AppColor.activeColor,
-                size: Get.width * 0.06,
+                size: AppSize.p24,
               ),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
             ),
-            SizedBox(width: Get.width * 0.04),
+            SizedBox(width: AppSize.p16),
             IconButton(
               onPressed: () {
                 _showDeleteDialog(item);
@@ -217,7 +218,7 @@ class _MetalTouchState extends State<MetalTouch> {
               icon: Icon(
                 AppIcon.remove,
                 color: AppColor.activeColor,
-                size: Get.width * 0.06,
+                size: AppSize.p24,
               ),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
@@ -259,11 +260,11 @@ class _MetalTouchState extends State<MetalTouch> {
       highlightColor: AppColor.highlightColor!,
       child: ListView.builder(
         itemCount: 10,
-        padding: EdgeInsets.all(Get.width * 0.04),
+        padding: EdgeInsets.all(AppSize.p16),
         itemBuilder: (context, index) {
           return Container(
             height: 45,
-            margin: EdgeInsets.only(bottom: Get.height * 0.02),
+            margin: EdgeInsets.only(bottom: AppSize.p8),
             decoration: BoxDecoration(
               color: AppColor.fullScreenColor,
               borderRadius: BorderRadius.circular(5),

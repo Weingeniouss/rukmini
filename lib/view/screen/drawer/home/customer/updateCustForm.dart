@@ -17,11 +17,11 @@ import 'package:rukmini/view/utils/widget/inputField.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/controller/ui/home/customer/updateCustForm_controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 
 class UpdateCustForm extends StatelessWidget {
-  UpdateCustForm({super.key});
-
-  final updateCustUI = Get.put(UpdateCustFormControllerUI());
+  final UpdateCustFormControllerUI updateCustUI;
+  const UpdateCustForm({super.key, required this.updateCustUI});
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +162,7 @@ Widget customerDetails(UpdateCustFormControllerUI controller) {
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 color: AppColor.textField,
-                fontSize: Get.width * 0.035,
+                fontSize: AppSize.size14,
               ),
             ),
             Obx(
@@ -324,7 +324,7 @@ Widget photoListSection({
             title,
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              fontSize: Get.width * 0.038,
+              fontSize: AppSize.size15,
             ),
           ),
           IconButton(
@@ -371,7 +371,7 @@ Widget photoListSection({
                                     Text(
                                       AppString.image,
                                       style: TextStyle(
-                                        fontSize: Get.width * 0.02,
+                                        fontSize: AppSize.size15,
                                         color: AppColor.fullScreenColor,
                                       ),
                                     ),
@@ -381,7 +381,7 @@ Widget photoListSection({
                         ),
                       ),
                     ),
-                    SizedBox(width: Get.width * 0.04),
+                    SizedBox(width: AppSize.p16),
                     Expanded(
                       child: SizedBox(
                         height: 40,
@@ -395,7 +395,7 @@ Widget photoListSection({
                             ),
                             hintText: hintText,
                             hintStyle: TextStyle(
-                              fontSize: Get.width * 0.035,
+                              fontSize: AppSize.size14,
                               color: AppColor.textField.withOpacity(0.6),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -448,7 +448,7 @@ Widget dropDownField({
         style: TextStyle(
           fontWeight: FontWeight.w500,
           color: AppColor.textField,
-          fontSize: Get.width * 0.035,
+          fontSize: AppSize.size14,
         ),
       ),
       Obx(
@@ -476,4 +476,4 @@ Widget dropDownField({
   );
 }
 
-Widget inputVarticalSpace() => SizedBox(height: Get.height * 0.02);
+Widget inputVarticalSpace() => SizedBox(height: AppSize.p8);

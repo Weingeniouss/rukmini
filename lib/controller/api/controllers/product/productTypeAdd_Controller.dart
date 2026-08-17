@@ -2,6 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/product/productType_Controller.dart';
 
@@ -26,7 +27,7 @@ class ProductTypeAddController extends GetxController {
         await productTypeController.getProductTypeList();
       }
     } catch (e) {
-      if (kDebugMode) print('AddProductType Error: $e');
+      if (kDebugMode) print('AddProductType ${AppString.errorLog}$e');
     } finally {
       isLoading.value = false;
     }

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/dashbord_Controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
@@ -31,11 +32,6 @@ class _HomeState extends State<Home> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Fullscreen(
       drawer: homeDrawer(),
@@ -57,7 +53,7 @@ class _HomeState extends State<Home> {
           elevation: 2.0,
           onRefresh: CallApi.callDashboard,
           child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
                 varticalSpace(),
@@ -141,7 +137,7 @@ Widget loadingWait() {
             width: double.infinity,
             decoration: BoxDecoration(
               color: AppColor.white,
-              borderRadius: BorderRadius.circular(Get.width * 0.025),
+              borderRadius: BorderRadius.circular(AppSize.p10),
             ),
           ),
           varticalSpace(),
@@ -270,7 +266,7 @@ Widget totalValue({required String title, required String label}) {
     child: Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(Get.width * 0.02),
+        borderRadius: BorderRadius.circular(AppSize.p8),
         color: AppColor.fullScreenColor,
         boxShadow: kElevationToShadow[1],
         border: Border.all(color: AppColor.textField.withOpacity(0.5)),
@@ -279,7 +275,7 @@ Widget totalValue({required String title, required String label}) {
         children: [
           varticalSpace(),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.025),
+            padding: EdgeInsets.symmetric(horizontal: AppSize.p10),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -294,20 +290,20 @@ Widget totalValue({required String title, required String label}) {
               ),
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Text(
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: Get.width * 0.06,
+              fontSize: AppSize.p24,
               color: AppColor.primaryColor,
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
-            decoration: BoxDecoration(color: AppColor.primaryColor),
+            padding: EdgeInsets.symmetric(vertical: AppSize.p4),
+            decoration: const BoxDecoration(color: AppColor.primaryColor),
             child: Text(
               label,
               textAlign: TextAlign.center,
@@ -315,7 +311,7 @@ Widget totalValue({required String title, required String label}) {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontWeight: FontWeight.w500,
-                fontSize: Get.width * 0.035,
+                fontSize: AppSize.size14,
                 color: AppColor.backgroundColor,
               ),
             ),
@@ -328,14 +324,14 @@ Widget totalValue({required String title, required String label}) {
 
 Widget varticalSpace() => SizedBox(height: Get.height * 0.012);
 
-Widget horizontalSpace() => SizedBox(width: Get.width * 0.025);
+Widget horizontalSpace() => SizedBox(width: AppSize.p10);
 
 Widget shimmerCard() {
   return AspectRatio(
     aspectRatio: 1,
     child: Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(Get.width * 0.02),
+        borderRadius: BorderRadius.circular(AppSize.p8),
         color: AppColor.textField,
       ),
     ),

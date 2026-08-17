@@ -9,6 +9,7 @@ import 'package:rukmini/modal/drawer/home/customer/customer_list_model.dart'
     as list;
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
@@ -63,13 +64,13 @@ class _CustDetailState extends State<CustDetail> {
             title: AppString.deleteCustomer,
             middleText: AppString.deleteMessage,
             titleStyle: TextStyle(
-              fontSize: Get.width * 0.05,
+              fontSize: AppSize.size20,
               fontWeight: FontWeight.bold,
             ),
-            middleTextStyle: TextStyle(fontSize: Get.width * 0.035),
-            contentPadding: EdgeInsets.all(Get.width * 0.04),
+            middleTextStyle: TextStyle(fontSize: AppSize.size14),
+            contentPadding: EdgeInsets.all(AppSize.p16),
             confirm: Container(
-              width: Get.width * 0.3,
+              width: AppSize.width * 0.3,
               decoration: BoxDecoration(
                 color: AppColor.deleteColor,
                 borderRadius: BorderRadius.circular(10),
@@ -81,14 +82,14 @@ class _CustDetailState extends State<CustDetail> {
                   Get.back();
                   Get.back();
                 },
-                child: Text(
+                child: const Text(
                   AppString.delete,
-                  style: const TextStyle(color: AppColor.white),
+                  style: TextStyle(color: AppColor.white),
                 ),
               ),
             ),
             cancel: Container(
-              width: Get.width * 0.3,
+              width: AppSize.width * 0.3,
               decoration: BoxDecoration(
                 color: AppColor.baseColor,
                 borderRadius: BorderRadius.circular(10),
@@ -97,9 +98,9 @@ class _CustDetailState extends State<CustDetail> {
                 onPressed: () {
                   Get.back();
                 },
-                child: Text(
+                child: const Text(
                   AppString.cancel,
-                  style: const TextStyle(color: AppColor.primaryColor),
+                  style: TextStyle(color: AppColor.primaryColor),
                 ),
               ),
             ),
@@ -116,14 +117,14 @@ class _CustDetailState extends State<CustDetail> {
           final data = custDetailController.custDetailData.value.data;
 
           if (data == null) {
-            return const Center(child: Text('No Details Found'));
+            return Center(child: Text(AppString.noDetailsFound));
           }
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColor.subHeadingContainerColor,
                 ),
                 child: heddingData(
@@ -146,12 +147,13 @@ class _CustDetailState extends State<CustDetail> {
 
   Widget tabBarHedings(text) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: Get.height * 0.020),
+      padding: EdgeInsets.symmetric(vertical: AppSize.p20),
       child: Text(
         text,
         style: TextStyle(
-          fontSize: Get.width * 0.035,
+          fontSize: AppSize.size14,
           fontWeight: FontWeight.w500,
+          color: AppColor.dark,
         ),
       ),
     );
@@ -201,9 +203,9 @@ class _CustDetailState extends State<CustDetail> {
                 child: horizontalPadding(
                   child: Column(
                     children: [
-                      SizedBox(height: Get.height * 0.02),
+                      SizedBox(height: AppSize.p8),
                       if (data.girviList == null || data.girviList!.isEmpty)
-                        const Center(child: Text(AppString.noGirviRecordsFound))
+                        Center(child: Text(AppString.noGirviRecordsFound))
                       else
                         ...data.girviList!.map(
                           (girvi) => girviDetail(girvi: girvi),
@@ -218,9 +220,9 @@ class _CustDetailState extends State<CustDetail> {
                 child: horizontalPadding(
                   child: Column(
                     children: [
-                      SizedBox(height: Get.height * 0.02),
+                      SizedBox(height: AppSize.p8),
                       if (data.girviList == null || data.girviList!.isEmpty)
-                        const Center(child: Text(AppString.noGirviRecordsFound))
+                        Center(child: Text(AppString.noGirviRecordsFound))
                       else
                         ...data.girviList!.map(
                           (girvi) => translationDetail(girvi: girvi),
@@ -249,8 +251,8 @@ class _CustDetailState extends State<CustDetail> {
               (proof) => Card(
                 color: AppColor.backgroundColor,
                 margin: EdgeInsets.symmetric(
-                  horizontal: Get.width * 0.04,
-                  vertical: Get.height * 0.01,
+                  horizontal: AppSize.p16,
+                  vertical: AppSize.p4,
                 ),
                 child: Column(
                   children: [
@@ -264,13 +266,15 @@ class _CustDetailState extends State<CustDetail> {
                     ),
                     if (proof.imagePath != null)
                       GestureDetector(
-                        onTap: () => _showFullScreenImage(
-                          context,
-                          proof.imagePath!,
-                          proof.name ?? AppString.proofImage,
-                        ),
+                        onTap: () {
+                          _showFullScreenImage(
+                            context,
+                            proof.imagePath!,
+                            proof.name ?? AppString.proofImage,
+                          );
+                        },
                         child: Padding(
-                          padding: EdgeInsets.all(Get.width * 0.02),
+                          padding: EdgeInsets.all(AppSize.p8),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
@@ -278,8 +282,9 @@ class _CustDetailState extends State<CustDetail> {
                               width: double.infinity,
                               height: 200,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  const Icon(AppIcon.brokenImage, size: 50),
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(AppIcon.brokenImage, size: 50);
+                              },
                             ),
                           ),
                         ),
@@ -295,8 +300,8 @@ class _CustDetailState extends State<CustDetail> {
               (profile) => Card(
                 color: AppColor.backgroundColor,
                 margin: EdgeInsets.symmetric(
-                  horizontal: Get.width * 0.04,
-                  vertical: Get.height * 0.01,
+                  horizontal: AppSize.p16,
+                  vertical: AppSize.p4,
                 ),
                 child: Column(
                   children: [
@@ -316,13 +321,13 @@ class _CustDetailState extends State<CustDetail> {
                           profile.name ?? AppString.profileImage,
                         ),
                         child: Padding(
-                          padding: EdgeInsets.all(Get.width * 0.02),
+                          padding: EdgeInsets.all(AppSize.p8),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                width: Get.width * 0.25,
-                                height: Get.width * 0.45,
+                                width: AppSize.width * 0.25,
+                                height: AppSize.width * 0.45,
                                 decoration: BoxDecoration(
                                   color: AppColor.grey200,
                                   borderRadius: BorderRadius.circular(10),
@@ -332,7 +337,7 @@ class _CustDetailState extends State<CustDetail> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: Get.width * 0.04),
+                              SizedBox(width: AppSize.p16),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -340,25 +345,25 @@ class _CustDetailState extends State<CustDetail> {
                                     Text(
                                       profile.name ?? '',
                                       style: TextStyle(
-                                        fontSize: Get.width * 0.042,
+                                        fontSize: AppSize.p16,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    SizedBox(height: Get.height * 0.005),
+                                    SizedBox(height: AppSize.p4),
                                     Text(
                                       profile.status ?? '',
                                       style: TextStyle(
                                         color: AppColor.textColor,
-                                        fontSize: Get.width * 0.035,
+                                        fontSize: AppSize.size14,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    SizedBox(height: Get.height * 0.005),
+                                    SizedBox(height: AppSize.p4),
                                     Text(
                                       "${AppString.idColon}${profile.custId ?? ''}",
                                       style: TextStyle(
                                         color: AppColor.activeColor,
-                                        fontSize: Get.width * 0.035,
+                                        fontSize: AppSize.size14,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -412,12 +417,12 @@ class _CustDetailState extends State<CustDetail> {
               height: double.infinity,
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) return child;
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               },
-              errorBuilder: (context, error, stackTrace) => Center(
+              errorBuilder: (context, error, stackTrace) => const Center(
                 child: Icon(
                   AppIcon.brokenImage,
-                  color: Colors.white,
+                  color: AppColor.white,
                   size: 100,
                 ),
               ),
@@ -447,44 +452,49 @@ class _CustDetailState extends State<CustDetail> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: Get.height * 0.01),
+              SizedBox(height: AppSize.p4),
               _detailItem(AppString.address, address, AppIcon.location),
               _detailItem(AppString.gender, gender, AppIcon.person),
               _detailItem(AppString.status, status, AppIcon.status),
               _detailItem(AppString.gracePeriod, gracePeriod, AppIcon.calendar),
               if (custType.isNotEmpty) ...[
-                SizedBox(height: Get.height * 0.02),
+                SizedBox(height: AppSize.p8),
                 Text(
                   AppString.customerTypes,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: Get.width * 0.04,
+                    fontSize: AppSize.largeText,
                   ),
                 ),
                 ...custType.map(
                   (type) => ListTile(
                     title: Text(type.typeName ?? ''),
                     subtitle: Text(type.status ?? ''),
-                    leading: Icon(
+                    leading: const Icon(
                       AppIcon.category,
                       color: AppColor.activeColor,
                     ),
                   ),
                 ),
               ],
-              SizedBox(height: Get.height * 0.02),
+              SizedBox(height: AppSize.p8),
               Text(
                 AppString.phoneNumbar,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: Get.width * 0.04,
+                  fontSize: AppSize.largeText,
                 ),
               ),
               ...phone.map(
                 (p) => ListTile(
                   title: Text(p.phone ?? ''),
-                  subtitle: Text(p.isDefault == "1" ? AppString.defaultLabel : ""),
-                  leading: const Icon(AppIcon.phone, color: AppColor.activeColor),
+                  subtitle: Text(
+                    p.isDefault == "1" ? AppString.defaultLabel : "",
+                  ),
+                  leading: const Icon(
+                    AppIcon.phone,
+                    color: AppColor.activeColor,
+                  ),
                 ),
               ),
             ],
@@ -497,7 +507,7 @@ class _CustDetailState extends State<CustDetail> {
         horizontalPadding(
           child: Column(
             children: [
-              SizedBox(height: Get.height * 0.01),
+              SizedBox(height: AppSize.p4),
               _detailItem(AppString.name, nomineeName, AppIcon.location),
               _detailItem(
                 AppString.phoneNumbar,
@@ -521,9 +531,9 @@ class _CustDetailState extends State<CustDetail> {
     return Card(
       borderOnForeground: true,
       color: AppColor.backgroundColor,
-      margin: EdgeInsets.only(bottom: Get.height * 0.015),
+      margin: EdgeInsets.only(bottom: AppSize.p4),
       child: Padding(
-        padding: EdgeInsets.all(Get.width * 0.03),
+        padding: EdgeInsets.all(AppSize.p12),
         child: Column(
           children: [
             _detailItem(
@@ -556,9 +566,9 @@ class _CustDetailState extends State<CustDetail> {
     return Card(
       borderOnForeground: true,
       color: AppColor.backgroundColor,
-      margin: EdgeInsets.only(bottom: Get.height * 0.015),
+      margin: EdgeInsets.only(bottom: AppSize.p4),
       child: Padding(
-        padding: EdgeInsets.all(Get.width * 0.03),
+        padding: EdgeInsets.all(AppSize.p12),
         child: Column(
           children: [
             _detailItem(
@@ -596,7 +606,7 @@ class _CustDetailState extends State<CustDetail> {
     required String phone,
   }) {
     return Padding(
-      padding: EdgeInsets.all(Get.width * 0.04),
+      padding: EdgeInsets.all(AppSize.p16),
       child: Row(
         children: [
           GestureDetector(
@@ -604,15 +614,15 @@ class _CustDetailState extends State<CustDetail> {
               _showFullScreenImage(
                 context,
                 customer.imagePath!,
-                customer.name ?? 'Profile Image',
+                customer.name ?? AppString.profileImage,
               );
             },
             child: Container(
-              width: Get.width * 0.2,
-              height: Get.width * 0.4,
+              width: AppSize.width * 0.2,
+              height: AppSize.width * 0.4,
               decoration: BoxDecoration(
                 color: AppColor.primaryColor,
-                borderRadius: BorderRadius.circular(Get.width * 0.02),
+                borderRadius: BorderRadius.circular(AppSize.p8),
                 image: customer.imagePath != null
                     ? DecorationImage(
                         image: NetworkImage(customer.imagePath!),
@@ -625,7 +635,7 @@ class _CustDetailState extends State<CustDetail> {
                   : null,
             ),
           ),
-          SizedBox(width: Get.width * 0.04),
+          SizedBox(width: AppSize.p16),
           Expanded(
             child: Column(
               children: [
@@ -639,7 +649,7 @@ class _CustDetailState extends State<CustDetail> {
                           Text(
                             name,
                             style: TextStyle(
-                              fontSize: Get.width * 0.045,
+                              fontSize: AppSize.size18,
                               fontWeight: FontWeight.bold,
                               color: AppColor.primaryColor,
                             ),
@@ -647,7 +657,7 @@ class _CustDetailState extends State<CustDetail> {
                           Text(
                             custcode,
                             style: TextStyle(
-                              fontSize: Get.width * 0.035,
+                              fontSize: AppSize.size14,
                               color: AppColor.textColor,
                             ),
                           ),
@@ -665,7 +675,7 @@ class _CustDetailState extends State<CustDetail> {
                                 child: Text(
                                   '${AppString.gvnAmt}: ',
                                   style: TextStyle(
-                                    fontSize: Get.width * 0.035,
+                                    fontSize: AppSize.size14,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -673,7 +683,7 @@ class _CustDetailState extends State<CustDetail> {
                               Text(
                                 totalGivenAmt,
                                 style: TextStyle(
-                                  fontSize: Get.width * 0.03,
+                                  fontSize: AppSize.size18,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -685,7 +695,7 @@ class _CustDetailState extends State<CustDetail> {
                                 child: Text(
                                   '${AppString.pendingAmt}: ',
                                   style: TextStyle(
-                                    fontSize: Get.width * 0.035,
+                                    fontSize: AppSize.size14,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -693,7 +703,7 @@ class _CustDetailState extends State<CustDetail> {
                               Text(
                                 gracePeriod,
                                 style: TextStyle(
-                                  fontSize: Get.width * 0.03,
+                                  fontSize: AppSize.size18,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -704,7 +714,7 @@ class _CustDetailState extends State<CustDetail> {
                     ),
                   ],
                 ),
-                SizedBox(height: Get.height * 0.01),
+                SizedBox(height: AppSize.p8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -715,14 +725,14 @@ class _CustDetailState extends State<CustDetail> {
                           AppColor.activeColor,
                           () => _makeCall(phone),
                         ),
-                        SizedBox(height: Get.height * 0.003),
+                        SizedBox(height: AppSize.p4),
                         Text(
                           AppString.call,
-                          style: TextStyle(fontSize: Get.height * 0.015),
+                          style: TextStyle(fontSize: AppSize.p12),
                         ),
                       ],
                     ),
-                    SizedBox(width: Get.width * 0.03),
+                    SizedBox(width: AppSize.p12),
                     Column(
                       children: [
                         _contactIcon(
@@ -730,14 +740,14 @@ class _CustDetailState extends State<CustDetail> {
                           AppColor.blue,
                           () => _sendSMS(phone),
                         ),
-                        SizedBox(height: Get.height * 0.003),
+                        SizedBox(height: AppSize.p4),
                         Text(
                           AppString.message,
-                          style: TextStyle(fontSize: Get.height * 0.015),
+                          style: TextStyle(fontSize: AppSize.p12),
                         ),
                       ],
                     ),
-                    SizedBox(width: Get.width * 0.03),
+                    SizedBox(width: AppSize.p12),
                     Column(
                       children: [
                         _contactIcon(
@@ -745,10 +755,10 @@ class _CustDetailState extends State<CustDetail> {
                           AppColor.activeColor,
                           () => _launchWhatsApp(phone),
                         ),
-                        SizedBox(height: Get.height * 0.003),
+                        SizedBox(height: AppSize.p4),
                         Text(
                           AppString.whatsapp,
-                          style: TextStyle(fontSize: Get.height * 0.015),
+                          style: TextStyle(fontSize: AppSize.p12),
                         ),
                       ],
                     ),
@@ -766,7 +776,7 @@ class _CustDetailState extends State<CustDetail> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(Get.width * 0.02),
+        padding: EdgeInsets.all(AppSize.p8),
         decoration: BoxDecoration(
           color: AppColor.white,
           shape: BoxShape.circle,
@@ -778,7 +788,7 @@ class _CustDetailState extends State<CustDetail> {
             ),
           ],
         ),
-        child: Icon(icon, color: color, size: Get.width * 0.05),
+        child: Icon(icon, color: color, size: AppSize.p20),
       ),
     );
   }
@@ -816,19 +826,19 @@ class _CustDetailState extends State<CustDetail> {
     FontWeight? fontWeight,
   }) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: Get.height * 0.005),
+      padding: EdgeInsets.symmetric(vertical: AppSize.p4),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: Get.width * 0.06, color: AppColor.activeColor),
-          SizedBox(width: Get.width * 0.02),
+          Icon(icon, size: AppSize.p24, color: AppColor.activeColor),
+          SizedBox(width: AppSize.p8),
           Expanded(
             flex: 3,
             child: Text(
               '$label :',
               style: TextStyle(
                 fontWeight: FontWeight.w500,
-                fontSize: Get.width * 0.035,
+                fontSize: AppSize.size14,
               ),
             ),
           ),
@@ -859,18 +869,18 @@ Widget loadingState() {
         children: [
           // Header Shimmer
           Container(
-            padding: EdgeInsets.all(Get.width * 0.04),
+            padding: EdgeInsets.all(AppSize.p16),
             child: Row(
               children: [
                 Container(
-                  width: Get.width * 0.2,
-                  height: Get.width * 0.4,
+                  width: AppSize.width * 0.2,
+                  height: AppSize.width * 0.4,
                   decoration: BoxDecoration(
                     color: AppColor.textField,
-                    borderRadius: BorderRadius.circular(Get.width * 0.02),
+                    borderRadius: BorderRadius.circular(AppSize.p8),
                   ),
                 ),
-                SizedBox(width: Get.width * 0.04),
+                SizedBox(width: AppSize.p16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -882,8 +892,8 @@ Widget loadingState() {
                       ),
                       SizedBox(height: 10),
                       Container(
-                        width: Get.width * 0.3,
-                        height: 15,
+                        width: AppSize.width * 0.3,
+                        height: AppSize.p8,
                         color: AppColor.textField,
                       ),
                       SizedBox(height: 20),
@@ -911,13 +921,13 @@ Widget loadingState() {
           // TabBar Shimmer
           Container(
             height: 50,
-            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
+            padding: EdgeInsets.symmetric(horizontal: AppSize.p16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: List.generate(
                 4,
                 (index) => Container(
-                  width: Get.width * 0.2,
+                  width: AppSize.width * 0.2,
                   height: 20,
                   color: AppColor.textField,
                 ),
@@ -927,7 +937,7 @@ Widget loadingState() {
 
           // Content Shimmer
           Padding(
-            padding: EdgeInsets.all(Get.width * 0.04),
+            padding: EdgeInsets.all(AppSize.p16),
             child: Column(
               children: List.generate(
                 8,
@@ -943,14 +953,14 @@ Widget loadingState() {
                           shape: BoxShape.circle,
                         ),
                       ),
-                      SizedBox(width: 15),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
                               width: Get.width * 0.4,
-                              height: 15,
+                              height: AppSize.p8,
                               color: AppColor.textField,
                             ),
                             SizedBox(height: 5),
