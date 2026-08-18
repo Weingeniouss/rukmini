@@ -17,6 +17,7 @@ import '../../utils/app_background.dart';
 
 class Login extends StatelessWidget {
   final LoginControllerAPI loginAPI;
+
   const Login({super.key, required this.loginAPI});
 
   @override
@@ -46,9 +47,11 @@ class Login extends StatelessWidget {
               Obx(() => loginButton(loginAPI)),
 
               //Forget Password
-              forgetpasswod(onPressed: () {
-                showForgotPasswordPopup(context);
-              }),
+              forgetpasswod(
+                onPressed: () {
+                  showForgotPasswordPopup(context);
+                },
+              ),
             ],
           ),
         ),
