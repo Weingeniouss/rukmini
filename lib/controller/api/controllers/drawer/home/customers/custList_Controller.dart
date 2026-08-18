@@ -22,6 +22,8 @@ class CustListController extends GetxController {
   Future<http.Response?> custList({
     bool isRefresh = false,
     String? search,
+    String? fromDate,
+    String? toDate,
   }) async {
     if (isRefresh) {
       currentPage = 1;
@@ -40,6 +42,8 @@ class CustListController extends GetxController {
       final http.Response response = await cuslistServices.custListApi(
         page: currentPage.toString(),
         search: search ?? searchQuery.value,
+        fromDate: fromDate,
+        toDate: toDate,
       );
 
       if (kDebugMode) {
@@ -52,19 +56,27 @@ class CustListController extends GetxController {
           final newData = CustomerListModel.fromJson(decoded);
           customerListData.value = newData;
 
-          if (currentPage == 1) {
-            customers.assignAll(newData.data ?? []);
-          } else {
-            customers.addAll(newData.data ?? []);
-          }
+          if (newData.status == true) {
+            if (currentPage == 1) {
+              customers.assignAll(newData.data ?? []);
+            } else {
+              customers.addAll(newData.data ?? []);
+            }
 
-          // Check if we've reached the end
-          if (newData.data == null || newData.data!.isEmpty) {
-            hasMoreData.value = false;
+            // Check if we've reached the end
+            if (newData.data == null || newData.data!.isEmpty) {
+              hasMoreData.value = false;
+            } else {
+              currentPage++;
+            }
           } else {
-            currentPage++;
+            // Server returned status: false
+            hasMoreData.value = false;
           }
         }
+      } else {
+        // Not 200 OK
+        hasMoreData.value = false;
       }
       return response;
     } catch (e) {

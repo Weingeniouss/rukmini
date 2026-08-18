@@ -8,10 +8,19 @@ import '../../../../controller/api/controllers/drawer/home/customers/custList_Co
 import '../../../../modal/drawer/home/customer/customer_list_model.dart';
 import '../../../../view/utils/widget/pop.dart';
 
-Future<CustomerListModel?> getCustList({bool isRefresh = false, String? search}) async {
+Future<CustomerListModel?> getCustList({
+  bool isRefresh = false,
+  String? search,
+  String? fromDate,
+  String? toDate,
+}) async {
   final CustListController custListController = Get.put(CustListController());
-  final http.Response? response =
-      await custListController.custList(isRefresh: isRefresh, search: search);
+  final http.Response? response = await custListController.custList(
+    isRefresh: isRefresh,
+    search: search,
+    fromDate: fromDate,
+    toDate: toDate,
+  );
 
   if (response != null) {
     String body = response.body;

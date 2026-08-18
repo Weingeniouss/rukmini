@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/home/report/report_ui_controller.dart';
@@ -50,19 +52,41 @@ class ReportHelper {
             ),
           ),
           content: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.7,
+            width: MediaQuery.of(context).size.width * 0.95,
+            height: MediaQuery.of(context).size.height * 0.8,
             child: Obx(() {
               if (uiController.isReportLoading.value) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 10),
+                      Text("Fetching data, please wait..."),
+                    ],
+                  ),
+                );
               }
 
               if (uiController.reportList.isEmpty) {
-                return Center(child: Text(AppString.noDataFound));
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.info_outline, size: 50, color: AppColor.textColor),
+                      const SizedBox(height: 10),
+                      Text(
+                        AppString.noDataFound,
+                        style: TextStyle(fontSize: AppSize.size18, color: AppColor.textColor),
+                      ),
+                    ],
+                  ),
+                );
               }
 
               return Column(
                 children: [
+                  if (index == 0) _buildSummary(uiController),
                   Expanded(
                     child: SingleChildScrollView(
                       scrollDirection: Axis.vertical,
@@ -71,6 +95,7 @@ class ReportHelper {
                         child: DataTable(
                           headingRowColor:
                               MaterialStateProperty.all(AppColor.grey200),
+                          columnSpacing: 20,
                           columns: _buildColumns(index),
                           rows: _buildRows(index, uiController.reportList),
                         ),
@@ -114,27 +139,61 @@ class ReportHelper {
     );
   }
 
+  static Widget _buildSummary(ReportUIController uiController) {
+    return Container(
+      padding: EdgeInsets.all(AppSize.p16),
+      margin: EdgeInsets.all(AppSize.p8),
+      decoration: BoxDecoration(
+        color: AppColor.lightBlue,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _summaryItem("Total Given", uiController.custReportController.totalGivenAmt.value),
+          _summaryItem("Total Pending", uiController.custReportController.totalPendingAmt.value),
+        ],
+      ),
+    );
+  }
+
+  static Widget _summaryItem(String label, double amount) {
+    return Column(
+      children: [
+        Text(label, style: TextStyle(fontSize: AppSize.size14, color: AppColor.textColor)),
+        Text("₹${amount.toStringAsFixed(2)}", 
+            style: TextStyle(fontSize: AppSize.size18, fontWeight: FontWeight.bold, color: AppColor.primaryColor)),
+      ],
+    );
+  }
+
   static List<DataColumn> _buildColumns(int index) {
     if (index == 0) {
       return [
         const DataColumn(label: Text('Code')),
         const DataColumn(label: Text('Name')),
         const DataColumn(label: Text('Phone')),
+        const DataColumn(label: Text('Given Amt')),
+        const DataColumn(label: Text('Pending Amt')),
         const DataColumn(label: Text('Address')),
       ];
     } else if (index == 1) {
       return [
         const DataColumn(label: Text('Unique ID')),
         const DataColumn(label: Text('Customer')),
+        const DataColumn(label: Text('Phone')),
         const DataColumn(label: Text('Date')),
-        const DataColumn(label: Text('Amt')),
-        const DataColumn(label: Text('Bal')),
+        const DataColumn(label: Text('Due Date')),
+        const DataColumn(label: Text('Given Amt')),
+        const DataColumn(label: Text('Interest')),
+        const DataColumn(label: Text('Balance')),
       ];
     } else {
       return [
         const DataColumn(label: Text('Unique ID')),
         const DataColumn(label: Text('Customer')),
-        const DataColumn(label: Text('Code')),
+        const DataColumn(label: Text('Locker Code')),
+        const DataColumn(label: Text('Item Code')),
         const DataColumn(label: Text('Total Amt')),
         const DataColumn(label: Text('Balance')),
       ];
@@ -147,23 +206,27 @@ class ReportHelper {
         return DataRow(cells: [
           DataCell(Text(item.custCode ?? '')),
           DataCell(Text(item.name ?? '')),
-          DataCell(Text((item.phoneList != null && item.phoneList.isNotEmpty)
-              ? item.phoneList[0].phone ?? ''
-              : '')),
+          DataCell(Text(item.custPhone ?? '')),
+          DataCell(Text(item.givenAmt?.toString() ?? '')),
+          DataCell(Text(item.pendingAmt?.toString() ?? '')),
           DataCell(Text(item.address ?? '')),
         ]);
       } else if (index == 1) {
         return DataRow(cells: [
           DataCell(Text(item.uniqueId ?? '')),
           DataCell(Text(item.custName ?? '')),
+          DataCell(Text(item.custPhone ?? '')),
           DataCell(Text(item.girviDate ?? '')),
+          DataCell(Text(item.dueDate ?? '')),
           DataCell(Text(item.givenAmt ?? '')),
+          DataCell(Text(item.interest ?? '')),
           DataCell(Text(item.balance ?? '')),
         ]);
       } else {
         return DataRow(cells: [
           DataCell(Text(item.uniqueId ?? '')),
           DataCell(Text(item.custName ?? '')),
+          DataCell(Text(item.lockerCode ?? '')),
           DataCell(Text(item.code ?? '')),
           DataCell(Text(item.totalAmt ?? '')),
           DataCell(Text(item.balance ?? '')),

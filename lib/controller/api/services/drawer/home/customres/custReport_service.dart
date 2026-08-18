@@ -6,14 +6,13 @@ import '../../../../../../view/utils/app_String.dart';
 import '../../../../../../view/utils/app_URL.dart';
 import '../../../../../../view/utils/app_constants.dart';
 
-class CustListServices {
-  final String url = AppUrl.custList;
+class CustReportServices {
+  final String url = AppUrl.customerReport;
   final apiKey = AppUrl.apiKey;
 
-  Future<http.Response> custListApi({
+  Future<http.Response> custReportApi({
     String? timezone,
     String? search,
-    String? page,
     String? fromDate,
     String? toDate,
   }) async {
@@ -23,22 +22,20 @@ class CustListServices {
       AppString.userid: userId,
     };
 
-    final Map<String, String> queryParameters = {
-      AppString.timezonePera: timezone ?? '',
-      AppString.searchPera: search ?? '',
-      AppString.pagePera: page ?? '1',
+    final Map<String, dynamic> body = {
+      AppString.timezone: timezone ?? '',
+      AppString.Search: search ?? '',
       AppString.FormDate: fromDate ?? '',
       AppString.ToDate: toDate ?? '',
     };
 
-    final uri = Uri.parse(url).replace(queryParameters: queryParameters);
-
     if (kDebugMode) {
-      print('--- CustomerList API Request ---');
-      print('URL: $uri');
+      print('--- CustomerReport API Request ---');
+      print('URL: $url');
       print('Headers: $headers');
-      print('--- CustomerList API Request ---');
+      print('Body: $body');
+      print('--- CustomerReport API Request ---');
     }
-    return await http.get(uri, headers: headers);
+    return await http.post(Uri.parse(url), headers: headers, body: body);
   }
 }

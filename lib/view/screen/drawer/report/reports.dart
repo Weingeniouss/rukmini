@@ -47,7 +47,13 @@ class Reports extends StatelessWidget {
               index: 2,
               title: AppString.lockerWiseReport,
               icon: AppIcon.locker,
-              child: _buildLockerFilter(context),
+              child: Column(
+                children: [
+                  _buildLockerFilter(context),
+                  SizedBox(height: AppSize.p8),
+                  _buildDateRangeFilter(context),
+                ],
+              ),
             ),
           ],
         ),
@@ -103,6 +109,7 @@ class Reports extends StatelessWidget {
               if (isExpanded) ...[
                 const Divider(height: 1),
                 Padding(padding: EdgeInsets.all(AppSize.p16), child: child),
+                if (index == 0) _buildCustomerSummary(),
                 Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
@@ -159,6 +166,66 @@ class Reports extends StatelessWidget {
           ),
         );
       }),
+    );
+  }
+
+  Widget _buildCustomerSummary() {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSize.p16,
+        vertical: AppSize.p8,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _summaryBox(
+              "Total Given",
+              uiController.custReportController.totalGivenAmt.value,
+              AppColor.activeColor,
+            ),
+          ),
+          SizedBox(width: AppSize.p8),
+          Expanded(
+            child: _summaryBox(
+              "Total Pending",
+              uiController.custReportController.totalPendingAmt.value,
+              AppColor.deleteColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _summaryBox(String label, double amount, Color color) {
+    return Container(
+      padding: EdgeInsets.all(AppSize.p8),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Column(
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: AppSize.size12,
+              color: AppColor.textColor,
+            ),
+          ),
+          FittedBox(
+            child: Text(
+              "₹${amount.toStringAsFixed(2)}",
+              style: TextStyle(
+                fontSize: AppSize.size18,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

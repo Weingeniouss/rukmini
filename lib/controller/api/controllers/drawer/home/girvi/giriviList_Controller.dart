@@ -15,7 +15,7 @@ class GiriviListController extends GetxController {
   var isLoadMore = false.obs;
   var giriviListData = GirviListModel().obs;
   var giriviList = <GirviData>[].obs;
-  
+
   var currentPage = 1;
   var hasMoreData = true.obs;
 
@@ -81,18 +81,24 @@ class GiriviListController extends GetxController {
           final model = GirviListModel.fromJson(decoded);
           giriviListData.value = model;
 
-          if (isRefresh || (!isLoadMoreAction && currentPage == 1)) {
-            giriviList.assignAll(model.data ?? []);
-          } else {
-            giriviList.addAll(model.data ?? []);
-          }
+          if (model.status == true) {
+            if (isRefresh || (!isLoadMoreAction && currentPage == 1)) {
+              giriviList.assignAll(model.data ?? []);
+            } else {
+              giriviList.addAll(model.data ?? []);
+            }
 
-          if (model.data == null || model.data!.isEmpty) {
-            hasMoreData.value = false;
+            if (model.data == null || model.data!.isEmpty) {
+              hasMoreData.value = false;
+            } else {
+              currentPage++;
+            }
           } else {
-            currentPage++;
+            hasMoreData.value = false;
           }
         }
+      } else {
+        hasMoreData.value = false;
       }
       return response;
     } catch (e) {

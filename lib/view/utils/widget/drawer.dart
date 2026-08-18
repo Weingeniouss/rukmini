@@ -159,7 +159,7 @@ Widget homeDrawer() {
                     ReportHelper.showReportDialog(
                       context: Get.context!,
                       uiController: reportUIController,
-                      index: 0, // Customer Report
+                      index: 0,
                       title: AppString.exportCustomersContacts,
                     );
                   },

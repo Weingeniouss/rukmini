@@ -7,6 +7,7 @@ import 'package:rukmini/elevated/drawer/allMaster/category_Master/categoryRemove
 import 'package:rukmini/elevated/drawer/home/customers/addCustElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custDetailElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custListElevated.dart';
+import 'package:rukmini/elevated/drawer/home/customers/custReportElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custRemoveElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custUpdateElevated.dart';
 import 'package:rukmini/elevated/drawer/home/dashboardElevated.dart';
@@ -41,6 +42,7 @@ import 'package:rukmini/elevated/year/yearRemoveElevated.dart';
 import 'package:rukmini/modal/drawer/allMaster/category_Master/categoryAdd_modal.dart';
 import 'package:rukmini/modal/drawer/allMaster/category_Master/categoryRemove_modal.dart';
 import 'package:rukmini/modal/drawer/home/customer/add_customer_model.dart';
+import 'package:rukmini/modal/drawer/home/customer/customer_report_model.dart';
 import 'package:rukmini/modal/drawer/home/customer/update_customer_model.dart';
 import 'package:rukmini/modal/drawer/home/girvi/girivi_add_model.dart';
 import 'package:rukmini/modal/drawer/home/girvi/girvi_detail_modal.dart';
@@ -87,8 +89,28 @@ class CallApi {
         static Future<void> callCustList({
           bool isRefresh = false,
           String? search,
+          String? fromDate,
+          String? toDate,
         }) async {
-          await getCustList(isRefresh: isRefresh, search: search);
+          await getCustList(
+            isRefresh: isRefresh,
+            search: search,
+            fromDate: fromDate,
+            toDate: toDate,
+          );
+        }
+
+        // Customer Report
+        static Future<CustomerReportModel?> callCustReport({
+          String? search,
+          String? fromDate,
+          String? toDate,
+        }) async {
+          return await getCustReport(
+            search: search,
+            fromDate: fromDate,
+            toDate: toDate,
+          );
         }
 
         // Customer Detail

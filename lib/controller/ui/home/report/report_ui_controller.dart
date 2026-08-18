@@ -5,9 +5,12 @@ import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:intl/intl.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/lockerList_Controller.dart';
-import 'package:rukmini/controller/api/controllers/drawer/home/customers/custList_Controller.dart';
+import 'package:rukmini/controller/api/controllers/drawer/home/girvi/giriviList_Controller.dart';
+import 'package:rukmini/controller/api/controllers/drawer/locker/locker_wise_del_controller.dart';
+import 'package:rukmini/controller/api/controllers/drawer/home/customers/custReport_Controller.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -21,6 +24,7 @@ class ReportUIController extends GetxController {
   var selectedLockerId = "".obs;
 
   final lockerListController = Get.put(LockerListController());
+  final custReportController = Get.put(CustReportController());
   final searchLockerController = TextEditingController();
   var filteredLockers = <dynamic>[].obs;
 
@@ -89,15 +93,10 @@ class ReportUIController extends GetxController {
     final sdkInt = androidInfo.version.sdkInt;
 
     if (sdkInt >= 33) {
-      // Android 13+ (API 33) doesn't need WRITE_EXTERNAL_STORAGE for temp files or sharing
-      // Photos/Videos/Audio permissions are not needed for Excel docs
       return true;
     } else if (sdkInt >= 30) {
-      // Android 11 & 12 (API 30-32) use Scoped Storage
-      // Writing to temp directory is always allowed
       return true;
     } else {
-      // Android 10 and below (API < 30)
       final status = await Permission.storage.request();
       return status.isGranted;
     }
@@ -107,7 +106,16 @@ class ReportUIController extends GetxController {
     try {
       final hasPermission = await _requestPermissions();
       if (!hasPermission) {
-        ToastificationError.Error("Storage permission is required to save files.");
+        ToastificationError.Error(
+          "Storage permission is required to save files.",
+        );
+        return;
+      }
+
+      await fetchReport(index);
+
+      if (reportList.isEmpty) {
+        ToastificationError.Error("No data found to export.");
         return;
       }
 
@@ -119,48 +127,76 @@ class ReportUIController extends GetxController {
 
       if (index == 0) {
         fileName = "Customer_Report.xlsx";
-        headers = ["Name", "Cust Code", "Gvn Amt", "Pending Amt", "Phone"];
+        headers = [
+          "Code",
+          "Name",
+          "Phone",
+          "Address",
+          "Given Amt",
+          "Pending Amt",
+        ];
       } else if (index == 1) {
         fileName = "Girvi_Report.xlsx";
-        headers = ["Unique ID", "Customer", "Date", "Given Amt", "Balance"];
+        headers = [
+          "Unique ID",
+          "Customer",
+          "Phone",
+          "Date",
+          "Due Date",
+          "Given Amt",
+          "Interest",
+          "Balance",
+        ];
       } else if (index == 2) {
-        if (selectedLockerId.isEmpty) {
-          ToastificationError.Error("Please select a locker first");
-          return;
-        }
         fileName = "Locker_Report_${selectedLocker.value}.xlsx";
-        headers = ["Unique ID", "Weight", "Category", "Metal", "Date"];
+        headers = [
+          "Unique ID",
+          "Customer",
+          "Locker Code",
+          "Item Code",
+          "Total Amt",
+          "Balance",
+        ];
       }
 
       sheetObject.appendRow(headers.map((e) => TextCellValue(e)).toList());
 
-      // Add actual data
-      await fetchReport(index);
       for (var item in reportList) {
         if (index == 0) {
-          sheetObject.appendRow([
-            item.name ?? '',
-            item.custCode ?? '',
-            item.gracePeriod ?? '',
-            '',
-            (item.phoneList != null && item.phoneList.isNotEmpty) ? item.phoneList[0].phone ?? '' : ''
-          ].map((e) => TextCellValue(e.toString())).toList());
+          sheetObject.appendRow(
+            [
+              item.custCode ?? '',
+              item.name ?? '',
+              item.custPhone ?? '',
+              item.address ?? '',
+              item.givenAmt ?? '',
+              item.pendingAmt ?? '',
+            ].map((e) => TextCellValue(e.toString())).toList(),
+          );
         } else if (index == 1) {
-          sheetObject.appendRow([
-            item.uniqueId ?? '',
-            item.custName ?? '',
-            item.girviDate ?? '',
-            item.givenAmt ?? '',
-            item.balance ?? ''
-          ].map((e) => TextCellValue(e.toString())).toList());
+          sheetObject.appendRow(
+            [
+              item.uniqueId ?? '',
+              item.custName ?? '',
+              item.custPhone ?? '',
+              item.girviDate ?? '',
+              item.dueDate ?? '',
+              item.givenAmt ?? '',
+              item.interest ?? '',
+              item.balance ?? '',
+            ].map((e) => TextCellValue(e.toString())).toList(),
+          );
         } else if (index == 2) {
-          sheetObject.appendRow([
-            item.uniqueId ?? '',
-            '',
-            '',
-            '',
-            item.code ?? ''
-          ].map((e) => TextCellValue(e.toString())).toList());
+          sheetObject.appendRow(
+            [
+              item.uniqueId ?? '',
+              item.custName ?? '',
+              item.lockerCode ?? '',
+              item.code ?? '',
+              item.totalAmt ?? '',
+              item.balance ?? '',
+            ].map((e) => TextCellValue(e.toString())).toList(),
+          );
         }
       }
 
@@ -183,34 +219,93 @@ class ReportUIController extends GetxController {
 
   Future<void> fetchReport(int index) async {
     try {
+      if (isReportLoading.value) return;
       isReportLoading.value = true;
       reportList.clear();
 
       if (index == 0) {
-        await CallApi.callCustList(isRefresh: true);
-        final controller = Get.find<CustListController>();
-        reportList.assignAll(controller.customers);
-      } else if (index == 1) {
-        final result = await CallApi.callGiriviList(
-          isRefresh: true,
-          formDate: fromDateController.text,
-          toDate: toDateController.text,
-        );
-        if (result != null && result.data != null) {
-          reportList.assignAll(result.data!);
+        // Customer Report
+        String fDate = fromDateController.text;
+        String tDate = toDateController.text;
+
+        if (fDate.isEmpty) fDate = "2021-01-01";
+        if (tDate.isEmpty) {
+          tDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
         }
+
+        await CallApi.callCustReport(fromDate: fDate, toDate: tDate);
+        reportList.assignAll(custReportController.customerReports);
+      } else if (index == 1) {
+        // Girvi Report
+        String fDate = fromDateController.text;
+        String tDate = toDateController.text;
+
+        if (fDate.isEmpty) fDate = "2021-01-01";
+        if (tDate.isEmpty) {
+          tDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+        }
+
+        final controller = Get.put(GiriviListController());
+        bool hasMore = true;
+        int pageCount = 1;
+
+        while (hasMore) {
+          final result = await CallApi.callGiriviList(
+            isRefresh: pageCount == 1,
+            isLoadMoreAction: pageCount > 1,
+            formDate: fDate,
+            toDate: tDate,
+          );
+
+          if (result == null ||
+              result.status == false ||
+              result.data == null ||
+              result.data!.isEmpty ||
+              !controller.hasMoreData.value ||
+              pageCount > 50) {
+            hasMore = false;
+          } else {
+            pageCount++;
+          }
+        }
+        reportList.assignAll(controller.giriviList);
       } else if (index == 2) {
+        // Locker Wise Report
         if (selectedLockerId.isEmpty) {
           ToastificationError.Error("Please select a locker first");
           isReportLoading.value = false;
           return;
         }
+
+        Get.put(LockerWiseDelController());
         final result = await CallApi.callLockerWiseDel(
           lockerId: selectedLockerId.value,
         );
         if (result != null && result.data != null) {
           reportList.assignAll(result.data!);
         }
+      }
+
+      // Final Local Filter for Girvi Report
+      if (fromDateController.text.isNotEmpty &&
+          toDateController.text.isNotEmpty &&
+          index == 1) {
+        DateTime from = DateTime.parse(fromDateController.text);
+        DateTime to = DateTime.parse(
+          toDateController.text,
+        ).add(const Duration(days: 1));
+
+        reportList.value = reportList.where((item) {
+          try {
+            DateTime itemDate = DateTime.parse(item.girviDate);
+            return itemDate.isAfter(
+                  from.subtract(const Duration(seconds: 1)),
+                ) &&
+                itemDate.isBefore(to);
+          } catch (e) {
+            return true;
+          }
+        }).toList();
       }
     } catch (e) {
       ToastificationError.Error("Failed to fetch report: $e");
