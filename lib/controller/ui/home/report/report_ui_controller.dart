@@ -10,7 +10,7 @@ import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/lockerList_Controller.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/girvi/giriviList_Controller.dart';
 import 'package:rukmini/controller/api/controllers/drawer/locker/locker_wise_del_controller.dart';
-import 'package:rukmini/controller/api/controllers/drawer/home/customers/custReport_Controller.dart';
+import 'package:rukmini/controller/api/controllers/drawer/report/custReport_Controller.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 import 'package:share_plus/share_plus.dart';
 

@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/controller/local/localDatabase.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import '../../../../controller/api/controllers/drawer/home/customers/custDetail_Controller.dart';
 import '../../../../modal/drawer/home/customer/customer_detail_model.dart';
@@ -29,6 +30,8 @@ Future<CustomerDetailModel?> getCustDetail({String? custId}) async {
           ToastificationError.Error(
               customerDetailModel.message ?? AppString.noDetailsFound);
         }
+      } else if (response.statusCode == 401) {
+        await LocalDatabase.handleUnauthorized();
       } else {
         ToastificationError.Error('${AppString.serverError}${response.statusCode}');
       }

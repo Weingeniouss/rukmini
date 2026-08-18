@@ -60,4 +60,12 @@ class LocalDatabase {
     userId = '';
     islogin = false;
   }
+
+  // Handle 401 Unauthorized globally
+  static Future<void> handleUnauthorized() async {
+    await LocalDatabase().logout();
+    if (Get.currentRoute != '/login') {
+      Get.offAllNamed('/login');
+    }
+  }
 }

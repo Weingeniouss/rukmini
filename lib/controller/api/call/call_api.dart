@@ -7,7 +7,7 @@ import 'package:rukmini/elevated/drawer/allMaster/category_Master/categoryRemove
 import 'package:rukmini/elevated/drawer/home/customers/addCustElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custDetailElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custListElevated.dart';
-import 'package:rukmini/elevated/drawer/home/customers/custReportElevated.dart';
+import 'package:rukmini/elevated/drawer/report/custReportElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custRemoveElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/custUpdateElevated.dart';
 import 'package:rukmini/elevated/drawer/home/dashboardElevated.dart';
@@ -42,7 +42,7 @@ import 'package:rukmini/elevated/year/yearRemoveElevated.dart';
 import 'package:rukmini/modal/drawer/allMaster/category_Master/categoryAdd_modal.dart';
 import 'package:rukmini/modal/drawer/allMaster/category_Master/categoryRemove_modal.dart';
 import 'package:rukmini/modal/drawer/home/customer/add_customer_model.dart';
-import 'package:rukmini/modal/drawer/home/customer/customer_report_model.dart';
+import 'package:rukmini/modal/drawer/report/customer_report_model.dart';
 import 'package:rukmini/modal/drawer/home/customer/update_customer_model.dart';
 import 'package:rukmini/modal/drawer/home/girvi/girivi_add_model.dart';
 import 'package:rukmini/modal/drawer/home/girvi/girvi_detail_modal.dart';

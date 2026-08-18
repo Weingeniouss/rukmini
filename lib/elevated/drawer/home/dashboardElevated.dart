@@ -37,6 +37,8 @@ Future<DashboardModel?> getDashboard() async {
             dashboardModel.message ?? AppString.failedToLoadDashboard,
           );
         }
+      } else if (response.statusCode == 401) {
+        await LocalDatabase.handleUnauthorized();
       } else {
         ToastificationError.Error(
           '${AppString.serverError}${response.statusCode}',

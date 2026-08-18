@@ -42,8 +42,7 @@ class DashbordController extends GetxController {
         if (kDebugMode) {
           print('401 Unauthorized detected! Redirecting...');
         }
-        await LocalDatabase().logout();
-        Get.offAllNamed('/login');
+        await LocalDatabase.handleUnauthorized();
       }
       return response;
     } catch (e) {

@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/controller/local/localDatabase.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/girvi/giriviList_Controller.dart';
@@ -43,6 +44,8 @@ Future<GirviListModel?> getGiriviList({
       if (response.statusCode == 200) {
         if (model.status == true) return model;
         ToastificationError.Error(model.message ?? AppString.failedToLoadList);
+      } else if (response.statusCode == 401) {
+        await LocalDatabase.handleUnauthorized();
       } else {
         ToastificationError.Error('${AppString.serverError}${response.statusCode}');
       }
