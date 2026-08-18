@@ -12,6 +12,7 @@ import 'package:rukmini/view/utils/app_logo.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:rukmini/view/utils/widget/inputField.dart';
+import 'package:rukmini/view/utils/widget/forgot_password_popup.dart';
 import '../../utils/app_background.dart';
 
 class Login extends StatelessWidget {
@@ -45,7 +46,9 @@ class Login extends StatelessWidget {
               Obx(() => loginButton(loginAPI)),
 
               //Forget Password
-              forgetpasswod(onPressed: () {}),
+              forgetpasswod(onPressed: () {
+                showForgotPasswordPopup(context);
+              }),
             ],
           ),
         ),

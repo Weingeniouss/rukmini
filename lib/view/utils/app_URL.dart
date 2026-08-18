@@ -79,4 +79,5 @@ class AppUrl {
 
    //Report
        static const customerReport = '${baseAPI}customer/CustReport';
+   //Report
 }

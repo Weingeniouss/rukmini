@@ -2,6 +2,7 @@
 
 import 'package:image_picker/image_picker.dart';
 import 'package:rukmini/elevated/credenials/loginElevated.dart';
+import 'package:rukmini/elevated/credenials/forgotPasswordElevated.dart';
 import 'package:rukmini/elevated/drawer/allMaster/category_Master/categoryElevated.dart' as category;
 import 'package:rukmini/elevated/drawer/allMaster/category_Master/categoryRemoveElevated.dart';
 import 'package:rukmini/elevated/drawer/home/customers/addCustElevated.dart';
@@ -76,6 +77,11 @@ class CallApi {
   // Credentials Login
   static Future<void> callLogin() async {
     await postLogin();
+  }
+
+  // Forgot Password
+  static Future<void> callForgotPassword() async {
+    await getForgotPassword();
   }
 
   //Drawar
