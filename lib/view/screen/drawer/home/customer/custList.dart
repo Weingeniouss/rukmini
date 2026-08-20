@@ -1,4 +1,4 @@
-// ignore_for_file: strict_top_level_inference, file_names
+// ignore_for_file: deprecated_member_use, strict_top_level_inference, file_names
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,10 +9,9 @@ import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
-import 'package:rukmini/view/utils/widget/appBar.dart';
+import 'package:rukmini/view/utils/app_URL.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
-import 'package:marquee/marquee.dart';
 import 'package:shimmer/shimmer.dart';
 
 class Custlist extends StatefulWidget {
@@ -36,8 +35,9 @@ class _CustlistState extends State<Custlist> {
     });
 
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+      if (_scrollController.hasClients &&
+          _scrollController.position.pixels ==
+              _scrollController.position.maxScrollExtent) {
         if (!custListController.isMoreLoading.value &&
             custListController.hasMoreData.value) {
           CallApi.callCustList(search: _searchController.text);
@@ -49,323 +49,411 @@ class _CustlistState extends State<Custlist> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Fullscreen(
-        appBar: appBar(
-          title: _isSearching.value
-              ? TextField(
-                  controller: _searchController,
-                  autofocus: true,
-                  style: TextStyle(color: AppColor.fullScreenColor),
-                  cursorColor: AppColor.fullScreenColor,
-                  decoration: InputDecoration(
-                    hintText: AppString.searchCustomer,
-                    hintStyle: const TextStyle(color: AppColor.otherWhite),
-                    border: InputBorder.none,
-                  ),
-                  onChanged: (value) {
-                    custListController.searchQuery.value = value;
-                    CallApi.callCustList(isRefresh: true, search: value);
-                  },
-                )
-              : AppString.customer,
-          searchIcon: true,
-          searchOnPressed: () {
-            _isSearching.value = !_isSearching.value;
-            if (!_isSearching.value) {
-              _searchController.clear();
-              custListController.searchQuery.value = "";
-              CallApi.callCustList(isRefresh: true);
-            }
-          },
-        ),
-        drawer: homeDrawer(),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: AppColor.primaryColor,
-          onPressed: () {
-            Get.toNamed('/addCustForm');
-          },
-          child: const Icon(AppIcon.add, color: AppColor.white),
-        ),
-        child: Obx(() {
-          final loading = custListController.isLoading.value;
-          final list = custListController.customers;
-
-          if (loading && list.isEmpty) {
-            return customerLoading();
-          }
-
-          if (!loading && list.isEmpty) {
-            return Center(child: Text(AppString.noCustomersFound));
-          }
-
-          return RefreshIndicator(
-            backgroundColor: AppColor.backgroundColor,
-            color: AppColor.primaryColor,
-            elevation: 2.0,
-            onRefresh: () => CallApi.callCustList(
-              isRefresh: true,
-              search: _searchController.text,
-            ),
-            child: Column(
-              children: [
-                customersList(scrollController: _scrollController, list: list),
-                if (custListController.isMoreLoading.value) nextPageLoading(),
-              ],
-            ),
-          );
-        }),
-      );
-    });
-  }
-}
-
-Widget customersList({
-  ScrollController? scrollController,
-  required List<CustomerData> list,
-}) {
-  return Expanded(
-    child: ListView.builder(
-      controller: scrollController,
-      itemCount: list.length,
-      itemBuilder: (context, index) {
-        final customer = list[index];
-        final phoneData =
-            (customer.phoneList != null && customer.phoneList!.isNotEmpty)
-            ? customer.phoneList!.first
-            : null;
-
-        final custType =
-            (customer.custType != null && customer.custType!.isNotEmpty)
-            ? customer.custType!.first
-            : null;
-
-        // Logic for Section Headers (A, B, C...)
-        final String name = customer.name ?? AppString.noName;
-        final String currentInitial = name.isNotEmpty
-            ? name[0].toUpperCase()
-            : '?';
-
-        bool showHeader = false;
-        if (index == 0) {
-          showHeader = true;
-        } else {
-          final String prevName = list[index - 1].name ?? '';
-          final String previousInitial = prevName.isNotEmpty
-              ? prevName[0].toUpperCase()
-              : '?';
-          if (currentInitial != previousInitial) {
-            showHeader = true;
-          }
-        }
-
-        return dataValue(
-          showHeader,
-          currentInitial,
-          customer,
-          phoneData,
-          custType,
-        );
-      },
-    ),
-  );
-}
-
-Widget dataValue(showHeader, currentInitial, customer, phoneData, custType) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      if (showHeader)
-        Padding(
-          padding: EdgeInsets.fromLTRB(
-            AppSize.p8,
-            AppSize.p8,
-            AppSize.p8,
-            AppSize.p8,
+    return Fullscreen(
+      isPadding: false,
+      drawer: homeDrawer(),
+      backGroundcolor: AppColor.dashboardIconBg,
+      // Matches image background
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(AppSize.width * 0.2),
+        child: Container(
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top + AppSize.p10,
+            left: AppSize.p16,
+            right: AppSize.p16,
+            bottom: AppSize.p10,
           ),
-          child: Text(
-            currentInitial,
-            style: TextStyle(
-              fontSize: AppSize.size18,
-              fontWeight: FontWeight.normal,
-              color: AppColor.activeColor,
-            ),
-          ),
-        ),
-      Card(
-        color: AppColor.backgroundColor,
-        margin: EdgeInsets.symmetric(vertical: 6),
-        child: ListTile(
-          leading: Container(
-            width: AppSize.width * 0.12,
-            height: AppSize.height * 0.1,
-            decoration: BoxDecoration(
-              color: AppColor.primaryColor,
-              borderRadius: BorderRadius.circular(AppSize.width * 0.015),
-              image: customer.imagePath != null
-                  ? DecorationImage(
-                      image: NetworkImage(customer.imagePath!),
-                      fit: BoxFit.cover,
-                    )
-                  : null,
-            ),
-            child: customer.imagePath == null
-                ? Icon(AppIcon.person, color: AppColor.backgroundColor)
-                : null,
-          ),
-          title: Column(
+          child: Row(
             children: [
-              valueText(key: AppString.name, value: customer.name),
-              valueText(key: AppString.address, value: customer.address),
-              Row(
-                children: [
-                  Expanded(
-                    child: valueText(
-                      key: AppString.phone,
-                      value: phoneData?.phone,
+              Builder(
+                builder: (context) {
+                  return IconButton(
+                    icon: Icon(
+                      AppIcon.menu,
+                      color: AppColor.dashboardTextDark,
+                      size: AppSize.p24 + AppSize.p4,
                     ),
-                  ),
-                  Spacer(),
-                  Expanded(
-                    child: valueText(
-                      key: AppString.type,
-                      value: custType?.typeName,
+                    onPressed: () => Scaffold.of(context).openDrawer(),
+                  );
+                },
+              ),
+              SizedBox(width: AppSize.p8),
+              Obx(
+                () => _isSearching.value
+                    ? Expanded(
+                        child: TextField(
+                          controller: _searchController,
+                          autofocus: true,
+                          decoration: InputDecoration(
+                            hintText: AppString.searchCustomer,
+                            border: InputBorder.none,
+                          ),
+                          onChanged: (value) {
+                            custListController.searchQuery.value = value;
+                            CallApi.callCustList(
+                              isRefresh: true,
+                              search: value,
+                            );
+                          },
+                        ),
+                      )
+                    : Text(
+                        AppString.customer,
+                        style: TextStyle(
+                          fontSize: AppSize.size20,
+                          fontWeight: FontWeight.w600,
+                          color: AppColor.black54,
+                        ),
+                      ),
+              ),
+              const Spacer(),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  borderRadius: BorderRadius.circular(AppSize.p10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColor.black.withOpacity(0.05),
+                      blurRadius: 5,
                     ),
+                  ],
+                ),
+                child: IconButton(
+                  icon: const Icon(
+                    AppIcon.searchIcon,
+                    color: AppColor.dashboardGold,
                   ),
-                ],
+                  onPressed: () {
+                    _isSearching.value = !_isSearching.value;
+                    if (!_isSearching.value) {
+                      _searchController.clear();
+                      custListController.searchQuery.value = "";
+                      CallApi.callCustList(isRefresh: true);
+                    }
+                  },
+                ),
               ),
             ],
           ),
-          subtitle: Padding(
-            padding: EdgeInsets.only(top: 5),
-            child: valueText(key: AppString.custCode, value: customer.custCode),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColor.dashboardGold,
+        onPressed: () => Get.toNamed('/addCustForm'),
+        elevation: 5,
+        shape: const CircleBorder(),
+        child: Icon(
+          AppIcon.add,
+          color: AppColor.white,
+          size: AppSize.p24 + AppSize.p8,
+        ),
+      ),
+      child: Obx(() {
+        final bool loading = custListController.isLoading.value;
+        final bool isMoreLoading = custListController.isMoreLoading.value;
+        final List<CustomerData> list = custListController.customers.toList();
+
+        if (loading && list.isEmpty) {
+          return customerLoading();
+        }
+
+        if (!loading && list.isEmpty) {
+          return Center(child: Text(AppString.noCustomersFound));
+        }
+
+        return RefreshIndicator(
+          key: const ValueKey('custListRefreshIndicator'),
+          onRefresh: () => CallApi.callCustList(
+            isRefresh: true,
+            search: _searchController.text,
           ),
-          onTap: () => Get.toNamed('/custDetail', arguments: customer),
+          child: ListView.builder(
+            key: const ValueKey('custListBuilder'),
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.all(AppSize.p16),
+            itemCount: list.length + (isMoreLoading ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index == list.length) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: AppSize.p16),
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColor.dashboardGold,
+                    ),
+                  ),
+                );
+              }
+
+              final customer = list[index];
+              final phoneList = customer.phoneList;
+              final phoneData = (phoneList != null && phoneList.isNotEmpty)
+                  ? phoneList[0]
+                  : null;
+
+              final custTypeList = customer.custType;
+              final custType = (custTypeList != null && custTypeList.isNotEmpty)
+                  ? custTypeList[0]
+                  : null;
+
+              final String name = customer.name ?? "No Name";
+              final String currentInitial = name.isNotEmpty
+                  ? name[0].toUpperCase()
+                  : '?';
+
+              bool showHeader = false;
+              if (index == 0) {
+                showHeader = true;
+              } else if (index > 0 && index < list.length) {
+                final String prevName = list[index - 1].name ?? '';
+                final String previousInitial = prevName.isNotEmpty
+                    ? prevName[0].toUpperCase()
+                    : '?';
+                if (currentInitial != previousInitial) {
+                  showHeader = true;
+                }
+              }
+
+              return Column(
+                key: ValueKey('customer_${customer.custId ?? index}'),
+                children: [
+                  if (showHeader) _buildSectionHeader(currentInitial),
+                  _buildCustomerCard(customer, phoneData, custType),
+                ],
+              );
+            },
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget _buildSectionHeader(String initial) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: AppSize.p8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                initial,
+                style: TextStyle(
+                  fontSize: AppSize.size20 + AppSize.p4,
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.dashboardGold,
+                ),
+              ),
+              Container(
+                height: 2,
+                width: AppSize.p24,
+                color: AppColor.dashboardGold,
+              ),
+            ],
+          ),
         ),
-      ),
-    ],
-  );
-}
-
-Widget valueText({String? key, String? value}) {
-  return Row(
-    children: [
-      Text(
-        '$key: ',
-        style: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: AppSize.size12,
-        ),
-      ),
-      marqueeText(value ?? ''),
-    ],
-  );
-}
-
-Widget nextPageLoading() {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Center(
-      child: CircularProgressIndicator(color: AppColor.primaryColor),
-    ),
-  );
-}
-
-Widget marqueeText(String text) {
-  final String displayText = text.isEmpty ? AppString.na : text;
-  final TextStyle textStyle = TextStyle(
-    fontWeight: FontWeight.normal,
-    fontSize: AppSize.size14,
-    color: AppColor.textColor,
-  );
-
-  return Expanded(
-    child: SizedBox(
-      height: 20,
-      child: displayText.length > 11
-          ? Marquee(
-              text: displayText,
-              style: textStyle,
-              scrollAxis: Axis.horizontal,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              blankSpace: 30.0,
-              velocity: 30.0,
-              pauseAfterRound: const Duration(seconds: 2),
-              startPadding: AppSize.p10,
-              accelerationDuration: const Duration(seconds: 1),
-              accelerationCurve: Curves.linear,
-              decelerationDuration: const Duration(milliseconds: 500),
-              decelerationCurve: Curves.easeOut,
-            )
-          : Text(
-              displayText,
-              style: textStyle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-    ),
-  );
-}
-
-Widget customerLoading() {
-  return ListView.builder(
-    itemCount: 10,
-    itemBuilder: (context, index) {
-      return Shimmer.fromColors(
-        baseColor: AppColor.baseColor,
-        highlightColor: AppColor.highlightColor,
-        child: Card(
-          child: ListTile(
-            leading: Container(
-              width: AppSize.width * 0.12,
-              height: AppSize.height * 0.1,
-              decoration: BoxDecoration(
-                color: AppColor.textField,
-                borderRadius: BorderRadius.circular(AppSize.width * 0.015),
+        Row(
+          children: [
+            Expanded(child: Container(height: 1, color: AppColor.grey300)),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSize.p10),
+              child: Icon(
+                AppIcon.diamond,
+                color: AppColor.dashboardGold,
+                size: AppSize.size14,
               ),
             ),
-            title: Column(
+            Expanded(child: Container(height: 1, color: AppColor.grey300)),
+          ],
+        ),
+        SizedBox(height: AppSize.p16),
+      ],
+    );
+  }
+
+  Widget _buildCustomerCard(
+    CustomerData customer,
+    PhoneList? phone,
+    CustType? type,
+  ) {
+    return Container(
+      margin: EdgeInsets.only(bottom: AppSize.p16),
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        borderRadius: BorderRadius.circular(AppSize.p16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: Offset(0, AppSize.p4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: AppColor.transparent,
+        child: InkWell(
+          onTap: () => Get.toNamed('/custDetail', arguments: customer),
+          borderRadius: BorderRadius.circular(AppSize.p16),
+          child: Padding(
+            padding: EdgeInsets.all(AppSize.p12),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Profile Image Placeholder
                 Container(
-                  width: double.infinity,
-                  height: AppSize.p8,
-                  color: AppColor.textField,
+                  width: AppSize.width * 0.16,
+                  height: AppSize.width * 0.25,
+                  decoration: BoxDecoration(
+                    color: AppColor.dashboardQuickActionBg,
+                    borderRadius: BorderRadius.circular(AppSize.p12),
+                    border: Border.all(
+                      color: AppColor.dashboardCream,
+                      width: 1,
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppSize.p10),
+                    child: Builder(
+                      builder: (context) {
+                        String? imageUrl;
+                        if (customer.imagePath != null &&
+                            customer.imagePath != "null" &&
+                            customer.imagePath!.isNotEmpty) {
+                          imageUrl = customer.imagePath;
+                        } else if (customer.image != null &&
+                            customer.image != "null" &&
+                            customer.image!.isNotEmpty) {
+                          imageUrl = customer.image;
+                        }
+
+                        if (imageUrl == null) {
+                          return Icon(
+                            AppIcon.person,
+                            size: AppSize.width * 0.11,
+                            color: AppColor.dashboardGold.withOpacity(0.5),
+                          );
+                        }
+
+                        final String fullUrl = imageUrl.startsWith('http')
+                            ? imageUrl
+                            : "${AppUrl.baseURL}$imageUrl";
+
+                        return Image.network(
+                          fullUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(
+                              AppIcon.person,
+                              size: AppSize.width * 0.11,
+                              color: AppColor.dashboardGold.withOpacity(0.5),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
                 ),
-                SizedBox(height: AppSize.p4 * 1.2), // 0.012
-                Container(
-                  width: AppSize.width * 0.5,
-                  height: AppSize.p8,
-                  color: AppColor.textField,
+                SizedBox(width: AppSize.p16),
+                // Details
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        customer.name ?? AppString.noName,
+                        style: TextStyle(
+                          fontSize: AppSize.size14,
+                          fontWeight: FontWeight.w600,
+                          color: AppColor.black54,
+                        ),
+                      ),
+                      SizedBox(height: AppSize.p8),
+                      _infoRowWithIcon(
+                        AppIcon.location,
+                        "",
+                        customer.address ?? "",
+                      ),
+                      SizedBox(height: AppSize.p4),
+                      _infoRowWithIcon(AppIcon.phone, "", phone?.phone ?? ""),
+                      SizedBox(height: AppSize.p4),
+                      _infoRowWithIcon(
+                        AppIcon.category,
+                        "",
+                        type?.typeName ?? "",
+                      ),
+                      SizedBox(height: AppSize.p4),
+                      _infoRowWithIcon(
+                        AppIcon.badge,
+                        "",
+                        customer.custCode ?? "",
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-            subtitle: Padding(
-              padding: EdgeInsets.only(top: AppSize.p4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: AppSize.width * 0.2,
-                    height: AppSize.p8,
-                    color: AppColor.textField,
-                  ),
-                  Container(
-                    width: AppSize.width * 0.2,
-                    height: AppSize.p8,
-                    color: AppColor.textField,
-                  ),
-                ],
-              ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _infoRowWithIcon(IconData icon, String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: AppSize.p16, color: AppColor.dashboardGold),
+        SizedBox(width: AppSize.p8 * 0.75),
+        if (label.isNotEmpty) ...[
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: AppSize.size12,
+              fontWeight: FontWeight.w600,
+              color: AppColor.black54,
+            ),
+          ),
+          SizedBox(width: AppSize.p4),
+        ],
+        Expanded(
+          child: Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: AppSize.size12,
+              color: AppColor.dashboardTextLight,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
-      );
-    },
-  );
+      ],
+    );
+  }
+
+  Widget customerLoading() {
+    return Shimmer.fromColors(
+      baseColor: AppColor.baseColor,
+      highlightColor: AppColor.highlightColor,
+      child: ListView.builder(
+        padding: EdgeInsets.all(AppSize.p16),
+        itemCount: 8,
+        itemBuilder: (context, index) => Container(
+          height: AppSize.height * 0.15,
+          margin: EdgeInsets.only(bottom: AppSize.p16),
+          decoration: BoxDecoration(
+            color: AppColor.white,
+            borderRadius: BorderRadius.circular(AppSize.p16),
+          ),
+        ),
+      ),
+    );
+  }
 }

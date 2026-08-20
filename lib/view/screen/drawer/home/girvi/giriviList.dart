@@ -320,15 +320,6 @@ class _GiriviListState extends State<GiriviList> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  AppString.givenAmount,
-                                  style: TextStyle(
-                                    color: AppColor.textColor,
-                                    fontSize: Get.width * 0.028,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: Get.height * 0.005),
                                 Row(
                                   children: [
                                     Icon(
@@ -368,15 +359,6 @@ class _GiriviListState extends State<GiriviList> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(
-                              AppString.contact,
-                              style: TextStyle(
-                                color: AppColor.textColor,
-                                fontSize: Get.width * 0.028,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            SizedBox(height: Get.height * 0.008),
                             Row(
                               children: [
                                 CircleAvatar(
@@ -433,14 +415,6 @@ class _GiriviListState extends State<GiriviList> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: AppColor.textColor,
-                    fontSize: Get.width * 0.028,
-                  ),
-                ),
-                SizedBox(height: Get.height * 0.002),
                 Text(
                   value,
                   style: TextStyle(

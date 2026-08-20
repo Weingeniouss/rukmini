@@ -104,7 +104,7 @@ class ChangeTheLocker extends StatelessWidget {
                     ),
                   ),
                   Icon(
-                    AppIcon.arrow_down,
+                    AppIcon.arrowDown,
                     color: AppColor.activeColor,
                     size: AppSize.p20,
                   ),
@@ -241,7 +241,7 @@ class ChangeTheLocker extends StatelessWidget {
                     ),
                   ),
                   Icon(
-                    AppIcon.arrow_down,
+                    AppIcon.arrowDown,
                     color: AppColor.textColor,
                     size: AppSize.headingText,
                   ),
@@ -272,7 +272,7 @@ class ChangeTheLocker extends StatelessWidget {
                 ),
               ),
               Icon(
-                AppIcon.arrow_down,
+                AppIcon.arrowDown,
                 color: AppColor.textColor,
                 size: AppSize.headingText,
               ),

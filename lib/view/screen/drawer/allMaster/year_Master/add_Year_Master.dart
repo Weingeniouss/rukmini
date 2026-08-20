@@ -48,7 +48,7 @@ class AddYearMaster extends StatelessWidget {
                     true,
                   ),
                   icon: const Icon(
-                    AppIcon.arrow_down,
+                    AppIcon.arrowDown,
                     color: AppColor.black54,
                   ),
                 ),
@@ -67,7 +67,7 @@ class AddYearMaster extends StatelessWidget {
                     false,
                   ),
                   icon: const Icon(
-                    AppIcon.arrow_down,
+                    AppIcon.arrowDown,
                     color: AppColor.black54,
                   ),
                 ),

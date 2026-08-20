@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/controllers/credentials/forgot_password_controller.dart';
 

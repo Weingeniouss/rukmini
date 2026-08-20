@@ -190,7 +190,7 @@ class _AddgiriviState extends State<Addgirivi> {
                           ),
                         ),
                       ),
-                      const Icon(AppIcon.arrow_down, color: AppColor.black54),
+                      const Icon(AppIcon.arrowDown, color: AppColor.black54),
                     ],
                   ),
                 ],

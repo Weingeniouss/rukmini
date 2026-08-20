@@ -44,4 +44,16 @@ class AppColor {
   static const red = Colors.red;
   static const blue = Colors.blue;
   static const transparent = Colors.transparent;
+
+  // Dashboard Specific Colors
+  static const dashboardCardBg = Color(0xFFFFFFFF);
+  static const dashboardIconBg = Color(0xFFF9F6EE);
+  static const dashboardGold = Color(0xFFB8860B);
+  static const dashboardTextDark = Color(0xFF1A1A1B);
+  static const dashboardTextLight = Color(0xFF71717A);
+  static const dashboardChartArea = Color(0xFFFAF7F0);
+  static const dashboardCream = Color(0xFFF3EFE0);
+  static const dashboardQuickActionBg = Color(0xFFFDFBF7);
+  static const dashboardUsedLocker = Color(0xFFD4C3A3);
+  static const dashboardChartGrid = Color(0xFFE6E6E6);
 }

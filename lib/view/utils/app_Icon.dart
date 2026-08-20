@@ -11,6 +11,18 @@ class AppIcon {
 
   // Home Assets
   static const openMenu = 'asset/appImage/icon/Open_Menu.svg';
+  static const IconData menu = Icons.menu;
+  static const IconData notification = Icons.notifications_none_outlined;
+  static const IconData customer = Icons.people_outline;
+  static const IconData product = Icons.shopping_bag_outlined;
+  static const IconData refresh = Icons.refresh_outlined;
+  static const IconData swap = Icons.swap_horiz;
+  static const IconData addCustomer = Icons.person_add_alt_1_outlined;
+  static const IconData report = Icons.bar_chart_outlined;
+  static const IconData quote = Icons.format_quote;
+  static const IconData arrowUp = Icons.arrow_upward;
+  static const IconData arrowDown = Icons.arrow_downward;
+  static const IconData arrow_down = Icons.keyboard_arrow_down;
 
   // AppBar Icons
   static const Icon search = Icon(Icons.search, color: AppColor.fullScreenColor);
@@ -46,7 +58,6 @@ class AppIcon {
   static const IconData check = Icons.check;
   static const IconData image = Icons.image_outlined;
   static const IconData badge = Icons.badge_outlined;
-  static const IconData arrow_down = Icons.keyboard_arrow_down;
 
   // Contact Icons
   static const IconData call = Icons.call;

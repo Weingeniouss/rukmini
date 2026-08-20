@@ -261,6 +261,20 @@ class AppString {
 
   //home
   static const homeScreen = 'Home';
+  static const dashboardOverview = 'Dashboard Overview';
+  static const thisMonth = 'This Month';
+  static const lockersOverview = 'Lockers Overview';
+  static const vsLast = 'vs last';
+  static const quickActions = 'Quick Actions';
+  static const addCustomer = 'Add Customer';
+  static const addGirvi = 'Add Girvi';
+  static const reportsAction = 'Reports';
+  static const quoteMessage = 'Every piece of data is a\nreflection of trust.';
+  static const totalLockers = 'Total Lockers';
+  static const usedLockers = 'Used Lockers';
+  static const available = 'Available';
+  static const viewAll = 'View All';
+
   static const totalCustomer = 'Total Customer';
   static const totalGirvi = 'Total Girvi';
   static const totalKarkit = 'Total Karkit';

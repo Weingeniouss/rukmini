@@ -208,7 +208,7 @@ class _AddProductState extends State<AddProduct> {
                           ),
                         ),
                         Icon(
-                          AppIcon.arrow_down,
+                          AppIcon.arrowDown,
                           color: AppColor.black54,
                           size: AppSize.p24,
                         ),

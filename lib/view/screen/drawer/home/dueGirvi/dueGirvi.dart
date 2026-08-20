@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/pendingTransaction/pending_transaction_controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
@@ -142,7 +143,7 @@ class _DueGirviState extends State<DueGirvi> {
 
   Widget _buildLegendBar() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: AppSize.p16, vertical: AppSize.p8),
       decoration: BoxDecoration(
         color: AppColor.fullScreenColor,
         border: Border(
@@ -211,7 +212,7 @@ class _DueGirviState extends State<DueGirvi> {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: AppSize.p8),
           Text(
             label,
             style: TextStyle(
@@ -264,24 +265,24 @@ class _DueGirviState extends State<DueGirvi> {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: AppSize.p10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildDetailItem(
-                AppString.gvnDt,
+                AppIcon.date,
                 data.girviDate ?? "01 JAN 1970",
               ),
-              _buildDetailItem(AppString.dueDt, data.dueDate ?? "22 JUL 2026"),
+              _buildDetailItem(AppIcon.calendar, data.dueDate ?? "22 JUL 2026"),
             ],
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: AppSize.p8 * 0.75),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildDetailItem(AppString.totAmtGvn, data.givenAmt ?? "0.00"),
+              _buildDetailItem(AppIcon.rupee, data.givenAmt ?? "0.00"),
               _buildDetailItem(
-                AppString.balance,
+                AppIcon.wallet,
                 data.balance?.toString() ?? "0",
               ),
             ],
@@ -291,22 +292,21 @@ class _DueGirviState extends State<DueGirvi> {
     );
   }
 
-  Widget _buildDetailItem(String label, String value) {
-    return RichText(
-      text: TextSpan(
-        style: TextStyle(
-          color: AppColor.dark,
-          fontSize: AppSize.size14,
-          fontFamily: 'Poppins',
-        ),
-        children: [
-          TextSpan(
-            text: "$label : ",
-            style: const TextStyle(fontWeight: FontWeight.w600),
+  Widget _buildDetailItem(IconData icon, String value) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 16, color: AppColor.dashboardGold),
+        SizedBox(width: AppSize.p8 * 0.75),
+        Text(
+          value,
+          style: TextStyle(
+            color: AppColor.dark,
+            fontSize: AppSize.size14,
+            fontFamily: 'Poppins',
           ),
-          TextSpan(text: value),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

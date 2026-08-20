@@ -280,7 +280,7 @@ class _productDetailState extends State<productDetail>
                           ),
                         ],
                       ),
-                      SizedBox(height: 4),
+                      SizedBox(height: AppSize.p4),
                       Text(
                         "${item.metalName} ${item.prodType}",
                         style: TextStyle(

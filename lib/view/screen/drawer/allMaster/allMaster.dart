@@ -94,11 +94,6 @@ class AllMaster extends StatelessWidget {
           fontWeight: FontWeight.w400,
         ),
       ),
-      trailing: Icon(
-        AppIcon.rightArrow,
-        color: AppColor.activeColor.withOpacity(0.7),
-        size: AppSize.p24,
-      ),
       contentPadding: EdgeInsets.symmetric(
         horizontal: AppSize.p20,
         vertical: AppSize.p4,

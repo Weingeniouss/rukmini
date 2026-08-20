@@ -168,7 +168,7 @@ class ProductInLocker extends StatelessWidget {
               ),
             ),
             Icon(
-              AppIcon.arrow_down,
+              AppIcon.arrowDown,
               color: AppColor.activeColor,
               size: AppSize.p24,
             ),
