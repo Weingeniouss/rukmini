@@ -30,23 +30,12 @@ class Splash extends StatelessWidget {
       isPadding: false,
       child: Stack(
         children: [
-          // Attractive & Sober Gradient Overlay
+          // Dark Overlay to blend background image with dark theme
           Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  center: const Alignment(0.0, -0.5),
-                  radius: 1.0,
-                  colors: [
-                    AppColor.splashGold.withOpacity(0.05),
-                    Colors.black.withOpacity(0.4),
-                  ],
-                ),
-              ),
-            ),
+            child: Container(color: AppColor.black.withOpacity(0.5)),
           ),
 
-          // Custom Sober Background Art
+          // Geometric Overlay / Decorative Arcs & Sparkles
           Positioned.fill(
             child: CustomPaint(painter: SoberBackgroundPainter()),
           ),
@@ -54,44 +43,11 @@ class Splash extends StatelessWidget {
           // Content Layer
           Column(
             children: [
-              SizedBox(height: AppSize.p40),
-              // Premium Golden Logo
-              Center(
-                child: Image.asset(
-                  AppLogo.rukminiLogo2,
-                  height: AppSize.height * 0.22,
-                  fit: BoxFit.contain,
-                ),
-              ),
-
-              const Spacer(),
+              SizedBox(height: AppSize.p20),
+              welcome(),
 
               // Scrollable Quotes Section
-              SizedBox(
-                height: AppSize.height * 0.6,
-                child: ListView(
-                  padding: EdgeInsets.symmetric(horizontal: AppSize.p24),
-                  physics: const BouncingScrollPhysics(),
-                  children: [
-                    _buildQuoteCard(
-                      AppString.napoleonHill,
-                      AppString.authorNapoleonHill,
-                    ),
-                    const _DividerWithDiamond(),
-                    _buildQuoteCard(
-                      AppString.andyRooney,
-                      AppString.andyRooneyJournalist,
-                      onTap: _navigateToNext,
-                    ),
-                    const _DividerWithDiamond(),
-                    _buildQuoteCard(
-                      AppString.williamGeorge,
-                      AppString.williamGeorgeJordan,
-                    ),
-                    SizedBox(height: AppSize.p40),
-                  ],
-                ),
-              ),
+              quotes(),
             ],
           ),
         ],
@@ -99,54 +55,94 @@ class Splash extends StatelessWidget {
     );
   }
 
-  Widget _buildQuoteCard(String quote, String author, {VoidCallback? onTap}) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: AppSize.p10),
-      padding: EdgeInsets.all(AppSize.p20),
-      decoration: BoxDecoration(
-        color: AppColor.quoteCardBg.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(AppSize.p16),
-        border: Border.all(
-          color: AppColor.splashGold.withOpacity(0.2),
-          width: 1,
-        ),
-      ),
+  Widget welcome() {
+    return Center(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.format_quote_rounded,
-            color: AppColor.splashGold,
-            size: AppSize.iconLarge,
-          ),
-          SizedBox(height: AppSize.p10),
-          Text(
-            quote.replaceAll('“', '').replaceAll('”', ''),
-            style: TextStyle(
-              color: AppColor.quoteText.withOpacity(0.9),
-              fontSize: AppSize.largeText,
-              height: 1.5,
-              fontWeight: FontWeight.w300,
-              letterSpacing: AppSize.width * 0.002,
-            ),
-          ),
-          SizedBox(height: AppSize.p12),
-          GestureDetector(
-            onTap: onTap,
-            behavior: HitTestBehavior.opaque,
-            child: Text(
-              author,
-              style: TextStyle(
-                color: AppColor.splashGold.withOpacity(0.7),
-                fontSize: AppSize.commonText,
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.w400,
-                decoration: onTap != null ? TextDecoration.underline : null,
-                decorationColor: AppColor.splashGold.withOpacity(0.4),
-              ),
-            ),
+          Image.asset(
+            AppLogo.rukminiLogo2,
+            height: AppSize.height * 0.25,
+            fit: BoxFit.contain,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget quotes() {
+    return Expanded(
+      child: ListView(
+        padding: EdgeInsets.symmetric(horizontal: AppSize.p24),
+        physics: const BouncingScrollPhysics(),
+        children: [
+          _buildQuoteCard(AppString.napoleonHill, AppString.authorNapoleonHill),
+          _buildQuoteCard(
+            AppString.andyRooney,
+            AppString.andyRooneyJournalist,
+            onTap: _navigateToNext,
+          ),
+          _buildQuoteCard(
+            AppString.williamGeorge,
+            AppString.williamGeorgeJordan,
+          ),
+          SizedBox(height: AppSize.p40),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuoteCard(String quote, String author, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: AppSize.p8),
+        padding: EdgeInsets.all(AppSize.p20),
+        decoration: BoxDecoration(
+          color: AppColor.white.withOpacity(0.02),
+          borderRadius: BorderRadius.circular(AppSize.p16),
+          border: Border.all(
+            color: AppColor.splashGold.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: Icon(
+                Icons.format_quote_rounded,
+                color: AppColor.splashGold,
+                size: AppSize.iconLarge,
+              ),
+            ),
+            SizedBox(height: AppSize.p10),
+            Text(
+              quote.replaceAll('“', '').replaceAll('”', ''),
+              style: TextStyle(
+                color: AppColor.white,
+                fontSize: AppSize.largeText,
+                height: 1.5,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Poppins',
+              ),
+            ),
+            SizedBox(height: AppSize.p12),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                "— $author",
+                style: TextStyle(
+                  color: AppColor.splashGold,
+                  fontSize: AppSize.commonText,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+            SizedBox(height: AppSize.p16),
+            const _DividerWithDiamond(),
+          ],
+        ),
       ),
     );
   }
@@ -158,7 +154,7 @@ class _DividerWithDiamond extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: AppSize.p12),
+      padding: EdgeInsets.symmetric(vertical: AppSize.p4),
       child: Row(
         children: [
           Expanded(
@@ -199,52 +195,87 @@ class SoberBackgroundPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppColor.splashGold.withOpacity(0.08)
+      ..color = AppColor.splashGold.withOpacity(0.2)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.8;
+      ..strokeWidth = 1.0;
 
-    // Elegant long-radius arcs for a "Sober" look
+    // Geometric low-poly effect (Subtle triangles)
+    final polyPaint = Paint()
+      ..color = Colors.white.withOpacity(0.02)
+      ..style = PaintingStyle.fill;
+
+    void drawTriangle(Offset p1, Offset p2, Offset p3) {
+      final path = Path()
+        ..moveTo(p1.dx, p1.dy)
+        ..lineTo(p2.dx, p2.dy)
+        ..lineTo(p3.dx, p3.dy)
+        ..close();
+      canvas.drawPath(path, polyPaint);
+    }
+
+    // Top Right Geometry
+    drawTriangle(
+      Offset(size.width, 0),
+      Offset(size.width * 0.6, 0),
+      Offset(size.width, size.height * 0.15),
+    );
+    drawTriangle(
+      Offset(size.width * 0.6, 0),
+      Offset(size.width * 0.3, 0),
+      Offset(size.width * 0.5, size.height * 0.08),
+    );
+
+    // Bottom Left Geometry
+    drawTriangle(
+      Offset(0, size.height),
+      Offset(size.width * 0.4, size.height),
+      Offset(0, size.height * 0.8),
+    );
+    drawTriangle(
+      Offset(size.width * 0.4, size.height),
+      Offset(size.width * 0.7, size.height),
+      Offset(size.width * 0.5, size.height * 0.92),
+    );
+
+    // Top Left Decorative Gold Arc
     canvas.drawArc(
-      Rect.fromLTWH(
-        -size.width * 0.2,
-        size.height * 0.1,
-        size.width * 1.5,
-        size.height * 0.8,
+      Rect.fromCircle(
+        center: Offset(0, size.height * 0.2),
+        radius: size.width * 0.45,
       ),
-      math.pi,
-      math.pi / 2,
+      -math.pi / 2.2,
+      math.pi / 1.5,
       false,
       paint,
     );
 
+    // Bottom Right Decorative Gold Arc
     canvas.drawArc(
-      Rect.fromLTWH(
-        size.width * 0.3,
-        -size.height * 0.1,
-        size.width * 1.2,
-        size.height * 0.6,
+      Rect.fromCircle(
+        center: Offset(size.width, size.height * 0.8),
+        radius: size.width * 0.45,
       ),
-      math.pi / 2,
-      math.pi / 2,
+      math.pi / 1.2,
+      math.pi / 1.5,
       false,
       paint,
     );
 
-    // Faint botanical branch at bottom left
-    final leafPaint = Paint()
-      ..color = AppColor.splashGold.withOpacity(0.05)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.5;
+    // Sparkle points on the arcs
+    final sparklePaint = Paint()
+      ..color = AppColor.splashGold
+      ..style = PaintingStyle.fill;
 
-    final path = Path();
-    path.moveTo(0, size.height * 0.95);
-    path.quadraticBezierTo(
-      size.width * 0.2,
-      size.height * 0.85,
-      size.width * 0.1,
-      size.height * 0.6,
+    canvas.drawCircle(
+      Offset(size.width * 0.05, size.height * 0.18),
+      1.5,
+      sparklePaint,
     );
-    canvas.drawPath(path, leafPaint);
+    canvas.drawCircle(
+      Offset(size.width * 0.95, size.height * 0.78),
+      1.5,
+      sparklePaint,
+    );
   }
 
   @override

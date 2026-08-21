@@ -105,4 +105,9 @@ class AppIcon {
   static const IconData searchIcon = Icons.search;
   static const IconData closeIcon = Icons.close;
   static const IconData addCircle = Icons.add_circle_outline;
+  static const IconData leaf = Icons.eco_outlined;
+  static const IconData editIcon = Icons.edit;
+  static const IconData deleteIcon = Icons.delete;
+  static const IconData backIcon = Icons.keyboard_arrow_left;
+  static const IconData whatsapp = Icons.chat_bubble_outline;
 }
