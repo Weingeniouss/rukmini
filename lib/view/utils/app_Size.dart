@@ -29,6 +29,7 @@ class AppSize {
   static double p16 = width * 0.04;
   static double p20 = width * 0.05;
   static double p24 = width * 0.06;
+  static double p40 = width * 0.1;
 
   // Icon Sizes
   static double iconSmall = width * 0.04;

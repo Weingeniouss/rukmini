@@ -4,7 +4,6 @@ import 'package:rukmini/controller/api/controllers/credentials/forgot_password_c
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
-import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/widget/inputField.dart';
 
 void showForgotPasswordPopup(BuildContext context) {
@@ -34,7 +33,7 @@ void showForgotPasswordPopup(BuildContext context) {
             SizedBox(height: AppSize.p16),
             inputField(
               hintText: "Email",
-              prefixIcon: AppIcon.user,
+              // prefixIcon: AppIcon.user,
               inputTextcontroller: controller.emailController,
             ),
           ],

@@ -56,4 +56,26 @@ class AppColor {
   static const dashboardQuickActionBg = Color(0xFFFDFBF7);
   static const dashboardUsedLocker = Color(0xFFD4C3A3);
   static const dashboardChartGrid = Color(0xFFE6E6E6);
+
+  // Drawer Specific Colors
+  static const drawerBg = Color(0xFFFDFBF7);
+  static const drawerSelectedBg = Color(0xFFFFF7EA);
+  static const drawerSelectedBorder = Color(0xFFFFE0B2);
+  static const logoutBg = Color(0xFFFFF2E1);
+  static const logoutIcon = Color(0xFFE57373);
+  static const logoutText = Color(0xFFD32F2F);
+
+  // Login Specific Colors (Light Theme)
+  static const loginBg = Color(0xFFFDFBF7);
+  static const loginTextDark = Color(0xFF1A1A1A);
+  static const loginGold = Color(0xFFD4AF37);
+  static const loginButtonStart = Color(0xFFDEB887);
+  static const loginButtonEnd = Color(0xFFB8860B);
+
+  // Splash Specific Colors
+  static const splashBg = Color(0xFF000000);
+  static const splashGold = Color(0xFFD4AF37);
+  static const splashDivider = Color(0xFFD4AF37);
+  static const quoteCardBg = Colors.white10;
+  static const quoteText = Colors.white;
 }

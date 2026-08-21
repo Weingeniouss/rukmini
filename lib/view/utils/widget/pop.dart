@@ -15,7 +15,7 @@ class ToastificationSuccess {
         style: ToastificationStyle.minimal,
         autoCloseDuration: const Duration(seconds: 5),
         boxShadow: kElevationToShadow[2],
-        primaryColor: AppColor.primaryColor,
+        primaryColor: AppColor.loginGold,
       );
     });
   }

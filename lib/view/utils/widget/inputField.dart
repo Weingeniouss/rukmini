@@ -5,13 +5,14 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/widget/inputField.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
-import 'package:rukmini/view/utils/app_Icon.dart';
 
 Widget inputField({
   required String hintText,
-  String? prefixIcon,
+  String? prefixIconPath,
+  IconData? prefixIconData,
   dynamic icon,
   Color? iconColor,
+  Color? textColor,
   bool isPassword = false,
   TextEditingController? inputTextcontroller,
   Widget? suffixIcon,
@@ -35,50 +36,52 @@ Widget inputField({
       maxLength: maxLength,
       inputFormatters: inputFormatters,
       controller: inputTextcontroller,
-      style: TextStyle(color: AppColor.textField),
-      cursorColor: AppColor.textField,
+      style: TextStyle(color: textColor ?? AppColor.loginTextDark),
+      cursorColor: iconColor ?? AppColor.loginGold,
       obscureText: obscureText,
       decoration: InputDecoration(
         counterText: "",
-        prefixIcon: (icon != null)
-            ? Icon(icon is IconData ? icon : icon,
-                color: iconColor ?? AppColor.textField)
-            : (prefixIcon != null && prefixIcon.isNotEmpty)
-                ? Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Image.asset(prefixIcon,
-                        scale: 28, color: iconColor ?? AppColor.textField),
-                  )
-                : null,
-        prefixIconColor: iconColor ?? AppColor.textField,
-        suffixIconColor: iconColor ?? AppColor.textField,
+        prefixIcon: prefixIconData != null
+            ? Icon(prefixIconData, color: iconColor ?? AppColor.loginGold)
+            : (icon != null)
+                ? Icon(icon is IconData ? icon : icon,
+                    color: iconColor ?? AppColor.loginGold)
+                : (prefixIconPath != null && prefixIconPath.isNotEmpty)
+                    ? Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Image.asset(prefixIconPath,
+                            scale: 28, color: iconColor ?? AppColor.loginGold),
+                      )
+                    : null,
+        prefixIconColor: iconColor ?? AppColor.loginGold,
+        suffixIconColor: iconColor ?? AppColor.loginGold,
         suffixIcon: suffixIcon ??
             (isPassword
                 ? IconButton(
                     onPressed: () => isvisorNot.obscureTextClick(),
                     icon: Icon(
                       obscureText
-                          ? AppIcon.visibilityOff
-                          : AppIcon.visibilityOn,
-                      color: iconColor ?? AppColor.textField,
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                      color: iconColor ?? AppColor.loginGold,
                       size: 22,
                     ),
                   )
                 : null),
         focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: AppColor.textField),
+          borderSide: BorderSide(color: iconColor ?? AppColor.loginGold, width: 1.5),
         ),
         disabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: AppColor.textField),
+          borderSide: BorderSide(color: Colors.grey.withOpacity(0.3)),
         ),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: AppColor.textField),
+          borderSide: BorderSide(color: Colors.grey.withOpacity(0.3)),
         ),
         errorBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: AppColor.textField),
+          borderSide: BorderSide(color: AppColor.errorColor),
         ),
         hintText: hintText,
-        hintStyle: TextStyle(color: AppColor.textField.withOpacity(0.7)),
+        hintStyle: TextStyle(color: (textColor ?? AppColor.loginTextDark).withOpacity(0.5)),
       ),
     );
   }

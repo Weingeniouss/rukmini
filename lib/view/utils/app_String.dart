@@ -167,6 +167,7 @@ class AppString {
 
   //Drawer
   static const home = 'Home';
+  static const user = 'User';
   static const logout = 'Logout';
   static const allMaster = 'All Master';
   static const customer = 'Customer';
@@ -258,6 +259,7 @@ class AppString {
   static const emailphone = 'Email/Phone';
   static const password = 'password';
   static const forgetPassword = 'Forget Password?';
+  static const logIn = 'Log In';
 
   //home
   static const homeScreen = 'Home';

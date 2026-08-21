@@ -77,6 +77,11 @@ class AppIcon {
   static const IconData contact = Icons.contact_mail_outlined;
   static const IconData logout = Icons.logout;
 
+  // Login (New Design)
+  static const IconData loginUser = Icons.person_outline;
+  static const IconData loginLock = Icons.lock_outline;
+  static const IconData loginArrow = Icons.arrow_forward;
+
   static const IconData metal = Icons.layers_outlined;
   static const IconData productType = Icons.category_outlined;
   static const IconData weight = Icons.scale_outlined;
