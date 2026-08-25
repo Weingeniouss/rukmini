@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/home/girivi/addGirivi_Controller.dart';
+import 'package:rukmini/modal/drawer/home/girvi/girvi_detail_modal.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
@@ -20,6 +21,18 @@ class Addgirivi extends StatefulWidget {
 
 class _AddgiriviState extends State<Addgirivi> {
   final addGiriviUI = Get.put(AddGiriviControllerUI());
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (Get.arguments != null && Get.arguments is GiriviDetailData) {
+        addGiriviUI.populateData(Get.arguments as GiriviDetailData);
+      } else {
+        addGiriviUI.clearData();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +57,77 @@ class _AddgiriviState extends State<Addgirivi> {
 
                   // Add Product Button
                   _buildAddProductButton(),
+
+                  // Product List Display
+                  _buildProductList(),
                 ],
               ),
             ),
           ),
           _buildBottomActionRow(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildProductList() {
+    return Obx(
+      () => ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: addGiriviUI.productsList.length,
+        itemBuilder: (context, index) {
+          final product = addGiriviUI.productsList[index];
+          return Container(
+            margin: EdgeInsets.only(bottom: AppSize.p12),
+            padding: EdgeInsets.all(AppSize.p12),
+            decoration: BoxDecoration(
+              color: AppColor.white,
+              borderRadius: BorderRadius.circular(AppSize.p16),
+              border: Border.all(color: AppColor.grey300.withOpacity(0.5)),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${product['MetalName'] ?? ''} - ${product['Pieces'] ?? '0'} Pcs",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: AppSize.commonText,
+                        ),
+                      ),
+                      Text(
+                        "Weight: ${product['Weight'] ?? '0'}gm | Rate: ${product['TodayRate'] ?? '0'}",
+                        style: TextStyle(
+                          color: AppColor.textColor,
+                          fontSize: AppSize.smallText,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    Get.toNamed(
+                      '/AddProduct',
+                      arguments: {'product': product, 'index': index},
+                    );
+                  },
+                  icon: Icon(AppIcon.editIcon, color: AppColor.goldColor),
+                ),
+                IconButton(
+                  onPressed: () {
+                    addGiriviUI.productsList.removeAt(index);
+                  },
+                  icon: Icon(AppIcon.deleteIcon, color: AppColor.red),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -220,41 +298,35 @@ class _AddgiriviState extends State<Addgirivi> {
           Expanded(
             child: Column(
               children: [
-                GestureDetector(
-                  onTap: () => _showCustomerSelection(),
-                  child: inputField(
+                Obx(
+                  () => inputField(
                     hintText: AppString.customerName,
                     icon: AppIcon.person,
-                    inputTextcontroller: TextEditingController(
-                      text: addGiriviUI.customerName.value,
-                    ),
+                    inputTextcontroller: addGiriviUI.customerNameController,
                     readOnly: true,
-                    suffixIcon: Icon(
-                      AppIcon.arrow_down,
-                      color: AppColor.goldColor,
-                      size: AppSize.p20,
-                    ),
+                    onTap: addGiriviUI.isEdit.value
+                        ? null
+                        : () => _showCustomerSelection(),
+                    suffixIcon: addGiriviUI.isEdit.value
+                        ? null
+                        : Icon(
+                            AppIcon.arrow_down,
+                            color: AppColor.goldColor,
+                            size: AppSize.p20,
+                          ),
                   ),
                 ),
-                Obx(
-                  () => inputField(
-                    hintText: AppString.customerPhoneNumber,
-                    icon: AppIcon.phone,
-                    inputTextcontroller: TextEditingController(
-                      text: addGiriviUI.customerPhone.value,
-                    ),
-                    readOnly: true,
-                  ),
+                inputField(
+                  hintText: AppString.customerPhoneNumber,
+                  icon: AppIcon.phone,
+                  inputTextcontroller: addGiriviUI.customerPhoneController,
+                  readOnly: true,
                 ),
-                Obx(
-                  () => inputField(
-                    hintText: AppString.address,
-                    icon: AppIcon.location,
-                    inputTextcontroller: TextEditingController(
-                      text: addGiriviUI.address.value,
-                    ),
-                    readOnly: true,
-                  ),
+                inputField(
+                  hintText: AppString.address,
+                  icon: AppIcon.location,
+                  inputTextcontroller: addGiriviUI.addressController,
+                  readOnly: true,
                 ),
               ],
             ),
@@ -642,12 +714,19 @@ class _AddgiriviState extends State<Addgirivi> {
 void customerVoid(dynamic addGiriviUI, dynamic customer) {
   addGiriviUI.selectedCustomerId.value = customer.custId ?? '';
   addGiriviUI.customerName.value = customer.name ?? '';
-  addGiriviUI.customerPhone.value =
-      customer.phoneList?.firstWhereOrNull((p) => p.isDefault == "1")?.phone ??
+  addGiriviUI.customerNameController.text = customer.name ?? '';
+  
+  String phone = customer.phoneList?.firstWhereOrNull((p) => p.isDefault == "1")?.phone ??
       ((customer.phoneList != null && customer.phoneList!.isNotEmpty)
           ? customer.phoneList!.first.phone
           : '') ??
       '';
+  
+  addGiriviUI.customerPhone.value = phone;
+  addGiriviUI.customerPhoneController.text = phone;
+  
   addGiriviUI.address.value = customer.address ?? '';
+  addGiriviUI.addressController.text = customer.address ?? '';
+  
   Get.back();
 }

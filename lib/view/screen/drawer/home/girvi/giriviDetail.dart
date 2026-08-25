@@ -96,7 +96,12 @@ class _GiriviDetailState extends State<GiriviDetail> {
           edit: true,
           close: true,
           remove: true,
-          editOnPressed: () => Get.toNamed('/giriviadd'),
+          editOnPressed: () {
+            final data = giriviDetailController.giriviDetailData.value.data;
+            if (data != null) {
+              Get.toNamed('/giriviadd', arguments: data);
+            }
+          },
           closeOnPressed: () => CallApi.callCloseGirvie(girviId: girviId),
           deletOnPressed: () => CallApi.callRemoveGirvie(girviId: girviId),
         ),

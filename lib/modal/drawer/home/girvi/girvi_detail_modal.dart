@@ -211,6 +211,7 @@ class ProductDetail {
   String? origAmount;
   String? givenAmount;
   String? isDiamond;
+  String? isHallmark;
   String? isGemStone;
   String? isReturn;
   String? returnDate;
@@ -237,6 +238,7 @@ class ProductDetail {
       this.origAmount,
       this.givenAmount,
       this.isDiamond,
+      this.isHallmark,
       this.isGemStone,
       this.isReturn,
       this.returnDate,
@@ -263,6 +265,7 @@ class ProductDetail {
     origAmount = json['OrigAmount'];
     givenAmount = json['GivenAmount'];
     isDiamond = json['IsDiamond'];
+    isHallmark = json['IsHallmark'];
     isGemStone = json['IsGemStone'];
     isReturn = json['IsReturn'];
     returnDate = json['ReturnDate'];
@@ -305,6 +308,7 @@ class ProductDetail {
     data['OrigAmount'] = origAmount;
     data['GivenAmount'] = givenAmount;
     data['IsDiamond'] = isDiamond;
+    data['IsHallmark'] = isHallmark;
     data['IsGemStone'] = isGemStone;
     data['IsReturn'] = isReturn;
     data['ReturnDate'] = returnDate;

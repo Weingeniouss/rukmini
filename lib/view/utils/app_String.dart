@@ -384,6 +384,7 @@ class AppString {
       static const uploadProductPhotos = 'Upload Product Photos';
       static const remark = 'Remark';
       static const isDiamondAvailable = 'Is Diamond available?';
+      static const isHallmarkAvailable = 'Is Hallmark available?';
       static const diamondDetails = 'Diamond Details';
       static const diamondPieces = 'Diamond Pieces';
       static const diamondWeight = 'Diamond Weight';

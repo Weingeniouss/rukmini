@@ -36,6 +36,14 @@ class _AddProductState extends State<AddProduct> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (Get.arguments != null && Get.arguments['product'] != null) {
+        addProductUI.populateData(
+          Get.arguments['product'],
+          Get.arguments['index'],
+        );
+      } else {
+        addProductUI.clearData();
+      }
       CallApi.callMetalList();
       CallApi.callProductTypeList();
       CallApi.callProductList();
@@ -206,6 +214,28 @@ class _AddProductState extends State<AddProduct> {
   Widget _buildDiamondSection() {
     return Column(
       children: [
+        Padding(
+          padding: EdgeInsets.only(bottom: AppSize.p16),
+          child: Row(
+            children: [
+              Obx(
+                () => Checkbox(
+                  value: addProductUI.isHallmark.value,
+                  onChanged: (val) =>
+                      addProductUI.isHallmark.value = val ?? false,
+                  activeColor: AppColor.goldColor,
+                ),
+              ),
+              Text(
+                AppString.isHallmarkAvailable,
+                style: TextStyle(
+                  fontSize: AppSize.commonText,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
         Padding(
           padding: EdgeInsets.only(bottom: AppSize.p16),
           child: Row(
@@ -586,14 +616,22 @@ class _AddProductState extends State<AddProduct> {
       "OrigAmount": addProductUI.originalPriceController.text,
       "GivenAmount": addProductUI.amountGivenController.text,
       "IsDiamond": addProductUI.isDiamondAvailable.value ? "1" : "0",
+      "IsHallmark": addProductUI.isHallmark.value ? "1" : "0",
       "LockerCode": addProductUI.lockerCodeController.text,
       "Remark": addProductUI.remarkController.text,
       "DiamondPieces": addProductUI.diamondPiecesController.text,
       "DiamondWeight": addProductUI.diamondWeightController.text,
       "CertificateNo": addProductUI.certificateNumberController.text,
       "DiamondPrice": addProductUI.diamondPriceController.text,
+      "MetalTouch": addProductUI.selectedMetalTouch.value,
+      "MetalName": addProductUI.selectedMetal.value,
+      "CategoryName": addProductUI.selectedCategory.value,
     };
-    addGiriviUI.addProduct(product);
+    if (addProductUI.isEdit.value) {
+      addGiriviUI.updateProduct(addProductUI.productIndex.value, product);
+    } else {
+      addGiriviUI.addProduct(product);
+    }
     if (kDebugMode) {
       print(product);
     }
