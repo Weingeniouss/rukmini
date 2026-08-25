@@ -197,6 +197,7 @@ class AppString {
   static const noCustomersFound = 'No Customers Found';
   static const noName = 'No Name';
   static const na = 'N/A';
+  static const upload = 'Upload';
 
   //Units & Labels
   static const gm = 'gm';
@@ -339,6 +340,7 @@ class AppString {
       static const interestAmount = 'Interest Amount';
       static const totalAmountReceivable = 'Total Amount Receivable';
       static const title = 'Title';
+      static const updateCustomer = 'Update Customer';
     //Givi
       static const giriviList = 'Girivi List';
       static const selectYear = 'Select Year';
@@ -379,6 +381,7 @@ class AppString {
       static const lockerCode = 'Locker Code';
       static const enterLockerCode = 'Enter Locker code';
       static const productPhoto = 'Product Photo';
+      static const uploadProductPhotos = 'Upload Product Photos';
       static const remark = 'Remark';
       static const isDiamondAvailable = 'Is Diamond available?';
       static const diamondDetails = 'Diamond Details';

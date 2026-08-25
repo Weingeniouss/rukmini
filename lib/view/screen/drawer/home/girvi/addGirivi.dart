@@ -1,6 +1,5 @@
 // ignore_for_file: file_names, deprecated_member_use
 
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/home/girivi/addGirivi_Controller.dart';
@@ -9,9 +8,8 @@ import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
-import 'package:rukmini/view/utils/widget/button.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
-import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
+import 'package:rukmini/view/utils/widget/inputField.dart';
 
 class Addgirivi extends StatefulWidget {
   const Addgirivi({super.key});
@@ -27,387 +25,508 @@ class _AddgiriviState extends State<Addgirivi> {
   Widget build(BuildContext context) {
     return Fullscreen(
       isPadding: false,
-      appBar: appBar(back: true, title: AppString.girvi, centerTitle: true),
+      backGroundcolor: AppColor.backgroundColor,
+      appBar: appBar(back: true, title: AppString.girvi),
       child: Column(
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: EdgeInsets.all(AppSize.p16),
               child: Column(
                 children: [
-                  horizontalPadding(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Column(
-                            children: [
-                              _buildDropdownRow(
-                                icon: AppIcon.person,
-                                label: AppString.customerName,
-                                value: addGiriviUI.customerName,
-                                onTap: () => _showCustomerSelection(),
-                              ),
-                              _buildDataRow(
-                                icon: AppIcon.call,
-                                label: AppString.customerPhoneNumber,
-                                value: addGiriviUI.customerPhone,
-                                isGrayBackground: true,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(width: AppSize.p16),
-                        _buildImagePicker(),
-                      ],
-                    ),
-                  ),
-                  _buildDataRow(
-                    icon: AppIcon.location,
-                    label: AppString.address,
-                    value: addGiriviUI.address,
-                    isPadding: true,
-                  ),
-                  _buildDivider(),
-                  _buildInputRow(
-                    icon: AppIcon.date,
-                    label: AppString.toDate,
-                    controller: addGiriviUI.dateController,
-                    hint: AppString.selectDate,
-                    readOnly: true,
-                    onTap: () => _selectDate(context),
-                  ),
-                  _buildDivider(),
-                  _buildInputRow(
-                    icon: AppIcon.calendar,
-                    label: AppString.durationInMonths,
-                    controller: addGiriviUI.durationController,
-                    hint: AppString.enterDurationInMonths,
-                    keyboardType: TextInputType.number,
-                  ),
-                  _buildDivider(),
-                  _buildInputRow(
-                    icon: AppIcon.calendar,
-                    label: AppString.dueDateLabel,
-                    controller: addGiriviUI.dueDateController,
-                    hint: AppString.dueDateLabel,
-                    isGrayBackground: true,
-                    readOnly: true,
-                  ),
-                  _buildDivider(),
-                  _buildInputRow(
-                    icon: AppIcon.percent,
-                    label: AppString.interestRate,
-                    controller: addGiriviUI.interestRateController,
-                    hint: AppString.interestRate,
-                    keyboardType: TextInputType.number,
-                  ),
-                  _buildDivider(),
-                  _buildInputRow(
-                    icon: AppIcon.rupee,
-                    label: AppString.totalAmountGiven,
-                    controller: addGiriviUI.totalAmountGivenController,
-                    hint: AppString.totalAmountGiven,
-                    keyboardType: TextInputType.number,
-                    isGrayBackground: true,
-                  ),
-                  _buildDivider(),
-                  _buildInputRow(
-                    icon: AppIcon.rupee,
-                    label: AppString.interestAmount,
-                    controller: addGiriviUI.interestAmountController,
-                    hint: AppString.interestAmount,
-                    readOnly: true,
-                  ),
-                  _buildDivider(),
-                  _buildInputRow(
-                    icon: AppIcon.rupee,
-                    label: AppString.totalAmountReceivable,
-                    controller: addGiriviUI.totalAmountReceivableController,
-                    hint: AppString.totalAmountReceivable,
-                    isGrayBackground: true,
-                    readOnly: true,
-                  ),
-                  SizedBox(height: AppSize.p12),
-                  addProductButtons(),
+                  // Top Section: Customer Details & Image Picker
+                  _sectionHeader(AppString.customerDetail, AppIcon.person),
+                  _customerSelection(),
+
+                  // Form Fields
+                  _sectionHeader(AppString.girviDetails, AppIcon.girvi),
+                  dividerForm(),
+
+                  // Add Product Button
+                  _buildAddProductButton(),
                 ],
               ),
             ),
           ),
-          _buildBottomButtons(),
+          _buildBottomActionRow(),
         ],
       ),
     );
   }
 
-  Widget addProductButtons() {
+  Widget _buildAddProductButton() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppSize.width * 0.20),
+      padding: EdgeInsets.symmetric(vertical: AppSize.p16),
       child: GestureDetector(
-        onTap: () {
-          Get.toNamed('/AddProduct');
-        },
-        child: clickButton(AppString.addProduct),
-      ),
-    );
-  }
-
-  Widget _buildDropdownRow({
-    required IconData icon,
-    required String label,
-    required RxString value,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          children: [
-            Icon(icon, color: AppColor.activeColor, size: 24),
-            SizedBox(width: AppSize.p16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(color: AppColor.textColor, fontSize: AppSize.p12),
-                  ),
-                  Row(
-                    children: [
-                      Obx(
-                        () => Expanded(
-                          child: Text(
-                            value.value.isEmpty
-                                ? "Select Customer"
-                                : value.value,
-                            style: TextStyle(
-                              fontSize: AppSize.p16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const Icon(AppIcon.arrowDown, color: AppColor.black54),
-                    ],
-                  ),
-                ],
-              ),
+        onTap: () => Get.toNamed('/AddProduct'),
+        child: Container(
+          padding: EdgeInsets.all(AppSize.p12),
+          decoration: BoxDecoration(
+            color: AppColor.white,
+            borderRadius: BorderRadius.circular(AppSize.p16),
+            border: Border.all(
+              color: AppColor.goldColor.withOpacity(0.5),
+              style: BorderStyle.solid,
             ),
-          ],
+            boxShadow: [
+              BoxShadow(
+                color: AppColor.black.withOpacity(0.02),
+                blurRadius: AppSize.p4 + 1,
+                offset: Offset(0, AppSize.p4 / 2),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(AppSize.p8),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: AppColor.goldColor.withOpacity(0.5),
+                  ),
+                  borderRadius: BorderRadius.circular(AppSize.p8),
+                ),
+                child: Icon(
+                  AppIcon.inventory,
+                  color: AppColor.goldColor,
+                  size: AppSize.p20,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  AppString.addProduct,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: AppColor.goldColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppSize.commonText,
+                  ),
+                ),
+              ),
+              Icon(
+                AppIcon.rightArrow,
+                color: AppColor.black,
+                size: AppSize.p20,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildDataRow({
-    required IconData icon,
-    required String label,
-    required RxString value,
-    bool isGrayBackground = false,
-    bool isPadding = false,
-  }) {
-    Widget content = Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: 10,
-        horizontal: isPadding ? AppSize.p16 : 0,
-      ),
+  Widget dividerForm() {
+    return Column(
+      children: [
+        _buildFormRow(
+          icon: AppIcon.calendar,
+          label: AppString.toDate,
+          controller: addGiriviUI.dateController,
+          trailing: Icon(
+            AppIcon.calendar,
+            color: AppColor.goldColor,
+            size: AppSize.iconSmall,
+          ),
+          onTap: () => _selectDate(context),
+          hasIndicator: true,
+        ),
+        _buildFormRow(
+          icon: AppIcon.calendar,
+          label: AppString.durationInMonths,
+          controller: addGiriviUI.durationController,
+          trailing: Icon(
+            AppIcon.rightArrow,
+            color: AppColor.black,
+            size: AppSize.iconSmall,
+          ),
+          keyboardType: TextInputType.number,
+          hasIndicator: true,
+        ),
+        _buildFormRow(
+          icon: AppIcon.calendar,
+          label: AppString.dueDateLabel,
+          controller: addGiriviUI.dueDateController,
+          trailing: Icon(
+            AppIcon.rightArrow,
+            color: AppColor.black,
+            size: AppSize.iconSmall,
+          ),
+          readOnly: true,
+          hasIndicator: true,
+        ),
+        _buildFormRow(
+          icon: AppIcon.percent,
+          label: AppString.interestRate,
+          controller: addGiriviUI.interestRateController,
+          trailing: Padding(
+            padding: EdgeInsets.only(right: AppSize.p12),
+            child: const Text(
+              "%",
+              style: TextStyle(
+                color: AppColor.goldColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          keyboardType: TextInputType.number,
+          hasIndicator: true,
+        ),
+        _buildFormRow(
+          icon: AppIcon.rupee,
+          label: AppString.totalAmountGiven,
+          controller: addGiriviUI.totalAmountGivenController,
+          trailing: Icon(
+            AppIcon.rupee,
+            color: AppColor.goldColor,
+            size: AppSize.iconSmall,
+          ),
+          keyboardType: TextInputType.number,
+          hasIndicator: true,
+        ),
+        _buildFormRow(
+          icon: AppIcon.rupee,
+          label: AppString.interestAmount,
+          controller: addGiriviUI.interestAmountController,
+          trailing: Icon(
+            AppIcon.rupee,
+            color: AppColor.goldColor,
+            size: AppSize.iconSmall,
+          ),
+          readOnly: true,
+          hasIndicator: true,
+        ),
+        _buildFormRow(
+          icon: AppIcon.rupee,
+          label: AppString.totalAmountReceivable,
+          controller: addGiriviUI.totalAmountReceivableController,
+          trailing: Icon(
+            AppIcon.rupee,
+            color: AppColor.goldColor,
+            size: AppSize.iconSmall,
+          ),
+          readOnly: true,
+          hasIndicator: true,
+        ),
+      ],
+    );
+  }
+
+  Widget _customerSelection() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: AppSize.p16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: AppColor.activeColor, size: 24),
-          SizedBox(width: AppSize.p16),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: AppColor.textColor,
-                    fontSize: AppSize.p12,
+                GestureDetector(
+                  onTap: () => _showCustomerSelection(),
+                  child: inputField(
+                    hintText: AppString.customerName,
+                    icon: AppIcon.person,
+                    inputTextcontroller: TextEditingController(
+                      text: addGiriviUI.customerName.value,
+                    ),
+                    readOnly: true,
+                    suffixIcon: Icon(
+                      AppIcon.arrow_down,
+                      color: AppColor.goldColor,
+                      size: AppSize.p20,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 4),
                 Obx(
-                  () => Text(
-                    value.value.isEmpty ? AppString.na : value.value,
-                    style: TextStyle(fontSize: AppSize.size14, fontWeight: FontWeight.w400),
+                  () => inputField(
+                    hintText: AppString.customerPhoneNumber,
+                    icon: AppIcon.phone,
+                    inputTextcontroller: TextEditingController(
+                      text: addGiriviUI.customerPhone.value,
+                    ),
+                    readOnly: true,
+                  ),
+                ),
+                Obx(
+                  () => inputField(
+                    hintText: AppString.address,
+                    icon: AppIcon.location,
+                    inputTextcontroller: TextEditingController(
+                      text: addGiriviUI.address.value,
+                    ),
+                    readOnly: true,
                   ),
                 ),
               ],
             ),
           ),
+          SizedBox(width: AppSize.p12),
+          _buildImageUploadBox(),
         ],
       ),
     );
-
-    if (isGrayBackground) {
-      return Container(
-        color: AppColor.grey200,
-        width: double.infinity,
-        child: content,
-      );
-    }
-    return content;
   }
 
-  Widget _buildInputRow({
+  // Widget _appBarButton(IconData icon, VoidCallback onTap) {
+  //   return GestureDetector(
+  //     onTap: onTap,
+  //     child: Container(
+  //       padding: EdgeInsets.all(AppSize.p8),
+  //       decoration: BoxDecoration(
+  //         color: AppColor.white.withOpacity(0.1),
+  //         borderRadius: BorderRadius.circular(AppSize.p10),
+  //         border: Border.all(color: AppColor.goldColor.withOpacity(0.3)),
+  //       ),
+  //       child: Icon(icon, color: AppColor.goldColor, size: AppSize.iconMedium),
+  //     ),
+  //   );
+  // }
+
+  Widget _sectionHeader(String title, IconData icon) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSize.p16,
+        vertical: AppSize.p12,
+      ),
+      margin: EdgeInsets.only(bottom: AppSize.p12),
+      decoration: BoxDecoration(
+        color: AppColor.whiteOrang.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(AppSize.p20),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(AppSize.p8),
+            decoration: BoxDecoration(
+              color: AppColor.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColor.goldColor.withOpacity(0.1),
+                  blurRadius: AppSize.p4,
+                ),
+              ],
+            ),
+            child: Icon(icon, color: AppColor.goldColor, size: AppSize.p20),
+          ),
+          SizedBox(width: AppSize.p12),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: AppSize.headingText,
+              fontWeight: FontWeight.bold,
+              color: AppColor.black,
+            ),
+          ),
+          const Spacer(),
+          Icon(
+            AppIcon.leaf,
+            color: AppColor.goldColor.withOpacity(0.1),
+            size: AppSize.iconLarge * 1.25,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImageUploadBox() {
+    return Container(
+      width: AppSize.width * 0.3,
+      height: AppSize.width * 0.53,
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        borderRadius: BorderRadius.circular(AppSize.p16),
+        border: Border.all(
+          color: AppColor.goldColor.withOpacity(0.5),
+          style: BorderStyle.solid,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: EdgeInsets.all(AppSize.p12),
+            decoration: BoxDecoration(
+              color: AppColor.whiteOrang.withOpacity(0.5),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              AppIcon.camera_alt,
+              color: AppColor.goldColor,
+              size: AppSize.iconLarge,
+            ),
+          ),
+          SizedBox(height: AppSize.p12),
+          Text(
+            AppString.images,
+            style: TextStyle(
+              fontSize: AppSize.p12,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            "(0/5)",
+            style: TextStyle(
+              fontSize: AppSize.extraSmallText,
+              color: AppColor.textColor,
+            ),
+          ),
+          SizedBox(height: AppSize.p16),
+          GestureDetector(
+            onTap: addGiriviUI.pickImage,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSize.p16,
+                vertical: AppSize.p4 + 2,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppSize.p8),
+                border: Border.all(color: AppColor.goldColor),
+              ),
+              child: Text(
+                AppString.upload,
+                style: TextStyle(
+                  color: AppColor.goldColor,
+                  fontSize: AppSize.p12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFormRow({
     required IconData icon,
     required String label,
     required TextEditingController controller,
-    required String hint,
-    bool isGrayBackground = false,
+    Widget? trailing,
     bool readOnly = false,
     VoidCallback? onTap,
     TextInputType keyboardType = TextInputType.text,
+    bool hasIndicator = false,
   }) {
-    Widget content = horizontalPadding(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: AppColor.activeColor, size: 24),
-            SizedBox(width: AppSize.p16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(color: AppColor.textColor, fontSize: AppSize.p12),
-                  ),
-                  TextField(
-                    controller: controller,
-                    readOnly: readOnly,
-                    onTap: onTap,
-                    keyboardType: keyboardType,
-                    style: TextStyle(fontSize: AppSize.size15, fontWeight: FontWeight.w400),
-                      decoration: InputDecoration(
-                        hintText: hint,
-                        hintStyle: TextStyle(
-                          color: AppColor.boderSideColor.shade400,
-                          fontSize: AppSize.size15,
-                        ),
-                        isDense: true,
-                        contentPadding: const EdgeInsets.symmetric(vertical: 8),
-                        border: InputBorder.none,
-                      ),
-                  ),
-                ],
-              ),
+    return Row(
+      children: [
+        if (hasIndicator)
+          Container(
+            width: AppSize.p4,
+            height: AppSize.width * 0.08,
+            margin: EdgeInsets.only(bottom: AppSize.p12),
+            decoration: BoxDecoration(
+              color: AppColor.goldColor,
+              borderRadius: BorderRadius.circular(AppSize.p4),
             ),
-          ],
-        ),
-      ),
-    );
-
-    if (isGrayBackground) {
-      return Container(
-        color: AppColor.grey200,
-        width: double.infinity,
-        child: content,
-      );
-    }
-    return content;
-  }
-
-  Widget _buildImagePicker() {
-    return Obx(() {
-      return GestureDetector(
-        onTap: addGiriviUI.pickImage,
-        child: Container(
-          width: AppSize.width * 0.3,
-          height: AppSize.width * 0.3,
-          decoration: BoxDecoration(
-            color: AppColor.grey200,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: AppColor.black.withOpacity(0.1),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
           ),
-          child: addGiriviUI.selectedImage.value != null
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.file(
-                    File(addGiriviUI.selectedImage.value!.path),
-                    fit: BoxFit.cover,
-                  ),
-                )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(AppIcon.camera, size: 40, color: AppColor.grey400),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Images",
-                      style: TextStyle(
-                        color: AppColor.grey500,
-                        fontSize: AppSize.p12,
-                      ),
-                    ),
-                  ],
-                ),
+        if (hasIndicator) SizedBox(width: AppSize.p8),
+        Expanded(
+          child: inputField(
+            hintText: label,
+            icon: icon,
+            inputTextcontroller: controller,
+            suffixIcon: trailing,
+            readOnly: readOnly,
+            onTap: onTap,
+            keyboardType: keyboardType,
+          ),
         ),
-      );
-    });
-  }
-
-  Widget _buildDivider() {
-    return Divider(
-      height: 1,
-      thickness: 1,
-      color: AppColor.grey200,
+      ],
     );
   }
 
-  Widget _buildBottomButtons() {
+  Widget _buildBottomActionRow() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: AppSize.p8),
+      padding: EdgeInsets.all(AppSize.p16),
       decoration: BoxDecoration(
-        color: AppColor.primaryColor,
-        border: Border(
-          top: BorderSide(color: AppColor.activeColor.shade900, width: 2),
-        ),
+        color: AppColor.white,
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.05),
+            blurRadius: AppSize.p10,
+            offset: Offset(0, -AppSize.p4 - 1),
+          ),
+        ],
       ),
       child: Row(
         children: [
           Expanded(
-            child: GestureDetector(
-              onTap: () => Get.back(),
-              child: Center(
-                child: Text(
-                  AppString.cancel,
-                  style: TextStyle(
-                    color: AppColor.activeColor,
-                    fontSize: AppSize.size14,
-                    fontWeight: FontWeight.w500,
-                  ),
+            child: OutlinedButton(
+              onPressed: () => Get.back(),
+              style: OutlinedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: AppSize.p16),
+                side: BorderSide(color: AppColor.goldColor, width: 1.5),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppSize.p16),
                 ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    AppIcon.closeIcon,
+                    color: AppColor.goldColor,
+                    size: AppSize.p20,
+                  ),
+                  SizedBox(width: AppSize.p8),
+                  Text(
+                    AppString.cancel,
+                    style: TextStyle(
+                      color: AppColor.goldColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: AppSize.largeText,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          Container(width: 1, color: AppColor.activeColor.shade900),
+          SizedBox(width: AppSize.p16),
           Expanded(
-            child: GestureDetector(
-              onTap: () {
-                addGiriviUI.submitGirivi();
-              },
-              child: Center(
-                child: Text(
-                  AppString.save,
-                  style: TextStyle(
-                    color: AppColor.activeColor,
-                    fontSize: AppSize.size14,
-                    fontWeight: FontWeight.w500,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AppColor.goldColor, AppColor.dashboardGold],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(AppSize.p16),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColor.goldColor.withOpacity(0.3),
+                    blurRadius: AppSize.p8,
+                    offset: Offset(0, AppSize.p4),
                   ),
+                ],
+              ),
+              child: ElevatedButton(
+                onPressed: () => addGiriviUI.submitGirivi(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColor.transparent,
+                  shadowColor: AppColor.transparent,
+                  padding: EdgeInsets.symmetric(vertical: AppSize.p16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSize.p16),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      AppIcon.save,
+                      color: AppColor.white,
+                      size: AppSize.p20,
+                    ),
+                    SizedBox(width: AppSize.p8),
+                    Text(
+                      AppString.save,
+                      style: TextStyle(
+                        color: AppColor.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: AppSize.largeText,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -450,25 +569,30 @@ class _AddgiriviState extends State<Addgirivi> {
         height: AppSize.height * 0.8,
         decoration: BoxDecoration(
           color: AppColor.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppSize.p20),
+          ),
         ),
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(AppSize.p16),
               child: Text(
                 AppString.selectCustomer,
-                style: TextStyle(fontSize: AppSize.p12, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: AppSize.p12,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: AppSize.p16),
               child: TextField(
                 decoration: InputDecoration(
                   hintText: AppString.search,
                   prefixIcon: const Icon(AppIcon.searchIcon),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppSize.p10),
                   ),
                 ),
                 onChanged: (val) => addGiriviUI.custListController.custList(
@@ -501,22 +625,7 @@ class _AddgiriviState extends State<Addgirivi> {
                       ),
                       title: Text(customer.name ?? ""),
                       subtitle: Text(customer.custCode ?? ""),
-                      onTap: () {
-                        addGiriviUI.selectedCustomerId.value =
-                            customer.custId ?? '';
-                        addGiriviUI.customerName.value = customer.name ?? '';
-                        addGiriviUI.customerPhone.value =
-                            customer.phoneList
-                                ?.firstWhereOrNull((p) => p.isDefault == "1")
-                                ?.phone ??
-                            ((customer.phoneList != null &&
-                                    customer.phoneList!.isNotEmpty)
-                                ? customer.phoneList!.first.phone
-                                : '') ??
-                            '';
-                        addGiriviUI.address.value = customer.address ?? '';
-                        Get.back();
-                      },
+                      onTap: () => customerVoid(addGiriviUI, customer),
                     );
                   },
                 );
@@ -528,4 +637,17 @@ class _AddgiriviState extends State<Addgirivi> {
       isScrollControlled: true,
     );
   }
+}
+
+void customerVoid(dynamic addGiriviUI, dynamic customer) {
+  addGiriviUI.selectedCustomerId.value = customer.custId ?? '';
+  addGiriviUI.customerName.value = customer.name ?? '';
+  addGiriviUI.customerPhone.value =
+      customer.phoneList?.firstWhereOrNull((p) => p.isDefault == "1")?.phone ??
+      ((customer.phoneList != null && customer.phoneList!.isNotEmpty)
+          ? customer.phoneList!.first.phone
+          : '') ??
+      '';
+  addGiriviUI.address.value = customer.address ?? '';
+  Get.back();
 }

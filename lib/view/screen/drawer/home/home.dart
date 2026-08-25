@@ -14,6 +14,7 @@ import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/app_image.dart';
 import 'package:rukmini/view/utils/app_size.dart';
+import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:shimmer/shimmer.dart';
@@ -59,85 +60,42 @@ class _HomeState extends State<Home> {
       drawer: homeDrawer(),
       backGroundcolor: AppColor.backgroundColor,
       isPadding: false,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(AppSize.width * 0.2),
-        child: Container(
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top + AppSize.p10,
-            left: AppSize.p16,
-            right: AppSize.p16,
-            bottom: AppSize.p10,
-          ),
-          child: Row(
-            children: [
-              Builder(
-                builder: (context) => IconButton(
-                  icon: const Icon(
-                    AppIcon.menu,
-                    color: AppColor.dashboardTextDark,
-                  ),
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                ),
+      appBar: appBar(
+        centerTitle: false,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              AppString.home,
+              style: TextStyle(
+                fontSize: AppSize.size20,
+                fontWeight: FontWeight.bold,
+                color: AppColor.dashboardTextDark,
               ),
-              SizedBox(width: AppSize.p8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    AppString.home,
-                    style: TextStyle(
-                      fontSize: AppSize.size20,
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.dashboardTextDark,
-                    ),
-                  ),
-                  Text(
-                    AppString.dashboardOverview,
-                    style: TextStyle(
-                      fontSize: AppSize.size12,
-                      color: AppColor.dashboardTextLight,
-                    ),
-                  ),
-                ],
+            ),
+            Text(
+              AppString.dashboardOverview,
+              style: TextStyle(
+                fontSize: AppSize.size12,
+                color: AppColor.dashboardTextLight,
               ),
-              const Spacer(),
-              Stack(
-                children: [
-                  Icon(
-                    AppIcon.notification,
-                    size: AppSize.iconLarge * 0.8,
-                    color: AppColor.dashboardTextDark,
-                  ),
-                  Positioned(
-                    right: 2,
-                    top: 2,
-                    child: Container(
-                      padding: EdgeInsets.all(AppSize.p4),
-                      decoration: const BoxDecoration(
-                        color: AppColor.orange,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-                ],
+            ),
+          ],
+        ),
+        notification: true,
+        avatar: CircleAvatar(
+          backgroundColor: AppColor.dashboardCream,
+          child: Obx(() {
+            final role = loginController.loginData.value.data?.roleName;
+            return Text(
+              getInitials(role),
+              style: const TextStyle(
+                color: AppColor.dashboardTextDark,
+                fontWeight: FontWeight.bold,
               ),
-              SizedBox(width: AppSize.p16),
-              CircleAvatar(
-                backgroundColor: AppColor.dashboardCream,
-                child: Obx(() {
-                  final role = loginController.loginData.value.data?.roleName;
-                  return Text(
-                    getInitials(role),
-                    style: const TextStyle(
-                      color: AppColor.dashboardTextDark,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  );
-                }),
-              ),
-            ],
-          ),
+            );
+          }),
         ),
       ),
       child: Obx(() {
@@ -678,9 +636,16 @@ class _HomeState extends State<Home> {
         margin: EdgeInsets.only(right: AppSize.p12),
         padding: EdgeInsets.all(AppSize.p16),
         decoration: BoxDecoration(
-          color: AppColor.dashboardCardBg,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColor.grey200),
+          color: AppColor.white,
+          borderRadius: BorderRadius.circular(AppSize.p16),
+          border: Border.all(color: AppColor.grey300.withOpacity(0.5)),
+          boxShadow: [
+            BoxShadow(
+              color: AppColor.black.withOpacity(0.02),
+              blurRadius: 5,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -688,13 +653,13 @@ class _HomeState extends State<Home> {
             Container(
               padding: EdgeInsets.all(AppSize.p8),
               decoration: BoxDecoration(
-                color: AppColor.dashboardIconBg,
-                borderRadius: BorderRadius.circular(10),
+                color: AppColor.whiteOrang.withOpacity(0.5),
+                shape: BoxShape.circle,
               ),
               child: Icon(
                 icon,
-                color: AppColor.dashboardGold,
-                size: AppSize.p24,
+                color: AppColor.goldColor,
+                size: AppSize.p20 + 2,
               ),
             ),
             SizedBox(height: AppSize.p12),
@@ -704,7 +669,7 @@ class _HomeState extends State<Home> {
                 style: TextStyle(
                   fontSize: AppSize.extraLargeText,
                   fontWeight: FontWeight.bold,
-                  color: AppColor.dashboardTextDark,
+                  color: AppColor.black,
                 ),
               ),
             ),
@@ -714,7 +679,7 @@ class _HomeState extends State<Home> {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: AppSize.size12,
-                color: AppColor.dashboardTextLight,
+                color: AppColor.textColor,
               ),
             ),
             SizedBox(height: AppSize.p8),
@@ -723,9 +688,7 @@ class _HomeState extends State<Home> {
                 Icon(
                   isPositive ? AppIcon.arrowUp : AppIcon.arrowDown,
                   size: AppSize.width * 0.035,
-                  color: isPositive
-                      ? AppColor.activeColor
-                      : AppColor.deleteColor,
+                  color: isPositive ? AppColor.activeColor : AppColor.deleteColor,
                 ),
                 SizedBox(width: AppSize.p4 / 2),
                 Text(
@@ -733,21 +696,7 @@ class _HomeState extends State<Home> {
                   style: TextStyle(
                     fontSize: AppSize.extraSmallText * 1.5,
                     fontWeight: FontWeight.bold,
-                    color: isPositive
-                        ? AppColor.activeColor
-                        : AppColor.deleteColor,
-                  ),
-                ),
-                SizedBox(width: AppSize.p4 / 2),
-                Expanded(
-                  child: Text(
-                    AppString.vsLast,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: AppSize.extraSmallText * 1.1,
-                      color: AppColor.dashboardTextLight,
-                    ),
+                    color: isPositive ? AppColor.activeColor : AppColor.deleteColor,
                   ),
                 ),
               ],
@@ -821,16 +770,23 @@ class _HomeState extends State<Home> {
           horizontal: AppSize.p4,
         ),
         decoration: BoxDecoration(
-          color: AppColor.dashboardQuickActionBg,
+          color: AppColor.white,
           borderRadius: BorderRadius.circular(AppSize.p12),
-          border: Border.all(color: AppColor.dashboardCream),
+          border: Border.all(color: AppColor.grey300.withOpacity(0.5)),
+          boxShadow: [
+            BoxShadow(
+              color: AppColor.black.withOpacity(0.02),
+              blurRadius: 5,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Column(
           children: [
             Icon(
               icon,
-              color: AppColor.dashboardGold,
-              size: AppSize.iconLarge * 0.9,
+              color: AppColor.goldColor,
+              size: AppSize.iconLarge * 0.8,
             ),
             SizedBox(height: AppSize.p8),
             FittedBox(
@@ -838,9 +794,9 @@ class _HomeState extends State<Home> {
                 label,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: AppSize.extraSmallText * 1.18,
-                  fontWeight: FontWeight.w500,
-                  color: AppColor.dashboardTextDark,
+                  fontSize: AppSize.smallText,
+                  fontWeight: FontWeight.w600,
+                  color: AppColor.black,
                 ),
               ),
             ),

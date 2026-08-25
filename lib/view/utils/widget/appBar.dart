@@ -1,8 +1,8 @@
-// ignore_for_file: file_names
+// ignore_for_file: deprecated_member_use, file_names
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:rukmini/view/utils/app_background.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import '../app_Icon.dart';
@@ -15,6 +15,9 @@ AppBar appBar({
   bool? close,
   bool? remove,
   bool? back,
+  bool? notification,
+  bool isPremium = false,
+  Widget? avatar,
   void Function()? searchOnPressed,
   void Function()? filterOnPressed,
   void Function()? deletOnPressed,
@@ -28,9 +31,10 @@ AppBar appBar({
     titleWidget = Text(
       title,
       style: TextStyle(
-        color: AppColor.fullScreenColor,
-        fontSize: AppSize.size20,
-        fontWeight: FontWeight.w500,
+        color: isPremium ? AppColor.goldColor : AppColor.black,
+        fontSize: isPremium ? AppSize.titleText * 1.2 : AppSize.titleText,
+        fontWeight: FontWeight.bold,
+        letterSpacing: isPremium ? 2 : null,
       ),
     );
   } else if (title is Widget) {
@@ -40,49 +44,160 @@ AppBar appBar({
   }
 
   return AppBar(
-    leadingWidth: (back == true) ? 40 : null,
+    surfaceTintColor: isPremium ? AppColor.black : AppColor.backgroundColor,
+    foregroundColor: isPremium ? AppColor.black : AppColor.backgroundColor,
+    backgroundColor: isPremium ? AppColor.black : AppColor.backgroundColor,
+    elevation: 0,
+    flexibleSpace: isPremium
+        ? Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(AppBackground.backgroundImage),
+                fit: BoxFit.cover,
+                opacity: 0.3,
+              ),
+            ),
+          )
+        : null,
+    leadingWidth: (back == true) ? AppSize.width * 0.18 : null,
     leading: (back == true)
-        ? IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            padding: EdgeInsets.zero,
-            icon: AppIcon.back,
+        ? Padding(
+            padding: EdgeInsets.only(left: AppSize.p16),
+            child: _appBarButton(
+              AppIcon.backIcon,
+              () => Get.back(),
+              isPremium: isPremium,
+            ),
           )
         : Builder(
             builder: (context) {
-              return GestureDetector(
-                onTap: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSize.p12),
-                  child: SvgPicture.asset(AppIcon.openMenu),
+              return Padding(
+                padding: EdgeInsets.only(left: AppSize.p10),
+                child: _appBarButton(
+                  AppIcon.menu,
+                  () => Scaffold.of(context).openDrawer(),
+                  isPremium: isPremium,
                 ),
               );
             },
           ),
     actions: [
-      (searchIcon == true)
-          ? IconButton(onPressed: searchOnPressed, icon: AppIcon.search)
-          : const SizedBox(),
-      (filter == true)
-          ? IconButton(onPressed: filterOnPressed, icon: AppIcon.filter)
-          : const SizedBox(),
-      (edit == true)
-          ? IconButton(onPressed: editOnPressed, icon: AppIcon.edit)
-          : const SizedBox(),
-      (close == true)
-          ? IconButton(onPressed: closeOnPressed, icon: AppIcon.close)
-          : const SizedBox(),
-      (remove == true)
-          ? IconButton(onPressed: deletOnPressed, icon: AppIcon.delete)
-          : const SizedBox(),
+      if (searchIcon == true)
+        _appBarButton(
+          AppIcon.searchIcon,
+          searchOnPressed ?? () {},
+          isPremium: isPremium,
+        ),
+      if (filter == true)
+        _appBarButton(
+          AppIcon.filter.icon!,
+          filterOnPressed ?? () {},
+          isPremium: isPremium,
+        ),
+      if (edit == true)
+        _appBarButton(
+          AppIcon.editIcon,
+          editOnPressed ?? () {},
+          isPremium: isPremium,
+        ),
+      if (close == true)
+        _appBarButton(
+          AppIcon.closeIcon,
+          closeOnPressed ?? () {},
+          isPremium: isPremium,
+        ),
+      if (remove == true)
+        _appBarButton(
+          AppIcon.deleteIcon,
+          deletOnPressed ?? () {},
+          isPremium: isPremium,
+        ),
+      if (notification == true)
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            _appBarButton(AppIcon.notification, () {}, isPremium: isPremium),
+            Positioned(
+              right: 8,
+              top: 12,
+              child: Container(
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: AppColor.orange,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          ],
+        ),
+      if (avatar != null)
+        Padding(
+          padding: EdgeInsets.only(right: AppSize.p8, left: 4),
+          child: Center(child: avatar),
+        ),
+      SizedBox(width: AppSize.p12),
     ],
     primary: true,
-    title: titleWidget,
-    backgroundColor: AppColor.primaryColor,
-    centerTitle: centerTitle,
-    bottom: bottom,
+    title: isPremium
+        ? Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                AppIcon.auto_awesome,
+                color: AppColor.goldColor.withOpacity(0.5),
+                size: 15,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: titleWidget,
+              ),
+              Icon(
+                AppIcon.auto_awesome,
+                color: AppColor.goldColor.withOpacity(0.5),
+                size: 15,
+              ),
+            ],
+          )
+        : titleWidget,
+    centerTitle: centerTitle ?? true,
+    bottom: isPremium
+        ? PreferredSize(
+            preferredSize: const Size.fromHeight(20),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Icon(AppIcon.diamond, color: AppColor.goldColor, size: 20),
+            ),
+          )
+        : bottom,
+  );
+}
+
+Widget _appBarButton(
+  IconData icon,
+  VoidCallback onTap, {
+  bool isPremium = false,
+}) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      margin: EdgeInsets.symmetric(vertical: AppSize.p8, horizontal: 4),
+      padding: EdgeInsets.all(AppSize.p4),
+      decoration: BoxDecoration(
+        color: isPremium ? AppColor.white.withOpacity(0.1) : AppColor.white,
+        borderRadius: BorderRadius.circular(AppSize.p10),
+        border: Border.all(color: AppColor.goldColor.withOpacity(0.3)),
+        boxShadow: isPremium
+            ? null
+            : [
+                BoxShadow(
+                  color: AppColor.black.withOpacity(0.05),
+                  blurRadius: AppSize.p4,
+                  offset: Offset(0, AppSize.p4 / 2),
+                ),
+              ],
+      ),
+      child: Icon(icon, color: AppColor.goldColor, size: AppSize.iconMedium),
+    ),
   );
 }

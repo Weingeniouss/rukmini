@@ -11,6 +11,7 @@ import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/headingContainer.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
@@ -49,47 +50,31 @@ class _CustDetailState extends State<CustDetail> {
     return Fullscreen(
       isPadding: false,
       backGroundcolor: AppColor.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: AppColor.backgroundColor,
-        elevation: 0,
-        leadingWidth: AppSize.width * 0.18,
-        leading: Padding(
-          padding: EdgeInsets.only(left: AppSize.p16),
-          child: _appBarButton(AppIcon.backIcon, () => Get.back()),
-        ),
-        title: Text(
-          AppString.customerDetail,
-          style: TextStyle(
-            color: AppColor.black,
-            fontSize: AppSize.titleText,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          _appBarButton(AppIcon.editIcon, () {
-            final data = custDetailController.custDetailData.value.data;
-            if (data != null) {
-              Get.toNamed('/updateCustForm', arguments: data);
-            }
-          }),
-          SizedBox(width: AppSize.p8),
-          _appBarButton(AppIcon.deleteIcon, () {
-            RukminiAlertBox.show(
-              icon: AppIcon.deleteIcon,
-              iconColor: AppColor.deleteColor,
-              title: AppString.deleteCustomer,
-              message: AppString.deleteMessage,
-              confirmText: AppString.delete,
-              onConfirm: () async {
-                await CallApi.callCustRemove(custId: customer.custId!);
-                await CallApi.callCustList(isRefresh: true);
-                Get.back();
-              },
-            );
-          }),
-          SizedBox(width: AppSize.p8),
-        ],
+      appBar: appBar(
+        back: true,
+        title: AppString.customerDetail,
+        edit: true,
+        editOnPressed: () {
+          final data = custDetailController.custDetailData.value.data;
+          if (data != null) {
+            Get.toNamed('/updateCustForm', arguments: data);
+          }
+        },
+        remove: true,
+        deletOnPressed: () {
+          RukminiAlertBox.show(
+            icon: AppIcon.deleteIcon,
+            iconColor: AppColor.deleteColor,
+            title: AppString.deleteCustomer,
+            message: AppString.deleteMessage,
+            confirmText: AppString.delete,
+            onConfirm: () async {
+              await CallApi.callCustRemove(custId: customer.custId!);
+              await CallApi.callCustList(isRefresh: true);
+              Get.back();
+            },
+          );
+        },
       ),
       child: DefaultTabController(
         length: 4,
@@ -122,29 +107,6 @@ class _CustDetailState extends State<CustDetail> {
             ],
           );
         }),
-      ),
-    );
-  }
-
-  Widget _appBarButton(IconData icon, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: AppSize.p8),
-        padding: EdgeInsets.all(AppSize.p4),
-        decoration: BoxDecoration(
-          color: AppColor.white,
-          borderRadius: BorderRadius.circular(AppSize.p10),
-          border: Border.all(color: AppColor.goldColor.withOpacity(0.3)),
-          boxShadow: [
-            BoxShadow(
-              color: AppColor.black.withOpacity(0.05),
-              blurRadius: AppSize.p4,
-              offset: Offset(0, AppSize.p4 / 2),
-            ),
-          ],
-        ),
-        child: Icon(icon, color: AppColor.goldColor, size: AppSize.iconMedium),
       ),
     );
   }
@@ -1137,120 +1099,171 @@ class _CustDetailState extends State<CustDetail> {
 
 Widget loadingState() {
   return Shimmer.fromColors(
-    baseColor: AppColor.baseColor,
-    highlightColor: AppColor.highlightColor,
+    baseColor: AppColor.grey300,
+    highlightColor: AppColor.white,
     child: SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Shimmer
-          Container(
-            padding: EdgeInsets.all(AppSize.p16),
-            child: Row(
-              children: [
-                Container(
-                  width: AppSize.width * 0.2,
-                  height: AppSize.width * 0.4,
-                  decoration: BoxDecoration(
-                    color: AppColor.textField,
-                    borderRadius: BorderRadius.circular(AppSize.p8),
-                  ),
-                ),
-                SizedBox(width: AppSize.p16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        height: AppSize.p20,
-                        color: AppColor.textField,
-                      ),
-                      SizedBox(height: AppSize.p10),
-                      Container(
-                        width: AppSize.width * 0.3,
-                        height: AppSize.p8,
-                        color: AppColor.textField,
-                      ),
-                      SizedBox(height: AppSize.p20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: List.generate(
-                          3,
-                          (index) => Container(
-                            width: AppSize.p40,
-                            height: AppSize.p40,
-                            decoration: BoxDecoration(
-                              color: AppColor.textField,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // TabBar Shimmer
-          Container(
-            height: AppSize.height * 0.06,
-            padding: EdgeInsets.symmetric(horizontal: AppSize.p16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(
-                4,
-                (index) => Container(
-                  width: AppSize.width * 0.2,
-                  height: AppSize.p20,
-                  color: AppColor.textField,
-                ),
+          // Header Card Shimmer
+          horizontalPadding(
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: AppSize.p16),
+              padding: EdgeInsets.all(AppSize.p16),
+              decoration: BoxDecoration(
+                color: AppColor.white,
+                borderRadius: BorderRadius.circular(AppSize.p20),
               ),
-            ),
-          ),
-
-          // Content Shimmer
-          Padding(
-            padding: EdgeInsets.all(AppSize.p16),
-            child: Column(
-              children: List.generate(
-                8,
-                (index) => Padding(
-                  padding: EdgeInsets.only(bottom: AppSize.p20),
-                  child: Row(
+              child: Column(
+                children: [
+                  Row(
                     children: [
                       Container(
-                        width: AppSize.width * 0.08,
-                        height: AppSize.width * 0.08,
+                        width: AppSize.width * 0.25,
+                        height: AppSize.width * 0.35,
                         decoration: BoxDecoration(
-                          color: AppColor.textField,
-                          shape: BoxShape.circle,
+                          color: AppColor.white,
+                          borderRadius: BorderRadius.circular(AppSize.p16),
                         ),
                       ),
-                      SizedBox(width: AppSize.p10),
+                      SizedBox(width: AppSize.p16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              width: Get.width * 0.4,
-                              height: AppSize.p8,
-                              color: AppColor.textField,
+                              width: 150,
+                              height: 20,
+                              color: AppColor.white,
                             ),
-                            SizedBox(height: AppSize.p4),
+                            SizedBox(height: AppSize.p8),
+                            Container(
+                              width: 80,
+                              height: 15,
+                              color: AppColor.white,
+                            ),
+                            SizedBox(height: AppSize.p12),
                             Container(
                               width: double.infinity,
-                              height: AppSize.p12,
-                              color: AppColor.textField,
+                              height: 12,
+                              color: AppColor.white,
+                            ),
+                            SizedBox(height: 5),
+                            Container(
+                              width: double.infinity,
+                              height: 12,
+                              color: AppColor.white,
                             ),
                           ],
                         ),
                       ),
                     ],
                   ),
+                  SizedBox(height: AppSize.p20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: List.generate(
+                      3,
+                      (index) => Column(
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 50,
+                            decoration: const BoxDecoration(
+                              color: AppColor.white,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          SizedBox(height: AppSize.p8),
+                          Container(
+                            width: 40,
+                            height: 10,
+                            color: AppColor.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // TabBar Shimmer
+          horizontalPadding(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List.generate(
+                3,
+                (index) => Container(
+                  width: AppSize.width * 0.25,
+                  height: 35,
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    borderRadius: BorderRadius.circular(AppSize.p8),
+                  ),
                 ),
+              ),
+            ),
+          ),
+          SizedBox(height: AppSize.p16),
+
+          // Content Card Shimmer
+          horizontalPadding(
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColor.white,
+                borderRadius: BorderRadius.circular(AppSize.p20),
+              ),
+              child: Column(
+                children: [
+                  // Section Header Shimmer
+                  Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: AppColor.white.withOpacity(0.3),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(AppSize.p20),
+                      ),
+                    ),
+                  ),
+                  // Detail Rows Shimmer
+                  Padding(
+                    padding: EdgeInsets.all(AppSize.p16),
+                    child: Column(
+                      children: List.generate(
+                        5,
+                        (index) => Padding(
+                          padding: EdgeInsets.symmetric(vertical: AppSize.p12),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 24,
+                                height: 24,
+                                decoration: const BoxDecoration(
+                                  color: AppColor.white,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              SizedBox(width: AppSize.p16),
+                              Container(
+                                width: 80,
+                                height: 15,
+                                color: AppColor.white,
+                              ),
+                              const Spacer(),
+                              Container(
+                                width: 120,
+                                height: 15,
+                                color: AppColor.white,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

@@ -138,7 +138,6 @@ class Login extends StatelessWidget {
             iconColor: AppColor.loginGold,
             inputTextcontroller: loginAPI.loginUI.emailController,
           ),
-          SizedBox(height: AppSize.p24),
           inputField(
             hintText: AppString.password,
             prefixIconData: AppIcon.loginLock,

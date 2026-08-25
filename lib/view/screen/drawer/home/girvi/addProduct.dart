@@ -1,23 +1,22 @@
-// ignore_for_file: file_names, prefer_interpolation_to_compose_strings, unused_element
+// ignore_for_file: deprecated_member_use, file_names, prefer_interpolation_to_compose_strings, unused_element
 
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/metal/metal_Controller.dart';
 import 'package:rukmini/controller/api/controllers/product/productType_Controller.dart';
-import 'package:rukmini/controller/api/controllers/product/product_Controller.dart';
 import 'package:rukmini/controller/ui/home/girivi/addProduct_Controller.dart';
+import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/lockerList_Controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
-import 'package:rukmini/view/utils/widget/headingContainer.dart';
-import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
+import 'package:rukmini/view/utils/widget/inputField.dart';
 import '../../../../../controller/ui/home/girivi/addGirivi_Controller.dart';
-import '../../../../utils/widget/button.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({super.key});
@@ -30,7 +29,7 @@ class _AddProductState extends State<AddProduct> {
   final addProductUI = Get.put(AddProductControllerUI());
   final metalController = Get.put(MetalController());
   final productTypeController = Get.put(ProductTypeController());
-  final productController = Get.put(ProductController());
+  final lockerListController = Get.put(LockerListController());
   final addGiriviUI = Get.find<AddGiriviControllerUI>();
 
   @override
@@ -40,6 +39,7 @@ class _AddProductState extends State<AddProduct> {
       CallApi.callMetalList();
       CallApi.callProductTypeList();
       CallApi.callProductList();
+      CallApi.callLockerList();
     });
   }
 
@@ -47,6 +47,7 @@ class _AddProductState extends State<AddProduct> {
   Widget build(BuildContext context) {
     return Fullscreen(
       isPadding: false,
+      backGroundcolor: AppColor.backgroundColor,
       appBar: appBar(
         title: AppString.addProduct,
         back: true,
@@ -56,368 +57,461 @@ class _AddProductState extends State<AddProduct> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(vertical: AppSize.p8),
+              padding: EdgeInsets.all(AppSize.p16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildDropdownRow(
-                    icon: AppIcon.metal,
-                    label: AppString.metal,
-                    value: addProductUI.selectedMetal,
-                    hint: AppString.selectMetal,
-                    onTap: () => _showProductTypeSelection(),
-                  ),
-                  _buildDivider(),
-                  // _buildDropdownRow(
-                  //   icon: AppIcon.productType,
-                  //   label: AppString.productType,
-                  //   value: controller.selectedProductType,
-                  //   hint: AppString.selectProductType,
-                  //   onTap: () => _showProductSelection(),
-                  // ),
-                  // _buildDivider(),
-                  _buildDropdownRow(
-                    icon: AppIcon.category,
-                    label: AppString.category,
-                    value: addProductUI.selectedCategory,
-                    hint: AppString.selectCategory,
-                    onTap: () => _showCategorySelection(),
-                  ),
-                  _buildDivider(),
-                  _buildDropdownRow(
-                    icon: AppIcon.metal,
-                    label: AppString.metalTouch,
-                    value: addProductUI.selectedMetalTouch,
-                    hint: AppString.selectMetalTouch,
-                    onTap: () => _showMetalSelection(),
-                  ),
-                  _buildDivider(),
-                  _buildInputRow(
-                    icon: AppIcon.productType,
-                    label: AppString.quantity,
-                    controller: addProductUI.quantityController,
-                    hint: AppString.enterQuantity,
-                    keyboardType: TextInputType.number,
-                  ),
-                  _buildDivider(),
-                  _buildInputRow(
-                    icon: AppIcon.weight,
-                    label: AppString.weightInGm,
-                    controller: addProductUI.weightController,
-                    hint: AppString.enterWeight,
-                    keyboardType: TextInputType.number,
-                  ),
-                  _buildDivider(),
-                  _buildInputRow(
-                    icon: AppIcon.rupee,
-                    label: AppString.todaysRate,
-                    controller: addProductUI.todaysRateController,
-                    hint: AppString.todaysRate,
-                    isGrayBackground: true,
-                    keyboardType: TextInputType.number,
-                  ),
-                  _buildDivider(),
-                  _buildInputRow(
-                    icon: AppIcon.rupee,
-                    label: AppString.originalPriceApprox,
-                    controller: addProductUI.originalPriceController,
-                    hint: AppString.enterApproxOriginalPrice,
-                    keyboardType: TextInputType.number,
-                  ),
-                  _buildDivider(),
-                  _buildInputRow(
-                    icon: AppIcon.rupee,
-                    label: AppString.amountGiven,
-                    controller: addProductUI.amountGivenController,
-                    hint: AppString.enterGivenAmount,
-                    keyboardType: TextInputType.number,
-                  ),
-                  _buildDivider(),
-                  _buildDropdownRow(
-                    icon: AppIcon.locker,
-                    label: AppString.locker,
-                    value: addProductUI.selectedLocker,
-                    hint: AppString.selectLocker,
-                  ),
-                  _buildDivider(),
-                  _buildInputRow(
-                    icon: AppIcon.lockPerson,
-                    label: AppString.lockerCode,
-                    controller: addProductUI.lockerCodeController,
-                    hint: AppString.enterLockerCode,
-                  ),
-                  _buildDivider(),
+                  _sectionHeader(AppString.productDetail, AppIcon.product),
+                  _buildProductCoreDetails(),
+                  _sectionHeader(AppString.metalTouch, AppIcon.metal),
+                  _buildMetalDetails(),
+                  _sectionHeader(AppString.productPhoto, AppIcon.camera),
                   _buildProductPhotoSection(),
-                  _buildDivider(),
-                  _buildDiamondCheckbox(),
-                  Obx(
-                    () => addProductUI.isDiamondAvailable.value
-                        ? _buildDiamondDetails()
-                        : const SizedBox(),
-                  ),
-                  const SizedBox(height: 20),
-                  _buildSubmitButton(),
-                  SizedBox(height: AppSize.p12),
+                  _sectionHeader(AppString.diamondDetails, AppIcon.diamond),
+                  _buildDiamondSection(),
+                  SizedBox(height: AppSize.p40),
                 ],
               ),
             ),
+          ),
+          _buildBottomActionRow(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProductCoreDetails() {
+    return Column(
+      children: [
+        Obx(
+          () => _buildFormRow(
+            icon: AppIcon.metal,
+            label: AppString.metal,
+            controller: TextEditingController(
+              text: addProductUI.selectedMetal.value,
+            ),
+            readOnly: true,
+            onTap: () => _showProductTypeSelection(),
+            trailing: Icon(
+              AppIcon.arrow_down,
+              color: AppColor.goldColor,
+              size: AppSize.p20,
+            ),
+            hasIndicator: true,
+          ),
+        ),
+        Obx(
+          () => _buildFormRow(
+            icon: AppIcon.category,
+            label: AppString.category,
+            controller: TextEditingController(
+              text: addProductUI.selectedCategory.value,
+            ),
+            readOnly: true,
+            onTap: () => _showCategorySelection(),
+            trailing: Icon(
+              AppIcon.arrow_down,
+              color: AppColor.goldColor,
+              size: AppSize.p20,
+            ),
+            hasIndicator: true,
+          ),
+        ),
+        _buildFormRow(
+          icon: AppIcon.productType,
+          label: AppString.quantity,
+          controller: addProductUI.quantityController,
+          keyboardType: TextInputType.number,
+          hasIndicator: true,
+        ),
+        _buildFormRow(
+          icon: AppIcon.weight,
+          label: AppString.weightInGm,
+          controller: addProductUI.weightController,
+          keyboardType: TextInputType.number,
+          hasIndicator: true,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMetalDetails() {
+    return Column(
+      children: [
+        Obx(
+          () => _buildFormRow(
+            icon: AppIcon.metal,
+            label: AppString.metalTouch,
+            controller: TextEditingController(
+              text: addProductUI.selectedMetalTouch.value,
+            ),
+            readOnly: true,
+            onTap: () => _showMetalSelection(),
+            trailing: Icon(
+              AppIcon.arrow_down,
+              color: AppColor.goldColor,
+              size: AppSize.p20,
+            ),
+            hasIndicator: true,
+          ),
+        ),
+        _buildFormRow(
+          icon: AppIcon.rupee,
+          label: AppString.todaysRate,
+          controller: addProductUI.todaysRateController,
+          keyboardType: TextInputType.number,
+          hasIndicator: true,
+        ),
+        _buildFormRow(
+          icon: AppIcon.rupee,
+          label: AppString.originalPriceApprox,
+          controller: addProductUI.originalPriceController,
+          keyboardType: TextInputType.number,
+          hasIndicator: true,
+        ),
+        _buildFormRow(
+          icon: AppIcon.rupee,
+          label: AppString.amountGiven,
+          controller: addProductUI.amountGivenController,
+          keyboardType: TextInputType.number,
+          hasIndicator: true,
+        ),
+        Obx(
+          () => _buildFormRow(
+            icon: AppIcon.locker,
+            label: AppString.locker,
+            controller: TextEditingController(
+              text: addProductUI.selectedLocker.value,
+            ),
+            readOnly: true,
+            onTap: () => _showLockerSelection(),
+            trailing: Icon(
+              AppIcon.arrow_down,
+              color: AppColor.goldColor,
+              size: AppSize.p20,
+            ),
+            hasIndicator: true,
+          ),
+        ),
+        _buildFormRow(
+          icon: AppIcon.lockPerson,
+          label: AppString.lockerCode,
+          controller: addProductUI.lockerCodeController,
+          hasIndicator: true,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDiamondSection() {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(bottom: AppSize.p16),
+          child: Row(
+            children: [
+              Obx(
+                () => Checkbox(
+                  value: addProductUI.isDiamondAvailable.value,
+                  onChanged: (val) =>
+                      addProductUI.isDiamondAvailable.value = val ?? false,
+                  activeColor: AppColor.goldColor,
+                ),
+              ),
+              Text(
+                AppString.isDiamondAvailable,
+                style: TextStyle(
+                  fontSize: AppSize.commonText,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Obx(() {
+          if (!addProductUI.isDiamondAvailable.value) return const SizedBox();
+          return Column(
+            children: [
+              _buildFormRow(
+                icon: AppIcon.diamond,
+                label: AppString.diamondPieces,
+                controller: addProductUI.diamondPiecesController,
+                keyboardType: TextInputType.number,
+              ),
+              _buildFormRow(
+                icon: AppIcon.diamond,
+                label: AppString.diamondWeight,
+                controller: addProductUI.diamondWeightController,
+                keyboardType: TextInputType.number,
+              ),
+              _buildFormRow(
+                icon: AppIcon.certificate,
+                label: AppString.certificateNumber,
+                controller: addProductUI.certificateNumberController,
+              ),
+              _buildFormRow(
+                icon: AppIcon.rupee,
+                label: AppString.diamondPriceApp,
+                controller: addProductUI.diamondPriceController,
+                keyboardType: TextInputType.number,
+              ),
+            ],
+          );
+        }),
+      ],
+    );
+  }
+
+  Widget _sectionHeader(String title, IconData icon) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSize.p16,
+        vertical: AppSize.p12,
+      ),
+      margin: EdgeInsets.only(bottom: AppSize.p12, top: AppSize.p16),
+      decoration: BoxDecoration(
+        color: AppColor.whiteOrang.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(AppSize.p20),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(AppSize.p8),
+            decoration: BoxDecoration(
+              color: AppColor.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColor.goldColor.withOpacity(0.1),
+                  blurRadius: AppSize.p4,
+                ),
+              ],
+            ),
+            child: Icon(icon, color: AppColor.goldColor, size: AppSize.p20),
+          ),
+          SizedBox(width: AppSize.p12),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: AppSize.headingText,
+              fontWeight: FontWeight.bold,
+              color: AppColor.black,
+            ),
+          ),
+          const Spacer(),
+          Icon(
+            AppIcon.leaf,
+            color: AppColor.goldColor.withOpacity(0.1),
+            size: AppSize.iconLarge * 1.25,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDropdownRow({
-    required IconData icon,
-    required String label,
-    required RxString value,
-    required String hint,
-    VoidCallback? onTap,
-  }) {
-    return horizontalPadding(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: AppSize.p4),
-          child: Row(
-            children: [
-              Icon(icon, color: AppColor.activeColor, size: AppSize.p24),
-              SizedBox(width: AppSize.p16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      style: TextStyle(
-                        color: AppColor.textColor,
-                        fontSize: AppSize.size18,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Obx(
-                          () => Expanded(
-                            child: Text(
-                              value.value.isEmpty ? hint : value.value,
-                              style: TextStyle(
-                                fontSize: AppSize.largeText,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Icon(
-                          AppIcon.arrowDown,
-                          color: AppColor.black54,
-                          size: AppSize.p24,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInputRow({
+  Widget _buildFormRow({
     required IconData icon,
     required String label,
     required TextEditingController controller,
-    required String hint,
-    bool isGrayBackground = false,
+    Widget? trailing,
+    bool readOnly = false,
+    VoidCallback? onTap,
     TextInputType keyboardType = TextInputType.text,
+    bool hasIndicator = false,
   }) {
-    Widget content = horizontalPadding(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSize.p4),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: AppColor.activeColor, size: AppSize.p24),
-            SizedBox(width: AppSize.p16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                      color: AppColor.textColor,
-                      fontSize: AppSize.size18,
-                    ),
-                  ),
-                  TextField(
-                    controller: controller,
-                    keyboardType: keyboardType,
-                    style: TextStyle(
-                      fontSize: AppSize.size15,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: hint,
-                      hintStyle: TextStyle(
-                        color: AppColor.boderSideColor.shade400,
-                        fontSize: AppSize.size15,
-                      ),
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: AppSize.p4,
-                      ),
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ],
-              ),
+    return Row(
+      children: [
+        if (hasIndicator)
+          Container(
+            width: AppSize.p4,
+            height: AppSize.width * 0.08,
+            margin: EdgeInsets.only(bottom: AppSize.p12),
+            decoration: BoxDecoration(
+              color: AppColor.goldColor,
+              borderRadius: BorderRadius.circular(AppSize.p4),
             ),
-          ],
+          ),
+        if (hasIndicator) SizedBox(width: AppSize.p8),
+        Expanded(
+          child: inputField(
+            hintText: label,
+            icon: icon,
+            inputTextcontroller: controller,
+            suffixIcon: trailing,
+            readOnly: readOnly,
+            onTap: onTap,
+            keyboardType: keyboardType,
+          ),
         ),
-      ),
+      ],
     );
-
-    if (isGrayBackground) {
-      return Container(
-        color: AppColor.grey200,
-        width: double.infinity,
-        child: content,
-      );
-    }
-    return content;
   }
 
   Widget _buildProductPhotoSection() {
     return Column(
       children: [
-        horizontalPadding(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: AppSize.p8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
+        Padding(
+          padding: EdgeInsets.only(bottom: AppSize.p16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                AppString.uploadProductPhotos,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: AppSize.commonText,
+                ),
+              ),
+              IconButton(
+                onPressed: addProductUI.pickImage,
+                icon: Icon(AppIcon.add, color: AppColor.goldColor),
+              ),
+            ],
+          ),
+        ),
+        Obx(
+          () => Column(
+            children: List.generate(addProductUI.productImages.length, (index) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: AppSize.p12),
+                child: Row(
                   children: [
-                    Icon(
-                      AppIcon.camera,
-                      color: AppColor.activeColor,
-                      size: AppSize.p24,
+                    Container(
+                      width: AppSize.width * 0.15,
+                      height: AppSize.width * 0.15,
+                      decoration: BoxDecoration(
+                        color: AppColor.backgroundColor,
+                        borderRadius: BorderRadius.circular(AppSize.p8),
+                        border: Border.all(color: AppColor.grey300),
+                        image: DecorationImage(
+                          image: FileImage(
+                            File(addProductUI.productImages[index].path),
+                          ),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                    SizedBox(width: AppSize.p16),
-                    Text(
-                      AppString.productPhoto + " :",
-                      style: TextStyle(
-                        fontSize: AppSize.largeText,
-                        fontWeight: FontWeight.w400,
+                    SizedBox(width: AppSize.p12),
+                    Expanded(
+                      child: inputField(
+                        hintText: AppString.remark,
+                        inputTextcontroller: addProductUI.remarkController,
+                        suffixIcon: IconButton(
+                          onPressed: () => addProductUI.removeImage(index),
+                          icon: Icon(
+                            AppIcon.removeCircle,
+                            color: AppColor.deleteColor,
+                            size: AppSize.p20,
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
-                IconButton(
-                  onPressed: addProductUI.pickImage,
-                  icon: Icon(
-                    AppIcon.add,
-                    color: AppColor.activeColor,
-                    size: AppSize.p24,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Obx(
-          () => ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: addProductUI.productImages.length,
-            itemBuilder: (context, index) {
-              return horizontalPadding(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: AppSize.p8),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: AppSize.width * 0.15,
-                        height: AppSize.width * 0.15,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          image: DecorationImage(
-                            image: FileImage(
-                              File(addProductUI.productImages[index].path),
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: AppSize.p12),
-                      Expanded(
-                        child: Container(
-                          height: AppSize.p20,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppSize.p8,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: AppColor.grey400),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: TextField(
-                            style: TextStyle(fontSize: AppSize.size14),
-                            decoration: InputDecoration(
-                              hintText: AppString.remark,
-                              hintStyle: TextStyle(fontSize: AppSize.size14),
-                              border: InputBorder.none,
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                vertical: AppSize.p4,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () => addProductUI.removeImage(index),
-                        icon: Icon(
-                          AppIcon.remove,
-                          color: AppColor.deleteColor,
-                          size: AppSize.p24,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               );
-            },
+            }),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildDiamondCheckbox() {
-    return horizontalPadding(
+  Widget _buildBottomActionRow() {
+    return Container(
+      padding: EdgeInsets.all(AppSize.p16),
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.05),
+            blurRadius: AppSize.p10,
+            offset: Offset(0, -AppSize.p4 - 1),
+          ),
+        ],
+      ),
       child: Row(
         children: [
-          Obx(
-            () => SizedBox(
-              height: AppSize.p24,
-              width: AppSize.p24,
-              child: Checkbox(
-                value: addProductUI.isDiamondAvailable.value,
-                onChanged: (val) {
-                  addProductUI.isDiamondAvailable.value = val ?? false;
-                },
-                activeColor: AppColor.primaryColor,
+          Expanded(
+            child: OutlinedButton(
+              onPressed: () => Get.back(),
+              style: OutlinedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: AppSize.p16),
+                side: BorderSide(color: AppColor.goldColor, width: 1.5),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppSize.p16),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    AppIcon.closeIcon,
+                    color: AppColor.goldColor,
+                    size: AppSize.p20,
+                  ),
+                  SizedBox(width: AppSize.p8),
+                  Text(
+                    AppString.cancel,
+                    style: TextStyle(
+                      color: AppColor.goldColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: AppSize.largeText,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          SizedBox(width: AppSize.p12),
-          Text(
-            AppString.isDiamondAvailable,
-            style: TextStyle(
-              fontSize: AppSize.largeText,
-              fontWeight: FontWeight.w400,
+          SizedBox(width: AppSize.p16),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AppColor.goldColor, AppColor.dashboardGold],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(AppSize.p16),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColor.goldColor.withOpacity(0.3),
+                    blurRadius: AppSize.p8,
+                    offset: Offset(0, AppSize.p4),
+                  ),
+                ],
+              ),
+              child: ElevatedButton(
+                onPressed: () {
+                  _showCategorySelection();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColor.transparent,
+                  shadowColor: AppColor.transparent,
+                  padding: EdgeInsets.symmetric(vertical: AppSize.p16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSize.p16),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      AppIcon.save,
+                      color: AppColor.white,
+                      size: AppSize.p20,
+                    ),
+                    SizedBox(width: AppSize.p8),
+                    Text(
+                      AppString.sumit,
+                      style: TextStyle(
+                        color: AppColor.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: AppSize.largeText,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
@@ -425,124 +519,85 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 
-  Widget _buildDiamondDetails() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: AppSize.p8),
-        headingContainer(AppString.diamondDetails),
-        SizedBox(height: AppSize.p8),
-        horizontalPadding(
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildSmallInput(
-                      icon: AppIcon.diamond,
-                      hint: AppString.diamondPieces,
-                      controller: addProductUI.diamondPiecesController,
-                    ),
-                  ),
-                  SizedBox(width: AppSize.p12),
-                  Expanded(
-                    child: _buildSmallInput(
-                      icon: AppIcon.diamond,
-                      hint: AppString.diamondWeight,
-                      controller: addProductUI.diamondWeightController,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: AppSize.p8),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildSmallInput(
-                      icon: AppIcon.certificate,
-                      hint: AppString.certificateNumber,
-                      controller: addProductUI.certificateNumberController,
-                    ),
-                  ),
-                  SizedBox(height: AppSize.p8),
-                  Expanded(
-                    child: _buildSmallInput(
-                      icon: AppIcon.rupee,
-                      hint: AppString.diamondPriceApp,
-                      controller: addProductUI.diamondPriceController,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+  void _showLockerSelection() {
+    Get.bottomSheet(
+      Container(
+        height: AppSize.height * 0.7,
+        decoration: BoxDecoration(
+          color: AppColor.white,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppSize.p20),
           ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildSmallInput({
-    required IconData icon,
-    required String hint,
-    required TextEditingController controller,
-  }) {
-    return Row(
-      children: [
-        Icon(icon, color: AppColor.activeColor, size: AppSize.p20),
-        SizedBox(width: AppSize.p8),
-        Expanded(
-          child: TextField(
-            controller: controller,
-            style: TextStyle(fontSize: AppSize.size14),
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: TextStyle(
-                color: AppColor.boderSideColor.shade400,
-                fontSize: AppSize.size14,
-              ),
-              isDense: true,
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColor.boderSideColor.shade300),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(AppSize.p16),
+              child: Text(
+                AppString.selectLocker,
+                style: TextStyle(
+                  fontSize: AppSize.headingText,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
+            const Divider(),
+            Expanded(
+              child: Obx(() {
+                if (lockerListController.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (lockerListController.lockerList.isEmpty) {
+                  return const Center(
+                    child: Text(AppString.noLockersAvailable),
+                  );
+                }
+                return ListView.builder(
+                  itemCount: lockerListController.lockerList.length,
+                  itemBuilder: (context, index) {
+                    final locker = lockerListController.lockerList[index];
+                    return ListTile(
+                      title: Text(locker.lockerCode ?? ""),
+                      subtitle: Text(locker.comName ?? ""),
+                      onTap: () {
+                        addProductUI.selectedLocker.value =
+                            locker.lockerCode ?? "";
+                        Get.back();
+                      },
+                    );
+                  },
+                );
+              }),
+            ),
+          ],
         ),
-      ],
-    );
-  }
-
-  Widget _buildSubmitButton() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppSize.width * 0.20),
-      child: GestureDetector(
-        onTap: () {
-          final product = {
-            "ProductTypeId": addProductUI.selectedProductTypeId.value,
-            "CategoryId": addProductUI.selectedCategoryId.value,
-            "MetalId": addProductUI.selectedMetalTouchId.value,
-            "Pieces": addProductUI.quantityController.text,
-            "Weight": addProductUI.weightController.text,
-            "TodayRate": addProductUI.todaysRateController.text,
-            "OrigAmount": addProductUI.originalPriceController.text,
-            "GivenAmount": addProductUI.amountGivenController.text,
-            "IsDiamond": addProductUI.isDiamondAvailable.value ? "1" : "0",
-            "LockerCode": addProductUI.lockerCodeController.text,
-            "Remark": addProductUI.remarkController.text,
-            "DiamondPieces": addProductUI.diamondPiecesController.text,
-            "DiamondWeight": addProductUI.diamondWeightController.text,
-            "CertificateNo": addProductUI.certificateNumberController.text,
-            "DiamondPrice": addProductUI.diamondPriceController.text,
-          };
-          addGiriviUI.addProduct(product);
-          Get.back();
-        },
-        child: clickButton(AppString.sumit),
       ),
     );
   }
 
-  Widget _buildDivider() {
-    return Divider(height: 1, thickness: 1, color: AppColor.grey200);
+  void _showCategorySelection() {
+    final product = {
+      "ProductTypeId": addProductUI.selectedProductTypeId.value,
+      "CategoryId": addProductUI.selectedCategoryId.value,
+      "MetalId": addProductUI.selectedMetalTouchId.value,
+      "Pieces": addProductUI.quantityController.text,
+      "Weight": addProductUI.weightController.text,
+      "TodayRate": addProductUI.todaysRateController.text,
+      "OrigAmount": addProductUI.originalPriceController.text,
+      "GivenAmount": addProductUI.amountGivenController.text,
+      "IsDiamond": addProductUI.isDiamondAvailable.value ? "1" : "0",
+      "LockerCode": addProductUI.lockerCodeController.text,
+      "Remark": addProductUI.remarkController.text,
+      "DiamondPieces": addProductUI.diamondPiecesController.text,
+      "DiamondWeight": addProductUI.diamondWeightController.text,
+      "CertificateNo": addProductUI.certificateNumberController.text,
+      "DiamondPrice": addProductUI.diamondPriceController.text,
+    };
+    addGiriviUI.addProduct(product);
+    if (kDebugMode) {
+      print(product);
+    }
+    Get.back();
   }
 
   void _showMetalSelection() {
@@ -550,8 +605,10 @@ class _AddProductState extends State<AddProduct> {
       Container(
         height: AppSize.height * 0.7,
         decoration: BoxDecoration(
-          color: AppColor.boderSideColor,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          color: AppColor.white,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppSize.p20),
+          ),
         ),
         child: Column(
           children: [
@@ -560,7 +617,7 @@ class _AddProductState extends State<AddProduct> {
               child: Text(
                 AppString.selectMetal,
                 style: TextStyle(
-                  fontSize: AppSize.size18,
+                  fontSize: AppSize.headingText,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -607,7 +664,9 @@ class _AddProductState extends State<AddProduct> {
         height: AppSize.height * 0.4,
         decoration: BoxDecoration(
           color: AppColor.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppSize.p20),
+          ),
         ),
         child: Column(
           children: [
@@ -616,7 +675,7 @@ class _AddProductState extends State<AddProduct> {
               child: Text(
                 AppString.selectProductType,
                 style: TextStyle(
-                  fontSize: AppSize.size18,
+                  fontSize: AppSize.headingText,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -655,175 +714,6 @@ class _AddProductState extends State<AddProduct> {
           ],
         ),
       ),
-    );
-  }
-
-  void _showProductSelection() {
-    Get.bottomSheet(
-      Container(
-        height: AppSize.height * 0.4,
-        decoration: BoxDecoration(
-          color: AppColor.fullScreenColor,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(AppSize.p16),
-              child: Text(
-                AppString.selectProductType,
-                style: TextStyle(
-                  fontSize: AppSize.size18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const Divider(),
-            Expanded(
-              child: Obx(() {
-                if (productController.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (productController.products.isEmpty) {
-                  return const Center(child: Text(AppString.noProductsFound));
-                }
-                return ListView.builder(
-                  itemCount: productController.products.length,
-                  itemBuilder: (context, index) {
-                    final product = productController.products[index];
-                    return ListTile(
-                      title: Text(product.prodType ?? ""),
-                      subtitle: Text(
-                        "${AppString.rate}: ${product.todayRate} | ${AppString.weightColon}: ${product.weight}",
-                      ),
-                      onTap: () {
-                        addProductUI.selectedProductType.value =
-                            product.prodType ?? "";
-                        addProductUI.selectedProductTypeId.value =
-                            product.productTypeId ?? "";
-                        addProductUI.selectedCategory.value =
-                            product.catName ?? "";
-                        addProductUI.selectedCategoryId.value =
-                            product.categoryId ?? "";
-                        addProductUI.selectedMetalTouch.value =
-                            "${product.metalName}K";
-                        addProductUI.selectedMetalTouchId.value =
-                            product.metalId ?? "";
-                        addProductUI.todaysRateController.text =
-                            product.todayRate ?? "";
-                        addProductUI.weightController.text =
-                            product.weight ?? "";
-                        addProductUI.quantityController.text =
-                            product.pieces ?? "";
-                        Get.back();
-                      },
-                    );
-                  },
-                );
-              }),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showCategorySelection() {
-    Get.bottomSheet(
-      Container(
-        height: AppSize.height * 0.8,
-        decoration: BoxDecoration(
-          color: AppColor.fullScreenColor,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(AppSize.p16),
-              child: Text(
-                AppString.selectCategory,
-                style: TextStyle(
-                  fontSize: AppSize.size18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const Divider(),
-            Expanded(
-              child: Obx(() {
-                if (productController.isLoading.value) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                final categories = productController.products
-                    .map((e) => e.catName)
-                    .whereType<String>()
-                    .toSet()
-                    .toList();
-                if (categories.isEmpty) {
-                  return const Center(child: Text(AppString.noCategoriesFound));
-                }
-                return ListView.builder(
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    final category = categories[index];
-                    return ListTile(
-                      title: Text(category),
-                      onTap: () {
-                        addProductUI.selectedCategory.value = category;
-                        Get.back();
-                      },
-                    );
-                  },
-                );
-              }),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showCustomerSelection(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(
-            AppString.selectCustomerName,
-            style: const TextStyle(color: AppColor.activeColor),
-          ),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(AppIcon.searchIcon),
-                    hintText: AppString.search,
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: AppColor.grey300),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                ListTile(title: Text(AppString.lockerD)),
-                ListTile(title: Text(AppString.lockerM)),
-                ListTile(title: Text(AppString.lockerN)),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                AppString.ok,
-                style: const TextStyle(color: AppColor.activeColor),
-              ),
-            ),
-          ],
-        );
-      },
     );
   }
 }

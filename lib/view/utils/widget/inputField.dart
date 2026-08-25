@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/widget/inputField.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_size.dart';
 
 Widget inputField({
   required String hintText,
@@ -14,6 +15,8 @@ Widget inputField({
   Color? iconColor,
   Color? textColor,
   bool isPassword = false,
+  bool readOnly = false,
+  VoidCallback? onTap,
   TextEditingController? inputTextcontroller,
   Widget? suffixIcon,
   TextInputType? keyboardType,
@@ -29,59 +32,83 @@ Widget inputField({
   }
 
   Widget buildTextField(bool obscureText) {
-    return TextField(
-      autofocus: false,
-      autocorrect: false,
-      keyboardType: keyboardType,
-      maxLength: maxLength,
-      inputFormatters: inputFormatters,
-      controller: inputTextcontroller,
-      style: TextStyle(color: textColor ?? AppColor.loginTextDark),
-      cursorColor: iconColor ?? AppColor.loginGold,
-      obscureText: obscureText,
-      decoration: InputDecoration(
-        counterText: "",
-        prefixIcon: prefixIconData != null
-            ? Icon(prefixIconData, color: iconColor ?? AppColor.loginGold)
-            : (icon != null)
-                ? Icon(icon is IconData ? icon : icon,
-                    color: iconColor ?? AppColor.loginGold)
-                : (prefixIconPath != null && prefixIconPath.isNotEmpty)
-                    ? Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Image.asset(prefixIconPath,
-                            scale: 28, color: iconColor ?? AppColor.loginGold),
-                      )
-                    : null,
-        prefixIconColor: iconColor ?? AppColor.loginGold,
-        suffixIconColor: iconColor ?? AppColor.loginGold,
-        suffixIcon: suffixIcon ??
-            (isPassword
-                ? IconButton(
-                    onPressed: () => isvisorNot.obscureTextClick(),
-                    icon: Icon(
-                      obscureText
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined,
-                      color: iconColor ?? AppColor.loginGold,
-                      size: 22,
-                    ),
-                  )
-                : null),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: iconColor ?? AppColor.loginGold, width: 1.5),
+    return Container(
+      margin: EdgeInsets.only(bottom: AppSize.p12),
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        borderRadius: BorderRadius.circular(AppSize.p12),
+        border: Border.all(color: AppColor.grey300.withOpacity(0.5)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.02),
+            blurRadius: AppSize.p4 + 1,
+            offset: Offset(0, AppSize.p4 / 2),
+          ),
+        ],
+      ),
+      child: TextField(
+        autofocus: false,
+        autocorrect: false,
+        readOnly: readOnly,
+        onTap: onTap,
+        keyboardType: keyboardType,
+        maxLength: maxLength,
+        inputFormatters: inputFormatters,
+        controller: inputTextcontroller,
+        style: TextStyle(
+          color: textColor ?? AppColor.loginTextDark,
+          fontSize: AppSize.commonText,
         ),
-        disabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey.withOpacity(0.3)),
+        cursorColor: iconColor ?? AppColor.goldColor,
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          counterText: "",
+          prefixIcon: prefixIconData != null
+              ? Icon(
+                  prefixIconData,
+                  color: iconColor ?? AppColor.goldColor,
+                  size: AppSize.p20,
+                )
+              : (icon != null)
+                  ? Icon(
+                      icon is IconData ? icon : icon,
+                      color: iconColor ?? AppColor.goldColor,
+                      size: AppSize.p20,
+                    )
+                  : (prefixIconPath != null && prefixIconPath.isNotEmpty)
+                      ? Padding(
+                          padding: EdgeInsets.all(AppSize.p12),
+                          child: Image.asset(
+                            prefixIconPath,
+                            scale: 28,
+                            color: iconColor ?? AppColor.goldColor,
+                          ),
+                        )
+                      : null,
+          suffixIcon: suffixIcon ??
+              (isPassword
+                  ? IconButton(
+                      onPressed: () => isvisorNot.obscureTextClick(),
+                      icon: Icon(
+                        obscureText
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        color: iconColor ?? AppColor.goldColor,
+                        size: 22,
+                      ),
+                    )
+                  : null),
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(
+            vertical: AppSize.p16,
+            horizontal: AppSize.p16,
+          ),
+          hintText: hintText,
+          hintStyle: TextStyle(
+            color: (textColor ?? AppColor.loginTextDark).withOpacity(0.5),
+            fontSize: AppSize.commonText,
+          ),
         ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey.withOpacity(0.3)),
-        ),
-        errorBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: AppColor.errorColor),
-        ),
-        hintText: hintText,
-        hintStyle: TextStyle(color: (textColor ?? AppColor.loginTextDark).withOpacity(0.5)),
       ),
     );
   }
