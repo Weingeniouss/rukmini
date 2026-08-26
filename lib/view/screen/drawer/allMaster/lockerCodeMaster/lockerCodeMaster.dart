@@ -36,146 +36,290 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Fullscreen(
-        drawer: homeDrawer(),
-        isPadding: false,
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: AppColor.primaryColor,
-          onPressed: () {
-            Get.toNamed('/addLockerCode');
-          },
-          child: Icon(AppIcon.add, color: AppColor.activeColor),
+    return Fullscreen(
+      drawer: homeDrawer(),
+      isPadding: false,
+      backGroundcolor: AppColor.backgroundColor,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColor.primaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSize.p12),
         ),
-        appBar: appBar(
-          back: true,
-          centerTitle: true,
-          title: lockerController.isSearching.value
-              ? TextField(
-                  controller: lockerController.searchTextController,
-                  autofocus: true,
-                  style: TextStyle(color: AppColor.fullScreenColor),
-                  cursorColor: AppColor.fullScreenColor,
-                  decoration: InputDecoration(
-                    hintText: AppString.searchLocker,
-                    hintStyle: TextStyle(color: AppColor.otherWhite),
-                    border: InputBorder.none,
+        onPressed: () => Get.toNamed('/addLockerCode'),
+        child: Icon(
+          AppIcon.add,
+          color: AppColor.goldColor,
+          size: AppSize.p24 + AppSize.p4,
+        ),
+      ),
+      appBar: appBar(
+        back: true,
+        centerTitle: true,
+        title: _buildDecorativeTitle(),
+      ),
+      child: Column(
+        children: [
+          Expanded(
+            child: Obx(() {
+              if (lockerController.isLoading.value &&
+                  lockerController.lockerList.isEmpty) {
+                return _shimmerLoading();
+              }
+
+              final list = lockerController.filteredLockerList;
+
+              if (list.isEmpty) {
+                return const Center(child: Text(AppString.noDataFound));
+              }
+
+              return RefreshIndicator(
+                onRefresh: () => CallApi.callLockerList(),
+                color: AppColor.goldColor,
+                child: ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.p16,
+                    vertical: AppSize.p12,
                   ),
-                )
-              : AppString.lockerCodeMaster,
-          searchIcon: true,
-          searchOnPressed: () {
-            lockerController.isSearching.value =
-                !lockerController.isSearching.value;
-            if (!lockerController.isSearching.value) {
-              lockerController.searchTextController.clear();
-            }
-          },
+                  itemCount: list.length,
+                  itemBuilder: (context, index) {
+                    return _buildLockerCard(list[index]);
+                  },
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDecorativeTitle() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          AppString.lockerCodeMaster,
+          style: TextStyle(
+            color: AppColor.black,
+            fontSize: AppSize.titleText,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        child: Obx(() {
-          if (lockerController.isLoading.value &&
-              lockerController.lockerList.isEmpty) {
-            return _shimmerLoading();
-          }
-
-          final list = lockerController.filteredLockerList;
-
-          if (list.isEmpty) {
-            return const Center(child: Text(AppString.noDataFound));
-          }
-
-          return RefreshIndicator(
-            onRefresh: () => CallApi.callLockerList(),
-            color: AppColor.activeColor,
-            child: ListView.builder(
-              padding: EdgeInsets.symmetric(vertical: AppSize.p4),
-              itemCount: list.length,
-              itemBuilder: (context, index) {
-                return _buildLockerCard(list[index]);
-              },
+        SizedBox(height: AppSize.p4 / 2),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: AppSize.width * 0.1,
+              height: 1,
+              color: AppColor.goldColor.withOpacity(0.5),
             ),
-          );
-        }),
-      );
-    });
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSize.p4),
+              child: Transform.rotate(
+                angle: 0.785, // 45 degrees
+                child: Container(
+                  width: AppSize.p8,
+                  height: AppSize.p8,
+                  color: AppColor.goldColor,
+                ),
+              ),
+            ),
+            Container(
+              width: AppSize.width * 0.1,
+              height: 1,
+              color: AppColor.goldColor.withOpacity(0.5),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   Widget _buildLockerCard(LockerData item) {
     return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: AppSize.p16,
-        vertical: AppSize.p4,
-      ),
+      margin: EdgeInsets.only(bottom: AppSize.p16),
       decoration: BoxDecoration(
-        color: AppColor.fullScreenColor,
-        border: Border.all(color: AppColor.grey300),
+        color: AppColor.white,
+        borderRadius: BorderRadius.circular(AppSize.p12),
         boxShadow: [
           BoxShadow(
             color: AppColor.black.withOpacity(0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+            blurRadius: AppSize.p10,
+            offset: Offset(0, AppSize.p4),
           ),
         ],
       ),
-      child: InkWell(
-        onLongPress: () {
-          _showDeleteDialog(item);
-        },
-        child: Padding(
-          padding: EdgeInsets.all(AppSize.p16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSize.p12),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildRichText(
-                AppString.code,
-                "${item.lockerCode} (${item.interestRate ?? '0.00'} %)",
-                isGreenValue: true,
-              ),
-              _buildRichText(
-                AppString.company,
-                item.comName ?? "",
-                isGreenValue: true,
-              ),
-              SizedBox(height: AppSize.p4),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildRichText(AppString.name, item.personName ?? ""),
-                  _buildRichText(AppString.number, item.personPhone ?? ""),
-                ],
-              ),
-              SizedBox(height: AppSize.p4),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: _buildRichText(
-                        AppString.address,
-                        item.comAddress ?? "",
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        Get.toNamed('/addLockerCode', arguments: item);
-                      },
-                      icon: Icon(
-                        AppIcon.editNote,
-                        color: AppColor.activeColor,
-                        size: AppSize.p24,
-                      ),
-                      padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(),
-                    ),
-                  ],
-                ),
-              ),
+              // Left gold indicator
+              Container(width: AppSize.p4, color: AppColor.goldColor),
+              _buildLockerCardDetails(item),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildLockerCardDetails(LockerData item) {
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.all(AppSize.p12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                // Checkmark icon
+                Container(
+                  padding: EdgeInsets.all(AppSize.p4 / 2),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColor.goldColor, width: 1.5),
+                  ),
+                  child: Icon(
+                    AppIcon.check,
+                    color: AppColor.goldColor,
+                    size: AppSize.size14,
+                  ),
+                ),
+                SizedBox(width: AppSize.p12),
+                // Locker Icon in Cream Circle
+                Container(
+                  padding: EdgeInsets.all(AppSize.p8),
+                  decoration: BoxDecoration(
+                    color: AppColor.whiteOrang.withOpacity(0.5),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    AppIcon.locker,
+                    color: AppColor.goldColor,
+                    size: AppSize.p24,
+                  ),
+                ),
+                SizedBox(width: AppSize.p12),
+                // Title (Code)
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${item.lockerCode} (${item.interestRate ?? '0.00'} %)",
+                        style: TextStyle(
+                          color: AppColor.black,
+                          fontSize: AppSize.commonText,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        item.comName ?? "",
+                        style: TextStyle(
+                          color: AppColor.textColor,
+                          fontSize: AppSize.smallText,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Actions
+                _buildActionButtons(item),
+              ],
+            ),
+            SizedBox(height: AppSize.p12),
+            const Divider(height: 1),
+            SizedBox(height: AppSize.p8),
+            // Details (Person & Phone)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildDetailItem(AppIcon.person, item.personName ?? ""),
+                _buildDetailItem(AppIcon.phone, item.personPhone ?? ""),
+              ],
+            ),
+            if (item.comAddress != null && item.comAddress!.isNotEmpty) ...[
+              SizedBox(height: AppSize.p8),
+              _buildDetailItem(
+                AppIcon.location,
+                item.comAddress!,
+                isFullWidth: true,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButtons(LockerData item) {
+    return Row(
+      children: [
+        IconButton(
+          onPressed: () {
+            Get.toNamed('/addLockerCode', arguments: item);
+          },
+          icon: Icon(AppIcon.editNote, color: AppColor.goldColor),
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(),
+        ),
+        Container(
+          width: 1,
+          height: AppSize.p20,
+          color: AppColor.grey300,
+          margin: EdgeInsets.symmetric(horizontal: AppSize.p8),
+        ),
+        IconButton(
+          onPressed: () => _showDeleteDialog(item),
+          icon: Container(
+            padding: EdgeInsets.all(AppSize.p4),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColor.red.withOpacity(0.5)),
+            ),
+            child: Icon(
+              AppIcon.deleteIcon,
+              color: AppColor.red,
+              size: AppSize.p16,
+            ),
+          ),
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetailItem(
+    IconData icon,
+    String value, {
+    bool isFullWidth = false,
+  }) {
+    final content = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: AppSize.p16, color: AppColor.goldColor),
+        SizedBox(width: AppSize.p8),
+        Flexible(
+          child: Text(
+            value,
+            style: TextStyle(
+              color: AppColor.black,
+              fontSize: AppSize.size12,
+              fontWeight: FontWeight.w500,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+
+    return isFullWidth ? content : Expanded(child: content);
   }
 
   void _showDeleteDialog(LockerData item) {
@@ -185,7 +329,7 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
       textConfirm: AppString.delete,
       textCancel: AppString.cancel,
       confirmTextColor: AppColor.white,
-      buttonColor: AppColor.deleteColor,
+      buttonColor: AppColor.red,
       onConfirm: () async {
         Get.back();
         await lockerRemoveController.removeLocker(
@@ -195,49 +339,20 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
     );
   }
 
-  Widget _buildRichText(
-    String label,
-    String value, {
-    bool isGreenValue = false,
-  }) {
-    return RichText(
-      text: TextSpan(
-        style: TextStyle(
-          color: AppColor.dark,
-          fontSize: AppSize.size12,
-          fontFamily: 'Poppins',
-        ),
-        children: [
-          TextSpan(
-            text: "$label : ",
-            style: TextStyle(fontWeight: FontWeight.w500),
-          ),
-          TextSpan(
-            text: value,
-            style: TextStyle(
-              color: isGreenValue ? AppColor.activeColor : AppColor.dark,
-              fontWeight: isGreenValue ? FontWeight.w500 : FontWeight.w400,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _shimmerLoading() {
     return Shimmer.fromColors(
-      baseColor: AppColor.baseColor!,
-      highlightColor: AppColor.highlightColor!,
+      baseColor: AppColor.grey300,
+      highlightColor: AppColor.white,
       child: ListView.builder(
         itemCount: 5,
         padding: EdgeInsets.all(AppSize.p16),
         itemBuilder: (context, index) {
           return Container(
-            height: 100,
-            margin: EdgeInsets.only(bottom: AppSize.p8),
+            height: AppSize.width * 0.3,
+            margin: EdgeInsets.only(bottom: AppSize.p12),
             decoration: BoxDecoration(
               color: AppColor.white,
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(AppSize.p12),
             ),
           );
         },
