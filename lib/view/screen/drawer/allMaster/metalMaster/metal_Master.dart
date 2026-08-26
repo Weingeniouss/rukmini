@@ -13,7 +13,6 @@ import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
-import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:shimmer/shimmer.dart';
 
 class MetalMaster extends StatefulWidget {
@@ -40,15 +39,16 @@ class _MetalMasterState extends State<MetalMaster> {
   Widget build(BuildContext context) {
     return Fullscreen(
       isPadding: false,
+      backGroundcolor: AppColor.backgroundColor,
       appBar: appBar(
         back: true,
         centerTitle: true,
-        title: AppString.metalMaster,
+        title: _buildDecorativeTitle(),
       ),
       child: Column(
         children: [
-          _buildInputSection(),
-          _buildDivider(),
+          _buildFilterAndAddSection(),
+          const Divider(height: 1),
           Expanded(
             child: Obx(() {
               if (productTypeController.isLoading.value &&
@@ -62,13 +62,16 @@ class _MetalMasterState extends State<MetalMaster> {
 
               return RefreshIndicator(
                 onRefresh: () => CallApi.callProductTypeList(),
-                color: AppColor.activeColor,
+                color: AppColor.goldColor,
                 child: ListView.builder(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(vertical: AppSize.p4),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.p16,
+                    vertical: AppSize.p12,
+                  ),
                   itemCount: productTypeController.productTypeList.length,
                   itemBuilder: (context, index) {
-                    return _buildMetalListItem(
+                    return _buildMetalCard(
                       productTypeController.productTypeList[index],
                     );
                   },
@@ -81,178 +84,274 @@ class _MetalMasterState extends State<MetalMaster> {
     );
   }
 
-  Widget _buildInputSection() {
-    return horizontalPadding(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSize.p8),
-        child: Row(
+  Widget _buildDecorativeTitle() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          AppString.metalMaster,
+          style: TextStyle(
+            color: AppColor.black,
+            fontSize: AppSize.titleText,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: AppSize.p4 / 2),
+        Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              AppIcon.grid,
-              color: AppColor.activeColor.withOpacity(0.6),
-              size: AppSize.p24,
-            ),
-            SizedBox(width: AppSize.p12),
-            Expanded(
-              flex: 3,
-              child: _buildTextField(
-                controller: metalMasterUI.metalController,
-                hintText: AppString.metal,
-              ),
-            ),
             Container(
-              height: AppSize.p12,
-              width: 1.2,
-              color: AppColor.boderSideColor.shade400,
-              margin: EdgeInsets.symmetric(horizontal: AppSize.p8),
+              width: AppSize.width * 0.1,
+              height: 1,
+              color: AppColor.goldColor.withOpacity(0.5),
             ),
-            Expanded(
-              flex: 2,
-              child: _buildTextField(
-                controller: metalMasterUI.rateController,
-                hintText: AppString.rate,
-                keyboardType: TextInputType.number,
-              ),
-            ),
-            Obx(
-              () => metalMasterUI.isLoading.value
-                  ? SizedBox(
-                      height: AppSize.p24,
-                      width: AppSize.p24,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : GestureDetector(
-                      onTap: () => metalMasterUI.save(),
-                      child: Container(
-                        padding: EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: AppColor.activeColor,
-                            width: 1.5,
-                          ),
-                        ),
-                        child: Icon(
-                          metalMasterUI.editingId.value == null
-                              ? AppIcon.add
-                              : AppIcon.check,
-                          color: AppColor.activeColor,
-                          size: AppSize.headingText,
-                        ),
-                      ),
-                    ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hintText,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return TextField(
-      controller: controller,
-      keyboardType: keyboardType,
-      style: TextStyle(
-        fontSize: AppSize.p16,
-        color: AppColor.textColor,
-        fontWeight: FontWeight.w400,
-      ),
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(
-          color: AppColor.textColor.withOpacity(0.5),
-          fontSize: AppSize.p16,
-        ),
-        border: InputBorder.none,
-        isDense: true,
-        contentPadding: EdgeInsets.zero,
-      ),
-    );
-  }
-
-  Widget _buildMetalListItem(ProductTypeData item) {
-    return horizontalPadding(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSize.p8),
-        child: Row(
-          children: [
-            Icon(
-              AppIcon.checkCircle,
-              color: AppColor.activeColor,
-              size: AppSize.p24,
-            ),
-            SizedBox(width: AppSize.p16),
-            Expanded(
-              child: Text(
-                "${item.name} (${item.rate}.00)",
-                style: TextStyle(
-                  fontSize: AppSize.size18,
-                  fontWeight: FontWeight.w500,
-                  color: AppColor.dark,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Transform.rotate(
+                angle: 0.785,
+                child: Container(
+                  width: AppSize.p8,
+                  height: AppSize.p8,
+                  color: AppColor.goldColor,
                 ),
               ),
             ),
-            IconButton(
-              onPressed: () {
-                metalMasterUI.startEditing(
-                  item.productTypeId,
-                  item.name,
-                  item.rate,
-                );
-              },
-              icon: Icon(
-                AppIcon.editNote,
-                color: AppColor.activeColor,
-                size: AppSize.p24,
-              ),
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-            ),
-            SizedBox(width: AppSize.p16),
-            IconButton(
-              onPressed: () {
-                _showDeleteDialog(item);
-              },
-              icon: Icon(
-                AppIcon.remove,
-                color: AppColor.activeColor,
-                size: AppSize.p24,
-              ),
-              padding: EdgeInsets.zero,
-              constraints: BoxConstraints(),
+            Container(
+              width: AppSize.width * 0.1,
+              height: 1,
+              color: AppColor.goldColor.withOpacity(0.5),
             ),
           ],
         ),
+      ],
+    );
+  }
+
+  Widget _buildFilterAndAddSection() {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSize.p16,
+        vertical: AppSize.p8,
+      ),
+      color: AppColor.white,
+      child: Row(
+        children: [
+          Icon(AppIcon.grid, color: AppColor.goldColor, size: AppSize.p24),
+          SizedBox(width: AppSize.p16),
+          Expanded(
+            flex: 3,
+            child: TextField(
+              controller: metalMasterUI.metalController,
+              style: TextStyle(
+                fontSize: AppSize.commonText,
+                color: AppColor.black,
+                fontWeight: FontWeight.w500,
+              ),
+              decoration: InputDecoration(
+                hintText: AppString.metal,
+                hintStyle: TextStyle(color: AppColor.textColor.withOpacity(0.5)),
+                border: InputBorder.none,
+                isDense: true,
+              ),
+            ),
+          ),
+          Container(
+            height: AppSize.p16,
+            width: 1,
+            color: AppColor.grey300,
+            margin: EdgeInsets.symmetric(horizontal: AppSize.p12),
+          ),
+          Expanded(
+            flex: 2,
+            child: TextField(
+              controller: metalMasterUI.rateController,
+              keyboardType: TextInputType.number,
+              style: TextStyle(
+                fontSize: AppSize.commonText,
+                color: AppColor.black,
+                fontWeight: FontWeight.w500,
+              ),
+              decoration: InputDecoration(
+                hintText: AppString.rate,
+                hintStyle: TextStyle(color: AppColor.textColor.withOpacity(0.5)),
+                border: InputBorder.none,
+                isDense: true,
+              ),
+            ),
+          ),
+          Obx(
+            () => metalMasterUI.isLoading.value
+                ? SizedBox(
+                    height: AppSize.p24,
+                    width: AppSize.p24,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColor.goldColor,
+                    ),
+                  )
+                : GestureDetector(
+                    onTap: () => metalMasterUI.save(),
+                    child: Container(
+                      padding: EdgeInsets.all(AppSize.p4),
+                      decoration: BoxDecoration(
+                        color: AppColor.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: AppColor.goldColor,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Icon(
+                        metalMasterUI.editingId.value == null
+                            ? AppIcon.add
+                            : AppIcon.check,
+                        color: AppColor.goldColor,
+                        size: AppSize.p20,
+                      ),
+                    ),
+                  ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildDivider() {
-    return Divider(
-      height: 1,
-      thickness: 1,
-      color: AppColor.boderSideColor.shade200,
+  Widget _buildMetalCard(ProductTypeData item) {
+    bool isGold = item.name?.toLowerCase().contains("gold") ?? false;
+    return Container(
+      margin: EdgeInsets.only(bottom: AppSize.p16),
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        borderRadius: BorderRadius.circular(AppSize.p12),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSize.p12),
+        child: IntrinsicHeight(
+          child: Row(
+            children: [
+              // Left gold indicator
+              Container(width: AppSize.p4, color: AppColor.goldColor),
+              Padding(
+                padding: EdgeInsets.all(AppSize.p12),
+                child: Row(
+                  children: [
+                    // Checkmark icon
+                    Container(
+                      padding: EdgeInsets.all(AppSize.p4 / 2),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: AppColor.goldColor,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Icon(
+                        AppIcon.check,
+                        color: AppColor.goldColor,
+                        size: AppSize.size14,
+                      ),
+                    ),
+                    SizedBox(width: AppSize.p12),
+                    // Metal Icon in Cream Circle
+                    Container(
+                      padding: EdgeInsets.all(AppSize.p8),
+                      decoration: BoxDecoration(
+                        color: AppColor.whiteOrang.withOpacity(0.5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        isGold ? Icons.radio_button_checked : Icons.local_offer,
+                        color: isGold ? AppColor.goldColor : Colors.grey,
+                        size: AppSize.p24,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Title and Price
+              Expanded(
+                child: Text(
+                  "${item.name} (${item.rate})",
+                  style: TextStyle(
+                    color: AppColor.black,
+                    fontSize: AppSize.commonText,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              // Actions
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: AppSize.p8),
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        metalMasterUI.startEditing(
+                          item.productTypeId,
+                          item.name,
+                          item.rate,
+                        );
+                      },
+                      icon: Icon(AppIcon.editNote, color: AppColor.goldColor),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                    Container(
+                      width: 1,
+                      height: AppSize.p20,
+                      color: AppColor.grey300,
+                      margin: EdgeInsets.symmetric(horizontal: AppSize.p8),
+                    ),
+                    IconButton(
+                      onPressed: () => _showDeleteDialog(item),
+                      icon: Container(
+                        padding: EdgeInsets.all(AppSize.p4),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColor.red.withOpacity(0.5),
+                          ),
+                        ),
+                        child: Icon(
+                          AppIcon.deleteIcon,
+                          color: AppColor.red,
+                          size: AppSize.p16,
+                        ),
+                      ),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   Widget _shimmerLoading() {
     return Shimmer.fromColors(
-      baseColor: AppColor.baseColor!,
-      highlightColor: AppColor.highlightColor!,
+      baseColor: AppColor.grey300,
+      highlightColor: AppColor.white,
       child: ListView.builder(
         itemCount: 6,
         padding: EdgeInsets.all(AppSize.p16),
         itemBuilder: (context, index) {
           return Container(
-            height: 45,
-            margin: EdgeInsets.only(bottom: AppSize.p8),
+            height: AppSize.width * 0.2,
+            margin: EdgeInsets.only(bottom: AppSize.p16),
             decoration: BoxDecoration(
-              color: AppColor.fullScreenColor,
-              borderRadius: BorderRadius.circular(5),
+              color: AppColor.white,
+              borderRadius: BorderRadius.circular(AppSize.p12),
             ),
           );
         },
@@ -262,12 +361,12 @@ class _MetalMasterState extends State<MetalMaster> {
 
   void _showDeleteDialog(ProductTypeData item) {
     Get.defaultDialog(
-      title: AppString.deleteCustomer,
-      middleText: "${AppString.deleteMessage} \n\n ${item.name}",
+      title: AppString.deleteMetalTouch,
+      middleText: "${AppString.deleteMetalTouchMessage} \n\n ${item.name}",
       textConfirm: AppString.delete,
       textCancel: AppString.cancel,
-      confirmTextColor: AppColor.fullScreenColor,
-      buttonColor: AppColor.deleteColor,
+      confirmTextColor: AppColor.white,
+      buttonColor: AppColor.red,
       onConfirm: () async {
         Get.back();
         await CallApi.callProductTypeRemove(

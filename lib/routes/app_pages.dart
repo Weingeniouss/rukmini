@@ -49,10 +49,7 @@ class AppPages {
 
     //Credentials
     //Login
-    GetPage(
-      name: _Paths.login,
-      page: () => Login(loginAPI: Get.put(LoginControllerAPI())),
-    ),
+    GetPage(name: _Paths.login, page: () => Login(loginAPI: Get.put(LoginControllerAPI()))),
 
     //Drawer
     GetPage(name: _Paths.allMaster, page: () => const AllMaster()),
@@ -70,13 +67,11 @@ class AppPages {
     GetPage(name: _Paths.custDetail, page: () => const CustDetail()),
     GetPage(
       name: _Paths.addCustForm,
-      page: () =>
-          AddCustForm(addCustForomUI: Get.put(AddCustFormControllerUI())),
+      page: () => AddCustForm(addCustForomUI: Get.put(AddCustFormControllerUI())),
     ),
     GetPage(
       name: _Paths.updateCustForm,
-      page: () =>
-          UpdateCustForm(updateCustUI: Get.put(UpdateCustFormControllerUI())),
+      page: () => UpdateCustForm(updateCustUI: Get.put(UpdateCustFormControllerUI())),
     ),
     // Girivi
     GetPage(name: _Paths.giriviList, page: () => const GiriviList()),
@@ -114,8 +109,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.addLockerCode,
-      page: () =>
-          AddLockerCode(uiController: Get.put(LockerMasterControllerUI())),
+      page: () => AddLockerCode(uiController: Get.put(LockerMasterControllerUI())),
     ),
     //Metal Touch
     GetPage(name: _Paths.metalTouch, page: () => const MetalTouch()),
@@ -123,8 +117,7 @@ class AppPages {
     GetPage(name: _Paths.yearMaster, page: () => const YearMaster()),
     GetPage(
       name: _Paths.addYearMaster,
-      page: () =>
-          AddYearMaster(uiController: Get.put(YearMasterControllerUI())),
+      page: () => AddYearMaster(uiController: Get.put(YearMasterControllerUI())),
     ),
     //All Master
 
@@ -145,8 +138,7 @@ class AppPages {
     //Locker Transaction
     GetPage(
       name: _Paths.lockerTransaction,
-      page: () =>
-          LockerTranStaion(uiController: Get.put(LockerTransUIController())),
+      page: () => LockerTranStaion(uiController: Get.put(LockerTransUIController())),
     ),
     GetPage(
       name: _Paths.lockerTransationDetail,

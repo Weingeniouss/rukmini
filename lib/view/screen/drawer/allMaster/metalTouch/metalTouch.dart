@@ -13,7 +13,6 @@ import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
-import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:shimmer/shimmer.dart';
 
 class MetalTouch extends StatefulWidget {
@@ -40,15 +39,16 @@ class _MetalTouchState extends State<MetalTouch> {
     return Fullscreen(
       drawer: homeDrawer(),
       isPadding: false,
+      backGroundcolor: AppColor.backgroundColor,
       appBar: appBar(
         back: true,
         centerTitle: true,
-        title: AppString.metalTouchMaster,
+        title: _buildDecorativeTitle(),
       ),
       child: Column(
         children: [
-          _buildInputSection(),
-          _buildDivider(),
+          _buildFilterAndAddSection(),
+          const Divider(height: 1),
           Expanded(
             child: Obx(() {
               if (metalController.isLoading.value &&
@@ -62,13 +62,18 @@ class _MetalTouchState extends State<MetalTouch> {
 
               return RefreshIndicator(
                 onRefresh: () => CallApi.callMetalList(),
-                color: AppColor.activeColor,
+                color: AppColor.goldColor,
                 child: ListView.builder(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(vertical: AppSize.p4),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.p16,
+                    vertical: AppSize.p12,
+                  ),
                   itemCount: metalController.metalList.length,
                   itemBuilder: (context, index) {
-                    return _buildListItem(metalController.metalList[index]);
+                    return _buildMetalTouchCard(
+                      metalController.metalList[index],
+                    );
                   },
                 ),
               );
@@ -79,151 +84,258 @@ class _MetalTouchState extends State<MetalTouch> {
     );
   }
 
-  Widget _buildInputSection() {
-    return horizontalPadding(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSize.p8),
-        child: Row(
+  Widget _buildDecorativeTitle() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          AppString.metalTouchMaster,
+          style: TextStyle(
+            color: AppColor.black,
+            fontSize: AppSize.titleText,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: AppSize.p4 / 2),
+        Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              AppIcon.balance,
-              color: AppColor.activeColor.withOpacity(0.6),
-              size: AppSize.p24,
-            ),
-            SizedBox(width: AppSize.p12),
-            Expanded(
-              flex: 3,
-              child: _buildTextField(
-                controller: uiController.karatController,
-                hintText: AppString.karat,
-              ),
-            ),
             Container(
-              height: AppSize.p12,
-              width: 1.2,
-              color: AppColor.boderSideColor.shade400,
-              margin: EdgeInsets.symmetric(horizontal: AppSize.p8),
+              width: AppSize.width * 0.1,
+              height: 1,
+              color: AppColor.goldColor.withOpacity(0.5),
             ),
-            Expanded(
-              flex: 2,
-              child: _buildTextField(
-                controller: uiController.goldContentController,
-                hintText: AppString.contentPercent,
-                keyboardType: TextInputType.number,
-              ),
-            ),
-            Obx(
-              () => uiController.isLoading.value
-                  ? SizedBox(
-                      height: AppSize.p24,
-                      width: AppSize.p24,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : GestureDetector(
-                      onTap: () => uiController.save(),
-                      child: Container(
-                        padding: EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: AppColor.activeColor,
-                            width: 1.5,
-                          ),
-                        ),
-                        child: Icon(
-                          uiController.editingId.value == null
-                              ? AppIcon.add
-                              : AppIcon.check,
-                          color: AppColor.activeColor,
-                          size: AppSize.headingText,
-                        ),
-                      ),
-                    ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hintText,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return TextField(
-      controller: controller,
-      keyboardType: keyboardType,
-      style: TextStyle(
-        fontSize: AppSize.p16,
-        color: AppColor.textColor,
-        fontWeight: FontWeight.w400,
-      ),
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(
-          color: AppColor.textColor.withOpacity(0.5),
-          fontSize: AppSize.p16,
-        ),
-        border: InputBorder.none,
-        isDense: true,
-        contentPadding: EdgeInsets.zero,
-      ),
-    );
-  }
-
-  Widget _buildListItem(MetalData item) {
-    return horizontalPadding(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSize.p8),
-        child: Row(
-          children: [
-            Icon(
-              AppIcon.checkCircle,
-              color: AppColor.activeColor,
-              size: AppSize.p24,
-            ),
-            SizedBox(width: AppSize.p16),
-            Expanded(
-              child: Text(
-                "${item.karat} Karat (${item.goldContent}%)",
-                style: TextStyle(
-                  fontSize: AppSize.size18,
-                  fontWeight: FontWeight.w500,
-                  color: AppColor.dark,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSize.p4),
+              child: Transform.rotate(
+                angle: 0.785, // 45 degrees
+                child: Container(
+                  width: AppSize.p8,
+                  height: AppSize.p8,
+                  color: AppColor.goldColor,
                 ),
               ),
             ),
-            IconButton(
-              onPressed: () {
-                uiController.startEditing(
-                  item.metalId,
-                  item.karat,
-                  item.goldContent,
-                );
-              },
-              icon: Icon(
-                AppIcon.editNote,
-                color: AppColor.activeColor,
-                size: AppSize.p24,
-              ),
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-            ),
-            SizedBox(width: AppSize.p16),
-            IconButton(
-              onPressed: () {
-                _showDeleteDialog(item);
-              },
-              icon: Icon(
-                AppIcon.remove,
-                color: AppColor.activeColor,
-                size: AppSize.p24,
-              ),
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
+            Container(
+              width: AppSize.width * 0.1,
+              height: 1,
+              color: AppColor.goldColor.withOpacity(0.5),
             ),
           ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFilterAndAddSection() {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSize.p16,
+        vertical: AppSize.p8,
+      ),
+      color: AppColor.white,
+      child: Row(
+        children: [
+          Icon(AppIcon.grid, color: AppColor.goldColor, size: AppSize.p24),
+          SizedBox(width: AppSize.p16),
+          Expanded(
+            flex: 3,
+            child: TextField(
+              controller: uiController.karatController,
+              style: TextStyle(
+                fontSize: AppSize.commonText,
+                color: AppColor.black,
+                fontWeight: FontWeight.w500,
+              ),
+              decoration: InputDecoration(
+                hintText: AppString.karat,
+                hintStyle: TextStyle(
+                  color: AppColor.textColor.withOpacity(0.5),
+                ),
+                border: InputBorder.none,
+                isDense: true,
+              ),
+            ),
+          ),
+          Container(
+            height: AppSize.p16,
+            width: 1,
+            color: AppColor.grey300,
+            margin: EdgeInsets.symmetric(horizontal: AppSize.p12),
+          ),
+          Expanded(
+            flex: 2,
+            child: TextField(
+              controller: uiController.goldContentController,
+              keyboardType: TextInputType.number,
+              style: TextStyle(
+                fontSize: AppSize.commonText,
+                color: AppColor.black,
+                fontWeight: FontWeight.w500,
+              ),
+              decoration: InputDecoration(
+                hintText: "%",
+                hintStyle: TextStyle(
+                  color: AppColor.textColor.withOpacity(0.5),
+                ),
+                border: InputBorder.none,
+                isDense: true,
+              ),
+            ),
+          ),
+          Obx(
+            () => uiController.isLoading.value
+                ? SizedBox(
+                    height: AppSize.p24,
+                    width: AppSize.p24,
+                    child: const CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColor.goldColor,
+                    ),
+                  )
+                : GestureDetector(
+                    onTap: () => uiController.save(),
+                    child: Container(
+                      padding: EdgeInsets.all(AppSize.p4),
+                      decoration: BoxDecoration(
+                        color: AppColor.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: AppColor.goldColor,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Icon(
+                        uiController.editingId.value == null
+                            ? AppIcon.add
+                            : AppIcon.check,
+                        color: AppColor.goldColor,
+                        size: AppSize.p20,
+                      ),
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMetalTouchCard(MetalData item) {
+    return Container(
+      margin: EdgeInsets.only(bottom: AppSize.p12),
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        borderRadius: BorderRadius.circular(AppSize.p12),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.05),
+            blurRadius: AppSize.p10,
+            offset: Offset(0, AppSize.p4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSize.p12),
+        child: IntrinsicHeight(
+          child: Row(
+            children: [
+              // Left gold indicator
+              Container(width: AppSize.p4, color: AppColor.goldColor),
+              Padding(
+                padding: EdgeInsets.all(AppSize.p12),
+                child: Row(
+                  children: [
+                    // Checkmark icon
+                    Container(
+                      padding: EdgeInsets.all(AppSize.p4 / 2),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: AppColor.goldColor,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Icon(
+                        AppIcon.check,
+                        color: AppColor.goldColor,
+                        size: AppSize.size14,
+                      ),
+                    ),
+                    SizedBox(width: AppSize.p12),
+                    // Icon in Cream Circle
+                    Container(
+                      padding: EdgeInsets.all(AppSize.p8),
+                      decoration: BoxDecoration(
+                        color: AppColor.whiteOrang.withOpacity(0.5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        AppIcon.balance,
+                        color: AppColor.goldColor,
+                        size: AppSize.p24,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Name and Percent
+              Expanded(
+                child: Text(
+                  "${item.karat} Karat (${item.goldContent}%)",
+                  style: TextStyle(
+                    color: AppColor.black,
+                    fontSize: AppSize.commonText,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              // Actions
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: AppSize.p8),
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        uiController.startEditing(
+                          item.metalId,
+                          item.karat,
+                          item.goldContent,
+                        );
+                      },
+                      icon: Icon(AppIcon.editNote, color: AppColor.goldColor),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                    Container(
+                      width: 1,
+                      height: AppSize.p20,
+                      color: AppColor.grey300,
+                      margin: EdgeInsets.symmetric(horizontal: AppSize.p8),
+                    ),
+                    IconButton(
+                      onPressed: () => _showDeleteDialog(item),
+                      icon: Container(
+                        padding: EdgeInsets.all(AppSize.p4),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColor.red.withOpacity(0.5),
+                          ),
+                        ),
+                        child: Icon(
+                          AppIcon.deleteIcon,
+                          color: AppColor.red,
+                          size: AppSize.p16,
+                        ),
+                      ),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -236,8 +348,8 @@ class _MetalTouchState extends State<MetalTouch> {
           "${AppString.deleteMetalTouchMessage}\n\n ${item.karat} Karat",
       textConfirm: AppString.delete,
       textCancel: AppString.cancel,
-      confirmTextColor: AppColor.fullScreenColor,
-      buttonColor: AppColor.deleteColor,
+      confirmTextColor: AppColor.white,
+      buttonColor: AppColor.red,
       onConfirm: () async {
         Get.back();
         await CallApi.callMetalRemove(metalId: item.metalId ?? "");
@@ -246,28 +358,20 @@ class _MetalTouchState extends State<MetalTouch> {
     );
   }
 
-  Widget _buildDivider() {
-    return Divider(
-      height: 1,
-      thickness: 1,
-      color: AppColor.boderSideColor.shade200,
-    );
-  }
-
   Widget _shimmerLoading() {
     return Shimmer.fromColors(
-      baseColor: AppColor.baseColor!,
-      highlightColor: AppColor.highlightColor!,
+      baseColor: AppColor.grey300,
+      highlightColor: AppColor.white,
       child: ListView.builder(
         itemCount: 10,
         padding: EdgeInsets.all(AppSize.p16),
         itemBuilder: (context, index) {
           return Container(
-            height: 45,
-            margin: EdgeInsets.only(bottom: AppSize.p8),
+            height: AppSize.width * 0.15,
+            margin: EdgeInsets.only(bottom: AppSize.p12),
             decoration: BoxDecoration(
-              color: AppColor.fullScreenColor,
-              borderRadius: BorderRadius.circular(5),
+              color: AppColor.white,
+              borderRadius: BorderRadius.circular(AppSize.p12),
             ),
           );
         },

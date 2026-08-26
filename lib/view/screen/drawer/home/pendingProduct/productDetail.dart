@@ -26,7 +26,7 @@ class _productDetailState extends State<productDetail>
   final productController = Get.put(ProductController());
   final ScrollController _scrollController = ScrollController();
   late TabController _tabController;
-  final List<String> _tabs = ["Pending", "Return", "Sold", "Touch"];
+  final List<String> _tabs = ["Pending", "Return", "Sold", "Karkit"];
   final TextEditingController _searchController = TextEditingController();
   final RxBool _isSearching = false.obs;
 
@@ -77,6 +77,7 @@ class _productDetailState extends State<productDetail>
   void dispose() {
     _scrollController.dispose();
     _tabController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -86,16 +87,19 @@ class _productDetailState extends State<productDetail>
       return Fullscreen(
         drawer: homeDrawer(),
         isPadding: false,
+        backGroundcolor: AppColor.backgroundColor,
         appBar: appBar(
           title: _isSearching.value
               ? TextField(
                   controller: _searchController,
                   autofocus: true,
-                  style: TextStyle(color: AppColor.fullScreenColor),
-                  cursorColor: AppColor.fullScreenColor,
+                  style: const TextStyle(color: AppColor.black),
+                  cursorColor: AppColor.goldColor,
                   decoration: InputDecoration(
                     hintText: AppString.searchProduct,
-                    hintStyle: TextStyle(color: AppColor.otherWhite),
+                    hintStyle: TextStyle(
+                      color: AppColor.textColor.withOpacity(0.5),
+                    ),
                     border: InputBorder.none,
                   ),
                   onChanged: (value) {
@@ -112,32 +116,29 @@ class _productDetailState extends State<productDetail>
             }
           },
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(50),
+            preferredSize: Size.fromHeight(AppSize.width * 0.15),
             child: Container(
               color: AppColor.fullScreenColor,
               child: TabBar(
                 controller: _tabController,
-                onTap: (index) {
-                  productController.products.clear();
-                  fetchData(index: index, isRefresh: true);
-                },
-                indicatorColor: AppColor.activeColor,
-                labelColor: AppColor.activeColor,
-                unselectedLabelColor: AppColor.dark,
+                indicatorColor: AppColor.goldColor,
+                indicatorWeight: AppSize.p4 * 0.75,
+                labelColor: AppColor.goldColor,
+                unselectedLabelColor: AppColor.textColor,
                 indicatorSize: TabBarIndicatorSize.tab,
-                dividerColor: AppColor.boderSideColor.shade300,
+                labelPadding: EdgeInsets.zero,
                 tabs: [
-                  _buildTab(AppString.pendingProduct),
-                  _buildTab(AppString.returnProduct),
-                  _buildTab(AppString.soldProduct),
-                  _buildTab(AppString.karkitProduct, isLast: true),
+                  _buildTab(AppString.pending, Icons.history),
+                  _buildTab(AppString.returnProduct, Icons.reply),
+                  _buildTab(AppString.soldProduct, Icons.check_circle_outline),
+                  _buildTab(AppString.karkitProduct, Icons.calendar_today),
                 ],
               ),
             ),
           ),
         ),
         child: TabBarView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           controller: _tabController,
           children: List.generate(_tabs.length, (index) {
             return _buildTabContent(index);
@@ -164,26 +165,21 @@ class _productDetailState extends State<productDetail>
     });
   }
 
-  Widget _buildTab(String text, {bool isLast = false}) {
-    return Container(
-      width: double.infinity,
-      alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        // border: isLast
-        //     ? null
-        //     : Border(right: BorderSide(color: Colors.grey.shade300, width: 1)),
-      ),
-      child: Tab(
-        child: Center(
-          child: Text(
+  Widget _buildTab(String text, IconData icon) {
+    return Tab(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: AppSize.p20 + AppSize.p4),
+          SizedBox(height: AppSize.p4 / 2),
+          Text(
             text,
-            textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: AppSize.size14,
+              fontSize: AppSize.size12,
               fontWeight: FontWeight.w500,
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -192,15 +188,18 @@ class _productDetailState extends State<productDetail>
     return ListView.builder(
       controller: _scrollController,
       itemCount: data.length + (productController.isMoreLoading.value ? 1 : 0),
-      padding: EdgeInsets.all(AppSize.p8),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSize.p16,
+        vertical: AppSize.p8,
+      ),
       itemBuilder: (context, index) {
         if (index < data.length) {
           return _productCard(data[index]);
         } else {
-          return const Center(
+          return Center(
             child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(),
+              padding: EdgeInsets.all(AppSize.p8),
+              child: const CircularProgressIndicator(color: AppColor.goldColor),
             ),
           );
         }
@@ -209,13 +208,37 @@ class _productDetailState extends State<productDetail>
   }
 
   Widget _productCard(ProductListData item) {
-    return Card(
-      elevation: 0,
-      color: AppColor.fullScreenColor,
-      shape: RoundedRectangleBorder(
-        side: BorderSide(color: AppColor.boderSideColor.shade300),
-        borderRadius: BorderRadius.circular(5),
+    return Container(
+      margin: EdgeInsets.only(bottom: AppSize.p16),
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        borderRadius: BorderRadius.circular(AppSize.p12),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.05),
+            blurRadius: AppSize.p10,
+            offset: Offset(0, AppSize.p4),
+          ),
+        ],
       ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSize.p12),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Far left indicator bar
+              Container(width: AppSize.p4, color: AppColor.goldColor),
+              _buildProductDetails(item),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProductDetails(ProductListData item) {
+    return Expanded(
       child: Padding(
         padding: EdgeInsets.all(AppSize.p12),
         child: Column(
@@ -223,34 +246,36 @@ class _productDetailState extends State<productDetail>
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Image Placeholder
                 Container(
-                  width: Get.width * 0.18,
-                  height: Get.width * 0.18,
+                  width: AppSize.width * 0.18,
+                  height: AppSize.width * 0.18,
                   decoration: BoxDecoration(
-                    color: AppColor.textField.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(5),
+                    color: AppColor.whiteOrang.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(AppSize.p8),
                   ),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          AppIcon.camera_alt,
-                          color: AppColor.boderSideColor.shade600,
-                          size: AppSize.p24,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        AppIcon.camera_alt,
+                        color: AppColor.textColor.withOpacity(0.6),
+                        size: AppSize.p24,
+                      ),
+                      SizedBox(height: AppSize.p4),
+                      Text(
+                        AppString.image,
+                        style: TextStyle(
+                          fontSize: AppSize.smallText,
+                          color: AppColor.textColor.withOpacity(0.6),
+                          fontWeight: FontWeight.w500,
                         ),
-                        Text(
-                          AppString.image,
-                          style: TextStyle(
-                            fontSize: AppSize.size15,
-                            color: AppColor.boderSideColor.shade600,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(width: AppSize.p12),
+                // Top Content
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -262,9 +287,9 @@ class _productDetailState extends State<productDetail>
                             child: Text(
                               item.custName ?? "N/A",
                               style: TextStyle(
-                                color: AppColor.primaryColor,
-                                fontWeight: FontWeight.w500,
-                                fontSize: AppSize.size12,
+                                color: AppColor.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: AppSize.mediumText * 1.2,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -275,17 +300,49 @@ class _productDetailState extends State<productDetail>
                             style: TextStyle(
                               color: AppColor.activeColor,
                               fontWeight: FontWeight.w500,
-                              fontSize: AppSize.size12,
+                              fontSize: AppSize.mediumText,
                             ),
+                          ),
+                          SizedBox(width: AppSize.p4),
+                          Icon(
+                            Icons.more_vert,
+                            color: AppColor.textColor.withOpacity(0.6),
+                            size: AppSize.p20,
                           ),
                         ],
                       ),
-                      SizedBox(height: AppSize.p4),
-                      Text(
-                        "${item.metalName} ${item.prodType}",
-                        style: TextStyle(
-                          color: AppColor.boderSideColor.shade600,
-                          fontSize: Get.width * 0.032,
+                      SizedBox(height: AppSize.p8),
+                      // Metal Chip
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSize.p10,
+                          vertical: AppSize.p4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColor.whiteOrang,
+                          borderRadius: BorderRadius.circular(AppSize.p20),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              item.metalName?.toLowerCase().contains("gold") ==
+                                      true
+                                  ? Icons.radio_button_checked
+                                  : Icons.local_offer,
+                              size: AppSize.size14,
+                              color: AppColor.goldColor,
+                            ),
+                            SizedBox(width: AppSize.p4),
+                            Text(
+                              "${item.metalName} ${item.prodType}",
+                              style: TextStyle(
+                                color: AppColor.goldColor,
+                                fontSize: AppSize.smallText,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -293,105 +350,120 @@ class _productDetailState extends State<productDetail>
                 ),
               ],
             ),
-            SizedBox(height: Get.height * 0.015),
-            _detailRow(
-              "${AppString.date} :",
-              item.givenDate ?? AppString.na,
-              AppString.wgtColon,
-              "${item.weight ?? '0.00'} ${AppString.gm}",
-            ),
-            _detailRow(
-              "${AppString.gvnAmt}:",
-              item.givenAmount ?? "0.00",
-              AppString.rateColon,
-              "${item.todayRate ?? '0.00'}",
-            ),
-            _detailRow(
-              "${AppString.locker} :",
-              item.lockerCode ?? AppString.na,
-              "${AppString.pcs} :",
-              item.pieces ?? "0",
+            SizedBox(height: AppSize.p12),
+            const Divider(height: 1),
+            SizedBox(height: AppSize.p12),
+            // Grid Info
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      _infoItem(
+                        AppIcon.calendar,
+                        "${AppString.date}:",
+                        item.givenDate ?? AppString.na,
+                      ),
+                      SizedBox(height: AppSize.p8),
+                      _infoItem(
+                        AppIcon.rupee,
+                        "${AppString.gvnAmt}:",
+                        item.givenAmount ?? "0.00",
+                      ),
+                      SizedBox(height: AppSize.p8),
+                      _infoItem(
+                        AppIcon.locker,
+                        "${AppString.locker}:",
+                        item.lockerCode ?? AppString.na,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: AppSize.width * 0.15,
+                  width: 1,
+                  color: AppColor.grey300.withOpacity(0.5),
+                  margin: EdgeInsets.symmetric(horizontal: AppSize.p16),
+                ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      _infoItem(
+                        AppIcon.weight,
+                        "${AppString.weightInGm}:",
+                        "${item.weight ?? '0.00'} ${AppString.gm}",
+                      ),
+                      SizedBox(height: AppSize.p8),
+                      _infoItem(
+                        AppIcon.rupee,
+                        "${AppString.rate}:",
+                        item.todayRate ?? "0.00",
+                      ),
+                      SizedBox(height: AppSize.p8),
+                      _infoItem(
+                        AppIcon.category,
+                        "${AppString.pcs}:",
+                        item.pieces ?? "0",
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _detailRow(
-    String label1,
-    String value1,
-    String label2,
-    String value2,
-  ) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: RichText(
-              text: TextSpan(
-                style: TextStyle(
-                  color: AppColor.dark,
-                  fontSize: AppSize.size14,
-                  fontFamily: 'Poppins',
-                ),
-                children: [
-                  TextSpan(
-                    text: "$label1 ",
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  TextSpan(text: value1),
-                ],
-              ),
-            ),
-          ),
-          RichText(
-            textAlign: TextAlign.right,
-            text: TextSpan(
-              style: TextStyle(
-                color: AppColor.dark,
-                fontSize: AppSize.size14,
-                fontFamily: 'Poppins',
-              ),
-              children: [
-                TextSpan(
-                  text: "$label2 ",
-                  style: TextStyle(fontWeight: FontWeight.w500),
-                ),
-                TextSpan(text: value2),
-              ],
-            ),
-          ),
-        ],
+Widget _infoItem(IconData icon, String label, String value) {
+  return Row(
+    children: [
+      Icon(icon, size: AppSize.p16, color: AppColor.goldColor),
+      SizedBox(width: AppSize.p8),
+      Text(
+        label,
+        style: TextStyle(
+          color: AppColor.textColor,
+          fontSize: AppSize.size12,
+          fontWeight: FontWeight.w400,
+        ),
       ),
-    );
-  }
+      SizedBox(width: AppSize.p4),
+      Expanded(
+        child: Text(
+          value,
+          style: TextStyle(
+            color: AppColor.black,
+            fontSize: AppSize.size12,
+            fontWeight: FontWeight.w500,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    ],
+  );
+}
 
-  Widget _shimmerLoading() {
-    return Shimmer.fromColors(
-      baseColor: AppColor.baseColor!,
-      highlightColor: AppColor.highlightColor!,
-      child: ListView.builder(
-        itemCount: 6,
-        padding: EdgeInsets.all(AppSize.p8),
-        itemBuilder: (context, index) {
-          return Card(
-            elevation: 0,
-            margin: const EdgeInsets.symmetric(vertical: 5),
-            shape: RoundedRectangleBorder(
-              side: const BorderSide(color: AppColor.textField),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: Container(
-              height: Get.height * 0.18,
-              width: double.infinity,
-              color: AppColor.textField,
-            ),
-          );
-        },
-      ),
-    );
-  }
+Widget _shimmerLoading() {
+  return Shimmer.fromColors(
+    baseColor: AppColor.grey300,
+    highlightColor: AppColor.white,
+    child: ListView.builder(
+      itemCount: 6,
+      padding: EdgeInsets.all(AppSize.p16),
+      itemBuilder: (context, index) {
+        return Container(
+          margin: EdgeInsets.only(bottom: AppSize.p16),
+          height: AppSize.height * 0.22,
+          decoration: BoxDecoration(
+            color: AppColor.white,
+            borderRadius: BorderRadius.circular(AppSize.p12),
+          ),
+        );
+      },
+    ),
+  );
 }
