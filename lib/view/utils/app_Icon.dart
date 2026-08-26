@@ -114,4 +114,5 @@ class AppIcon {
   static const IconData save = Icons.save_outlined;
   static const IconData upload = Icons.upload_outlined;
   static const IconData inventory = Icons.inventory_2_outlined;
+  static const IconData download = Icons.download_outlined;
 }

@@ -12,6 +12,7 @@ import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:rukmini/view/utils/widget/report_helper.dart';
+import 'package:rukmini/view/utils/widget/inputField.dart';
 
 class Reports extends StatelessWidget {
   final ReportUIController uiController;
@@ -22,10 +23,15 @@ class Reports extends StatelessWidget {
   Widget build(BuildContext context) {
     return Fullscreen(
       isPadding: false,
+      backGroundcolor: AppColor.backgroundColor,
       drawer: homeDrawer(),
-      appBar: appBar(title: AppString.reports, back: false),
+      appBar: appBar(
+        centerTitle: true,
+        back: false,
+        title: _buildDecorativeTitle(AppString.reports),
+      ),
       child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: AppSize.p8),
+        padding: EdgeInsets.symmetric(vertical: AppSize.p12),
         child: Column(
           children: [
             _buildReportCard(
@@ -61,6 +67,49 @@ class Reports extends StatelessWidget {
     );
   }
 
+  Widget _buildDecorativeTitle(String title) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            color: AppColor.black,
+            fontSize: AppSize.titleText,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: AppSize.p4 / 2),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: AppSize.p40,
+              height: AppSize.p4 / 4,
+              color: AppColor.goldColor.withOpacity(0.5),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSize.p4),
+              child: Transform.rotate(
+                angle: 0.785, // 45 degrees
+                child: Container(
+                  width: AppSize.p4 * 1.5,
+                  height: AppSize.p4 * 1.5,
+                  color: AppColor.goldColor,
+                ),
+              ),
+            ),
+            Container(
+              width: AppSize.p40,
+              height: AppSize.p4 / 4,
+              color: AppColor.goldColor.withOpacity(0.5),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget _buildReportCard({
     required BuildContext context,
     required int index,
@@ -72,108 +121,221 @@ class Reports extends StatelessWidget {
       child: Obx(() {
         bool isExpanded = uiController.expandedIndex.value == index;
         return Container(
-          margin: EdgeInsets.only(bottom: AppSize.p8),
+          margin: EdgeInsets.only(bottom: AppSize.p16),
           decoration: BoxDecoration(
             color: AppColor.white,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppSize.p12),
             boxShadow: [
               BoxShadow(
-                color: AppColor.black.withOpacity(0.1),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
+                color: AppColor.black.withOpacity(0.05),
+                blurRadius: AppSize.p10,
+                offset: Offset(0, AppSize.p4),
               ),
             ],
-            border: Border.all(color: AppColor.grey200),
           ),
-          child: Column(
-            children: [
-              ListTile(
-                onTap: () => uiController.toggleExpansion(index),
-                leading: Icon(icon, color: AppColor.activeColor),
-                title: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: AppSize.size18,
-                    fontWeight: FontWeight.w500,
-                    color: AppColor.dark,
-                  ),
-                ),
-                trailing: Icon(
-                  isExpanded ? AppIcon.remove : AppIcon.addCircle,
-                  color: isExpanded
-                      ? AppColor.deleteColor
-                      : AppColor.activeColor,
-                  size: Get.width * 0.07,
-                ),
-              ),
-              if (isExpanded) ...[
-                const Divider(height: 1),
-                Padding(padding: EdgeInsets.all(AppSize.p16), child: child),
-                if (index == 0) _buildCustomerSummary(),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      right: AppSize.p16,
-                      bottom: AppSize.p16,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(AppSize.p12),
+            child: Column(
+              children: [
+                _buildCardHeader(title, icon, index, isExpanded),
+                if (isExpanded) ...[
+                  ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(AppSize.p12),
+                      bottomRight: Radius.circular(AppSize.p12),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
+                    child: Stack(
                       children: [
-                        ElevatedButton.icon(
-                          onPressed: () => uiController.exportReport(index),
-                          icon: const Icon(Icons.download, size: 18),
-                          label: const Text("Export Excel"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColor.activeColor,
-                            foregroundColor: AppColor.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: AppSize.p16,
-                              vertical: AppSize.p4,
-                            ),
+                        Positioned(
+                          bottom: -AppSize.p20,
+                          right: -AppSize.p20,
+                          child: Icon(
+                            AppIcon.leaf,
+                            color: AppColor.goldColor.withOpacity(0.05),
+                            size: AppSize.iconLarge * 3,
                           ),
                         ),
-                        SizedBox(width: AppSize.p8),
-                        ElevatedButton(
-                          onPressed: () => ReportHelper.showReportDialog(
-                            context: context,
-                            uiController: uiController,
-                            index: index,
-                            title: title,
+                        Padding(
+                          padding: EdgeInsets.all(AppSize.p16),
+                          child: Column(
+                            children: [
+                              child,
+                              if (index == 0) ...[
+                                SizedBox(height: AppSize.p16),
+                                _buildCustomerSummary(),
+                              ],
+                              SizedBox(height: AppSize.p20),
+                              _buildCardActions(context, index, title),
+                            ],
                           ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColor.activeColor,
-                            foregroundColor: AppColor.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: AppSize.p16,
-                              vertical: AppSize.p4,
-                            ),
-                          ),
-                          child: Text(AppString.viewReport),
                         ),
                       ],
                     ),
                   ),
-                ),
+                ],
               ],
-            ],
+            ),
           ),
         );
       }),
     );
   }
 
+  Widget _buildCardHeader(
+    String title,
+    IconData icon,
+    int index,
+    bool isExpanded,
+  ) {
+    return IntrinsicHeight(
+      child: InkWell(
+        onTap: () => uiController.toggleExpansion(index),
+        child: Row(
+          children: [
+            // Left gold indicator
+            Container(width: AppSize.p4, color: AppColor.goldColor),
+            Padding(
+              padding: EdgeInsets.all(AppSize.p12),
+              child: Row(
+                children: [
+                  // Icon container
+                  Container(
+                    padding: EdgeInsets.all(AppSize.p10),
+                    decoration: BoxDecoration(
+                      color: AppColor.whiteOrang.withOpacity(0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      icon,
+                      color: AppColor.goldColor,
+                      size: AppSize.p24,
+                    ),
+                  ),
+                  SizedBox(width: AppSize.p12),
+                  // Vertical divider
+                  Container(
+                    width: AppSize.p4 / 4,
+                    height: AppSize.p24,
+                    color: AppColor.grey300.withOpacity(0.5),
+                  ),
+                ],
+              ),
+            ),
+            // Title
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: AppColor.black,
+                  fontSize: AppSize.commonText,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            // Right arrow
+            Padding(
+              padding: EdgeInsets.only(right: AppSize.p16),
+              child: AnimatedRotation(
+                duration: const Duration(milliseconds: 200),
+                turns: isExpanded ? 0.25 : 0, // 90 degrees rotation when expanded
+                child: Icon(
+                  AppIcon.rightArrow,
+                  color: AppColor.goldColor,
+                  size: AppSize.p20,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCardActions(BuildContext context, int index, String title) {
+    return Row(
+      children: [
+        Expanded(
+          child: _gradientButton(
+            text: "Export Excel",
+            icon: AppIcon.download,
+            onPressed: () => uiController.exportReport(index),
+          ),
+        ),
+        SizedBox(width: AppSize.p12),
+        Expanded(
+          child: _gradientButton(
+            text: AppString.viewReport,
+            onPressed: () => ReportHelper.showReportDialog(
+              context: context,
+              uiController: uiController,
+              index: index,
+              title: title,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _gradientButton({
+    required String text,
+    IconData? icon,
+    required VoidCallback onPressed,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppColor.goldColor, AppColor.dashboardGold],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(AppSize.p12),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.goldColor.withOpacity(0.3),
+            blurRadius: AppSize.p4,
+            offset: Offset(0, AppSize.p4 / 2),
+          ),
+        ],
+      ),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColor.transparent,
+          shadowColor: AppColor.transparent,
+          padding: EdgeInsets.symmetric(vertical: AppSize.p12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSize.p12),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null) ...[
+              Icon(icon, color: AppColor.white, size: AppSize.p16),
+              SizedBox(width: AppSize.p4),
+            ],
+            Text(
+              text,
+              style: TextStyle(
+                color: AppColor.white,
+                fontWeight: FontWeight.bold,
+                fontSize: AppSize.commonText,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildCustomerSummary() {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSize.p16,
-        vertical: AppSize.p8,
+      padding: EdgeInsets.all(AppSize.p12),
+      decoration: BoxDecoration(
+        color: AppColor.whiteOrang.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(AppSize.p12),
+        border: Border.all(color: AppColor.goldColor.withOpacity(0.1)),
       ),
       child: Row(
         children: [
@@ -181,15 +343,15 @@ class Reports extends StatelessWidget {
             child: _summaryBox(
               "Total Given",
               uiController.custReportController.totalGivenAmt.value,
-              AppColor.activeColor,
+              AppColor.goldColor,
             ),
           ),
-          SizedBox(width: AppSize.p8),
+          SizedBox(width: AppSize.p12),
           Expanded(
             child: _summaryBox(
               "Total Pending",
               uiController.custReportController.totalPendingAmt.value,
-              AppColor.deleteColor,
+              AppColor.black,
             ),
           ),
         ],
@@ -198,130 +360,93 @@ class Reports extends StatelessWidget {
   }
 
   Widget _summaryBox(String label, double amount, Color color) {
-    return Container(
-      padding: EdgeInsets.all(AppSize.p8),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: color.withOpacity(0.3)),
-      ),
-      child: Column(
-        children: [
-          Text(
-            label,
+    return Column(
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: AppSize.size12,
+            color: AppColor.black.withOpacity(0.6),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        SizedBox(height: AppSize.p4),
+        FittedBox(
+          child: Text(
+            "₹${amount.toStringAsFixed(2)}",
             style: TextStyle(
-              fontSize: AppSize.size12,
-              color: AppColor.textColor,
+              fontSize: AppSize.size18,
+              fontWeight: FontWeight.bold,
+              color: color,
             ),
           ),
-          FittedBox(
-            child: Text(
-              "₹${amount.toStringAsFixed(2)}",
-              style: TextStyle(
-                fontSize: AppSize.size18,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildDateRangeFilter(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(AppIcon.calendar, color: AppColor.activeColor, size: 24),
-        SizedBox(width: AppSize.p16),
         Expanded(
-          child: _buildInlineDateField(
-            context: context,
-            controller: uiController.fromDateController,
-            hint: AppString.fromDate,
+          child: inputField(
+            hintText: AppString.fromDate,
+            icon: AppIcon.calendar,
+            iconColor: AppColor.goldColor,
+            inputTextcontroller: uiController.fromDateController,
+            readOnly: true,
+            onTap: () => uiController.selectDate(
+              context,
+              uiController.fromDateController,
+            ),
+            suffixIcon: Icon(
+              AppIcon.calendar,
+              color: AppColor.goldColor,
+              size: AppSize.p20,
+            ),
           ),
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(
-            "-",
-            style: TextStyle(fontSize: AppSize.p20, color: AppColor.grey500),
-          ),
-        ),
+        SizedBox(width: AppSize.p12),
         Expanded(
-          child: _buildInlineDateField(
-            context: context,
-            controller: uiController.toDateController,
-            hint: AppString.toDate,
+          child: inputField(
+            hintText: AppString.toDate,
+            icon: AppIcon.calendar,
+            iconColor: AppColor.goldColor,
+            inputTextcontroller: uiController.toDateController,
+            readOnly: true,
+            onTap: () =>
+                uiController.selectDate(context, uiController.toDateController),
+            suffixIcon: Icon(
+              AppIcon.calendar,
+              color: AppColor.goldColor,
+              size: AppSize.p20,
+            ),
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildInlineDateField({
-    required BuildContext context,
-    required TextEditingController controller,
-    required String hint,
-  }) {
-    return GestureDetector(
-      onTap: () => uiController.selectDate(context, controller),
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: AppColor.grey300)),
-        ),
-        child: TextField(
-          controller: controller,
-          enabled: false,
-          style: TextStyle(fontSize: AppSize.size18),
-          decoration: InputDecoration(
-            hintText: hint,
-            isDense: true,
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.zero,
-          ),
-        ),
-      ),
     );
   }
 
   Widget _buildLockerFilter(BuildContext context) {
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: () => _showLockerSelectionDialog(context),
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppColor.grey300)),
-            ),
-            child: Row(
-              children: [
-                Icon(AppIcon.locker, color: AppColor.activeColor, size: 24),
-                SizedBox(width: AppSize.p16),
-                Expanded(
-                  child: Obx(
-                    () => Text(
-                      uiController.selectedLocker.value.isEmpty
-                          ? AppString.selectLocker
-                          : uiController.selectedLocker.value,
-                      style: TextStyle(
-                        fontSize: AppSize.size18,
-                        color: uiController.selectedLocker.value.isEmpty
-                            ? AppColor.textColor
-                            : AppColor.dark,
-                      ),
-                    ),
-                  ),
-                ),
-                Icon(Icons.keyboard_arrow_down, color: AppColor.activeColor),
-              ],
-            ),
-          ),
+    return Obx(() {
+      final lockerDisplayController = TextEditingController(
+        text: uiController.selectedLocker.value,
+      );
+      return inputField(
+        hintText: AppString.selectLocker,
+        icon: AppIcon.locker,
+        iconColor: AppColor.goldColor,
+        inputTextcontroller: lockerDisplayController,
+        readOnly: true,
+        onTap: () => _showLockerSelectionDialog(context),
+        suffixIcon: Icon(
+          AppIcon.arrow_down,
+          color: AppColor.goldColor,
+          size: AppSize.p20,
         ),
-      ],
-    );
+      );
+    });
   }
 
   void _showLockerSelectionDialog(BuildContext context) {
@@ -330,14 +455,23 @@ class Reports extends StatelessWidget {
       builder: (context) {
         return AlertDialog(
           backgroundColor: AppColor.white,
-          titlePadding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+          titlePadding: EdgeInsets.fromLTRB(
+            AppSize.p16,
+            AppSize.p16,
+            AppSize.p16,
+            AppSize.p8,
+          ),
           contentPadding: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSize.p16),
+            side: BorderSide(color: AppColor.goldColor.withOpacity(0.2)),
+          ),
           title: Text(
             AppString.selectLockerTitle,
             style: TextStyle(
-              color: AppColor.activeColor,
-              fontSize: AppSize.size18,
+              color: AppColor.goldColor,
+              fontSize: AppSize.headingText,
+              fontWeight: FontWeight.bold,
             ),
           ),
           content: SizedBox(
@@ -346,51 +480,63 @@ class Reports extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: AppSize.p16),
                   child: TextField(
                     controller: uiController.searchLockerController,
                     decoration: InputDecoration(
                       prefixIcon: Icon(
                         AppIcon.searchIcon,
-                        color: AppColor.black,
-                        size: 20,
-                      ),
-                      prefixIconConstraints: BoxConstraints(
-                        minWidth: 30,
-                        minHeight: 0,
+                        color: AppColor.goldColor,
+                        size: AppSize.p20,
                       ),
                       hintText: AppString.searchLockerHint,
+                      hintStyle: TextStyle(
+                        fontSize: AppSize.commonText,
+                        color: AppColor.black.withOpacity(0.4),
+                      ),
                       isDense: true,
-                      contentPadding: EdgeInsets.symmetric(vertical: 8),
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColor.grey300),
+                        borderSide: BorderSide(
+                          color: AppColor.goldColor.withOpacity(0.2),
+                        ),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: AppColor.goldColor),
                       ),
                     ),
                     onChanged: uiController.updateSearch,
                   ),
                 ),
-                SizedBox(height: Get.height * 0.01),
+                SizedBox(height: AppSize.p8),
                 Flexible(
                   child: Container(
                     constraints: BoxConstraints(maxHeight: Get.height * 0.4),
                     child: Obx(() {
                       return ListView.separated(
                         shrinkWrap: true,
-                        padding: EdgeInsets.zero,
+                        padding: EdgeInsets.symmetric(vertical: AppSize.p8),
                         itemCount: uiController.filteredLockers.length,
                         separatorBuilder: (context, index) {
-                          return Divider(height: 1, indent: 16, endIndent: 16);
+                          return Divider(
+                            height: AppSize.p4 / 4,
+                            indent: AppSize.p16,
+                            endIndent: AppSize.p16,
+                            color: AppColor.goldColor.withOpacity(0.1),
+                          );
                         },
                         itemBuilder: (context, index) {
                           final locker = uiController.filteredLockers[index];
                           return ListTile(
                             dense: true,
                             contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16,
+                              horizontal: AppSize.p16,
                             ),
                             title: Text(
                               "${locker.lockerCode} (${locker.comName})",
-                              style: TextStyle(fontSize: AppSize.size18),
+                              style: TextStyle(
+                                fontSize: AppSize.commonText,
+                                color: AppColor.black,
+                              ),
                             ),
                             onTap: () {
                               uiController.selectLocker(locker);
@@ -409,8 +555,11 @@ class Reports extends StatelessWidget {
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text(
-                AppString.ok,
-                style: TextStyle(color: AppColor.activeColor),
+                AppString.cancel,
+                style: TextStyle(
+                  color: AppColor.goldColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
