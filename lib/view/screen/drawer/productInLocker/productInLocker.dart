@@ -19,6 +19,7 @@ import 'package:shimmer/shimmer.dart';
 class ProductInLocker extends StatelessWidget {
   final CustProductController custProductController;
   final LockerListController lockerListController;
+
   const ProductInLocker({
     super.key,
     required this.custProductController,
@@ -33,29 +34,35 @@ class ProductInLocker extends StatelessWidget {
 
     return Fullscreen(
       isPadding: false,
+      backGroundcolor: AppColor.backgroundColor,
       drawer: homeDrawer(),
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
+        preferredSize: Size.fromHeight(
+          kToolbarHeight + AppSize.p12 + AppSize.p4 / 4,
+        ),
         child: Obx(
           () => appBar(
+            centerTitle: true,
             title: custProductController.isSearching.value
                 ? TextField(
                     controller: custProductController.searchController,
                     autofocus: true,
                     style: TextStyle(
-                      color: AppColor.backgroundColor,
-                      fontSize: AppSize.p12,
+                      color: AppColor.black,
+                      fontSize: AppSize.commonText,
                     ),
                     decoration: InputDecoration(
                       hintText: AppString.search,
-                      hintStyle: TextStyle(color: AppColor.backgroundColor),
+                      hintStyle: TextStyle(
+                        color: AppColor.black.withOpacity(0.4),
+                      ),
                       border: InputBorder.none,
                     ),
                     onChanged: (val) {
                       custProductController.updateSearch(val);
                     },
                   )
-                : AppString.productinLocker,
+                : _buildDecorativeTitle(AppString.productinLocker),
             searchIcon: !custProductController.isSearching.value,
             close: custProductController.isSearching.value,
             filter: true,
@@ -77,19 +84,36 @@ class ProductInLocker extends StatelessWidget {
               }
 
               if (custProductController.filteredProductList.isEmpty) {
-                return Center(child: Text(AppString.noProductsFound));
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        AppIcon.inventory,
+                        size: AppSize.iconLarge * 2,
+                        color: AppColor.goldColor.withOpacity(0.2),
+                      ),
+                      SizedBox(height: AppSize.p16),
+                      Text(
+                        AppString.noProductsFound,
+                        style: TextStyle(
+                          color: AppColor.black.withOpacity(0.5),
+                          fontSize: AppSize.commonText,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               }
 
               return RefreshIndicator(
                 onRefresh: CallApi.callCustProduct,
-                color: AppColor.activeColor,
-                child: ListView.separated(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                color: AppColor.goldColor,
+                child: ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(vertical: AppSize.p12),
                   itemCount: custProductController.filteredProductList.length,
-                  separatorBuilder: (context, index) {
-                    return SizedBox(height: AppSize.p4);
-                  },
                   itemBuilder: (context, index) {
                     final item =
                         custProductController.filteredProductList[index];
@@ -132,292 +156,501 @@ class ProductInLocker extends StatelessWidget {
     );
   }
 
-  Widget _buildCustomerSelector() {
-    return GestureDetector(
-      onTap: () => _showCustomerSelectionPopup(),
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppSize.p16,
-          vertical: AppSize.p4 * 1.5,
-        ),
-        decoration: BoxDecoration(
-          color: AppColor.fullScreenColor,
-          border: Border(
-            bottom: BorderSide(color: AppColor.boderSideColor.withOpacity(0.3)),
+  Widget _buildDecorativeTitle(String title) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            color: AppColor.black,
+            fontSize: AppSize.titleText,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        child: Row(
+        SizedBox(height: AppSize.p4 / 2),
+        Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              AppIcon.person,
-              color: AppColor.activeColor,
-              size: AppSize.p24,
+            Container(
+              width: AppSize.p40,
+              height: AppSize.p4 / 4,
+              color: AppColor.goldColor.withOpacity(0.5),
             ),
-            SizedBox(width: AppSize.p12),
-            Expanded(
-              child: Obx(
-                () => Text(
-                  custProductController.selectedCustName.value,
-                  style: TextStyle(
-                    color: custProductController.selectedCustId.value.isEmpty
-                        ? AppColor.textColor
-                        : AppColor.dark,
-                    fontSize: AppSize.p16 * 1.05, // 0.042
-                  ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSize.p4),
+              child: Transform.rotate(
+                angle: 0.785, // 45 degrees
+                child: Container(
+                  width: AppSize.p8 / 1.33,
+                  height: AppSize.p8 / 1.33,
+                  color: AppColor.goldColor,
                 ),
               ),
             ),
-            Icon(
-              AppIcon.arrowDown,
-              color: AppColor.activeColor,
-              size: AppSize.p24,
-            ),
-            SizedBox(width: AppSize.p8),
-            GestureDetector(
-              onTap: () {
-                custProductController.clearCustomerFilter();
-              },
-              child: Icon(
-                AppIcon.remove,
-                color: AppColor.activeColor,
-                size: AppSize.p20,
-              ),
+            Container(
+              width: AppSize.p40,
+              height: AppSize.p4 / 4,
+              color: AppColor.goldColor.withOpacity(0.5),
             ),
           ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCustomerSelector() {
+    return horizontalPadding(
+      child: GestureDetector(
+        onTap: () => _showCustomerSelectionPopup(),
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: AppSize.p12),
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSize.p16,
+            vertical: AppSize.p12,
+          ),
+          decoration: BoxDecoration(
+            color: AppColor.whiteOrang.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(AppSize.p20),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(AppSize.p8),
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColor.goldColor.withOpacity(0.1),
+                      blurRadius: AppSize.p4,
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  AppIcon.person,
+                  color: AppColor.goldColor,
+                  size: AppSize.p20,
+                ),
+              ),
+              SizedBox(width: AppSize.p12),
+              Expanded(
+                child: Obx(
+                  () => Text(
+                    custProductController.selectedCustName.value.isEmpty ||
+                            custProductController.selectedCustName.value ==
+                                "Select Customer"
+                        ? AppString.selectCustomer
+                        : custProductController.selectedCustName.value,
+                    style: TextStyle(
+                      color: AppColor.black,
+                      fontSize: AppSize.commonText,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              Icon(
+                AppIcon.arrow_down,
+                color: AppColor.goldColor,
+                size: AppSize.p20,
+              ),
+              if (custProductController.selectedCustId.value.isNotEmpty) ...[
+                SizedBox(width: AppSize.p8),
+                GestureDetector(
+                  onTap: () {
+                    custProductController.clearCustomerFilter();
+                  },
+                  child: Icon(
+                    AppIcon.remove,
+                    color: AppColor.goldColor,
+                    size: AppSize.p20,
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   void _showCustomerSelectionPopup() {
-    Get.bottomSheet(
-      isScrollControlled: true,
-      Container(
-        height: AppSize.height * 0.8,
-        decoration: BoxDecoration(
-          color: AppColor.fullScreenColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(AppSize.p16),
+    showDialog(
+      context: Get.context!,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppColor.white,
+          titlePadding: EdgeInsets.fromLTRB(
+            AppSize.p16,
+            AppSize.p16,
+            AppSize.p16,
+            AppSize.p8,
+          ),
+          contentPadding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSize.p16),
+            side: BorderSide(color: AppColor.goldColor.withOpacity(0.2)),
+          ),
+          title: Text(
+            AppString.selectCustomer,
+            style: TextStyle(
+              color: AppColor.goldColor,
+              fontSize: AppSize.headingText,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: AppSize.p16),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        AppIcon.searchIcon,
+                        color: AppColor.goldColor,
+                        size: AppSize.p20,
+                      ),
+                      hintText: AppString.searchCustomer,
+                      hintStyle: TextStyle(
+                        fontSize: AppSize.commonText,
+                        color: AppColor.black.withOpacity(0.4),
+                      ),
+                      isDense: true,
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: AppColor.goldColor.withOpacity(0.2),
+                        ),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: AppColor.goldColor),
+                      ),
+                    ),
+                    onChanged: (val) {
+                      // Note: Filtering logic for customer list should be implemented in controller if needed
+                    },
+                  ),
+                ),
+                SizedBox(height: AppSize.p8),
+                Flexible(
+                  child: Container(
+                    constraints: BoxConstraints(maxHeight: Get.height * 0.6),
+                    child: Obx(() {
+                      if (custProductController.custList.isEmpty) {
+                        return const Center(
+                          child: Text(AppString.noCustomersAvailable),
+                        );
+                      }
+                      return ListView.separated(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.symmetric(vertical: AppSize.p8),
+                        itemCount: custProductController.custList.length,
+                        separatorBuilder: (context, index) => Divider(
+                          height: AppSize.p4 / 4,
+                          indent: AppSize.p16,
+                          endIndent: AppSize.p16,
+                          color: AppColor.goldColor.withOpacity(0.1),
+                        ),
+                        itemBuilder: (context, index) {
+                          final cust = custProductController.custList[index];
+                          return ListTile(
+                            dense: true,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: AppSize.p16,
+                            ),
+                            title: Text(
+                              cust.name ?? "N/A",
+                              style: TextStyle(
+                                fontSize: AppSize.commonText,
+                                color: AppColor.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            subtitle: Text(
+                              cust.custCode ?? "",
+                              style: TextStyle(
+                                fontSize: AppSize.size12,
+                                color: AppColor.black.withOpacity(0.6),
+                              ),
+                            ),
+                            onTap: () {
+                              custProductController.filterByCustomer(
+                                cust.custId ?? "",
+                                cust.name ?? "",
+                              );
+                              Get.back();
+                            },
+                          );
+                        },
+                      );
+                    }),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
               child: Text(
-                AppString.selectCustomer,
+                AppString.cancel,
                 style: TextStyle(
-                  fontSize: AppSize.size18,
+                  color: AppColor.goldColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            Divider(),
-            Expanded(
-              child: Obx(() {
-                if (custProductController.custList.isEmpty) {
-                  return const Center(
-                    child: Text(AppString.noCustomersAvailable),
-                  );
-                }
-                return ListView.builder(
-                  itemCount: custProductController.custList.length,
-                  itemBuilder: (context, index) {
-                    final cust = custProductController.custList[index];
-                    return ListTile(
-                      title: Text(
-                        cust.name ?? "N/A",
-                        style: TextStyle(fontSize: Get.width * 0.04),
-                      ),
-                      subtitle: Text(cust.custCode ?? ""),
-                      onTap: () {
-                        custProductController.filterByCustomer(
-                          cust.custId ?? "",
-                          cust.name ?? "",
-                        );
-                        Get.back();
-                      },
-                    );
-                  },
-                );
-              }),
-            ),
           ],
-        ),
-      ),
+        );
+      },
     );
   }
 
   void _showLockerFilterPopup() {
     lockerListController.getLockerList();
-    Get.bottomSheet(
-      Container(
-        height: Get.height * 0.45,
-        decoration: BoxDecoration(
-          color: AppColor.fullScreenColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(Get.width * 0.04),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    AppString.selectLocker,
-                    style: TextStyle(
-                      fontSize: Get.width * 0.03,
-                      fontWeight: FontWeight.bold,
-                    ),
+    showDialog(
+      context: Get.context!,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppColor.white,
+          titlePadding: EdgeInsets.fromLTRB(
+            AppSize.p16,
+            AppSize.p16,
+            AppSize.p16,
+            AppSize.p8,
+          ),
+          contentPadding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSize.p16),
+            side: BorderSide(color: AppColor.goldColor.withOpacity(0.2)),
+          ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                AppString.selectLocker,
+                style: TextStyle(
+                  color: AppColor.goldColor,
+                  fontSize: AppSize.headingText,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  custProductController.resetLockerFilter();
+                  Get.back();
+                },
+                child: Text(
+                  AppString.reset,
+                  style: TextStyle(
+                    color: AppColor.goldColor,
+                    fontSize: AppSize.size12,
                   ),
-                  TextButton(
-                    onPressed: () {
-                      custProductController.resetLockerFilter();
-                      Get.back();
-                    },
-                    child: const Text(AppString.reset),
+                ),
+              ),
+            ],
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: Container(
+                    constraints: BoxConstraints(maxHeight: Get.height * 0.4),
+                    child: Obx(() {
+                      if (lockerListController.isLoading.value) {
+                        return const Center(
+                          child: CircularProgressIndicator(
+                            color: AppColor.goldColor,
+                          ),
+                        );
+                      }
+                      if (lockerListController.lockerList.isEmpty) {
+                        return const Center(
+                          child: Text(AppString.noLockersAvailable),
+                        );
+                      }
+                      return ListView.separated(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.symmetric(vertical: AppSize.p8),
+                        itemCount: lockerListController.lockerList.length,
+                        separatorBuilder: (context, index) => Divider(
+                          height: AppSize.p4 / 4,
+                          indent: AppSize.p16,
+                          endIndent: AppSize.p16,
+                          color: AppColor.goldColor.withOpacity(0.1),
+                        ),
+                        itemBuilder: (context, index) {
+                          final locker = lockerListController.lockerList[index];
+                          return ListTile(
+                            dense: true,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: AppSize.p16,
+                            ),
+                            title: Text(
+                              locker.lockerCode ?? "N/A",
+                              style: TextStyle(
+                                fontSize: AppSize.commonText,
+                                color: AppColor.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            subtitle: Text(
+                              locker.comName ?? "",
+                              style: TextStyle(
+                                fontSize: AppSize.size12,
+                                color: AppColor.black.withOpacity(0.6),
+                              ),
+                            ),
+                            onTap: () {
+                              custProductController.filterByLocker(
+                                locker.lockerCode ?? "",
+                              );
+                              Get.back();
+                            },
+                          );
+                        },
+                      );
+                    }),
                   ),
-                ],
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: Text(
+                AppString.cancel,
+                style: TextStyle(
+                  color: AppColor.goldColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            const Divider(),
-            Expanded(
-              child: Obx(() {
-                if (lockerListController.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (lockerListController.lockerList.isEmpty) {
-                  return const Center(
-                    child: Text(AppString.noLockersAvailable),
-                  );
-                }
-                return ListView.builder(
-                  itemCount: lockerListController.lockerList.length,
-                  itemBuilder: (context, index) {
-                    final locker = lockerListController.lockerList[index];
-                    return ListTile(
-                      title: Text(
-                        locker.lockerCode ?? "N/A",
-                        style: TextStyle(fontSize: Get.width * 0.04),
-                      ),
-                      subtitle: Text(locker.comName ?? ""),
-                      onTap: () {
-                        custProductController.filterByLocker(
-                          locker.lockerCode ?? "",
-                        );
-                        Get.back();
-                      },
-                    );
-                  },
-                );
-              }),
-            ),
           ],
-        ),
-      ),
+        );
+      },
     );
   }
 
   Widget _buildProductCard(ProductList item, bool isSelected) {
     return horizontalPadding(
       child: Container(
-        padding: EdgeInsets.all(AppSize.p12),
+        margin: EdgeInsets.only(bottom: AppSize.p16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? AppColor.activeColor.withOpacity(0.1)
-              : AppColor.fullScreenColor,
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(
-            color: isSelected
-                ? AppColor.activeColor
-                : AppColor.boderSideColor.withOpacity(0.2),
-          ),
+          color: AppColor.white,
+          borderRadius: BorderRadius.circular(AppSize.p12),
           boxShadow: [
             BoxShadow(
               color: AppColor.black.withOpacity(0.05),
-              blurRadius: 5,
-              offset: const Offset(0, 2),
+              blurRadius: AppSize.p10,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(AppSize.p12),
+          child: IntrinsicHeight(
+            child: Row(
               children: [
-                _buildProductImage(item.productImg),
-                if (isSelected)
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: const BoxDecoration(
-                        color: AppColor.activeColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        AppIcon.check,
-                        color: AppColor.backgroundColor,
-                        size: 12,
-                      ),
+                // Gold vertical strip
+                Container(
+                  width: AppSize.p4,
+                  color: isSelected ? AppColor.activeColor : AppColor.goldColor,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(AppSize.p12),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildProductImage(item.productImg, isSelected),
+                        SizedBox(width: AppSize.p12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildHeaderRow(
+                                item.custName ?? "N/A",
+                                item.uniqueId ?? "",
+                              ),
+                              SizedBox(height: AppSize.p4),
+                              _buildTitleRow(
+                                "${item.metalName} Karat ${item.prodType} ${item.catName}",
+                                item.girviDate ?? "",
+                              ),
+                              SizedBox(height: AppSize.p8),
+                              _buildInfoRow(
+                                AppString.pcsColon,
+                                item.pieces ?? "0",
+                                AppString.wgtColon,
+                                "${item.weight} ${AppString.gm}",
+                              ),
+                              SizedBox(height: AppSize.p4),
+                              _buildInfoRow(
+                                AppString.gvnAmtColon,
+                                item.givenAmount ?? "0.00",
+                                AppString.lockerCodeColon,
+                                "${item.lockerCode}-${item.code}",
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                ),
               ],
             ),
-            SizedBox(width: AppSize.p12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeaderRow(item.custName ?? "N/A", item.uniqueId ?? ""),
-                  SizedBox(height: Get.height * 0.005),
-                  _buildTitleRow(
-                    "${item.metalName} Karat ${item.prodType} ${item.catName}",
-                    item.girviDate ?? "",
-                  ),
-                  SizedBox(height: Get.height * 0.008),
-                  _buildInfoRow(
-                    AppString.pcsColon,
-                    item.pieces ?? "0",
-                    AppString.wgtColon,
-                    "${item.weight} ${AppString.gm}",
-                  ),
-                  SizedBox(height: Get.height * 0.005),
-                  _buildInfoRow(
-                    AppString.gvnAmtColon,
-                    item.givenAmount ?? "0.00",
-                    AppString.lockerCodeColon,
-                    "${item.lockerCode}-${item.code}",
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildProductImage(String? imageUrl) {
-    return Container(
-      width: Get.width * 0.13,
-      height: Get.width * 0.23,
-      decoration: BoxDecoration(
-        color: AppColor.boderSideColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: (imageUrl != null && imageUrl.isNotEmpty)
-          ? ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return _buildImagePlaceholder();
-                },
+  Widget _buildProductImage(String? imageUrl, bool isSelected) {
+    return Stack(
+      children: [
+        Container(
+          width: AppSize.width * 0.18,
+          height: AppSize.width * 0.18,
+          decoration: BoxDecoration(
+            color: AppColor.whiteOrang.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(AppSize.p12),
+            border: Border.all(color: AppColor.goldColor.withOpacity(0.1)),
+          ),
+          child: (imageUrl != null && imageUrl.isNotEmpty)
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(AppSize.p12),
+                  child: Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return _buildImagePlaceholder();
+                    },
+                  ),
+                )
+              : _buildImagePlaceholder(),
+        ),
+        if (isSelected)
+          Positioned(
+            right: 4,
+            top: 4,
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: const BoxDecoration(
+                color: AppColor.activeColor,
+                shape: BoxShape.circle,
               ),
-            )
-          : _buildImagePlaceholder(),
+              child: Icon(AppIcon.check, color: AppColor.white, size: 12),
+            ),
+          ),
+      ],
     );
   }
 
@@ -427,14 +660,14 @@ class ProductInLocker extends StatelessWidget {
       children: [
         Icon(
           AppIcon.camera,
-          size: Get.width * 0.08,
-          color: AppColor.textColor.withOpacity(0.5),
+          size: AppSize.p24,
+          color: AppColor.goldColor.withOpacity(0.5),
         ),
         Text(
           AppString.images,
           style: TextStyle(
-            fontSize: Get.width * 0.025,
-            color: AppColor.textColor.withOpacity(0.5),
+            fontSize: AppSize.size12,
+            color: AppColor.goldColor.withOpacity(0.5),
           ),
         ),
       ],
@@ -449,8 +682,8 @@ class ProductInLocker extends StatelessWidget {
           child: Text(
             name,
             style: TextStyle(
-              color: AppColor.activeColor,
-              fontWeight: FontWeight.w600,
+              color: AppColor.goldColor,
+              fontWeight: FontWeight.bold,
               fontSize: AppSize.size14,
             ),
             maxLines: 1,
@@ -460,8 +693,9 @@ class ProductInLocker extends StatelessWidget {
         Text(
           code,
           style: TextStyle(
-            color: AppColor.activeColor,
-            fontSize: AppSize.p12,
+            color: AppColor.goldColor,
+            fontSize: AppSize.size12,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ],
@@ -476,9 +710,9 @@ class ProductInLocker extends StatelessWidget {
           child: Text(
             title,
             style: TextStyle(
-              color: AppColor.dark,
+              color: AppColor.black,
               fontWeight: FontWeight.w400,
-              fontSize: Get.width * 0.02,
+              fontSize: AppSize.size12,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -487,8 +721,8 @@ class ProductInLocker extends StatelessWidget {
         Text(
           date,
           style: TextStyle(
-            color: AppColor.textColor,
-            fontSize: Get.width * 0.032,
+            color: AppColor.black.withOpacity(0.5),
+            fontSize: AppSize.size12,
           ),
         ),
       ],
@@ -506,30 +740,42 @@ class ProductInLocker extends StatelessWidget {
       children: [
         RichText(
           text: TextSpan(
-            style: TextStyle(fontSize: Get.width * 0.032, color: AppColor.dark),
+            style: TextStyle(fontSize: AppSize.size12, color: AppColor.black),
             children: [
               TextSpan(
                 text: label1,
-                style: TextStyle(fontWeight: FontWeight.w500),
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.black.withOpacity(0.6),
+                ),
               ),
               TextSpan(
                 text: value1,
-                style: TextStyle(color: AppColor.textColor),
+                style: TextStyle(
+                  color: AppColor.goldColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
         ),
         RichText(
           text: TextSpan(
-            style: TextStyle(fontSize: Get.width * 0.032, color: AppColor.dark),
+            style: TextStyle(fontSize: AppSize.size12, color: AppColor.black),
             children: [
               TextSpan(
                 text: label2,
-                style: TextStyle(fontWeight: FontWeight.w500),
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.black.withOpacity(0.6),
+                ),
               ),
               TextSpan(
                 text: value2,
-                style: TextStyle(color: AppColor.textColor),
+                style: TextStyle(
+                  color: AppColor.goldColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -539,21 +785,53 @@ class ProductInLocker extends StatelessWidget {
   }
 
   Widget _buildBottomBar() {
-    return GestureDetector(
-      onTap: () {
-        Get.toNamed('/changeTheLocker');
-      },
+    return Container(
+      padding: EdgeInsets.all(AppSize.p16),
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.05),
+            blurRadius: AppSize.p10,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
       child: Container(
-        width: Get.width,
-        padding: EdgeInsets.symmetric(vertical: Get.height * 0.015),
-        color: AppColor.primaryColor,
-        child: Center(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [AppColor.goldColor, AppColor.dashboardGold],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(AppSize.p16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColor.goldColor.withOpacity(0.3),
+              blurRadius: AppSize.p8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: ElevatedButton(
+          onPressed: () {
+            Get.toNamed('/changeTheLocker');
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColor.transparent,
+            shadowColor: AppColor.transparent,
+            padding: EdgeInsets.symmetric(vertical: AppSize.p16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSize.p16),
+            ),
+          ),
           child: Text(
-            "Change the locker",
+            AppString.changeTheLocker,
             style: TextStyle(
-              color: AppColor.activeColor,
-              fontSize: AppSize.p12,
-              fontWeight: FontWeight.w500,
+              color: AppColor.white,
+              fontWeight: FontWeight.bold,
+              fontSize: AppSize.largeText,
             ),
           ),
         ),
@@ -569,14 +847,14 @@ class ProductInLocker extends StatelessWidget {
         itemCount: 6,
         padding: EdgeInsets.all(AppSize.p16),
         separatorBuilder: (context, index) {
-          return SizedBox(height: AppSize.p8);
+          return SizedBox(height: AppSize.p12);
         },
         itemBuilder: (context, index) {
           return Container(
-            height: 100,
+            height: AppSize.p4 * 30,
             decoration: BoxDecoration(
-              color: AppColor.fullScreenColor,
-              borderRadius: BorderRadius.circular(5),
+              color: AppColor.white,
+              borderRadius: BorderRadius.circular(AppSize.p12),
             ),
           );
         },
