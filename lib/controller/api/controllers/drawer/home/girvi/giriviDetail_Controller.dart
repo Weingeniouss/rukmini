@@ -12,12 +12,16 @@ class GiriviDetailController extends GetxController {
   final GiriviDetailServices _giriviDetailServices = GiriviDetailServices();
   var isLoading = false.obs;
   var giriviDetailData = GiriviDetailModal().obs;
+  var currentGirviId = ''.obs;
 
   Future<http.Response?> getGiriviDetail({
     String? timezone,
     String? girviId,
   }) async {
     try {
+      if (girviId != null) {
+        currentGirviId.value = girviId;
+      }
       isLoading.value = true;
 
       final http.Response response = await _giriviDetailServices.giriviDetailApi(

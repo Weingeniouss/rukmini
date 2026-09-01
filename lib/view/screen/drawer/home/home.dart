@@ -84,18 +84,21 @@ class _HomeState extends State<Home> {
           ],
         ),
         notification: true,
-        avatar: CircleAvatar(
-          backgroundColor: AppColor.dashboardCream,
-          child: Obx(() {
-            final role = loginController.loginData.value.data?.roleName;
-            return Text(
-              getInitials(role),
-              style: const TextStyle(
-                color: AppColor.dashboardTextDark,
-                fontWeight: FontWeight.bold,
-              ),
-            );
-          }),
+        avatar: GestureDetector(
+          onTap: () => Get.toNamed('/profile'),
+          child: CircleAvatar(
+            backgroundColor: AppColor.dashboardCream,
+            child: Obx(() {
+              final role = loginController.loginData.value.data?.roleName;
+              return Text(
+                getInitials(role),
+                style: const TextStyle(
+                  color: AppColor.dashboardTextDark,
+                  fontWeight: FontWeight.bold,
+                ),
+              );
+            }),
+          ),
         ),
       ),
       child: Obx(() {

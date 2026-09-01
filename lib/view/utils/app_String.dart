@@ -483,6 +483,12 @@ class AppString {
   static const selectLockerTitle = 'Select Locker';
   static const searchLockerHint = 'Search Locker...';
 
+  static const userId = 'User ID';
+  static const roleId = 'Role ID';
+  static const superUser = 'Super User';
+  static const yes = 'Yes';
+  static const no = 'No';
+
   //Logging
   static const errorLog = 'Error: ';
   static const responseLog = 'Response: ';

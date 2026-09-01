@@ -1,8 +1,10 @@
 // ignore_for_file: file_names, deprecated_member_use
 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/home/girivi/addGirivi_Controller.dart';
+import 'package:rukmini/modal/drawer/home/customer/customer_list_model.dart';
 import 'package:rukmini/modal/drawer/home/girvi/girvi_detail_modal.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
@@ -93,7 +95,7 @@ class _AddgiriviState extends State<Addgirivi> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "${product['MetalName'] ?? ''} - ${product['Pieces'] ?? '0'} Pcs",
+                        metalname(product),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: AppSize.commonText,
@@ -412,60 +414,80 @@ class _AddgiriviState extends State<Addgirivi> {
           style: BorderStyle.solid,
         ),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.all(AppSize.p12),
-            decoration: BoxDecoration(
-              color: AppColor.whiteOrang.withOpacity(0.5),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              AppIcon.camera_alt,
-              color: AppColor.goldColor,
-              size: AppSize.iconLarge,
-            ),
-          ),
-          SizedBox(height: AppSize.p12),
-          Text(
-            AppString.images,
-            style: TextStyle(
-              fontSize: AppSize.p12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            "(0/5)",
-            style: TextStyle(
-              fontSize: AppSize.extraSmallText,
-              color: AppColor.textColor,
-            ),
-          ),
-          SizedBox(height: AppSize.p16),
-          GestureDetector(
-            onTap: addGiriviUI.pickImage,
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSize.p16,
-                vertical: AppSize.p4 + 2,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppSize.p8),
-                border: Border.all(color: AppColor.goldColor),
-              ),
-              child: Text(
-                AppString.upload,
-                style: TextStyle(
+      child: Obx(() {
+        final image = addGiriviUI.selectedImage.value;
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (image != null)
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(AppSize.p8),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppSize.p8),
+                    child: Image.file(
+                      File(image.path),
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    ),
+                  ),
+                ),
+              )
+            else ...[
+              Container(
+                padding: EdgeInsets.all(AppSize.p12),
+                decoration: BoxDecoration(
+                  color: AppColor.whiteOrang.withOpacity(0.5),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  AppIcon.camera_alt,
                   color: AppColor.goldColor,
+                  size: AppSize.iconLarge,
+                ),
+              ),
+              SizedBox(height: AppSize.p12),
+              Text(
+                AppString.images,
+                style: TextStyle(
                   fontSize: AppSize.p12,
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              Text(
+                "(0/5)",
+                style: TextStyle(
+                  fontSize: AppSize.extraSmallText,
+                  color: AppColor.textColor,
+                ),
+              ),
+            ],
+            SizedBox(height: AppSize.p16),
+            GestureDetector(
+              onTap: addGiriviUI.pickImage,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSize.p16,
+                  vertical: AppSize.p4 + 2,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(AppSize.p8),
+                  border: Border.all(color: AppColor.goldColor),
+                ),
+                child: Text(
+                  image != null ? "Change" : AppString.upload,
+                  style: TextStyle(
+                    color: AppColor.goldColor,
+                    fontSize: AppSize.p12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ),
-          ),
-        ],
-      ),
+            SizedBox(height: AppSize.p8),
+          ],
+        );
+      }),
     );
   }
 
@@ -711,22 +733,33 @@ class _AddgiriviState extends State<Addgirivi> {
   }
 }
 
-void customerVoid(dynamic addGiriviUI, dynamic customer) {
+void customerVoid(AddGiriviControllerUI addGiriviUI, CustomerData customer) {
   addGiriviUI.selectedCustomerId.value = customer.custId ?? '';
   addGiriviUI.customerName.value = customer.name ?? '';
   addGiriviUI.customerNameController.text = customer.name ?? '';
-  
-  String phone = customer.phoneList?.firstWhereOrNull((p) => p.isDefault == "1")?.phone ??
-      ((customer.phoneList != null && customer.phoneList!.isNotEmpty)
-          ? customer.phoneList!.first.phone
-          : '') ??
-      '';
-  
+
+  String phone = '';
+  if (customer.phoneList != null && customer.phoneList!.isNotEmpty) {
+    for (var p in customer.phoneList!) {
+      if (p.isDefault == "1") {
+        phone = p.phone ?? '';
+        break;
+      }
+    }
+    if (phone.isEmpty) {
+      phone = customer.phoneList!.first.phone ?? '';
+    }
+  }
+
   addGiriviUI.customerPhone.value = phone;
   addGiriviUI.customerPhoneController.text = phone;
-  
+
   addGiriviUI.address.value = customer.address ?? '';
   addGiriviUI.addressController.text = customer.address ?? '';
-  
+
   Get.back();
+}
+
+String metalname(product) {
+  return "${product['MetalName'] ?? ''} (${product['CategoryName'] ?? ''}) - ${product['Pieces'] ?? '0'} Pcs";
 }

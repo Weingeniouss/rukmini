@@ -25,21 +25,29 @@ class ReportHelper {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           title: Container(
             padding: EdgeInsets.all(AppSize.p16),
-            decoration: BoxDecoration(
-              color: AppColor.activeColor,
-              borderRadius: const BorderRadius.only(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppColor.goldColor, AppColor.dashboardGold],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(8),
                 topRight: Radius.circular(8),
               ),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: AppColor.white,
-                    fontSize: AppSize.size18,
+                Expanded(
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: AppColor.white,
+                      fontSize: AppSize.size18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 IconButton(
@@ -60,7 +68,7 @@ class ReportHelper {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CircularProgressIndicator(),
+                      CircularProgressIndicator(color: AppColor.goldColor),
                       SizedBox(height: 10),
                       Text("Fetching data, please wait..."),
                     ],
@@ -73,11 +81,18 @@ class ReportHelper {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.info_outline, size: 50, color: AppColor.textColor),
+                      Icon(
+                        Icons.info_outline,
+                        size: 50,
+                        color: AppColor.goldColor.withOpacity(0.5),
+                      ),
                       const SizedBox(height: 10),
                       Text(
                         AppString.noDataFound,
-                        style: TextStyle(fontSize: AppSize.size18, color: AppColor.textColor),
+                        style: TextStyle(
+                          fontSize: AppSize.size18,
+                          color: AppColor.textColor,
+                        ),
                       ),
                     ],
                   ),
@@ -93,8 +108,9 @@ class ReportHelper {
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: DataTable(
-                          headingRowColor:
-                              MaterialStateProperty.all(AppColor.grey200),
+                          headingRowColor: MaterialStateProperty.all(
+                            AppColor.whiteOrang.withOpacity(0.5),
+                          ),
                           columnSpacing: 20,
                           columns: _buildColumns(index),
                           rows: _buildRows(index, uiController.reportList),
@@ -104,19 +120,28 @@ class ReportHelper {
                   ),
                   Padding(
                     padding: EdgeInsets.all(AppSize.p16),
-                    child: ElevatedButton.icon(
-                      onPressed: () => uiController.exportReport(index),
-                      icon: const Icon(Icons.download, size: 18),
-                      label: const Text("Export Excel"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColor.activeColor,
-                        foregroundColor: AppColor.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [AppColor.goldColor, AppColor.dashboardGold],
                         ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: AppSize.p24,
-                          vertical: AppSize.p8,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: ElevatedButton.icon(
+                        onPressed: () => uiController.exportReport(index),
+                        icon: const Icon(Icons.download, size: 18),
+                        label: const Text("Export Excel"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: AppColor.white,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSize.p24,
+                            vertical: AppSize.p12,
+                          ),
                         ),
                       ),
                     ),
@@ -130,7 +155,10 @@ class ReportHelper {
               onPressed: () => Navigator.pop(context),
               child: Text(
                 AppString.ok,
-                style: TextStyle(color: AppColor.activeColor),
+                style: const TextStyle(
+                  color: AppColor.goldColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -144,14 +172,25 @@ class ReportHelper {
       padding: EdgeInsets.all(AppSize.p16),
       margin: EdgeInsets.all(AppSize.p8),
       decoration: BoxDecoration(
-        color: AppColor.lightBlue,
+        color: AppColor.whiteOrang.withOpacity(0.3),
         borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppColor.goldColor.withOpacity(0.2)),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _summaryItem("Total Given", uiController.custReportController.totalGivenAmt.value),
-          _summaryItem("Total Pending", uiController.custReportController.totalPendingAmt.value),
+          Expanded(
+            child: _summaryItem(
+              "Total Given",
+              uiController.custReportController.totalGivenAmt.value,
+            ),
+          ),
+          Container(height: 30, width: 1, color: AppColor.goldColor.withOpacity(0.2)),
+          Expanded(
+            child: _summaryItem(
+              "Total Pending",
+              uiController.custReportController.totalPendingAmt.value,
+            ),
+          ),
         ],
       ),
     );
@@ -159,10 +198,27 @@ class ReportHelper {
 
   static Widget _summaryItem(String label, double amount) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Text(label, style: TextStyle(fontSize: AppSize.size14, color: AppColor.textColor)),
-        Text("₹${amount.toStringAsFixed(2)}", 
-            style: TextStyle(fontSize: AppSize.size18, fontWeight: FontWeight.bold, color: AppColor.primaryColor)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: AppSize.size12,
+            color: AppColor.textColor,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            "₹${amount.toStringAsFixed(2)}",
+            style: TextStyle(
+              fontSize: AppSize.size18,
+              fontWeight: FontWeight.bold,
+              color: AppColor.goldColor,
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -203,34 +259,40 @@ class ReportHelper {
   static List<DataRow> _buildRows(int index, List<dynamic> data) {
     return data.map((item) {
       if (index == 0) {
-        return DataRow(cells: [
-          DataCell(Text(item.custCode ?? '')),
-          DataCell(Text(item.name ?? '')),
-          DataCell(Text(item.custPhone ?? '')),
-          DataCell(Text(item.givenAmt?.toString() ?? '')),
-          DataCell(Text(item.pendingAmt?.toString() ?? '')),
-          DataCell(Text(item.address ?? '')),
-        ]);
+        return DataRow(
+          cells: [
+            DataCell(Text(item.custCode ?? '')),
+            DataCell(Text(item.name ?? '')),
+            DataCell(Text(item.custPhone ?? '')),
+            DataCell(Text(item.givenAmt?.toString() ?? '')),
+            DataCell(Text(item.pendingAmt?.toString() ?? '')),
+            DataCell(Text(item.address ?? '')),
+          ],
+        );
       } else if (index == 1) {
-        return DataRow(cells: [
-          DataCell(Text(item.uniqueId ?? '')),
-          DataCell(Text(item.custName ?? '')),
-          DataCell(Text(item.custPhone ?? '')),
-          DataCell(Text(item.girviDate ?? '')),
-          DataCell(Text(item.dueDate ?? '')),
-          DataCell(Text(item.givenAmt ?? '')),
-          DataCell(Text(item.interest ?? '')),
-          DataCell(Text(item.balance ?? '')),
-        ]);
+        return DataRow(
+          cells: [
+            DataCell(Text(item.uniqueId ?? '')),
+            DataCell(Text(item.custName ?? '')),
+            DataCell(Text(item.custPhone ?? '')),
+            DataCell(Text(item.girviDate ?? '')),
+            DataCell(Text(item.dueDate ?? '')),
+            DataCell(Text(item.givenAmt ?? '')),
+            DataCell(Text(item.interest ?? '')),
+            DataCell(Text(item.balance ?? '')),
+          ],
+        );
       } else {
-        return DataRow(cells: [
-          DataCell(Text(item.uniqueId ?? '')),
-          DataCell(Text(item.custName ?? '')),
-          DataCell(Text(item.lockerCode ?? '')),
-          DataCell(Text(item.code ?? '')),
-          DataCell(Text(item.totalAmt ?? '')),
-          DataCell(Text(item.balance ?? '')),
-        ]);
+        return DataRow(
+          cells: [
+            DataCell(Text(item.uniqueId ?? '')),
+            DataCell(Text(item.custName ?? '')),
+            DataCell(Text(item.lockerCode ?? '')),
+            DataCell(Text(item.code ?? '')),
+            DataCell(Text(item.totalAmt ?? '')),
+            DataCell(Text(item.balance ?? '')),
+          ],
+        );
       }
     }).toList();
   }

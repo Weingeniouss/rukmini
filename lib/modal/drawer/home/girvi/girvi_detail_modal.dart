@@ -187,12 +187,39 @@ class GiriviDetailData {
 }
 
 class Nominee {
-  Nominee();
+  String? nomineeId;
+  String? custId;
+  String? name;
+  String? phone;
+  String? custRelation;
+  String? status;
 
-  Nominee.fromJson(Map<String, dynamic> json);
+  Nominee({
+    this.nomineeId,
+    this.custId,
+    this.name,
+    this.phone,
+    this.custRelation,
+    this.status,
+  });
+
+  Nominee.fromJson(Map<String, dynamic> json) {
+    nomineeId = json['NomineeId'];
+    custId = json['CustId'];
+    name = json['Name'];
+    phone = json['Phone'];
+    custRelation = json['CustRelation'];
+    status = json['Status'];
+  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['NomineeId'] = nomineeId;
+    data['CustId'] = custId;
+    data['Name'] = name;
+    data['Phone'] = phone;
+    data['CustRelation'] = custRelation;
+    data['Status'] = status;
     return data;
   }
 }

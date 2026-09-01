@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:rukmini/view/utils/app_constants.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/controller/ui/credentials/login_controllerUI.dart';
 import 'package:rukmini/modal/credentials/login_model.dart';
@@ -14,6 +15,25 @@ class LoginControllerAPI extends GetxController {
 
   var isLoading = false.obs;
   var loginData = LoginModel().obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadSavedUserData();
+  }
+
+  void _loadSavedUserData() {
+    if (pref != null) {
+      String? savedData = pref!.getString('userData');
+      if (savedData != null && savedData.isNotEmpty) {
+        try {
+          loginData.value = LoginModel.fromJson(jsonDecode(savedData));
+        } catch (e) {
+          if (kDebugMode) print('Error loading saved user data: $e');
+        }
+      }
+    }
+  }
 
   Future<http.Response?> login() async {
     try {

@@ -64,7 +64,7 @@ class AddGiriviControllerUI extends GetxController {
     dueDateController.text = data.dueDate ?? '';
     interestRateController.text = data.interest ?? '';
     totalAmountGivenController.text = data.givenAmt ?? '';
-    
+
     calculateAmounts();
 
     productsList.clear();
@@ -82,10 +82,18 @@ class AddGiriviControllerUI extends GetxController {
           "GivenAmount": product.givenAmount,
           "IsDiamond": product.isDiamond,
           "IsHallmark": product.isHallmark,
-          "LockerCode": (product.lockerList != null && product.lockerList!.isNotEmpty)
+          "LockerCode":
+              (product.lockerList != null && product.lockerList!.isNotEmpty)
               ? product.lockerList!.first.lockerCode
               : '',
-          // Add other fields as necessary
+          "MetalName": product.prodType,
+          "CategoryName": product.catName,
+          "MetalTouch": product.metalName,
+          "DiamondPieces": product.pieces,
+          "DiamondWeight": product.weight,
+          "CertificateNo": "",
+          "DiamondPrice": "",
+          "Remark": product.badDept,
         });
       }
     }

@@ -70,6 +70,9 @@ abstract class Routes {
     //Report
         static const report = _Paths.report;
     //Report
+    //Profile
+        static const profile = _Paths.profile;
+    //Profile
   //Drawer
 }
 
@@ -140,5 +143,8 @@ abstract class _Paths {
     //Report
           static const report = '/report';
     //Report
+    //Profile
+          static const profile = '/profile';
+    //Profile
   //Drawer
 }

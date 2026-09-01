@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/metal/metal_Controller.dart';
 import 'package:rukmini/controller/api/controllers/product/productType_Controller.dart';
+import 'package:rukmini/controller/api/controllers/drawer/all_master/category_master/category_Controller.dart';
 import 'package:rukmini/controller/ui/home/girivi/addProduct_Controller.dart';
 import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/lockerList_Controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
@@ -28,6 +29,7 @@ class AddProduct extends StatefulWidget {
 class _AddProductState extends State<AddProduct> {
   final addProductUI = Get.put(AddProductControllerUI());
   final metalController = Get.put(MetalController());
+  final categoryController = Get.put(CategoryController());
   final productTypeController = Get.put(ProductTypeController());
   final lockerListController = Get.put(LockerListController());
   final addGiriviUI = Get.find<AddGiriviControllerUI>();
@@ -47,6 +49,7 @@ class _AddProductState extends State<AddProduct> {
       CallApi.callMetalList();
       CallApi.callProductTypeList();
       CallApi.callProductList();
+      CallApi.callCategoryList();
       CallApi.callLockerList();
     });
   }
@@ -512,7 +515,7 @@ class _AddProductState extends State<AddProduct> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  _showCategorySelection();
+                  _submitProduct();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColor.transparent,
@@ -606,6 +609,62 @@ class _AddProductState extends State<AddProduct> {
   }
 
   void _showCategorySelection() {
+    Get.bottomSheet(
+      Container(
+        height: AppSize.height * 0.7,
+        decoration: BoxDecoration(
+          color: AppColor.white,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppSize.p20),
+          ),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(AppSize.p16),
+              child: Text(
+                AppString.selectCategory,
+                style: TextStyle(
+                  fontSize: AppSize.headingText,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const Divider(),
+            Expanded(
+              child: Obx(() {
+                if (categoryController.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (categoryController.categoryList.isEmpty) {
+                  return const Center(
+                    child: Text(AppString.noCategoriesFound),
+                  );
+                }
+                return ListView.builder(
+                  itemCount: categoryController.categoryList.length,
+                  itemBuilder: (context, index) {
+                    final category = categoryController.categoryList[index];
+                    return ListTile(
+                      title: Text(category.name ?? ""),
+                      onTap: () {
+                        addProductUI.selectedCategory.value = category.name ?? "";
+                        addProductUI.selectedCategoryId.value =
+                            category.categoryId ?? "";
+                        Get.back();
+                      },
+                    );
+                  },
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _submitProduct() {
     final product = {
       "ProductTypeId": addProductUI.selectedProductTypeId.value,
       "CategoryId": addProductUI.selectedCategoryId.value,

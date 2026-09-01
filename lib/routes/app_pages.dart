@@ -24,6 +24,7 @@ import 'package:rukmini/view/screen/drawer/home/girvi/addProduct.dart';
 import 'package:rukmini/view/screen/drawer/home/girvi/giriviDetail.dart';
 import 'package:rukmini/view/screen/drawer/home/home.dart';
 import 'package:rukmini/view/screen/drawer/home/pendingProduct/productDetail.dart';
+import 'package:rukmini/view/screen/drawer/home/profile/profile.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/allMaster.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/categoryMataer/categoryMaster.dart';
 import 'package:rukmini/view/screen/drawer/allMaster/metalTouch/metalTouch.dart';
@@ -152,6 +153,13 @@ class AppPages {
       page: () => Reports(uiController: Get.put(ReportUIController())),
     ),
     //Report
+
+    //Profile
+    GetPage(
+      name: _Paths.profile,
+      page: () => const Profile(),
+    ),
+    //Profile
     //Drawer
   ];
 }

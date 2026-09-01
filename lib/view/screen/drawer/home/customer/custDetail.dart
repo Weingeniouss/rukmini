@@ -409,10 +409,25 @@ class _CustDetailState extends State<CustDetail> {
           ],
           if ((data.proof == null || data.proof!.isEmpty) &&
               (data.profile == null || data.profile!.isEmpty))
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(AppSize.p20),
-                child: Text(AppString.noIdentityProofsFound),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: AppSize.p16),
+              padding: EdgeInsets.all(AppSize.p8),
+              decoration: BoxDecoration(
+                color: AppColor.white,
+                borderRadius: BorderRadius.circular(AppSize.p20),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColor.black.withOpacity(0.05),
+                    blurRadius: AppSize.p10,
+                    offset: Offset(0, AppSize.p4),
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(AppSize.p20),
+                  child: Text(AppString.noIdentityProofsFound),
+                ),
               ),
             ),
         ],
@@ -490,15 +505,19 @@ class _CustDetailState extends State<CustDetail> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _sectionHeader(AppString.customerDetail),
-          _detailRow(AppIcon.location, AppString.address, address),
-          _detailRow(AppIcon.person, AppString.gender, gender),
-          _detailRow(
-            AppIcon.status,
-            AppString.status,
-            status,
-            valueColor: AppColor.activeColor,
-          ),
-          _detailRow(AppIcon.calendar, AppString.gracePeriod, gracePeriod),
+          if (address.isNotEmpty)
+            _detailRow(AppIcon.location, AppString.address, address),
+          if (gender.isNotEmpty)
+            _detailRow(AppIcon.person, AppString.gender, gender),
+          if (status.isNotEmpty)
+            _detailRow(
+              AppIcon.status,
+              AppString.status,
+              status,
+              valueColor: AppColor.activeColor,
+            ),
+          if (gracePeriod.isNotEmpty && gracePeriod != "0")
+            _detailRow(AppIcon.calendar, AppString.gracePeriod, gracePeriod),
 
           if (custType.isNotEmpty) ...[
             Padding(
@@ -545,14 +564,21 @@ class _CustDetailState extends State<CustDetail> {
               (p) => _phoneItemCard(p.phone ?? '', p.isDefault == "1"),
             ),
           ],
-          _sectionHeader(AppString.nomineeDetail),
-          _detailRow(AppIcon.person, AppString.name, nomineeName),
-          _detailRow(AppIcon.phone, AppString.phone, nomineephoneNumbar),
-          _detailRow(
-            AppIcon.verifiedUser,
-            AppString.customerRelation,
-            nomineeRelation,
-          ),
+          if (nomineeName.isNotEmpty ||
+              nomineephoneNumbar.isNotEmpty ||
+              nomineeRelation.isNotEmpty) ...[
+            _sectionHeader(AppString.nomineeDetail),
+            if (nomineeName.isNotEmpty)
+              _detailRow(AppIcon.person, AppString.name, nomineeName),
+            if (nomineephoneNumbar.isNotEmpty)
+              _detailRow(AppIcon.phone, AppString.phone, nomineephoneNumbar),
+            if (nomineeRelation.isNotEmpty)
+              _detailRow(
+                AppIcon.verifiedUser,
+                AppString.customerRelation,
+                nomineeRelation,
+              ),
+          ],
         ],
       ),
     );
@@ -688,7 +714,7 @@ class _CustDetailState extends State<CustDetail> {
                 status,
                 style: TextStyle(
                   color: AppColor.activeColor,
-                  fontSize: AppSize.smallText,
+                  fontSize: AppSize.mediumText * 1.1,
                 ),
               ),
             ],
@@ -736,7 +762,7 @@ class _CustDetailState extends State<CustDetail> {
                   AppString.defaultLabel,
                   style: TextStyle(
                     color: AppColor.goldColor,
-                    fontSize: AppSize.smallText,
+                    fontSize: AppSize.mediumText * 1.1,
                   ),
                 ),
             ],

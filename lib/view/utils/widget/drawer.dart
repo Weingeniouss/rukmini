@@ -35,45 +35,51 @@ Widget homeDrawer() {
                   AppSize.p20,
                   AppSize.p20,
                 ),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      AppLogo.rukminiLogo2,
-                      height: AppSize.height * 0.12,
-                      fit: BoxFit.contain,
-                    ),
-                    SizedBox(width: AppSize.p16),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Obx(() {
-                            final role =
-                                loginAPI.loginData.value.data?.roleName;
-                            return Text(
-                              role ?? AppString.user,
-                              style: TextStyle(
-                                color: AppColor.primaryColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: AppSize.extraLargeText,
-                              ),
-                            );
-                          }),
-                          const SizedBox(height: 4),
-                          Text(
-                            loginAPI.loginUI.emailController.text,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: AppColor.textField,
-                              fontSize: AppSize.size14,
-                            ),
-                          ),
-                        ],
+                child: GestureDetector(
+                  onTap: () {
+                    Get.back();
+                    Get.toNamed('/profile');
+                  },
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        AppLogo.rukminiLogo2,
+                        height: AppSize.height * 0.12,
+                        fit: BoxFit.contain,
                       ),
-                    ),
-                  ],
+                      SizedBox(width: AppSize.p16),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Obx(() {
+                              final role =
+                                  loginAPI.loginData.value.data?.roleName;
+                              return Text(
+                                role ?? AppString.user,
+                                style: TextStyle(
+                                  color: AppColor.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: AppSize.extraLargeText,
+                                ),
+                              );
+                            }),
+                            const SizedBox(height: 4),
+                            Text(
+                              loginAPI.loginUI.emailController.text,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: AppColor.textField,
+                                fontSize: AppSize.size14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -170,6 +176,7 @@ Widget homeDrawer() {
                 index: 9,
                 title: AppString.exportCustomersContacts,
                 icon: AppIcon.contact,
+                isSpecial: true,
                 onTap: () {
                   navDrawerController.changeIndex(9);
                   final reportUIController = Get.put(ReportUIController());
@@ -236,6 +243,7 @@ Widget _drawerItem({
   required String title,
   required IconData icon,
   required void Function()? onTap,
+  bool isSpecial = false,
 }) {
   final NavDrawerController navDrawerController = Get.find();
   return Obx(() {
@@ -254,6 +262,15 @@ Widget _drawerItem({
                     width: 1,
                   ),
                 )
+              : isSpecial
+              ? BoxDecoration(
+                  color: AppColor.goldColor.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: AppColor.goldColor.withOpacity(0.2),
+                    width: 1,
+                  ),
+                )
               : null,
           child: ListTile(
             onTap: onTap,
@@ -261,20 +278,37 @@ Widget _drawerItem({
             visualDensity: const VisualDensity(vertical: -1),
             leading: Icon(
               icon,
-              color: isSelected ? AppColor.goldColor : AppColor.primaryColor,
+              color: isSelected
+                  ? AppColor.goldColor
+                  : isSpecial
+                  ? AppColor.goldColor
+                  : AppColor.primaryColor,
               size: 24,
             ),
             title: Text(
               title,
               style: TextStyle(
-                color: isSelected ? AppColor.goldColor : AppColor.primaryColor,
+                color: isSelected
+                    ? AppColor.goldColor
+                    : isSpecial
+                    ? AppColor.goldColor
+                    : AppColor.primaryColor,
                 fontSize: AppSize.largeText,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                fontWeight: (isSelected || isSpecial)
+                    ? FontWeight.bold
+                    : FontWeight.w500,
               ),
             ),
+            trailing: isSpecial
+                ? Icon(
+                    Icons.star_outline,
+                    color: AppColor.goldColor.withOpacity(0.5),
+                    size: 18,
+                  )
+                : null,
           ),
         ),
-        if (!isSelected)
+        if (!isSelected && !isSpecial)
           Divider(
             height: 1,
             thickness: 0.5,

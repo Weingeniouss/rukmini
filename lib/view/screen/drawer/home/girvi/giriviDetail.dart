@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/girvi/giriviDetail_Controller.dart';
+import 'package:rukmini/controller/api/controllers/drawer/home/girvi/giriviList_Controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
@@ -23,17 +24,19 @@ class GiriviDetail extends StatefulWidget {
 
 class _GiriviDetailState extends State<GiriviDetail> {
   final giriviDetailController = Get.put(GiriviDetailController());
-  late String girviId;
+  final giriviListController = Get.put(GiriviListController());
   final ScrollController _girviScrollController = ScrollController();
   final ScrollController _custScrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    girviId = Get.arguments ?? '';
+    giriviDetailController.currentGirviId.value = Get.arguments ?? '';
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (girviId.isNotEmpty) {
-        CallApi.callGiriviDetail(girviId: girviId);
+      if (giriviDetailController.currentGirviId.value.isNotEmpty) {
+        CallApi.callGiriviDetail(
+          girviId: giriviDetailController.currentGirviId.value,
+        );
       }
     });
   }
@@ -96,14 +99,20 @@ class _GiriviDetailState extends State<GiriviDetail> {
           edit: true,
           close: true,
           remove: true,
+          searchIcon: true,
+          searchOnPressed: () => _showGirviSearchSelection(),
           editOnPressed: () {
             final data = giriviDetailController.giriviDetailData.value.data;
             if (data != null) {
               Get.toNamed('/giriviadd', arguments: data);
             }
           },
-          closeOnPressed: () => CallApi.callCloseGirvie(girviId: girviId),
-          deletOnPressed: () => CallApi.callRemoveGirvie(girviId: girviId),
+          closeOnPressed: () => CallApi.callCloseGirvie(
+            girviId: giriviDetailController.currentGirviId.value,
+          ),
+          deletOnPressed: () => CallApi.callRemoveGirvie(
+            girviId: giriviDetailController.currentGirviId.value,
+          ),
         ),
         child: Obx(() {
           if (giriviDetailController.isLoading.value) {
@@ -579,47 +588,58 @@ class _GiriviDetailState extends State<GiriviDetail> {
                         padding: EdgeInsets.all(AppSize.p16),
                         child: Column(
                           children: [
-                            _buildInfoRowSimple(
-                              AppIcon.person,
-                              AppString.name,
-                              data.custName ?? "-",
-                            ),
-                            _buildInfoRowSimple(
-                              AppIcon.phone,
-                              AppString.phoneNumbar,
-                              data.custPhone ?? "-",
-                            ),
-                            _buildInfoRowSimple(
-                              AppIcon.location,
-                              AppString.address,
-                              data.address ?? "-",
-                            ),
+                            if (data.custName != null && data.custName!.isNotEmpty)
+                              _buildInfoRowSimple(
+                                AppIcon.person,
+                                AppString.name,
+                                data.custName ?? "-",
+                              ),
+                            if (data.custPhone != null && data.custPhone!.isNotEmpty)
+                              _buildInfoRowSimple(
+                                AppIcon.phone,
+                                AppString.phoneNumbar,
+                                data.custPhone ?? "-",
+                              ),
+                            if (data.address != null && data.address!.isNotEmpty)
+                              _buildInfoRowSimple(
+                                AppIcon.location,
+                                AppString.address,
+                                data.address ?? "-",
+                              ),
                           ],
                         ),
                       ),
-                      _sectionHeader(AppString.nomineeDetail, AppIcon.person),
-                      Padding(
-                        padding: EdgeInsets.all(AppSize.p16),
-                        child: Column(
-                          children: [
-                            _buildInfoRowSimple(
-                              AppIcon.person,
-                              AppString.name,
-                              "-",
-                            ),
-                            _buildInfoRowSimple(
-                              AppIcon.phone,
-                              AppString.phoneNumbar,
-                              "-",
-                            ),
-                            _buildInfoRowSimple(
-                              AppIcon.verifiedUser,
-                              AppString.customerRelation,
-                              "-",
-                            ),
-                          ],
+                      if (data.nominee != null &&
+                          ((data.nominee!.name != null &&
+                                  data.nominee!.name!.isNotEmpty) ||
+                              (data.nominee!.phone != null &&
+                                  data.nominee!.phone!.isNotEmpty) ||
+                              (data.nominee!.custRelation != null &&
+                                  data.nominee!.custRelation!.isNotEmpty))) ...[
+                        _sectionHeader(AppString.nomineeDetail, AppIcon.person),
+                        Padding(
+                          padding: EdgeInsets.all(AppSize.p16),
+                          child: Column(
+                            children: [
+                              _buildInfoRowSimple(
+                                AppIcon.person,
+                                AppString.name,
+                                data.nominee!.name ?? "-",
+                              ),
+                              _buildInfoRowSimple(
+                                AppIcon.phone,
+                                AppString.phoneNumbar,
+                                data.nominee!.phone ?? "-",
+                              ),
+                              _buildInfoRowSimple(
+                                AppIcon.verifiedUser,
+                                AppString.customerRelation,
+                                data.nominee!.custRelation ?? "-",
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                 ),
@@ -909,4 +929,136 @@ class _GiriviDetailState extends State<GiriviDetail> {
       ),
     );
   }
+
+  void _showGirviSearchSelection() {
+    giriviListController.getGiriviList(isRefresh: true);
+    Get.bottomSheet(
+      StatefulBuilder(
+        builder: (context, setSheetState) {
+          return Container(
+            height: AppSize.height * 0.8,
+            decoration: BoxDecoration(
+              color: AppColor.white,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(AppSize.p20),
+              ),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(AppSize.p16),
+                  child: Text(
+                    AppString.giriviList,
+                    style: TextStyle(
+                      fontSize: AppSize.headingText,
+                      fontWeight: FontWeight.bold,
+                      color: AppColor.goldColor,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: AppSize.p16),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: AppString.search,
+                      prefixIcon: const Icon(
+                        AppIcon.searchIcon,
+                        color: AppColor.goldColor,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(AppSize.p12),
+                        borderSide: BorderSide(
+                          color: AppColor.goldColor.withOpacity(0.3),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(AppSize.p12),
+                        borderSide: const BorderSide(color: AppColor.goldColor),
+                      ),
+                    ),
+                    onChanged: (val) {
+                      giriviListController.getGiriviList(
+                        isRefresh: true,
+                        search: val,
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: AppSize.p12),
+                Expanded(
+                  child: Obx(() {
+                    if (giriviListController.isLoading.value) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColor.goldColor,
+                        ),
+                      );
+                    }
+                    if (giriviListController.giriviList.isEmpty) {
+                      return Center(child: Text(AppString.noDataFound));
+                    }
+
+                    giriviListController.giriviList.sort(
+                      (a, b) => (b.uniqueId ?? '').compareTo(a.uniqueId ?? ''),
+                    );
+
+                    return listCustomerDetail(
+                      giriviListController,
+                      giriviDetailController,
+                    );
+                  }),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      isScrollControlled: true,
+    );
+  }
+}
+
+Widget listCustomerDetail(giriviListController, giriviDetailController) {
+  return ListView.separated(
+    itemCount: giriviListController.giriviList.length,
+    separatorBuilder: (context, index) {
+      return Divider(color: AppColor.goldColor.withOpacity(0.1), height: 1);
+    },
+    itemBuilder: (context, index) {
+      final item = giriviListController.giriviList[index];
+      return ListTile(
+        title: GestureDetector(
+          onTap: () {
+            Get.back();
+            giriviDetailController.currentGirviId.value = item.girviId ?? '';
+            CallApi.callGiriviDetail(
+              girviId: giriviDetailController.currentGirviId.value,
+            );
+          },
+          child: Text(
+            item.custName ?? "",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: AppSize.commonText,
+            ),
+          ),
+        ),
+        subtitle: Text(
+          "ID: ${item.uniqueId ?? ""} | Amt: ${item.givenAmt ?? "0"}",
+          style: TextStyle(fontSize: AppSize.smallText),
+        ),
+        trailing: Icon(
+          AppIcon.rightArrow,
+          color: AppColor.goldColor,
+          size: AppSize.p20,
+        ),
+        onTap: () {
+          giriviDetailController.currentGirviId.value = item.girviId ?? '';
+          CallApi.callGiriviDetail(
+            girviId: giriviDetailController.currentGirviId.value,
+          );
+        },
+      );
+    },
+  );
 }

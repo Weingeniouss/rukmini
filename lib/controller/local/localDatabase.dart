@@ -30,11 +30,12 @@ class LocalDatabase {
   }
 
   //Save Login Start
-  Future loginSaveData({String? email, String? password, String? uId}) async {
+  Future loginSaveData({String? email, String? password, String? uId, String? userData}) async {
     pref!.setString('email', email!);
     pref!.setString('password', password!);
     pref!.setString('tokan', tokans);
     pref!.setString('UserId', uId!);
+    if (userData != null) pref!.setString('userData', userData);
 
     emailStrore = pref!.getString('email')!;
     passwordStrore = pref!.getString('password')!;
