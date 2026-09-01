@@ -49,7 +49,7 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
             title: RichText(
               text: TextSpan(
                 style: TextStyle(
-                  color: AppColor.fullScreenColor,
+                  color: AppColor.goldColor,
                   fontSize: AppSize.size20,
                   fontWeight: FontWeight.w500,
                 ),
@@ -92,7 +92,9 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
                 final detail =
                     lockerDetailController.lockerDetailData.value.data;
                 if (detail == null) {
-                  return const Center(child: Text(AppString.noTransactionsFound));
+                  return const Center(
+                    child: Text(AppString.noTransactionsFound),
+                  );
                 }
 
                 return TabBarView(
@@ -190,7 +192,8 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
 
   Widget _buildTransactionDetails(LockerDetailData detail) {
     final trans = detail.transObj;
-    if (trans == null) return const Center(child: Text(AppString.noTransactionsFound));
+    if (trans == null)
+      return const Center(child: Text(AppString.noTransactionsFound));
 
     return ListView(
       padding: EdgeInsets.symmetric(vertical: AppSize.p4),
@@ -234,14 +237,25 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
               SizedBox(height: Get.height * 0.015),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [_buildTransItem("${AppString.balAmtLabel} : ", "${trans.balance}")],
+                children: [
+                  _buildTransItem(
+                    "${AppString.balAmtLabel} : ",
+                    "${trans.balance}",
+                  ),
+                ],
               ),
               SizedBox(height: Get.height * 0.015),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildTransItem("${AppString.paidAmtLabel} : ", "${trans.totalPaidAmt}"),
-                  _buildTransItem("${AppString.paidIntLabel} : ", "${trans.paidInterset}"),
+                  _buildTransItem(
+                    "${AppString.paidAmtLabel} : ",
+                    "${trans.totalPaidAmt}",
+                  ),
+                  _buildTransItem(
+                    "${AppString.paidIntLabel} : ",
+                    "${trans.paidInterset}",
+                  ),
                 ],
               ),
             ],
