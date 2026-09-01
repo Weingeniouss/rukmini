@@ -192,8 +192,9 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
 
   Widget _buildTransactionDetails(LockerDetailData detail) {
     final trans = detail.transObj;
-    if (trans == null)
+    if (trans == null) {
       return const Center(child: Text(AppString.noTransactionsFound));
+    }
 
     return ListView(
       padding: EdgeInsets.symmetric(vertical: AppSize.p4),
