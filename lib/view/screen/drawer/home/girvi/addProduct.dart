@@ -32,7 +32,7 @@ class _AddProductState extends State<AddProduct> {
   final categoryController = Get.put(CategoryController());
   final productTypeController = Get.put(ProductTypeController());
   final lockerListController = Get.put(LockerListController());
-  final addGiriviUI = Get.find<AddGiriviControllerUI>();
+  final addGiriviUI = Get.put(AddGiriviControllerUI());
 
   @override
   void initState() {
