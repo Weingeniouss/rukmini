@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:rukmini/controller/ui/home/report/report_ui_controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
@@ -44,16 +45,7 @@ class _ReportViewScreenState extends State<ReportViewScreen> {
       appBar: appBar(back: true, title: title, centerTitle: true),
       child: Obx(() {
         if (uiController.isReportLoading.value) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(color: AppColor.goldColor),
-                SizedBox(height: 10),
-                Text(AppString.fetchingDataPleaseWait),
-              ],
-            ),
-          );
+          return _shimmerLoading();
         }
 
         if (uiController.reportList.isEmpty) {
@@ -264,5 +256,54 @@ class _ReportViewScreenState extends State<ReportViewScreen> {
         );
       }
     }).toList();
+  }
+
+  Widget _shimmerLoading() {
+    return Stack(
+      children: [
+        Column(
+          children: [
+            if (index == 0)
+              Shimmer.fromColors(
+                baseColor: AppColor.grey300.withOpacity(0.5),
+                highlightColor: AppColor.white,
+                child: Container(
+                  height: 80,
+                  margin: EdgeInsets.all(AppSize.p16),
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+              ),
+            Expanded(
+              child: Shimmer.fromColors(
+                baseColor: AppColor.grey300.withOpacity(0.5),
+                highlightColor: AppColor.white,
+                child: ListView.builder(
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      height: 50,
+                      margin: EdgeInsets.symmetric(
+                        horizontal: AppSize.p16,
+                        vertical: AppSize.p8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColor.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+        const Center(
+          child: CircularProgressIndicator(color: AppColor.goldColor),
+        ),
+      ],
+    );
   }
 }

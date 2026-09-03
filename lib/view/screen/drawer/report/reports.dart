@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:rukmini/controller/ui/home/report/report_ui_controller.dart';
+import 'package:rukmini/routes/app_pages.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
@@ -11,7 +13,6 @@ import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
-import 'package:rukmini/view/utils/widget/report_helper.dart';
 import 'package:rukmini/view/utils/widget/inputField.dart';
 
 class Reports extends StatelessWidget {
@@ -21,49 +22,64 @@ class Reports extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Fullscreen(
-      isPadding: false,
-      backGroundcolor: AppColor.backgroundColor,
-      drawer: homeDrawer(),
-      appBar: appBar(
-        centerTitle: true,
-        back: false,
-        title: _buildDecorativeTitle(AppString.reports),
-      ),
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: AppSize.p12),
-        child: Column(
-          children: [
-            _buildReportCard(
-              context: context,
-              index: 0,
-              title: AppString.customerReport,
-              icon: AppIcon.person,
-              child: _buildDateRangeFilter(context),
+    return Stack(
+      children: [
+        Fullscreen(
+          isPadding: false,
+          backGroundcolor: AppColor.backgroundColor,
+          drawer: homeDrawer(),
+          appBar: appBar(
+            centerTitle: true,
+            back: false,
+            title: _buildDecorativeTitle(AppString.reports),
+          ),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(vertical: AppSize.p12),
+            child: Column(
+              children: [
+                _buildReportCard(
+                  context: context,
+                  index: 0,
+                  title: AppString.customerReport,
+                  icon: AppIcon.person,
+                  child: _buildDateRangeFilter(context),
+                ),
+                _buildReportCard(
+                  context: context,
+                  index: 1,
+                  title: AppString.girviReport,
+                  icon: AppIcon.grid,
+                  child: _buildDateRangeFilter(context),
+                ),
+                _buildReportCard(
+                  context: context,
+                  index: 2,
+                  title: AppString.lockerWiseReport,
+                  icon: AppIcon.locker,
+                  child: Column(
+                    children: [
+                      _buildLockerFilter(context),
+                      SizedBox(height: AppSize.p8),
+                      _buildDateRangeFilter(context),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            _buildReportCard(
-              context: context,
-              index: 1,
-              title: AppString.girviReport,
-              icon: AppIcon.grid,
-              child: _buildDateRangeFilter(context),
-            ),
-            _buildReportCard(
-              context: context,
-              index: 2,
-              title: AppString.lockerWiseReport,
-              icon: AppIcon.locker,
-              child: Column(
-                children: [
-                  _buildLockerFilter(context),
-                  SizedBox(height: AppSize.p8),
-                  _buildDateRangeFilter(context),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+        Obx(() {
+          if (uiController.isReportLoading.value) {
+            return Container(
+              color: Colors.black26,
+              child: const Center(
+                child: CircularProgressIndicator(color: AppColor.goldColor),
+              ),
+            );
+          }
+          return const SizedBox.shrink();
+        }),
+      ],
     );
   }
 
@@ -268,14 +284,12 @@ class Reports extends StatelessWidget {
             text: AppString.viewReport,
             onPressed: () {
               if (index == 0) {
-                Get.toNamed('/exportContacts');
+                Get.toNamed(Routes.exportContacts);
               } else {
-                ReportHelper.showReportDialog(
-                  context: context,
-                  uiController: uiController,
-                  index: index,
-                  title: title,
-                );
+                Get.toNamed(Routes.reportView, arguments: {
+                  'index': index,
+                  'title': title,
+                });
               }
             },
           ),
@@ -337,33 +351,48 @@ class Reports extends StatelessWidget {
   }
 
   Widget _buildCustomerSummary() {
-    return Container(
-      padding: EdgeInsets.all(AppSize.p12),
-      decoration: BoxDecoration(
-        color: AppColor.whiteOrang.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(AppSize.p12),
-        border: Border.all(color: AppColor.goldColor.withOpacity(0.1)),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: _summaryBox(
-              "Total Given",
-              uiController.custReportController.totalGivenAmt.value,
-              AppColor.goldColor,
+    return Obx(() {
+      if (uiController.custReportController.isLoading.value) {
+        return Shimmer.fromColors(
+          baseColor: AppColor.grey300.withOpacity(0.5),
+          highlightColor: AppColor.white,
+          child: Container(
+            height: 60,
+            decoration: BoxDecoration(
+              color: AppColor.white,
+              borderRadius: BorderRadius.circular(AppSize.p12),
             ),
           ),
-          SizedBox(width: AppSize.p12),
-          Expanded(
-            child: _summaryBox(
-              "Total Pending",
-              uiController.custReportController.totalPendingAmt.value,
-              AppColor.black,
+        );
+      }
+      return Container(
+        padding: EdgeInsets.all(AppSize.p12),
+        decoration: BoxDecoration(
+          color: AppColor.whiteOrang.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(AppSize.p12),
+          border: Border.all(color: AppColor.goldColor.withOpacity(0.1)),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: _summaryBox(
+                "Total Given",
+                uiController.custReportController.totalGivenAmt.value,
+                AppColor.goldColor,
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+            SizedBox(width: AppSize.p12),
+            Expanded(
+              child: _summaryBox(
+                "Total Pending",
+                uiController.custReportController.totalPendingAmt.value,
+                AppColor.black,
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _summaryBox(String label, double amount, Color color) {

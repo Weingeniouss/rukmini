@@ -128,10 +128,10 @@ class _productDetailState extends State<productDetail>
                 indicatorSize: TabBarIndicatorSize.tab,
                 labelPadding: EdgeInsets.zero,
                 tabs: [
-                  _buildTab(AppString.pending, Icons.history),
-                  _buildTab(AppString.returnProduct, Icons.reply),
-                  _buildTab(AppString.soldProduct, Icons.check_circle_outline),
-                  _buildTab(AppString.karkitProduct, Icons.calendar_today),
+                  _buildTab(AppString.pending, AppIcon.product),
+                  _buildTab(AppString.returnProduct, AppIcon.refresh),
+                  _buildTab(AppString.soldProduct, AppIcon.checkCircle),
+                  _buildTab(AppString.karkitProduct, AppIcon.inventory),
                 ],
               ),
             ),
@@ -304,11 +304,6 @@ class _productDetailState extends State<productDetail>
                             ),
                           ),
                           SizedBox(width: AppSize.p4),
-                          Icon(
-                            Icons.more_vert,
-                            color: AppColor.textColor.withOpacity(0.6),
-                            size: AppSize.p20,
-                          ),
                         ],
                       ),
                       SizedBox(height: AppSize.p8),
@@ -329,7 +324,7 @@ class _productDetailState extends State<productDetail>
                               item.metalName?.toLowerCase().contains("gold") ==
                                       true
                                   ? Icons.radio_button_checked
-                                  : Icons.local_offer,
+                                  : AppIcon.product,
                               size: AppSize.size14,
                               color: AppColor.goldColor,
                             ),

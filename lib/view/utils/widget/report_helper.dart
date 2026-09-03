@@ -53,7 +53,7 @@ class ReportHelper {
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: Icon(AppIcon.close as IconData?, color: AppColor.white),
+                  icon: const Icon(AppIcon.closeIcon, color: AppColor.white),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 ),

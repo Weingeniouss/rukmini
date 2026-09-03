@@ -83,7 +83,6 @@ class _HomeState extends State<Home> {
             ),
           ],
         ),
-        notification: true,
         avatar: GestureDetector(
           onTap: () => Get.toNamed('/profile'),
           child: CircleAvatar(
