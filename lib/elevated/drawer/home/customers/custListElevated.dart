@@ -37,12 +37,17 @@ Future<CustomerListModel?> getCustList({
           return customerListModel;
         } else {
           ToastificationError.Error(
-              customerListModel.message ?? AppString.noCustomersFound);
+            customerListModel.message ?? AppString.noCustomersFound,
+          );
         }
       } else if (response.statusCode == 401) {
         await LocalDatabase.handleUnauthorized();
+      } else if (response.statusCode == 404) {
+        // Suppress error for 404 (Not Found) during search
       } else {
-        ToastificationError.Error('${AppString.serverError}${response.statusCode}');
+        ToastificationError.Error(
+          '${AppString.serverError}${response.statusCode}',
+        );
       }
     } else {
       ToastificationError.Error('Invalid server response format');

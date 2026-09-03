@@ -411,7 +411,7 @@ class AppString {
       static const proTyp = 'Pro Typ';
       static const relation = 'Relation';
       static const paidInt = 'Paid Int';
-      static const date = 'date';
+      static const date = 'Date';
       static const muddal = 'Muddal';
       static const interest = 'Interest';
       static const cr = 'Cr/Dr';
@@ -488,6 +488,11 @@ class AppString {
   static const superUser = 'Super User';
   static const yes = 'Yes';
   static const no = 'No';
+  static const fetchingDataPleaseWait = 'Fetching data, please wait...';
+  static const exportExcel = 'Export Excel';
+  static const totalGiven = 'Total Given';
+  static const totalPending = 'Total Pending';
+  static const itemCode = 'Item Code';
 
   //Logging
   static const errorLog = 'Error: ';

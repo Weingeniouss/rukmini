@@ -691,7 +691,9 @@ class _HomeState extends State<Home> {
                 Icon(
                   isPositive ? AppIcon.arrowUp : AppIcon.arrowDown,
                   size: AppSize.width * 0.035,
-                  color: isPositive ? AppColor.activeColor : AppColor.deleteColor,
+                  color: isPositive
+                      ? AppColor.activeColor
+                      : AppColor.deleteColor,
                 ),
                 SizedBox(width: AppSize.p4 / 2),
                 Text(
@@ -699,7 +701,9 @@ class _HomeState extends State<Home> {
                   style: TextStyle(
                     fontSize: AppSize.extraSmallText * 1.5,
                     fontWeight: FontWeight.bold,
-                    color: isPositive ? AppColor.activeColor : AppColor.deleteColor,
+                    color: isPositive
+                        ? AppColor.activeColor
+                        : AppColor.deleteColor,
                   ),
                 ),
               ],

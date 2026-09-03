@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, deprecated_member_use
+// ignore_for_file: strict_top_level_inference, file_names, deprecated_member_use
 
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -760,6 +760,6 @@ void customerVoid(AddGiriviControllerUI addGiriviUI, CustomerData customer) {
   Get.back();
 }
 
-String metalname(product) {
+String metalname(Map<String, dynamic> product) {
   return "${product['MetalName'] ?? ''} (${product['CategoryName'] ?? ''}) - ${product['Pieces'] ?? '0'} Pcs";
 }

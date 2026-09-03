@@ -237,7 +237,8 @@ class Reports extends StatelessWidget {
               padding: EdgeInsets.only(right: AppSize.p16),
               child: AnimatedRotation(
                 duration: const Duration(milliseconds: 200),
-                turns: isExpanded ? 0.25 : 0, // 90 degrees rotation when expanded
+                turns: isExpanded ? 0.25 : 0,
+                // 90 degrees rotation when expanded
                 child: Icon(
                   AppIcon.rightArrow,
                   color: AppColor.goldColor,
@@ -265,12 +266,18 @@ class Reports extends StatelessWidget {
         Expanded(
           child: _gradientButton(
             text: AppString.viewReport,
-            onPressed: () => ReportHelper.showReportDialog(
-              context: context,
-              uiController: uiController,
-              index: index,
-              title: title,
-            ),
+            onPressed: () {
+              if (index == 0) {
+                Get.toNamed('/exportContacts');
+              } else {
+                ReportHelper.showReportDialog(
+                  context: context,
+                  uiController: uiController,
+                  index: index,
+                  title: title,
+                );
+              }
+            },
           ),
         ),
       ],
@@ -415,8 +422,9 @@ class Reports extends StatelessWidget {
             iconColor: AppColor.goldColor,
             inputTextcontroller: uiController.toDateController,
             readOnly: true,
-            onTap: () =>
-                uiController.selectDate(context, uiController.toDateController),
+            onTap: () {
+              uiController.selectDate(context, uiController.toDateController);
+            },
             suffixIcon: Icon(
               AppIcon.calendar,
               color: AppColor.goldColor,

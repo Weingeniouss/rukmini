@@ -6,8 +6,6 @@ import 'package:rukmini/controller/api/controllers/credentials/login_controller.
 import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
-import 'package:rukmini/controller/ui/home/report/report_ui_controller.dart';
-import 'package:rukmini/view/utils/widget/report_helper.dart';
 import '../../../controller/local/localDatabase.dart';
 import '../app_Color.dart';
 import '../app_Icon.dart';
@@ -179,13 +177,8 @@ Widget homeDrawer() {
                 isSpecial: true,
                 onTap: () {
                   navDrawerController.changeIndex(9);
-                  final reportUIController = Get.put(ReportUIController());
-                  ReportHelper.showReportDialog(
-                    context: Get.context!,
-                    uiController: reportUIController,
-                    index: 0,
-                    title: AppString.exportCustomersContacts,
-                  );
+                  Get.back(); // Close drawer
+                  Get.toNamed('/exportContacts');
                 },
               ),
             ],

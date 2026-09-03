@@ -116,4 +116,5 @@ class AppIcon {
   static const IconData inventory = Icons.inventory_2_outlined;
   static const IconData download = Icons.download_outlined;
   static const IconData star = Icons.star;
+  static const IconData infoOutline = Icons.info_outline;
 }

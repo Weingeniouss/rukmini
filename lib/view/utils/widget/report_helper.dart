@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/home/report/report_ui_controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 
@@ -52,7 +53,7 @@ class ReportHelper {
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close, color: AppColor.white),
+                  icon: Icon(AppIcon.close as IconData?, color: AppColor.white),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 ),
@@ -70,7 +71,7 @@ class ReportHelper {
                     children: [
                       CircularProgressIndicator(color: AppColor.goldColor),
                       SizedBox(height: 10),
-                      Text("Fetching data, please wait..."),
+                      Text(AppString.fetchingDataPleaseWait),
                     ],
                   ),
                 );
@@ -82,7 +83,7 @@ class ReportHelper {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.info_outline,
+                        AppIcon.infoOutline,
                         size: 50,
                         color: AppColor.goldColor.withOpacity(0.5),
                       ),
@@ -129,8 +130,8 @@ class ReportHelper {
                       ),
                       child: ElevatedButton.icon(
                         onPressed: () => uiController.exportReport(index),
-                        icon: const Icon(Icons.download, size: 18),
-                        label: const Text("Export Excel"),
+                        icon: Icon(AppIcon.download, size: 18),
+                        label: const Text(AppString.exportExcel),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           foregroundColor: AppColor.white,
@@ -180,14 +181,18 @@ class ReportHelper {
         children: [
           Expanded(
             child: _summaryItem(
-              "Total Given",
+              AppString.totalGiven,
               uiController.custReportController.totalGivenAmt.value,
             ),
           ),
-          Container(height: 30, width: 1, color: AppColor.goldColor.withOpacity(0.2)),
+          Container(
+            height: 30,
+            width: 1,
+            color: AppColor.goldColor.withOpacity(0.2),
+          ),
           Expanded(
             child: _summaryItem(
-              "Total Pending",
+              AppString.totalPending,
               uiController.custReportController.totalPendingAmt.value,
             ),
           ),
@@ -226,32 +231,32 @@ class ReportHelper {
   static List<DataColumn> _buildColumns(int index) {
     if (index == 0) {
       return [
-        const DataColumn(label: Text('Code')),
-        const DataColumn(label: Text('Name')),
-        const DataColumn(label: Text('Phone')),
-        const DataColumn(label: Text('Given Amt')),
-        const DataColumn(label: Text('Pending Amt')),
-        const DataColumn(label: Text('Address')),
+        const DataColumn(label: Text(AppString.code)),
+        const DataColumn(label: Text(AppString.name)),
+        const DataColumn(label: Text(AppString.phone)),
+        const DataColumn(label: Text(AppString.gvnAmt)),
+        const DataColumn(label: Text(AppString.pendingAmt)),
+        const DataColumn(label: Text(AppString.address)),
       ];
     } else if (index == 1) {
       return [
-        const DataColumn(label: Text('Unique ID')),
-        const DataColumn(label: Text('Customer')),
-        const DataColumn(label: Text('Phone')),
-        const DataColumn(label: Text('Date')),
-        const DataColumn(label: Text('Due Date')),
-        const DataColumn(label: Text('Given Amt')),
-        const DataColumn(label: Text('Interest')),
-        const DataColumn(label: Text('Balance')),
+        const DataColumn(label: Text(AppString.uniqueId)),
+        const DataColumn(label: Text(AppString.customer)),
+        const DataColumn(label: Text(AppString.phone)),
+        const DataColumn(label: Text(AppString.date)),
+        const DataColumn(label: Text(AppString.dueDate)),
+        const DataColumn(label: Text(AppString.givenAmt)),
+        const DataColumn(label: Text(AppString.interest)),
+        const DataColumn(label: Text(AppString.balance)),
       ];
     } else {
       return [
-        const DataColumn(label: Text('Unique ID')),
-        const DataColumn(label: Text('Customer')),
-        const DataColumn(label: Text('Locker Code')),
-        const DataColumn(label: Text('Item Code')),
-        const DataColumn(label: Text('Total Amt')),
-        const DataColumn(label: Text('Balance')),
+        const DataColumn(label: Text(AppString.uniqueId)),
+        const DataColumn(label: Text(AppString.customer)),
+        const DataColumn(label: Text(AppString.lockerCode)),
+        const DataColumn(label: Text(AppString.itemCode)),
+        const DataColumn(label: Text(AppString.totalAmt)),
+        const DataColumn(label: Text(AppString.balance)),
       ];
     }
   }

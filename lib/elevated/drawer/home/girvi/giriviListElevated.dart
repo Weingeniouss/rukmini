@@ -46,6 +46,8 @@ Future<GirviListModel?> getGiriviList({
         ToastificationError.Error(model.message ?? AppString.failedToLoadList);
       } else if (response.statusCode == 401) {
         await LocalDatabase.handleUnauthorized();
+      } else if (response.statusCode == 404) {
+        // Suppress error for 404 during search
       } else {
         ToastificationError.Error('${AppString.serverError}${response.statusCode}');
       }

@@ -69,6 +69,8 @@ abstract class Routes {
 
     //Report
         static const report = _Paths.report;
+        static const exportContacts = _Paths.exportContacts;
+        static const reportView = _Paths.reportView;
     //Report
     //Profile
         static const profile = _Paths.profile;
@@ -142,6 +144,8 @@ abstract class _Paths {
 
     //Report
           static const report = '/report';
+          static const exportContacts = '/exportContacts';
+          static const reportView = '/reportView';
     //Report
     //Profile
           static const profile = '/profile';
