@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/controller/ui/home/girivi/addGirivi_Controller.dart';
 import 'package:rukmini/modal/drawer/home/customer/customer_list_model.dart';
 import 'package:rukmini/modal/drawer/home/girvi/girvi_detail_modal.dart';
@@ -28,8 +29,9 @@ class _AddgiriviState extends State<Addgirivi> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (Get.arguments != null && Get.arguments is GiriviDetailData) {
-        addGiriviUI.populateData(Get.arguments as GiriviDetailData);
+      final args = NavDrawerController.getRouteArguments(context);
+      if (args != null && args is GiriviDetailData) {
+        addGiriviUI.populateData(args);
       } else {
         addGiriviUI.clearData();
       }
@@ -38,6 +40,8 @@ class _AddgiriviState extends State<Addgirivi> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Fullscreen(
       isPadding: false,
       backGroundcolor: AppColor.backgroundColor,
@@ -47,23 +51,59 @@ class _AddgiriviState extends State<Addgirivi> {
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.all(AppSize.p16),
-              child: Column(
-                children: [
-                  // Top Section: Customer Details & Image Picker
-                  _sectionHeader(AppString.customerDetail, AppIcon.person),
-                  _customerSelection(),
-
-                  // Form Fields
-                  _sectionHeader(AppString.girviDetails, AppIcon.girvi),
-                  dividerForm(),
-
-                  // Add Product Button
-                  _buildAddProductButton(),
-
-                  // Product List Display
-                  _buildProductList(),
-                ],
-              ),
+              child: isDesktopOrTablet
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Left Column: Customer & Girvi Details Form
+                        Expanded(
+                          child: Column(
+                            children: [
+                              _sectionHeader(
+                                AppString.customerDetail,
+                                AppIcon.person,
+                              ),
+                              _customerSelection(),
+                              _sectionHeader(
+                                AppString.girviDetails,
+                                AppIcon.girvi,
+                              ),
+                              dividerForm(),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: AppSize.p16),
+                        // Right Column: Products List & Add Product Button
+                        Expanded(
+                          child: Column(
+                            children: [
+                              _sectionHeader(
+                                AppString.productDetail,
+                                AppIcon.inventory,
+                              ),
+                              _buildAddProductButton(),
+                              _buildProductList(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        _sectionHeader(
+                          AppString.customerDetail,
+                          AppIcon.person,
+                        ),
+                        _customerSelection(),
+                        _sectionHeader(
+                          AppString.girviDetails,
+                          AppIcon.girvi,
+                        ),
+                        dividerForm(),
+                        _buildAddProductButton(),
+                        _buildProductList(),
+                      ],
+                    ),
             ),
           ),
           _buildBottomActionRow(),
@@ -340,21 +380,6 @@ class _AddgiriviState extends State<Addgirivi> {
     );
   }
 
-  // Widget _appBarButton(IconData icon, VoidCallback onTap) {
-  //   return GestureDetector(
-  //     onTap: onTap,
-  //     child: Container(
-  //       padding: EdgeInsets.all(AppSize.p8),
-  //       decoration: BoxDecoration(
-  //         color: AppColor.white.withOpacity(0.1),
-  //         borderRadius: BorderRadius.circular(AppSize.p10),
-  //         border: Border.all(color: AppColor.goldColor.withOpacity(0.3)),
-  //       ),
-  //       child: Icon(icon, color: AppColor.goldColor, size: AppSize.iconMedium),
-  //     ),
-  //   );
-  // }
-
   Widget _sectionHeader(String title, IconData icon) {
     return Container(
       padding: EdgeInsets.symmetric(
@@ -403,9 +428,11 @@ class _AddgiriviState extends State<Addgirivi> {
   }
 
   Widget _buildImageUploadBox() {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Container(
-      width: AppSize.width * 0.3,
-      height: AppSize.width * 0.53,
+      width: isDesktopOrTablet ? 120 : AppSize.width * 0.3,
+      height: isDesktopOrTablet ? 160 : AppSize.width * 0.53,
       decoration: BoxDecoration(
         color: AppColor.white,
         borderRadius: BorderRadius.circular(AppSize.p16),

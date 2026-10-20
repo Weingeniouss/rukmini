@@ -60,6 +60,29 @@ class _MetalMasterState extends State<MetalMaster> {
                 return Center(child: Text(AppString.noDataFound));
               }
 
+              if (AppSize.isDesktop || AppSize.isTablet) {
+                return RefreshIndicator(
+                  onRefresh: () => CallApi.callProductTypeList(),
+                  color: AppColor.goldColor,
+                  child: GridView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.all(AppSize.p16),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: AppSize.isDesktop ? 3 : 2,
+                      crossAxisSpacing: AppSize.p16,
+                      mainAxisSpacing: AppSize.p16,
+                      mainAxisExtent: 80,
+                    ),
+                    itemCount: productTypeController.productTypeList.length,
+                    itemBuilder: (context, index) {
+                      return _buildMetalCard(
+                        productTypeController.productTypeList[index],
+                      );
+                    },
+                  ),
+                );
+              }
+
               return RefreshIndicator(
                 onRefresh: () => CallApi.callProductTypeList(),
                 color: AppColor.goldColor,
@@ -85,6 +108,9 @@ class _MetalMasterState extends State<MetalMaster> {
   }
 
   Widget _buildDecorativeTitle() {
+    final double lineWidth =
+        (AppSize.isDesktop || AppSize.isTablet) ? 40 : AppSize.width * 0.1;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -101,7 +127,7 @@ class _MetalMasterState extends State<MetalMaster> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: AppSize.width * 0.1,
+              width: lineWidth,
               height: 1,
               color: AppColor.goldColor.withOpacity(0.5),
             ),
@@ -117,7 +143,7 @@ class _MetalMasterState extends State<MetalMaster> {
               ),
             ),
             Container(
-              width: AppSize.width * 0.1,
+              width: lineWidth,
               height: 1,
               color: AppColor.goldColor.withOpacity(0.5),
             ),
@@ -128,6 +154,108 @@ class _MetalMasterState extends State<MetalMaster> {
   }
 
   Widget _buildFilterAndAddSection() {
+    if (AppSize.isDesktop || AppSize.isTablet) {
+      return Container(
+        margin: EdgeInsets.all(AppSize.p16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColor.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColor.black.withOpacity(0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            const Icon(AppIcon.grid, color: AppColor.goldColor, size: 24),
+            const SizedBox(width: 16),
+            Expanded(
+              flex: 3,
+              child: TextField(
+                controller: metalMasterUI.metalController,
+                textAlign: TextAlign.left,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: AppColor.black,
+                  fontWeight: FontWeight.w500,
+                ),
+                decoration: InputDecoration(
+                  labelText: AppString.metal,
+                  hintText: AppString.metal,
+                  border: const OutlineInputBorder(),
+                  isDense: true,
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              flex: 2,
+              child: TextField(
+                controller: metalMasterUI.rateController,
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.left,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: AppColor.black,
+                  fontWeight: FontWeight.w500,
+                ),
+                decoration: InputDecoration(
+                  labelText: AppString.rate,
+                  hintText: AppString.rate,
+                  border: const OutlineInputBorder(),
+                  isDense: true,
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Obx(
+              () => metalMasterUI.isLoading.value
+                  ? const SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColor.goldColor,
+                      ),
+                    )
+                  : ElevatedButton.icon(
+                      onPressed: () => metalMasterUI.save(),
+                      icon: Icon(
+                        metalMasterUI.editingId.value == null
+                            ? AppIcon.add
+                            : AppIcon.check,
+                        color: AppColor.white,
+                      ),
+                      label: Text(
+                        metalMasterUI.editingId.value == null
+                            ? "Add"
+                            : AppString.update,
+                        style: const TextStyle(
+                          color: AppColor.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColor.goldColor,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 16,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSize.p16,
@@ -142,6 +270,7 @@ class _MetalMasterState extends State<MetalMaster> {
             flex: 3,
             child: TextField(
               controller: metalMasterUI.metalController,
+              textAlign: TextAlign.left,
               style: TextStyle(
                 fontSize: AppSize.commonText,
                 color: AppColor.black,
@@ -149,7 +278,9 @@ class _MetalMasterState extends State<MetalMaster> {
               ),
               decoration: InputDecoration(
                 hintText: AppString.metal,
-                hintStyle: TextStyle(color: AppColor.textColor.withOpacity(0.5)),
+                hintStyle: TextStyle(
+                  color: AppColor.textColor.withOpacity(0.5),
+                ),
                 border: InputBorder.none,
                 isDense: true,
               ),
@@ -166,6 +297,7 @@ class _MetalMasterState extends State<MetalMaster> {
             child: TextField(
               controller: metalMasterUI.rateController,
               keyboardType: TextInputType.number,
+              textAlign: TextAlign.left,
               style: TextStyle(
                 fontSize: AppSize.commonText,
                 color: AppColor.black,
@@ -173,7 +305,9 @@ class _MetalMasterState extends State<MetalMaster> {
               ),
               decoration: InputDecoration(
                 hintText: AppString.rate,
-                hintStyle: TextStyle(color: AppColor.textColor.withOpacity(0.5)),
+                hintStyle: TextStyle(
+                  color: AppColor.textColor.withOpacity(0.5),
+                ),
                 border: InputBorder.none,
                 isDense: true,
               ),
@@ -218,8 +352,12 @@ class _MetalMasterState extends State<MetalMaster> {
 
   Widget _buildMetalCard(ProductTypeData item) {
     bool isGold = item.name?.toLowerCase().contains("gold") ?? false;
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Container(
-      margin: EdgeInsets.only(bottom: AppSize.p16),
+      margin: isDesktopOrTablet
+          ? EdgeInsets.zero
+          : EdgeInsets.only(bottom: AppSize.p16),
       decoration: BoxDecoration(
         color: AppColor.white,
         borderRadius: BorderRadius.circular(AppSize.p12),

@@ -10,6 +10,7 @@ import 'package:rukmini/view/utils/app_constants.dart';
 import 'package:rukmini/view/utils/app_logo.dart';
 import 'package:rukmini/view/utils/app_background.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
+import 'package:rukmini/view/utils/widget/responsive.dart';
 
 class Splash extends StatelessWidget {
   const Splash({super.key});
@@ -24,6 +25,8 @@ class Splash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Fullscreen(
       backgroundImage: AppBackground.backgroundImage,
       backGroundcolor: AppColor.splashBg,
@@ -41,15 +44,117 @@ class Splash extends StatelessWidget {
           ),
 
           // Content Layer
-          Column(
-            children: [
-              SizedBox(height: AppSize.p20),
-              welcome(),
-
-              // Scrollable Quotes Section
-              quotes(),
-            ],
-          ),
+          isDesktopOrTablet
+              ? Center(
+                  child: ResponsiveCenter(
+                    maxWidth: 1100,
+                    padding: const EdgeInsets.all(24),
+                    child: Row(
+                      children: [
+                        // Left Side: Branding & Logo Hero
+                        Expanded(
+                          flex: 5,
+                          child: Container(
+                            padding: const EdgeInsets.all(40),
+                            decoration: BoxDecoration(
+                              color: AppColor.black.withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(
+                                color: AppColor.splashGold.withOpacity(0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  AppLogo.rukminiLogo2,
+                                  height: 140,
+                                  fit: BoxFit.contain,
+                                ),
+                                const SizedBox(height: 24),
+                                const Text(
+                                  AppString.rukminiJewellers,
+                                  style: TextStyle(
+                                    color: AppColor.white,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.2,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Container(
+                                  width: 60,
+                                  height: 2,
+                                  color: AppColor.splashGold,
+                                ),
+                                const SizedBox(height: 24),
+                                ElevatedButton.icon(
+                                  onPressed: _navigateToNext,
+                                  icon: const Icon(
+                                    Icons.arrow_forward_rounded,
+                                    color: AppColor.black,
+                                  ),
+                                  label: const Text(
+                                    "Continue",
+                                    style: TextStyle(
+                                      color: AppColor.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColor.splashGold,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 32,
+                                      vertical: 16,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 32),
+                        // Right Side: Quotes Panel
+                        Expanded(
+                          flex: 6,
+                          child: ListView(
+                            shrinkWrap: true,
+                            physics: const BouncingScrollPhysics(),
+                            children: [
+                              _buildQuoteCard(
+                                AppString.napoleonHill,
+                                AppString.authorNapoleonHill,
+                                onTap: _navigateToNext,
+                              ),
+                              _buildQuoteCard(
+                                AppString.andyRooney,
+                                AppString.andyRooneyJournalist,
+                                onTap: _navigateToNext,
+                              ),
+                              _buildQuoteCard(
+                                AppString.williamGeorge,
+                                AppString.williamGeorgeJordan,
+                                onTap: _navigateToNext,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : Column(
+                  children: [
+                    SizedBox(height: AppSize.p20),
+                    welcome(),
+                    quotes(),
+                  ],
+                ),
         ],
       ),
     );

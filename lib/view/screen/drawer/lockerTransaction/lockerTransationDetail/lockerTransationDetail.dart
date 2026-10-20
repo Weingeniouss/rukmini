@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/controller/api/controllers/drawer/locker/locker_detail_controller.dart';
 import 'package:rukmini/modal/drawer/locker/locker_detail_modal.dart';
 import 'package:rukmini/modal/drawer/locker/locker_wise_del_modal.dart';
@@ -10,6 +11,7 @@ import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
+import 'package:rukmini/view/utils/widget/responsive.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LockerTransationDetail extends StatefulWidget {
@@ -21,20 +23,25 @@ class LockerTransationDetail extends StatefulWidget {
 
 class _LockerTransationDetailState extends State<LockerTransationDetail> {
   final lockerDetailController = Get.put(LockerDetailController());
-  late LockerWiseData? lockerData;
+  LockerWiseData? lockerData;
+  bool _isInitialized = false;
 
   @override
-  void initState() {
-    super.initState();
-    lockerData = Get.arguments;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (lockerData?.lockerId != null && lockerData?.code != null) {
-        lockerDetailController.getLockerDetail(
-          lockerId: lockerData!.lockerId!,
-          code: lockerData!.code!,
-        );
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      final args = NavDrawerController.getRouteArguments(context);
+      if (args is LockerWiseData) {
+        lockerData = args;
+        if (lockerData?.lockerId != null && lockerData?.code != null) {
+          lockerDetailController.getLockerDetail(
+            lockerId: lockerData!.lockerId!,
+            code: lockerData!.code!,
+          );
+        }
       }
-    });
+      _isInitialized = true;
+    }
   }
 
   @override
@@ -115,29 +122,62 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
     if (detail.productList == null || detail.productList!.isEmpty) {
       return const Center(child: Text(AppString.noProductsFound));
     }
+
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
+    if (isDesktopOrTablet) {
+      return GridView.builder(
+        padding: EdgeInsets.all(AppSize.p16),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: AppSize.isDesktop ? 3 : 2,
+          crossAxisSpacing: AppSize.p16,
+          mainAxisSpacing: AppSize.p16,
+          mainAxisExtent: 160,
+        ),
+        itemCount: detail.productList!.length,
+        itemBuilder: (context, index) {
+          final product = detail.productList![index];
+          return _buildProductDetailCard(product, isGrid: true);
+        },
+      );
+    }
+
     return ListView.builder(
       padding: EdgeInsets.symmetric(vertical: AppSize.p4),
       itemCount: detail.productList!.length,
       itemBuilder: (context, index) {
         final product = detail.productList![index];
-        return _buildProductDetailCard(product);
+        return _buildProductDetailCard(product, isGrid: false);
       },
     );
   }
 
-  Widget _buildProductDetailCard(ProductListDetail product) {
+  Widget _buildProductDetailCard(
+    ProductListDetail product, {
+    bool isGrid = false,
+  }) {
     return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: AppSize.p12,
-        vertical: Get.height * 0.005,
-      ),
+      margin: isGrid
+          ? EdgeInsets.zero
+          : EdgeInsets.symmetric(
+              horizontal: AppSize.p12,
+              vertical: Get.height * 0.005,
+            ),
       padding: EdgeInsets.all(AppSize.p16),
       decoration: BoxDecoration(
-        color: AppColor.fullScreenColor,
+        color: AppColor.white,
         border: Border.all(color: AppColor.boderSideColor.withOpacity(0.2)),
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           _buildDetailRow(
             AppString.proTypColon,
@@ -145,21 +185,21 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
             AppString.metalColon,
             "${product.prodType} (${product.metalName} Karat)",
           ),
-          SizedBox(height: Get.height * 0.015),
+          const SizedBox(height: 8),
           _buildDetailRow(
             AppString.pcsColon,
             "${product.pieces} (${product.weight}${AppString.gm})",
             AppString.origPriceColon,
             product.origAmount ?? "0.00",
           ),
-          SizedBox(height: Get.height * 0.015),
+          const SizedBox(height: 8),
           _buildDetailRow(
             AppString.gvnAmtColon,
             product.givenAmount ?? "0.00",
             AppString.rateColon,
             product.todayRate ?? "0.00",
           ),
-          SizedBox(height: Get.height * 0.015),
+          const SizedBox(height: 8),
           Row(
             children: [
               RichText(
@@ -196,73 +236,90 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
       return const Center(child: Text(AppString.noTransactionsFound));
     }
 
-    return ListView(
-      padding: EdgeInsets.symmetric(vertical: AppSize.p4),
-      children: [
-        Container(
-          margin: EdgeInsets.all(AppSize.p12),
-          padding: EdgeInsets.all(AppSize.p16),
-          decoration: BoxDecoration(
-            color: AppColor.fullScreenColor,
-            border: Border.all(color: AppColor.boderSideColor.withOpacity(0.2)),
-            borderRadius: BorderRadius.circular(5),
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
+    final cardContent = Container(
+      margin: EdgeInsets.all(AppSize.p12),
+      padding: EdgeInsets.all(AppSize.p16),
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        border: Border.all(color: AppColor.boderSideColor.withOpacity(0.2)),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
-          child: Column(
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildTransItem(
-                    "${AppString.tknAmtLabel} : ",
-                    "${trans.givenAmt} (${trans.interestRate} %)",
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      _buildTransItem(
-                        "${AppString.totIntLabel} : ",
-                        "${trans.tillInterest} (${trans.tillMonth} ${AppString.month})",
-                      ),
-                      Text(
-                        "${AppString.till} ${trans.tillDate}",
-                        style: TextStyle(
-                          fontSize: AppSize.p10,
-                          color: AppColor.textColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              _buildTransItem(
+                "${AppString.tknAmtLabel} : ",
+                "${trans.givenAmt} (${trans.interestRate} %)",
               ),
-              SizedBox(height: Get.height * 0.015),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   _buildTransItem(
-                    "${AppString.balAmtLabel} : ",
-                    "${trans.balance}",
+                    "${AppString.totIntLabel} : ",
+                    "${trans.tillInterest} (${trans.tillMonth} ${AppString.month})",
                   ),
-                ],
-              ),
-              SizedBox(height: Get.height * 0.015),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildTransItem(
-                    "${AppString.paidAmtLabel} : ",
-                    "${trans.totalPaidAmt}",
-                  ),
-                  _buildTransItem(
-                    "${AppString.paidIntLabel} : ",
-                    "${trans.paidInterset}",
+                  Text(
+                    "${AppString.till} ${trans.tillDate}",
+                    style: TextStyle(
+                      fontSize: AppSize.p10,
+                      color: AppColor.textColor,
+                    ),
                   ),
                 ],
               ),
             ],
           ),
-        ),
-      ],
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildTransItem(
+                "${AppString.balAmtLabel} : ",
+                "${trans.balance}",
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildTransItem(
+                "${AppString.paidAmtLabel} : ",
+                "${trans.totalPaidAmt}",
+              ),
+              _buildTransItem(
+                "${AppString.paidIntLabel} : ",
+                "${trans.paidInterset}",
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+
+    if (isDesktopOrTablet) {
+      return SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: ResponsiveCenter(maxWidth: 800, child: cardContent),
+      );
+    }
+
+    return ListView(
+      padding: EdgeInsets.symmetric(vertical: AppSize.p4),
+      children: [cardContent],
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/girvi/giriviList_Controller.dart';
 import 'package:rukmini/controller/api/controllers/year/year_Controller.dart';
 import 'package:rukmini/modal/year/year_modal.dart';
@@ -11,6 +12,7 @@ import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
+import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:shimmer/shimmer.dart';
@@ -76,14 +78,17 @@ class _GiriviListState extends State<GiriviList> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Fullscreen(
+      drawer: homeDrawer(),
       isPadding: false,
       backGroundcolor: AppColor.backgroundColor,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColor.primaryColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         onPressed: () {
-          Get.toNamed('/giriviadd');
+          NavDrawerController.toNamed('/giriviadd');
         },
         child: Icon(AppIcon.add, color: AppColor.goldColor, size: 30),
       ),
@@ -124,7 +129,34 @@ class _GiriviListState extends State<GiriviList> {
           child: Column(
             children: [
               yearListSelector(),
-              Expanded(child: horizontalPadding(child: listItem(data))),
+              Expanded(
+                child: isDesktopOrTablet
+                    ? GridView.builder(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        controller: _scrollController,
+                        padding: EdgeInsets.all(AppSize.p16),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: AppSize.isDesktop ? 3 : 2,
+                          crossAxisSpacing: AppSize.p12,
+                          mainAxisSpacing: AppSize.p12,
+                          mainAxisExtent: 175,
+                        ),
+                        itemCount:
+                            data.length +
+                            (giriviListController.isLoadMore.value ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          if (index < data.length) {
+                            return _buildGirviCardItem(
+                              data[index],
+                              isGrid: true,
+                            );
+                          } else {
+                            return _paginationShimmer();
+                          }
+                        },
+                      )
+                    : horizontalPadding(child: listItem(data)),
+              ),
             ],
           ),
         );
@@ -220,180 +252,7 @@ class _GiriviListState extends State<GiriviList> {
       itemCount: data.length + (giriviListController.isLoadMore.value ? 1 : 0),
       itemBuilder: (context, index) {
         if (index < data.length) {
-          final item = data[index];
-          bool isClosed = item.isClosed == "1";
-          return Container(
-            margin: EdgeInsets.symmetric(vertical: AppSize.p8),
-            decoration: BoxDecoration(
-              color: AppColor.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColor.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: InkWell(
-              onTap: () {
-                Get.toNamed('/giriviDetail', arguments: item.girviId);
-              },
-              borderRadius: BorderRadius.circular(20),
-              child: Padding(
-                padding: EdgeInsets.all(AppSize.p16),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(AppSize.p10),
-                          decoration: BoxDecoration(
-                            color: AppColor.whiteOrang.withOpacity(0.5),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            AppIcon.person,
-                            color: AppColor.goldColor,
-                            size: 24,
-                          ),
-                        ),
-                        SizedBox(width: AppSize.p12),
-                        Expanded(
-                          child: Text(
-                            item.custName ?? '',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: AppSize.mediumText * 1.3,
-                              color: AppColor.black,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isClosed
-                                ? AppColor.red.withOpacity(0.1)
-                                : AppColor.activeColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            isClosed ? AppString.closed : AppString.open,
-                            style: TextStyle(
-                              color: isClosed
-                                  ? AppColor.red
-                                  : AppColor.activeColor,
-                              fontSize: AppSize.smallText,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: AppSize.p12),
-                      child: Divider(
-                        height: 1,
-                        thickness: 0.5,
-                        color: AppColor.grey300.withOpacity(0.5),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        _infoColumn(
-                          item.uniqueId ?? 'N/A',
-                          icon: AppIcon.fingerprint,
-                        ),
-                        Container(
-                          height: 20,
-                          width: 1,
-                          color: AppColor.grey300.withOpacity(0.5),
-                        ),
-                        _infoColumn(
-                          _formatDate(item.girviDate),
-                          icon: AppIcon.calendar,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: AppSize.p16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppSize.p16,
-                            vertical: AppSize.p10,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColor.whiteOrang.withOpacity(0.4),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                AppIcon.rupee,
-                                color: AppColor.goldColor,
-                                size: 18,
-                              ),
-                              SizedBox(width: AppSize.p4),
-                              Text(
-                                item.givenAmt ?? '0.00',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: AppSize.mediumText * 1.3,
-                                  color: AppColor.goldColor,
-                                ),
-                              ),
-                              SizedBox(width: AppSize.p8),
-                              Text(
-                                '(${item.interest ?? '0.00'}%)',
-                                style: TextStyle(
-                                  color: AppColor.textColor,
-                                  fontSize: AppSize.smallText,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(AppSize.p8),
-                              decoration: BoxDecoration(
-                                color: AppColor.whiteOrang.withOpacity(0.3),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                AppIcon.phone,
-                                color: AppColor.goldColor,
-                                size: 18,
-                              ),
-                            ),
-                            SizedBox(width: AppSize.p8),
-                            Text(
-                              item.custPhone ?? '',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: AppColor.black,
-                                fontSize: AppSize.commonText,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
+          return _buildGirviCardItem(data[index], isGrid: false);
         } else {
           return _paginationShimmer();
         }
@@ -401,21 +260,206 @@ class _GiriviListState extends State<GiriviList> {
     );
   }
 
+  Widget _buildGirviCardItem(dynamic item, {bool isGrid = false}) {
+    bool isClosed = item.isClosed == "1";
+    return Container(
+      margin: isGrid
+          ? EdgeInsets.zero
+          : EdgeInsets.symmetric(vertical: AppSize.p8),
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: InkWell(
+        onTap: () {
+          NavDrawerController.toNamed('/giriviDetail', arguments: item.girviId);
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: EdgeInsets.all(isGrid ? 12 : AppSize.p16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(isGrid ? 6 : AppSize.p10),
+                    decoration: BoxDecoration(
+                      color: AppColor.whiteOrang.withOpacity(0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      AppIcon.person,
+                      color: AppColor.goldColor,
+                      size: isGrid ? 18 : 24,
+                    ),
+                  ),
+                  SizedBox(width: isGrid ? 8 : AppSize.p12),
+                  Expanded(
+                    child: Text(
+                      item.custName ?? '',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: isGrid ? 14 : AppSize.mediumText * 1.3,
+                        color: AppColor.black,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isGrid ? 8 : 12,
+                      vertical: isGrid ? 4 : 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isClosed
+                          ? AppColor.red.withOpacity(0.1)
+                          : AppColor.activeColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      isClosed ? AppString.closed : AppString.open,
+                      style: TextStyle(
+                        color: isClosed ? AppColor.red : AppColor.activeColor,
+                        fontSize: isGrid ? 11 : AppSize.smallText,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: isGrid ? 8 : AppSize.p12,
+                ),
+                child: Divider(
+                  height: 1,
+                  thickness: 0.5,
+                  color: AppColor.grey300.withOpacity(0.5),
+                ),
+              ),
+              Row(
+                children: [
+                  _infoColumn(
+                    item.uniqueId ?? 'N/A',
+                    icon: AppIcon.fingerprint,
+                  ),
+                  Container(
+                    height: 16,
+                    width: 1,
+                    color: AppColor.grey300.withOpacity(0.5),
+                  ),
+                  _infoColumn(
+                    _formatDate(item.girviDate),
+                    icon: AppIcon.calendar,
+                  ),
+                ],
+              ),
+              SizedBox(height: isGrid ? 8 : AppSize.p16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isGrid ? 10 : AppSize.p16,
+                      vertical: isGrid ? 6 : AppSize.p10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColor.whiteOrang.withOpacity(0.4),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          AppIcon.rupee,
+                          color: AppColor.goldColor,
+                          size: 18,
+                        ),
+                        SizedBox(width: AppSize.p4),
+                        Text(
+                          item.givenAmt ?? '0.00',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: isGrid ? 13.0 : AppSize.mediumText * 1.3,
+                            color: AppColor.goldColor,
+                          ),
+                        ),
+                        SizedBox(width: AppSize.p8),
+                        Text(
+                          '(${item.interest ?? '0.00'}%)',
+                          style: TextStyle(
+                            color: AppColor.textColor,
+                            fontSize: isGrid ? 11.0 : AppSize.smallText,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(isGrid ? 6 : AppSize.p8),
+                        decoration: BoxDecoration(
+                          color: AppColor.whiteOrang.withOpacity(0.3),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          AppIcon.phone,
+                          color: AppColor.goldColor,
+                          size: isGrid ? 16 : 18,
+                        ),
+                      ),
+                      SizedBox(width: isGrid ? 6 : AppSize.p8),
+                      Text(
+                        item.custPhone ?? '',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.black,
+                          fontSize: isGrid ? 13.0 : AppSize.commonText,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _infoColumn(String value, {IconData? icon}) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Expanded(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (icon != null) ...[
-            Icon(icon, size: AppSize.p16, color: AppColor.goldColor),
-            SizedBox(width: AppSize.p8),
+            Icon(icon, size: isDesktopOrTablet ? 14 : AppSize.p16, color: AppColor.goldColor),
+            SizedBox(width: isDesktopOrTablet ? 4 : AppSize.p8),
           ],
-          Text(
-            value,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              color: AppColor.black,
-              fontSize: AppSize.commonText,
+          Flexible(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: AppColor.black,
+                fontSize: isDesktopOrTablet ? 12.0 : AppSize.commonText,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

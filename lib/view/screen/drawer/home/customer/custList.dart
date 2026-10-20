@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/customers/custList_Controller.dart';
 import 'package:rukmini/modal/drawer/home/customer/customer_list_model.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
@@ -61,7 +62,7 @@ class _CustlistState extends State<Custlist> {
       backGroundcolor: AppColor.dashboardIconBg,
       // Matches image background
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(AppSize.width * 0.2),
+        preferredSize: Size.fromHeight(AppSize.width * 0.05),
         child: Container(
           padding: EdgeInsets.only(
             top: MediaQuery.of(context).padding.top + AppSize.p10,
@@ -71,18 +72,19 @@ class _CustlistState extends State<Custlist> {
           ),
           child: Row(
             children: [
-              Builder(
-                builder: (context) {
-                  return IconButton(
-                    icon: Icon(
-                      AppIcon.menu,
-                      color: AppColor.dashboardTextDark,
-                      size: AppSize.p24 + AppSize.p4,
-                    ),
-                    onPressed: () => Scaffold.of(context).openDrawer(),
-                  );
-                },
-              ),
+              if (!AppSize.isDesktop)
+                Builder(
+                  builder: (context) {
+                    return IconButton(
+                      icon: Icon(
+                        AppIcon.menu,
+                        color: AppColor.dashboardTextDark,
+                        size: AppSize.p24 + AppSize.p4,
+                      ),
+                      onPressed: () => Scaffold.of(context).openEndDrawer(),
+                    );
+                  },
+                ),
               SizedBox(width: AppSize.p8),
               Obx(
                 () => _isSearching.value
@@ -145,7 +147,7 @@ class _CustlistState extends State<Custlist> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColor.dashboardGold,
-        onPressed: () => Get.toNamed('/addCustForm'),
+        onPressed: () => NavDrawerController.toNamed('/addCustForm'),
         elevation: 5,
         shape: const CircleBorder(),
         child: Icon(
@@ -165,6 +167,49 @@ class _CustlistState extends State<Custlist> {
 
         if (!loading && list.isEmpty) {
           return Center(child: Text(AppString.noCustomersFound));
+        }
+
+        if (AppSize.isDesktop || AppSize.isTablet) {
+          return RefreshIndicator(
+            key: const ValueKey('custListRefreshIndicatorGrid'),
+            onRefresh: () => CallApi.callCustList(
+              isRefresh: true,
+              search: _searchController.text,
+            ),
+            child: GridView.builder(
+              controller: _scrollController,
+              padding: EdgeInsets.all(AppSize.p16),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: AppSize.isDesktop ? 3 : 2,
+                crossAxisSpacing: AppSize.p16,
+                mainAxisSpacing: AppSize.p16,
+                mainAxisExtent: 195,
+              ),
+              itemCount: list.length + (isMoreLoading ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index == list.length) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColor.dashboardGold,
+                    ),
+                  );
+                }
+
+                final customer = list[index];
+                final phoneList = customer.phoneList;
+                final phoneData = (phoneList != null && phoneList.isNotEmpty)
+                    ? phoneList[0]
+                    : null;
+                final custTypeList = customer.custType;
+                final custType =
+                    (custTypeList != null && custTypeList.isNotEmpty)
+                    ? custTypeList[0]
+                    : null;
+
+                return _buildCustomerCard(customer, phoneData, custType);
+              },
+            ),
+          );
         }
 
         return RefreshIndicator(
@@ -299,7 +344,7 @@ class _CustlistState extends State<Custlist> {
       child: Material(
         color: AppColor.transparent,
         child: InkWell(
-          onTap: () => Get.toNamed('/custDetail', arguments: customer),
+          onTap: () => NavDrawerController.toNamed('/custDetail', arguments: customer),
           borderRadius: BorderRadius.circular(AppSize.p16),
           child: Padding(
             padding: EdgeInsets.all(AppSize.p12),
@@ -308,8 +353,12 @@ class _CustlistState extends State<Custlist> {
               children: [
                 // Profile Image Placeholder
                 Container(
-                  width: AppSize.width * 0.16,
-                  height: AppSize.width * 0.25,
+                  width: (AppSize.isDesktop || AppSize.isTablet)
+                      ? 65
+                      : AppSize.width * 0.16,
+                  height: (AppSize.isDesktop || AppSize.isTablet)
+                      ? 85
+                      : AppSize.width * 0.25,
                   decoration: BoxDecoration(
                     color: AppColor.dashboardQuickActionBg,
                     borderRadius: BorderRadius.circular(AppSize.p12),
@@ -336,7 +385,9 @@ class _CustlistState extends State<Custlist> {
                         if (imageUrl == null) {
                           return Icon(
                             AppIcon.person,
-                            size: AppSize.width * 0.11,
+                            size: (AppSize.isDesktop || AppSize.isTablet)
+                                ? 36
+                                : AppSize.width * 0.11,
                             color: AppColor.dashboardGold.withOpacity(0.5),
                           );
                         }
@@ -365,9 +416,12 @@ class _CustlistState extends State<Custlist> {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         customer.name ?? AppString.noName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: AppSize.size14,
                           fontWeight: FontWeight.w600,

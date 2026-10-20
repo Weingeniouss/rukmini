@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/customers/custDetail_Controller.dart';
 import 'package:rukmini/modal/drawer/home/customer/customer_detail_model.dart';
 import 'package:rukmini/modal/drawer/home/customer/customer_list_model.dart'
@@ -29,14 +30,19 @@ class CustDetail extends StatefulWidget {
 class _CustDetailState extends State<CustDetail> {
   final custDetailController = Get.put(CustdetailController());
   late list.CustomerData customer;
+  bool _isInitialized = false;
 
   @override
-  void initState() {
-    super.initState();
-    customer = Get.arguments as list.CustomerData;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      CallApi.callCustDetail(custId: customer.custId);
-    });
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      final args = NavDrawerController.getRouteArguments(context);
+      if (args is list.CustomerData) {
+        customer = args;
+        CallApi.callCustDetail(custId: customer.custId);
+      }
+      _isInitialized = true;
+    }
   }
 
   @override
@@ -57,7 +63,7 @@ class _CustDetailState extends State<CustDetail> {
         editOnPressed: () {
           final data = custDetailController.custDetailData.value.data;
           if (data != null) {
-            Get.toNamed('/updateCustForm', arguments: data);
+            NavDrawerController.toNamed('/updateCustForm', arguments: data);
           }
         },
         remove: true,
@@ -89,6 +95,30 @@ class _CustDetailState extends State<CustDetail> {
             return Center(child: Text(AppString.noDetailsFound));
           }
 
+          if (AppSize.isDesktop || AppSize.isTablet) {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 360,
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(horizontal: AppSize.p16),
+                    child: heddingData(
+                      name: data.name ?? '',
+                      custcode: data.custCode ?? '',
+                      totalGivenAmt: data.totalGivenAmt.toString(),
+                      gracePeriod: data.gracePeriod.toString(),
+                      phone: (data.phone != null && data.phone!.isNotEmpty)
+                          ? data.phone!.first.phone ?? ''
+                          : '',
+                    ),
+                  ),
+                ),
+                Expanded(child: tabBar(data)),
+              ],
+            );
+          }
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -112,6 +142,7 @@ class _CustDetailState extends State<CustDetail> {
   }
 
   Widget tabBarHedings(String text, {bool showDivider = false}) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: AppSize.p8),
       child: Row(
@@ -120,7 +151,7 @@ class _CustDetailState extends State<CustDetail> {
           Text(
             text,
             style: TextStyle(
-              fontSize: AppSize.size14,
+              fontSize: isDesktopOrTablet ? 15.0 : AppSize.size14,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -271,6 +302,7 @@ class _CustDetailState extends State<CustDetail> {
   }
 
   Widget identityProofTab(CustomerDetailData data) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -283,8 +315,19 @@ class _CustDetailState extends State<CustDetail> {
                 child: Column(
                   children: [
                     ListTile(
-                      title: Text(proof.name ?? ''),
-                      subtitle: Text(proof.status ?? ''),
+                      title: Text(
+                        proof.name ?? '',
+                        style: TextStyle(
+                          fontSize: isDesktopOrTablet ? 15.0 : AppSize.commonText,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      subtitle: Text(
+                        proof.status ?? '',
+                        style: TextStyle(
+                          fontSize: isDesktopOrTablet ? 13.0 : AppSize.smallText,
+                        ),
+                      ),
                       leading: const Icon(
                         AppIcon.verifiedUser,
                         color: AppColor.activeColor,
@@ -332,8 +375,19 @@ class _CustDetailState extends State<CustDetail> {
                 child: Column(
                   children: [
                     ListTile(
-                      title: Text(profile.name ?? ''),
-                      subtitle: Text(profile.status ?? ''),
+                      title: Text(
+                        profile.name ?? '',
+                        style: TextStyle(
+                          fontSize: isDesktopOrTablet ? 15.0 : AppSize.commonText,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      subtitle: Text(
+                        profile.status ?? '',
+                        style: TextStyle(
+                          fontSize: isDesktopOrTablet ? 13.0 : AppSize.smallText,
+                        ),
+                      ),
                       leading: const Icon(
                         AppIcon.personPin,
                         color: AppColor.activeColor,
@@ -352,8 +406,8 @@ class _CustDetailState extends State<CustDetail> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                width: AppSize.width * 0.25,
-                                height: AppSize.width * 0.45,
+                                width: isDesktopOrTablet ? 100 : AppSize.width * 0.25,
+                                height: isDesktopOrTablet ? 140 : AppSize.width * 0.45,
                                 decoration: BoxDecoration(
                                   color: AppColor.grey200,
                                   borderRadius: BorderRadius.circular(
@@ -373,7 +427,7 @@ class _CustDetailState extends State<CustDetail> {
                                     Text(
                                       profile.name ?? '',
                                       style: TextStyle(
-                                        fontSize: AppSize.p16,
+                                        fontSize: isDesktopOrTablet ? 15.0 : AppSize.p16,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -382,7 +436,7 @@ class _CustDetailState extends State<CustDetail> {
                                       profile.status ?? '',
                                       style: TextStyle(
                                         color: AppColor.textColor,
-                                        fontSize: AppSize.size14,
+                                        fontSize: isDesktopOrTablet ? 13.0 : AppSize.size14,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -391,7 +445,7 @@ class _CustDetailState extends State<CustDetail> {
                                       "${AppString.idColon}${profile.custId ?? ''}",
                                       style: TextStyle(
                                         color: AppColor.activeColor,
-                                        fontSize: AppSize.size14,
+                                        fontSize: isDesktopOrTablet ? 13.0 : AppSize.size14,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -488,6 +542,7 @@ class _CustDetailState extends State<CustDetail> {
     required String nomineephoneNumbar,
     required String nomineeRelation,
   }) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
     return Container(
       margin: EdgeInsets.symmetric(vertical: AppSize.p16),
       decoration: BoxDecoration(
@@ -531,7 +586,7 @@ class _CustDetailState extends State<CustDetail> {
                 AppString.customerTypes,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: AppSize.headingText,
+                  fontSize: isDesktopOrTablet ? 16.0 : AppSize.headingText,
                 ),
               ),
             ),
@@ -556,7 +611,7 @@ class _CustDetailState extends State<CustDetail> {
                 AppString.phoneNumbar,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: AppSize.headingText,
+                  fontSize: isDesktopOrTablet ? 16.0 : AppSize.headingText,
                 ),
               ),
             ),
@@ -585,6 +640,7 @@ class _CustDetailState extends State<CustDetail> {
   }
 
   Widget _sectionHeader(String title) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSize.p16,
@@ -608,7 +664,7 @@ class _CustDetailState extends State<CustDetail> {
           Text(
             title,
             style: TextStyle(
-              fontSize: AppSize.headingText,
+              fontSize: isDesktopOrTablet ? 16.0 : AppSize.headingText,
               fontWeight: FontWeight.bold,
               color: AppColor.black,
             ),
@@ -630,6 +686,7 @@ class _CustDetailState extends State<CustDetail> {
     String value, {
     Color? valueColor,
   }) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
     return Column(
       children: [
         Padding(
@@ -639,14 +696,14 @@ class _CustDetailState extends State<CustDetail> {
           ),
           child: Row(
             children: [
-              Icon(icon, color: AppColor.goldColor, size: AppSize.iconMedium),
+              Icon(icon, color: AppColor.goldColor, size: isDesktopOrTablet ? 20.0 : AppSize.iconMedium),
               SizedBox(width: AppSize.p16),
               Expanded(
                 flex: 3,
                 child: Text(
                   label,
                   style: TextStyle(
-                    fontSize: AppSize.commonText,
+                    fontSize: isDesktopOrTablet ? 15.0 : AppSize.commonText,
                     color: AppColor.black,
                   ),
                 ),
@@ -657,7 +714,7 @@ class _CustDetailState extends State<CustDetail> {
                 child: Text(
                   value,
                   style: TextStyle(
-                    fontSize: AppSize.commonText,
+                    fontSize: isDesktopOrTablet ? 15.0 : AppSize.commonText,
                     color: valueColor ?? AppColor.black,
                     fontWeight: FontWeight.w500,
                   ),
@@ -678,6 +735,7 @@ class _CustDetailState extends State<CustDetail> {
   }
 
   Widget _customItemCard(IconData icon, String title, String status) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: AppSize.p16,
@@ -697,7 +755,7 @@ class _CustDetailState extends State<CustDetail> {
               color: AppColor.whiteOrang,
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: AppColor.goldColor),
+            child: Icon(icon, color: AppColor.goldColor, size: isDesktopOrTablet ? 20.0 : 24.0),
           ),
           SizedBox(width: AppSize.p16),
           Column(
@@ -707,14 +765,14 @@ class _CustDetailState extends State<CustDetail> {
                 title,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: AppSize.commonText,
+                  fontSize: isDesktopOrTablet ? 15.0 : AppSize.commonText,
                 ),
               ),
               Text(
                 status,
                 style: TextStyle(
                   color: AppColor.activeColor,
-                  fontSize: AppSize.mediumText * 1.1,
+                  fontSize: isDesktopOrTablet ? 13.0 : AppSize.mediumText * 1.1,
                 ),
               ),
             ],
@@ -725,6 +783,7 @@ class _CustDetailState extends State<CustDetail> {
   }
 
   Widget _phoneItemCard(String phone, bool isDefault) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: AppSize.p16,
@@ -744,7 +803,7 @@ class _CustDetailState extends State<CustDetail> {
               color: AppColor.whiteOrang,
               shape: BoxShape.circle,
             ),
-            child: const Icon(AppIcon.phone, color: AppColor.goldColor),
+            child: Icon(AppIcon.phone, color: AppColor.goldColor, size: isDesktopOrTablet ? 20.0 : 24.0),
           ),
           SizedBox(width: AppSize.p16),
           Column(
@@ -754,7 +813,7 @@ class _CustDetailState extends State<CustDetail> {
                 phone,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: AppSize.commonText,
+                  fontSize: isDesktopOrTablet ? 15.0 : AppSize.commonText,
                 ),
               ),
               if (isDefault)
@@ -762,13 +821,13 @@ class _CustDetailState extends State<CustDetail> {
                   AppString.defaultLabel,
                   style: TextStyle(
                     color: AppColor.goldColor,
-                    fontSize: AppSize.mediumText * 1.1,
+                    fontSize: isDesktopOrTablet ? 13.0 : AppSize.mediumText * 1.1,
                   ),
                 ),
             ],
           ),
           const Spacer(),
-          const Icon(AppIcon.rightArrow, color: AppColor.goldColor),
+          Icon(AppIcon.rightArrow, color: AppColor.goldColor, size: isDesktopOrTablet ? 18.0 : 24.0),
         ],
       ),
     );
@@ -875,6 +934,7 @@ class _CustDetailState extends State<CustDetail> {
     String value, {
     Color? valueColor,
   }) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: AppSize.p12),
       decoration: BoxDecoration(
@@ -890,12 +950,12 @@ class _CustDetailState extends State<CustDetail> {
         children: [
           Row(
             children: [
-              Icon(icon, color: AppColor.goldColor, size: AppSize.iconSmall),
+              Icon(icon, color: AppColor.goldColor, size: isDesktopOrTablet ? 16.0 : AppSize.iconSmall),
               SizedBox(width: AppSize.p4),
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: AppSize.extraSmallText,
+                  fontSize: isDesktopOrTablet ? 12.0 : AppSize.extraSmallText,
                   color: AppColor.textColor,
                 ),
               ),
@@ -905,7 +965,7 @@ class _CustDetailState extends State<CustDetail> {
           Text(
             value,
             style: TextStyle(
-              fontSize: AppSize.commonText,
+              fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
               fontWeight: FontWeight.bold,
               color: valueColor ?? AppColor.black,
             ),
@@ -922,6 +982,7 @@ class _CustDetailState extends State<CustDetail> {
     required String gracePeriod,
     required String phone,
   }) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
     return Container(
       margin: EdgeInsets.symmetric(vertical: AppSize.p16),
       padding: EdgeInsets.all(AppSize.p16),
@@ -952,8 +1013,8 @@ class _CustDetailState extends State<CustDetail> {
                   }
                 },
                 child: Container(
-                  width: AppSize.width * 0.25,
-                  height: AppSize.width * 0.35,
+                  width: isDesktopOrTablet ? 100 : AppSize.width * 0.25,
+                  height: isDesktopOrTablet ? 130 : AppSize.width * 0.35,
                   decoration: BoxDecoration(
                     color: AppColor.dashboardIconBg,
                     borderRadius: BorderRadius.circular(AppSize.p16),
@@ -970,7 +1031,7 @@ class _CustDetailState extends State<CustDetail> {
                         ? Image.network(customer.imagePath!, fit: BoxFit.cover)
                         : Icon(
                             AppIcon.person,
-                            size: AppSize.iconLarge * 1.5,
+                            size: isDesktopOrTablet ? 40.0 : AppSize.iconLarge * 1.5,
                             color: AppColor.goldColor,
                           ),
                   ),
@@ -984,7 +1045,7 @@ class _CustDetailState extends State<CustDetail> {
                     Text(
                       name,
                       style: TextStyle(
-                        fontSize: AppSize.headingText,
+                        fontSize: isDesktopOrTablet ? 18.0 : AppSize.headingText,
                         fontWeight: FontWeight.bold,
                         color: AppColor.black,
                       ),
@@ -992,7 +1053,7 @@ class _CustDetailState extends State<CustDetail> {
                     Text(
                       custcode,
                       style: TextStyle(
-                        fontSize: AppSize.commonText,
+                        fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
                         color: AppColor.goldColor,
                         fontWeight: FontWeight.w500,
                       ),
@@ -1032,24 +1093,29 @@ class _CustDetailState extends State<CustDetail> {
   }
 
   Widget _amtRow(String label, String value) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: AppSize.p4 / 2),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: AppSize.mediumText,
-              color: AppColor.textColor,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w500,
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: isDesktopOrTablet ? 13.0 : AppSize.mediumText,
+                color: AppColor.textColor,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           Text(
             value,
             style: TextStyle(
-              fontSize: AppSize.commonText,
+              fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
               fontWeight: FontWeight.bold,
               color: AppColor.goldColor,
             ),
@@ -1060,12 +1126,13 @@ class _CustDetailState extends State<CustDetail> {
   }
 
   Widget _actionButton(IconData icon, String label, VoidCallback onTap) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
     return GestureDetector(
       onTap: onTap,
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.all(AppSize.p12),
+            padding: EdgeInsets.all(isDesktopOrTablet ? 10 : AppSize.p12),
             decoration: BoxDecoration(
               color: AppColor.white,
               shape: BoxShape.circle,
@@ -1081,14 +1148,14 @@ class _CustDetailState extends State<CustDetail> {
             child: Icon(
               icon,
               color: AppColor.goldColor,
-              size: AppSize.iconMedium,
+              size: isDesktopOrTablet ? 20.0 : AppSize.iconMedium,
             ),
           ),
           SizedBox(height: AppSize.p8),
           Text(
             label,
             style: TextStyle(
-              fontSize: AppSize.mediumText,
+              fontSize: isDesktopOrTablet ? 13.0 : AppSize.mediumText,
               color: AppColor.black,
               fontWeight: FontWeight.w500,
             ),

@@ -70,6 +70,27 @@ class _YearMasterState extends State<YearMaster> {
                 return Center(child: Text(AppString.noDataFound));
               }
 
+              if (AppSize.isDesktop || AppSize.isTablet) {
+                return RefreshIndicator(
+                  onRefresh: CallApi.callYearList,
+                  color: AppColor.goldColor,
+                  child: GridView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.all(AppSize.p16),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: AppSize.isDesktop ? 3 : 2,
+                      crossAxisSpacing: AppSize.p16,
+                      mainAxisSpacing: AppSize.p16,
+                      mainAxisExtent: 110,
+                    ),
+                    itemCount: yearController.yearList.length,
+                    itemBuilder: (context, index) {
+                      return _buildYearCard(yearController.yearList[index]);
+                    },
+                  ),
+                );
+              }
+
               return RefreshIndicator(
                 onRefresh: CallApi.callYearList,
                 color: AppColor.goldColor,
@@ -93,6 +114,9 @@ class _YearMasterState extends State<YearMaster> {
   }
 
   Widget _buildDecorativeTitle() {
+    final double lineWidth =
+        (AppSize.isDesktop || AppSize.isTablet) ? 40 : AppSize.width * 0.1;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -109,7 +133,7 @@ class _YearMasterState extends State<YearMaster> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: AppSize.width * 0.1,
+              width: lineWidth,
               height: 1,
               color: AppColor.goldColor.withOpacity(0.5),
             ),
@@ -125,7 +149,7 @@ class _YearMasterState extends State<YearMaster> {
               ),
             ),
             Container(
-              width: AppSize.width * 0.1,
+              width: lineWidth,
               height: 1,
               color: AppColor.goldColor.withOpacity(0.5),
             ),
@@ -136,6 +160,54 @@ class _YearMasterState extends State<YearMaster> {
   }
 
   Widget _buildFilterAndAddSection() {
+    if (AppSize.isDesktop || AppSize.isTablet) {
+      return Container(
+        margin: EdgeInsets.all(AppSize.p16),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        decoration: BoxDecoration(
+          color: AppColor.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColor.black.withOpacity(0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            const Icon(AppIcon.grid, color: AppColor.goldColor, size: 24),
+            const SizedBox(width: 16),
+            const Text(
+              AppString.yearMaster,
+              style: TextStyle(
+                fontSize: 16,
+                color: AppColor.goldColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: () => Get.toNamed('/addYearMaster'),
+              icon: const Icon(AppIcon.add, color: AppColor.white),
+              label: const Text(
+                "Add Year",
+                style: TextStyle(color: AppColor.white, fontWeight: FontWeight.bold),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColor.goldColor,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSize.p16,
@@ -177,8 +249,10 @@ class _YearMasterState extends State<YearMaster> {
   }
 
   Widget _buildYearCard(YearData year) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Container(
-      margin: EdgeInsets.only(bottom: AppSize.p16),
+      margin: isDesktopOrTablet ? EdgeInsets.zero : EdgeInsets.only(bottom: AppSize.p16),
       decoration: BoxDecoration(
         color: AppColor.white,
         borderRadius: BorderRadius.circular(AppSize.p12),

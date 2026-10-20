@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use, file_names
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/view/utils/app_background.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
@@ -65,22 +65,24 @@ AppBar appBar({
             padding: EdgeInsets.only(left: AppSize.p16),
             child: _appBarButton(
               AppIcon.backIcon,
-              () => Get.back(),
+              () => NavDrawerController.back(),
               isPremium: isPremium,
             ),
           )
-        : Builder(
-            builder: (context) {
-              return Padding(
-                padding: EdgeInsets.only(left: AppSize.p10),
-                child: _appBarButton(
-                  AppIcon.menu,
-                  () => Scaffold.of(context).openDrawer(),
-                  isPremium: isPremium,
-                ),
-              );
-            },
-          ),
+        : (AppSize.isDesktop
+              ? null
+              : Builder(
+                  builder: (context) {
+                    return Padding(
+                      padding: EdgeInsets.only(left: AppSize.p10),
+                      child: _appBarButton(
+                        AppIcon.menu,
+                        () => Scaffold.of(context).openEndDrawer(),
+                        isPremium: isPremium,
+                      ),
+                    );
+                  },
+                )),
     actions: [
       if (searchIcon == true)
         _appBarButton(

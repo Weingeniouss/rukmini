@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/lockerAdd_Controller.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 
 class LockerMasterControllerUI extends GetxController {
   final _addController = Get.put(LockerAddController());
@@ -20,8 +21,9 @@ class LockerMasterControllerUI extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    if (Get.arguments != null) {
-      final data = Get.arguments;
+    final args = NavDrawerController.getRouteArguments();
+    if (args != null) {
+      final data = args;
       editingId.value = data.lockerId;
       lockerCodeController.text = data.lockerCode ?? "";
       companyNameController.text = data.comName ?? "";

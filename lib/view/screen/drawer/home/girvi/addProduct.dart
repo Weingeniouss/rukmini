@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/metal/metal_Controller.dart';
 import 'package:rukmini/controller/api/controllers/product/productType_Controller.dart';
@@ -38,10 +39,11 @@ class _AddProductState extends State<AddProduct> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (Get.arguments != null && Get.arguments['product'] != null) {
+      final args = NavDrawerController.getRouteArguments(context);
+      if (args != null && args is Map && args['product'] != null) {
         addProductUI.populateData(
-          Get.arguments['product'],
-          Get.arguments['index'],
+          args['product'],
+          args['index'],
         );
       } else {
         addProductUI.clearData();

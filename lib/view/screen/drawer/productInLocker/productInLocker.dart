@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/lockerList_Controller.dart';
 import 'package:rukmini/controller/api/controllers/drawer/productInLocker/cust_product_controller.dart';
 import 'package:rukmini/modal/drawer/productInLocker/cust_product_model.dart';
@@ -31,6 +32,8 @@ class ProductInLocker extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       CallApi.callCustProduct();
     });
+
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
 
     return Fullscreen(
       isPadding: false,
@@ -107,6 +110,50 @@ class ProductInLocker extends StatelessWidget {
                 );
               }
 
+              if (isDesktopOrTablet) {
+                return RefreshIndicator(
+                  onRefresh: CallApi.callCustProduct,
+                  color: AppColor.goldColor,
+                  child: GridView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.all(AppSize.p16),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: AppSize.isDesktop ? 3 : 2,
+                      crossAxisSpacing: AppSize.p16,
+                      mainAxisSpacing: AppSize.p16,
+                      mainAxisExtent: 155,
+                    ),
+                    itemCount: custProductController.filteredProductList.length,
+                    itemBuilder: (context, index) {
+                      final item =
+                          custProductController.filteredProductList[index];
+                      return Obx(() {
+                        bool isSelected = custProductController.selectedProducts
+                            .contains(item);
+                        return GestureDetector(
+                          onLongPress: () {
+                            custProductController.toggleSelection(item);
+                          },
+                          onTap: () {
+                            if (custProductController
+                                .selectedProducts
+                                .isNotEmpty) {
+                              custProductController.toggleSelection(item);
+                            } else {
+                              NavDrawerController.toNamed(
+                                '/productInLockerDetail',
+                                arguments: item,
+                              );
+                            }
+                          },
+                          child: _buildProductCard(item, isSelected, isGrid: true),
+                        );
+                      });
+                    },
+                  ),
+                );
+              }
+
               return RefreshIndicator(
                 onRefresh: CallApi.callCustProduct,
                 color: AppColor.goldColor,
@@ -136,7 +183,7 @@ class ProductInLocker extends StatelessWidget {
                             );
                           }
                         },
-                        child: _buildProductCard(item, isSelected),
+                        child: _buildProductCard(item, isSelected, isGrid: false),
                       );
                     });
                   },
@@ -538,10 +585,10 @@ class ProductInLocker extends StatelessWidget {
     );
   }
 
-  Widget _buildProductCard(ProductList item, bool isSelected) {
+  Widget _buildProductCard(ProductList item, bool isSelected, {bool isGrid = false}) {
     return horizontalPadding(
       child: Container(
-        margin: EdgeInsets.only(bottom: AppSize.p16),
+        margin: isGrid ? EdgeInsets.zero : EdgeInsets.only(bottom: AppSize.p16),
         decoration: BoxDecoration(
           color: AppColor.white,
           borderRadius: BorderRadius.circular(AppSize.p12),
@@ -614,11 +661,13 @@ class ProductInLocker extends StatelessWidget {
   }
 
   Widget _buildProductImage(String? imageUrl, bool isSelected) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Stack(
       children: [
         Container(
-          width: AppSize.width * 0.18,
-          height: AppSize.width * 0.18,
+          width: isDesktopOrTablet ? 55 : AppSize.width * 0.18,
+          height: isDesktopOrTablet ? 55 : AppSize.width * 0.18,
           decoration: BoxDecoration(
             color: AppColor.whiteOrang.withOpacity(0.1),
             borderRadius: BorderRadius.circular(AppSize.p12),
@@ -675,6 +724,35 @@ class ProductInLocker extends StatelessWidget {
   }
 
   Widget _buildHeaderRow(String name, String code) {
+    if (AppSize.isDesktop || AppSize.isTablet) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            name,
+            style: const TextStyle(
+              color: AppColor.goldColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 14.0,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 2),
+          Text(
+            code,
+            style: const TextStyle(
+              color: AppColor.activeColor,
+              fontSize: 12.0,
+              fontWeight: FontWeight.w600,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      );
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -700,6 +778,7 @@ class ProductInLocker extends StatelessWidget {
         ),
       ],
     );
+  }
   }
 
   Widget _buildTitleRow(String title, String date) {
@@ -738,46 +817,56 @@ class ProductInLocker extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        RichText(
-          text: TextSpan(
-            style: TextStyle(fontSize: AppSize.size12, color: AppColor.black),
-            children: [
-              TextSpan(
-                text: label1,
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: AppColor.black.withOpacity(0.6),
+        Expanded(
+          child: RichText(
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            text: TextSpan(
+              style: TextStyle(fontSize: AppSize.size12, color: AppColor.black),
+              children: [
+                TextSpan(
+                  text: label1,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: AppColor.black.withOpacity(0.6),
+                  ),
                 ),
-              ),
-              TextSpan(
-                text: value1,
-                style: TextStyle(
-                  color: AppColor.goldColor,
-                  fontWeight: FontWeight.bold,
+                TextSpan(
+                  text: value1,
+                  style: TextStyle(
+                    color: AppColor.goldColor,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-        RichText(
-          text: TextSpan(
-            style: TextStyle(fontSize: AppSize.size12, color: AppColor.black),
-            children: [
-              TextSpan(
-                text: label2,
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: AppColor.black.withOpacity(0.6),
+        SizedBox(width: AppSize.p4),
+        Expanded(
+          child: RichText(
+            textAlign: TextAlign.end,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            text: TextSpan(
+              style: TextStyle(fontSize: AppSize.size12, color: AppColor.black),
+              children: [
+                TextSpan(
+                  text: label2,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: AppColor.black.withOpacity(0.6),
+                  ),
                 ),
-              ),
-              TextSpan(
-                text: value2,
-                style: TextStyle(
-                  color: AppColor.goldColor,
-                  fontWeight: FontWeight.bold,
+                TextSpan(
+                  text: value2,
+                  style: TextStyle(
+                    color: AppColor.goldColor,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
@@ -816,7 +905,7 @@ class ProductInLocker extends StatelessWidget {
         ),
         child: ElevatedButton(
           onPressed: () {
-            Get.toNamed('/changeTheLocker');
+            NavDrawerController.toNamed('/changeTheLocker');
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColor.transparent,
@@ -861,4 +950,3 @@ class ProductInLocker extends StatelessWidget {
       ),
     );
   }
-}

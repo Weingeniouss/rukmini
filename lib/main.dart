@@ -31,10 +31,12 @@ void main() async {
 
   await localdata.loadLocalData();
 
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitDown,
-    DeviceOrientation.portraitUp,
-  ]);
+  if (GetPlatform.isMobile && !GetPlatform.isWeb) {
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp,
+    ]);
+  }
 
   runApp(const MyApp());
 }
@@ -49,6 +51,8 @@ class MyApp extends StatelessWidget {
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(fontFamily: 'Poppins', useMaterial3: true),
+        defaultTransition: Transition.fade,
+        transitionDuration: const Duration(milliseconds: 200),
         initialRoute: AppPages.initial,
         getPages: AppPages.routes,
       ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:rukmini/controller/ui/home/report/report_ui_controller.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/routes/app_pages.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
@@ -284,9 +285,9 @@ class Reports extends StatelessWidget {
             text: AppString.viewReport,
             onPressed: () {
               if (index == 0) {
-                Get.toNamed(Routes.exportContacts);
+                NavDrawerController.toNamed(Routes.exportContacts);
               } else {
-                Get.toNamed(Routes.reportView, arguments: {
+                NavDrawerController.toNamed(Routes.reportView, arguments: {
                   'index': index,
                   'title': title,
                 });

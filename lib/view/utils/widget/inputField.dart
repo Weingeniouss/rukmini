@@ -23,10 +23,9 @@ Widget inputField({
   int? maxLength,
   List<TextInputFormatter>? inputFormatters,
 }) {
-  // Use hintText as tag to ensure each field gets its own controller instance
   final isvisorNot = Get.put(InputFieldController(), tag: hintText);
+  final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
 
-  // Initialize obscureText to true if it's a password field
   if (isPassword && isvisorNot.obscureText.value == false) {
     isvisorNot.obscureText.value = true;
   }
@@ -57,7 +56,7 @@ Widget inputField({
         controller: inputTextcontroller,
         style: TextStyle(
           color: textColor ?? AppColor.loginTextDark,
-          fontSize: AppSize.commonText,
+          fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
         ),
         cursorColor: iconColor ?? AppColor.goldColor,
         obscureText: obscureText,
@@ -67,13 +66,13 @@ Widget inputField({
               ? Icon(
                   prefixIconData,
                   color: iconColor ?? AppColor.goldColor,
-                  size: AppSize.p20,
+                  size: isDesktopOrTablet ? 18.0 : AppSize.p20,
                 )
               : (icon != null)
                   ? Icon(
                       icon is IconData ? icon : icon,
                       color: iconColor ?? AppColor.goldColor,
-                      size: AppSize.p20,
+                      size: isDesktopOrTablet ? 18.0 : AppSize.p20,
                     )
                   : (prefixIconPath != null && prefixIconPath.isNotEmpty)
                       ? Padding(
@@ -94,19 +93,19 @@ Widget inputField({
                             ? Icons.visibility_off_outlined
                             : Icons.visibility_outlined,
                         color: iconColor ?? AppColor.goldColor,
-                        size: 22,
+                        size: isDesktopOrTablet ? 18.0 : 22.0,
                       ),
                     )
                   : null),
           border: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(
-            vertical: AppSize.p16,
+            vertical: isDesktopOrTablet ? 12.0 : AppSize.p16,
             horizontal: AppSize.p16,
           ),
           hintText: hintText,
           hintStyle: TextStyle(
             color: (textColor ?? AppColor.loginTextDark).withOpacity(0.5),
-            fontSize: AppSize.commonText,
+            fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
           ),
         ),
       ),

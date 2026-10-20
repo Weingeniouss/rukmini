@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:rukmini/controller/ui/home/report/report_ui_controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
@@ -21,20 +22,23 @@ class ReportViewScreen extends StatefulWidget {
 
 class _ReportViewScreenState extends State<ReportViewScreen> {
   late final ReportUIController uiController;
-  late final int index;
-  late final String title;
+  int index = 0;
+  String title = '';
+  bool _isInitialized = false;
 
   @override
-  void initState() {
-    super.initState();
-    final args = Get.arguments as Map<String, dynamic>;
-    index = args['index'];
-    title = args['title'];
-    uiController = Get.find<ReportUIController>();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      uiController.fetchReport(index);
-    });
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      uiController = Get.find<ReportUIController>();
+      final args = NavDrawerController.getRouteArguments(context);
+      if (args is Map<String, dynamic>) {
+        index = args['index'] ?? 0;
+        title = args['title'] ?? '';
+        uiController.fetchReport(index);
+      }
+      _isInitialized = true;
+    }
   }
 
   @override

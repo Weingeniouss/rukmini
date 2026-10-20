@@ -11,7 +11,6 @@ import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
-import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -37,7 +36,6 @@ class _MetalTouchState extends State<MetalTouch> {
   @override
   Widget build(BuildContext context) {
     return Fullscreen(
-      drawer: homeDrawer(),
       isPadding: false,
       backGroundcolor: AppColor.backgroundColor,
       appBar: appBar(
@@ -58,6 +56,29 @@ class _MetalTouchState extends State<MetalTouch> {
 
               if (metalController.metalList.isEmpty) {
                 return const Center(child: Text(AppString.noDataFound));
+              }
+
+              if (AppSize.isDesktop || AppSize.isTablet) {
+                return RefreshIndicator(
+                  onRefresh: () => CallApi.callMetalList(),
+                  color: AppColor.goldColor,
+                  child: GridView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.all(AppSize.p16),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: AppSize.isDesktop ? 3 : 2,
+                      crossAxisSpacing: AppSize.p16,
+                      mainAxisSpacing: AppSize.p16,
+                      mainAxisExtent: 80,
+                    ),
+                    itemCount: metalController.metalList.length,
+                    itemBuilder: (context, index) {
+                      return _buildMetalTouchCard(
+                        metalController.metalList[index],
+                      );
+                    },
+                  ),
+                );
               }
 
               return RefreshIndicator(
@@ -85,6 +106,9 @@ class _MetalTouchState extends State<MetalTouch> {
   }
 
   Widget _buildDecorativeTitle() {
+    final double lineWidth =
+        (AppSize.isDesktop || AppSize.isTablet) ? 40 : AppSize.width * 0.1;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -101,7 +125,7 @@ class _MetalTouchState extends State<MetalTouch> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: AppSize.width * 0.1,
+              width: lineWidth,
               height: 1,
               color: AppColor.goldColor.withOpacity(0.5),
             ),
@@ -117,7 +141,7 @@ class _MetalTouchState extends State<MetalTouch> {
               ),
             ),
             Container(
-              width: AppSize.width * 0.1,
+              width: lineWidth,
               height: 1,
               color: AppColor.goldColor.withOpacity(0.5),
             ),
@@ -128,6 +152,106 @@ class _MetalTouchState extends State<MetalTouch> {
   }
 
   Widget _buildFilterAndAddSection() {
+    if (AppSize.isDesktop || AppSize.isTablet) {
+      return Container(
+        margin: EdgeInsets.all(AppSize.p16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColor.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColor.black.withOpacity(0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            const Icon(AppIcon.grid, color: AppColor.goldColor, size: 24),
+            const SizedBox(width: 16),
+            Expanded(
+              flex: 3,
+              child: TextField(
+                controller: uiController.karatController,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: AppColor.black,
+                  fontWeight: FontWeight.w500,
+                ),
+                decoration: InputDecoration(
+                  labelText: AppString.karat,
+                  hintText: AppString.karat,
+                  border: const OutlineInputBorder(),
+                  isDense: true,
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              flex: 2,
+              child: TextField(
+                controller: uiController.goldContentController,
+                keyboardType: TextInputType.number,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: AppColor.black,
+                  fontWeight: FontWeight.w500,
+                ),
+                decoration: const InputDecoration(
+                  labelText: "Gold Content (%)",
+                  hintText: "%",
+                  border: OutlineInputBorder(),
+                  isDense: true,
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Obx(
+              () => uiController.isLoading.value
+                  ? const SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColor.goldColor,
+                      ),
+                    )
+                  : ElevatedButton.icon(
+                      onPressed: () => uiController.save(),
+                      icon: Icon(
+                        uiController.editingId.value == null
+                            ? AppIcon.add
+                            : AppIcon.check,
+                        color: AppColor.white,
+                      ),
+                      label: Text(
+                        uiController.editingId.value == null
+                            ? "Add"
+                            : AppString.update,
+                        style: const TextStyle(
+                          color: AppColor.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColor.goldColor,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 16,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSize.p16,
@@ -221,8 +345,10 @@ class _MetalTouchState extends State<MetalTouch> {
   }
 
   Widget _buildMetalTouchCard(MetalData item) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Container(
-      margin: EdgeInsets.only(bottom: AppSize.p12),
+      margin: isDesktopOrTablet ? EdgeInsets.zero : EdgeInsets.only(bottom: AppSize.p12),
       decoration: BoxDecoration(
         color: AppColor.white,
         borderRadius: BorderRadius.circular(AppSize.p12),

@@ -5,8 +5,11 @@ import 'package:rukmini/view/utils/app_size.dart';
 
 //horizontal padding All Over Screen !
 Widget horizontalPadding({Widget? child}) {
+  final double hPadding = (AppSize.isDesktop || AppSize.isTablet)
+      ? 6.0
+      : AppSize.p12;
   return Padding(
-    padding: EdgeInsetsGeometry.symmetric(horizontal: AppSize.p12),
+    padding: EdgeInsets.symmetric(horizontal: hPadding),
     child: child,
   );
 }

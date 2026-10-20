@@ -68,18 +68,6 @@ class _DueGirviState extends State<DueGirvi> {
               ? _buildLocalitySearchField()
               : AppString.pendingTransaction,
           searchIcon: !pendingTransactionController.isLocalitySearching.value,
-          // filter: !pendingTransactionController.isSearching.value,
-          // filterOnPressed: () {
-          //   pendingTransactionController.isLocalitySearching.value =
-          //       !pendingTransactionController.isLocalitySearching.value;
-          //   if (!pendingTransactionController.isLocalitySearching.value) {
-          //     pendingTransactionController.localityTextController.clear();
-          //     CallApi.callPendingTransaction(
-          //       isRefresh: true,
-          //       isFilterer: pendingTransactionController.currentFilter.value,
-          //     );
-          //   }
-          // },
           searchOnPressed: () {
             pendingTransactionController.isSearching.value =
                 !pendingTransactionController.isSearching.value;
@@ -100,6 +88,8 @@ class _DueGirviState extends State<DueGirvi> {
   }
 
   Widget listOfPendingTransaction() {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Expanded(
       child: Obx(() {
         if (pendingTransactionController.isLoading.value &&
@@ -109,6 +99,41 @@ class _DueGirviState extends State<DueGirvi> {
         if (pendingTransactionController.pendingTransactionList.isEmpty) {
           return const Center(child: Text(AppString.noDataFound));
         }
+
+        final list = pendingTransactionController.pendingTransactionList;
+
+        if (isDesktopOrTablet) {
+          return RefreshIndicator(
+            onRefresh: () => CallApi.callPendingTransaction(
+              isRefresh: true,
+              isFilterer: pendingTransactionController.currentFilter.value,
+              search: pendingTransactionController.searchTextController.text,
+            ),
+            child: GridView.builder(
+              controller: _scrollController,
+              padding: EdgeInsets.all(AppSize.p16),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: AppSize.isDesktop ? 3 : 2,
+                crossAxisSpacing: AppSize.p16,
+                mainAxisSpacing: AppSize.p16,
+                mainAxisExtent: 115,
+              ),
+              itemCount: list.length +
+                  (pendingTransactionController.isLoadMore.value ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index < list.length) {
+                  return _buildCard(list[index], isGrid: true);
+                } else {
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+              },
+            ),
+          );
+        }
+
         return RefreshIndicator(
           onRefresh: () => CallApi.callPendingTransaction(
             isRefresh: true,
@@ -117,17 +142,13 @@ class _DueGirviState extends State<DueGirvi> {
           ),
           child: ListView.separated(
             controller: _scrollController,
-            itemCount:
-                pendingTransactionController.pendingTransactionList.length +
+            itemCount: list.length +
                 (pendingTransactionController.isLoadMore.value ? 1 : 0),
             separatorBuilder: (context, index) =>
                 const Divider(height: 1, color: AppColor.boderSideColor),
             itemBuilder: (context, index) {
-              if (index <
-                  pendingTransactionController.pendingTransactionList.length) {
-                return _buildCard(
-                  pendingTransactionController.pendingTransactionList[index],
-                );
+              if (index < list.length) {
+                return _buildCard(list[index], isGrid: false);
               } else {
                 return const Padding(
                   padding: EdgeInsets.all(8.0),
@@ -163,7 +184,7 @@ class _DueGirviState extends State<DueGirvi> {
               );
             },
           ),
-           SizedBox(width: Get.width * 0.05),
+          const SizedBox(width: 24),
           _buildLegendItem(
             AppColor.orange,
             AppString.oneyearup,
@@ -175,7 +196,7 @@ class _DueGirviState extends State<DueGirvi> {
               );
             },
           ),
-          Spacer(),
+          const Spacer(),
           GestureDetector(
             onTap: () {
               pendingTransactionController.currentFilter.value = null;
@@ -225,7 +246,7 @@ class _DueGirviState extends State<DueGirvi> {
     );
   }
 
-  Widget _buildCard(var data) {
+  Widget _buildCard(var data, {bool isGrid = false}) {
     Color indicatorColor = AppColor.orange;
     if (pendingTransactionController.currentFilter.value == '1') {
       indicatorColor = AppColor.yellow;
@@ -235,12 +256,26 @@ class _DueGirviState extends State<DueGirvi> {
 
     return Container(
       padding: const EdgeInsets.all(12),
+      margin: isGrid ? EdgeInsets.zero : EdgeInsets.zero,
       decoration: BoxDecoration(
         color: AppColor.whiteOrang,
-        border: Border(left: BorderSide(color: indicatorColor, width: 5)),
+        borderRadius: isGrid ? BorderRadius.circular(12) : null,
+        border: isGrid
+            ? Border(left: BorderSide(color: indicatorColor, width: 5))
+            : Border(left: BorderSide(color: indicatorColor, width: 5)),
+        boxShadow: isGrid
+            ? [
+                BoxShadow(
+                  color: AppColor.black.withOpacity(0.04),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -253,6 +288,8 @@ class _DueGirviState extends State<DueGirvi> {
                     fontSize: AppSize.p16 * 1.025, // 0.041
                     color: AppColor.dark.withOpacity(0.8),
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               Text(

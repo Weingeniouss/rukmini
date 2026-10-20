@@ -24,6 +24,8 @@ class ChangeTheLocker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Fullscreen(
       isPadding: false,
       appBar: appBar(
@@ -40,6 +42,24 @@ class ChangeTheLocker extends StatelessWidget {
               if (custProductController.selectedProducts.isEmpty) {
                 return const Center(child: Text(AppString.noProductsSelected));
               }
+
+              if (isDesktopOrTablet) {
+                return GridView.builder(
+                  padding: EdgeInsets.all(AppSize.p16),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: AppSize.isDesktop ? 3 : 2,
+                    crossAxisSpacing: AppSize.p16,
+                    mainAxisSpacing: AppSize.p16,
+                    mainAxisExtent: 150,
+                  ),
+                  itemCount: custProductController.selectedProducts.length,
+                  itemBuilder: (context, index) {
+                    final item = custProductController.selectedProducts[index];
+                    return _buildProductItemCard(item);
+                  },
+                );
+              }
+
               return ListView.separated(
                 padding: EdgeInsets.symmetric(vertical: Get.height * 0.01),
                 itemCount: custProductController.selectedProducts.length,
@@ -67,7 +87,7 @@ class ChangeTheLocker extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSize.p16,
-        vertical: AppSize.p4,
+        vertical: AppSize.p8,
       ),
       decoration: BoxDecoration(
         color: AppColor.fullScreenColor,
@@ -124,7 +144,7 @@ class ChangeTheLocker extends StatelessWidget {
             ),
           ),
           Container(
-            height: Get.height * 0.035,
+            height: 24,
             width: 1,
             color: AppColor.boderSideColor.shade400,
             margin: EdgeInsets.symmetric(horizontal: AppSize.p10),
@@ -161,11 +181,11 @@ class ChangeTheLocker extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(Get.width * 0.04),
+              padding: const EdgeInsets.all(16),
               child: Text(
                 AppString.selectLocker,
-                style: TextStyle(
-                  fontSize: Get.width * 0.03,
+                style: const TextStyle(
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -188,7 +208,7 @@ class ChangeTheLocker extends StatelessWidget {
                     return ListTile(
                       title: Text(
                         locker.lockerCode ?? "N/A",
-                        style: TextStyle(fontSize: Get.width * 0.04),
+                        style: const TextStyle(fontSize: 16),
                       ),
                       subtitle: Text(locker.comName ?? ""),
                       onTap: () {
@@ -210,7 +230,7 @@ class ChangeTheLocker extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSize.p16,
-        vertical: Get.height * 0.015,
+        vertical: AppSize.p12,
       ),
       child: Row(
         children: [
@@ -240,10 +260,11 @@ class ChangeTheLocker extends StatelessWidget {
                       ),
                     ),
                   ),
+                  SizedBox(width: AppSize.p4),
                   Icon(
                     AppIcon.arrowDown,
                     color: AppColor.textColor,
-                    size: AppSize.headingText,
+                    size: AppSize.size15,
                   ),
                 ],
               ),
@@ -271,12 +292,134 @@ class ChangeTheLocker extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(width: AppSize.p4),
               Icon(
                 AppIcon.arrowDown,
                 color: AppColor.textColor,
-                size: AppSize.headingText,
+                size: AppSize.size15,
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProductItemCard(ProductList item) {
+    return Container(
+      padding: EdgeInsets.all(AppSize.p12),
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        borderRadius: BorderRadius.circular(AppSize.p12),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.05),
+            blurRadius: AppSize.p10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildImagePlaceholder(item.productImg),
+          SizedBox(width: AppSize.p12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${item.metalName} Karat ${item.prodType} ${item.catName}",
+                  style: TextStyle(
+                    color: AppColor.dark.withOpacity(0.7),
+                    fontSize: AppSize.size14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: AppSize.p4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        item.custName ?? "N/A",
+                        style: TextStyle(
+                          color: AppColor.dark,
+                          fontSize: AppSize.size14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Text(
+                      item.girviDate ?? "",
+                      style: TextStyle(
+                        color: AppColor.textColor,
+                        fontSize: AppSize.size12,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: AppSize.p4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildLabelValue(AppString.pcsColon, item.pieces ?? "0"),
+                    _buildLabelValue(AppString.wgtColon, "${item.weight} ${AppString.gm}"),
+                  ],
+                ),
+                SizedBox(height: AppSize.p4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildLabelValue(AppString.gvnAmtColon, item.givenAmount ?? "0.00"),
+                    Row(
+                      children: [
+                        Text(
+                          "${AppString.tknAmt} ",
+                          style: TextStyle(
+                            color: AppColor.textColor,
+                            fontSize: AppSize.size12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Container(
+                          width: 60,
+                          height: 22,
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: AppColor.boderSideColor,
+                            ),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Center(
+                            child: TextField(
+                              controller: uiController
+                                  .tknAmtControllers[item.productId ?? ""],
+                              keyboardType: TextInputType.number,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: AppSize.size12,
+                                color: AppColor.dark,
+                              ),
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                isDense: true,
+                                contentPadding: EdgeInsets.zero,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -392,9 +535,11 @@ class ChangeTheLocker extends StatelessWidget {
   }
 
   Widget _buildImagePlaceholder(String? imageUrl) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Container(
-      width: Get.width * 0.12,
-      height: Get.width * 0.12,
+      width: isDesktopOrTablet ? 50 : Get.width * 0.12,
+      height: isDesktopOrTablet ? 50 : Get.width * 0.12,
       decoration: BoxDecoration(
         color: AppColor.boderSideColor.shade300,
         borderRadius: BorderRadius.circular(4),
@@ -414,18 +559,20 @@ class ChangeTheLocker extends StatelessWidget {
   }
 
   Widget _buildPlaceholderContent() {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(
           AppIcon.image,
-          size: Get.width * 0.05,
+          size: isDesktopOrTablet ? 20 : Get.width * 0.05,
           color: AppColor.boderSideColor.shade600,
         ),
         Text(
           AppString.image,
           style: TextStyle(
-            fontSize: Get.width * 0.02,
+            fontSize: isDesktopOrTablet ? 10 : Get.width * 0.02,
             color: AppColor.boderSideColor.shade600,
           ),
         ),
@@ -434,17 +581,19 @@ class ChangeTheLocker extends StatelessWidget {
   }
 
   Widget _buildLabelValue(String label, String value) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return RichText(
       text: TextSpan(
         style: TextStyle(
-          fontSize: Get.width * 0.035,
+          fontSize: isDesktopOrTablet ? 12 : Get.width * 0.035,
           color: AppColor.textColor,
         ),
         children: [
           TextSpan(
             text: label,
             style: TextStyle(
-              fontSize: Get.width * 0.035,
+              fontSize: isDesktopOrTablet ? 12 : Get.width * 0.035,
               fontWeight: FontWeight.w600,
               color: AppColor.dark,
             ),
@@ -456,13 +605,15 @@ class ChangeTheLocker extends StatelessWidget {
   }
 
   Widget _buildBottomBar() {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return GestureDetector(
       onTap: uiController.submit,
       child: Container(
-        width: Get.width,
+        width: double.infinity,
         padding: EdgeInsets.symmetric(
-          vertical: Get.height * 0.015,
-          horizontal: Get.width * 0.04,
+          vertical: isDesktopOrTablet ? 16 : Get.height * 0.015,
+          horizontal: AppSize.p16,
         ),
         color: AppColor.primaryColor,
         child: Align(
@@ -481,7 +632,7 @@ class ChangeTheLocker extends StatelessWidget {
                     AppString.done,
                     style: TextStyle(
                       color: AppColor.activeColor,
-                      fontSize: Get.width * 0.03,
+                      fontSize: isDesktopOrTablet ? 16 : Get.width * 0.03,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

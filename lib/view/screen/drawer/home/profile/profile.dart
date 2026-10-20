@@ -10,6 +10,7 @@ import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
+import 'package:rukmini/view/utils/widget/responsive.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
@@ -17,6 +18,7 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loginController = Get.find<LoginControllerAPI>();
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
 
     return Fullscreen(
       isPadding: false,
@@ -24,6 +26,37 @@ class Profile extends StatelessWidget {
       appBar: appBar(back: true, title: AppString.user, centerTitle: true),
       child: Obx(() {
         final userData = loginController.loginData.value.data;
+
+        if (isDesktopOrTablet) {
+          return Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: ResponsiveCenter(
+                maxWidth: 1000,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Left Column: Profile Card Header
+                    Expanded(
+                      flex: 5,
+                      child: _buildProfileHeader(userData),
+                    ),
+                    const SizedBox(width: 24),
+                    // Right Column: Information Cards Section
+                    Expanded(
+                      flex: 7,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: _buildInfoSection(userData),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
         return SingleChildScrollView(
           child: Column(
             children: [
@@ -38,6 +71,8 @@ class Profile extends StatelessWidget {
   }
 
   Widget _buildProfileHeader(dynamic userData) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return horizontalPadding(
       child: Container(
         width: double.infinity,
@@ -66,12 +101,12 @@ class Profile extends StatelessWidget {
                 border: Border.all(color: AppColor.goldColor.withOpacity(0.3)),
               ),
               child: CircleAvatar(
-                radius: AppSize.width * 0.13,
+                radius: isDesktopOrTablet ? 55 : AppSize.width * 0.13,
                 backgroundColor: AppColor.white,
                 child: Text(
                   _getInitials(userData?.roleName),
                   style: TextStyle(
-                    fontSize: AppSize.extraLargeText * 1.4,
+                    fontSize: isDesktopOrTablet ? 32 : AppSize.extraLargeText * 1.4,
                     fontWeight: FontWeight.bold,
                     color: AppColor.goldColor,
                   ),

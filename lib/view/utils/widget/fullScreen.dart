@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
+import 'package:rukmini/view/utils/widget/main_layout_screen.dart';
+import 'package:rukmini/view/utils/widget/responsive.dart';
 
 class Fullscreen extends StatelessWidget {
   final Widget child;
@@ -13,8 +15,9 @@ class Fullscreen extends StatelessWidget {
   final Widget? drawer;
   final bool isPadding;
   final Widget? floatingActionButton;
+  final double maxDesktopWidth;
 
-  //All Screen Background All Over Screnn Effict !
+  //All Screen Background All Over Screen Effect !
 
   const Fullscreen({
     super.key,
@@ -25,13 +28,20 @@ class Fullscreen extends StatelessWidget {
     this.drawer,
     this.isPadding = true,
     this.floatingActionButton,
+    this.maxDesktopWidth = 1600,
   });
 
   @override
   Widget build(BuildContext context) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+    final bool insideShell = ShellScope.of(context);
+    final bool showLeftDrawerInFullscreen =
+        isDesktopOrTablet && drawer != null && !insideShell;
+
     return Scaffold(
-      drawer: drawer,
-      appBar: appBar,
+      drawer: null,
+      endDrawer: isDesktopOrTablet ? null : drawer,
+      appBar: isDesktopOrTablet ? null : appBar,
       floatingActionButton: floatingActionButton,
       extendBodyBehindAppBar: true,
       extendBody: true,
@@ -47,9 +57,41 @@ class Fullscreen extends StatelessWidget {
                 )
               : null,
         ),
-        child: isPadding
-            ? horizontalPadding(child: SafeArea(child: child))
-            : SafeArea(child: child),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Left Side: Full-height Persistent Navigation Drawer (if not inside ShellScope)
+            if (showLeftDrawerInFullscreen)
+              SizedBox(
+                width: AppSize.isDesktop ? 350 : 240,
+                height: double.infinity,
+                child: drawer,
+              ),
+
+            // Right Content Column (Content-specific Header + Content Body)
+            Expanded(
+              child: Column(
+                children: [
+                  if (isDesktopOrTablet && appBar != null)
+                    SizedBox(
+                      height:
+                          appBar!.preferredSize.height +
+                          MediaQuery.of(context).padding.top,
+                      child: appBar,
+                    ),
+                  Expanded(
+                    child: ResponsiveCenter(
+                      maxWidth: maxDesktopWidth,
+                      child: isPadding
+                          ? horizontalPadding(child: SafeArea(child: child))
+                          : SafeArea(child: child),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

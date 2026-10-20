@@ -11,6 +11,7 @@ import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:rukmini/view/utils/widget/inputField.dart';
+import 'package:rukmini/view/utils/widget/responsive.dart';
 
 class AddYearMaster extends StatelessWidget {
   final YearMasterControllerUI uiController;
@@ -19,6 +20,8 @@ class AddYearMaster extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Fullscreen(
       isPadding: false,
       backGroundcolor: AppColor.backgroundColor,
@@ -32,78 +35,178 @@ class AddYearMaster extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(vertical: AppSize.p12),
-              child: horizontalPadding(
-                child: Column(
-                  children: [
-                    _buildSectionHeader(
-                      AppString.addYearMaster,
-                      AppIcon.calendar,
-                    ),
-                    SizedBox(height: AppSize.p16),
-                    inputField(
-                      hintText: AppString.title,
-                      icon: AppIcon.badge,
-                      iconColor: AppColor.goldColor,
-                      inputTextcontroller: uiController.titleController,
-                    ),
-                    inputField(
-                      hintText: AppString.fromDate,
-                      icon: AppIcon.calendar,
-                      iconColor: AppColor.goldColor,
-                      inputTextcontroller: uiController.fromDateController,
-                      readOnly: true,
-                      onTap: () => uiController.selectDate(
-                        context,
-                        uiController.fromDateController,
-                        true,
-                      ),
-                      suffixIcon: Icon(
-                        AppIcon.calendar,
-                        color: AppColor.goldColor,
-                        size: AppSize.p20,
-                      ),
-                    ),
-                    inputField(
-                      hintText: AppString.toDate,
-                      icon: AppIcon.calendar,
-                      iconColor: AppColor.goldColor,
-                      inputTextcontroller: uiController.toDateController,
-                      readOnly: true,
-                      onTap: () => uiController.selectDate(
-                        context,
-                        uiController.toDateController,
-                        false,
-                      ),
-                      suffixIcon: Icon(
-                        AppIcon.calendar,
-                        color: AppColor.goldColor,
-                        size: AppSize.p20,
-                      ),
-                    ),
-                    Obx(
-                      () => CheckboxListTile(
-                        title: Text(
-                          AppString.setAsDefaultYear,
-                          style: TextStyle(
-                            fontSize: AppSize.commonText,
-                            fontWeight: FontWeight.w500,
-                            color: AppColor.black,
-                          ),
+              child: isDesktopOrTablet
+                  ? ResponsiveCenter(
+                      maxWidth: 800,
+                      padding: const EdgeInsets.all(16),
+                      child: Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: AppColor.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColor.black.withOpacity(0.04),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                        value: uiController.isDefaultYear.value,
-                        onChanged: (val) {
-                          uiController.isDefaultYear.value = val ?? false;
-                        },
-                        activeColor: AppColor.goldColor,
-                        checkColor: AppColor.white,
-                        controlAffinity: ListTileControlAffinity.leading,
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
+                        child: Column(
+                          children: [
+                            _buildSectionHeader(
+                              AppString.addYearMaster,
+                              AppIcon.calendar,
+                            ),
+                            const SizedBox(height: 24),
+                            inputField(
+                              hintText: AppString.title,
+                              icon: AppIcon.badge,
+                              iconColor: AppColor.goldColor,
+                              inputTextcontroller: uiController.titleController,
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: inputField(
+                                    hintText: AppString.fromDate,
+                                    icon: AppIcon.calendar,
+                                    iconColor: AppColor.goldColor,
+                                    inputTextcontroller:
+                                        uiController.fromDateController,
+                                    readOnly: true,
+                                    onTap: () => uiController.selectDate(
+                                      context,
+                                      uiController.fromDateController,
+                                      true,
+                                    ),
+                                    suffixIcon: Icon(
+                                      AppIcon.calendar,
+                                      color: AppColor.goldColor,
+                                      size: AppSize.p20,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: inputField(
+                                    hintText: AppString.toDate,
+                                    icon: AppIcon.calendar,
+                                    iconColor: AppColor.goldColor,
+                                    inputTextcontroller:
+                                        uiController.toDateController,
+                                    readOnly: true,
+                                    onTap: () => uiController.selectDate(
+                                      context,
+                                      uiController.toDateController,
+                                      false,
+                                    ),
+                                    suffixIcon: Icon(
+                                      AppIcon.calendar,
+                                      color: AppColor.goldColor,
+                                      size: AppSize.p20,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Obx(
+                              () => CheckboxListTile(
+                                title: Text(
+                                  AppString.setAsDefaultYear,
+                                  style: TextStyle(
+                                    fontSize: AppSize.commonText,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColor.black,
+                                  ),
+                                ),
+                                value: uiController.isDefaultYear.value,
+                                onChanged: (val) {
+                                  uiController.isDefaultYear.value = val ?? false;
+                                },
+                                activeColor: AppColor.goldColor,
+                                checkColor: AppColor.white,
+                                controlAffinity: ListTileControlAffinity.leading,
+                                contentPadding: EdgeInsets.zero,
+                                dense: true,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : horizontalPadding(
+                      child: Column(
+                        children: [
+                          _buildSectionHeader(
+                            AppString.addYearMaster,
+                            AppIcon.calendar,
+                          ),
+                          SizedBox(height: AppSize.p16),
+                          inputField(
+                            hintText: AppString.title,
+                            icon: AppIcon.badge,
+                            iconColor: AppColor.goldColor,
+                            inputTextcontroller: uiController.titleController,
+                          ),
+                          inputField(
+                            hintText: AppString.fromDate,
+                            icon: AppIcon.calendar,
+                            iconColor: AppColor.goldColor,
+                            inputTextcontroller: uiController.fromDateController,
+                            readOnly: true,
+                            onTap: () => uiController.selectDate(
+                              context,
+                              uiController.fromDateController,
+                              true,
+                            ),
+                            suffixIcon: Icon(
+                              AppIcon.calendar,
+                              color: AppColor.goldColor,
+                              size: AppSize.p20,
+                            ),
+                          ),
+                          inputField(
+                            hintText: AppString.toDate,
+                            icon: AppIcon.calendar,
+                            iconColor: AppColor.goldColor,
+                            inputTextcontroller: uiController.toDateController,
+                            readOnly: true,
+                            onTap: () => uiController.selectDate(
+                              context,
+                              uiController.toDateController,
+                              false,
+                            ),
+                            suffixIcon: Icon(
+                              AppIcon.calendar,
+                              color: AppColor.goldColor,
+                              size: AppSize.p20,
+                            ),
+                          ),
+                          Obx(
+                            () => CheckboxListTile(
+                              title: Text(
+                                AppString.setAsDefaultYear,
+                                style: TextStyle(
+                                  fontSize: AppSize.commonText,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColor.black,
+                                ),
+                              ),
+                              value: uiController.isDefaultYear.value,
+                              onChanged: (val) {
+                                uiController.isDefaultYear.value = val ?? false;
+                              },
+                              activeColor: AppColor.goldColor,
+                              checkColor: AppColor.white,
+                              controlAffinity: ListTileControlAffinity.leading,
+                              contentPadding: EdgeInsets.zero,
+                              dense: true,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
             ),
           ),
           _buildBottomActionRow(),

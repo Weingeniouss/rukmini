@@ -11,7 +11,6 @@ import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_String.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
-import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -37,7 +36,6 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
   @override
   Widget build(BuildContext context) {
     return Fullscreen(
-      drawer: homeDrawer(),
       isPadding: false,
       backGroundcolor: AppColor.backgroundColor,
       floatingActionButton: FloatingActionButton(
@@ -72,6 +70,27 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
                 return const Center(child: Text(AppString.noDataFound));
               }
 
+              if (AppSize.isDesktop || AppSize.isTablet) {
+                return RefreshIndicator(
+                  onRefresh: () => CallApi.callLockerList(),
+                  color: AppColor.goldColor,
+                  child: GridView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.all(AppSize.p16),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: AppSize.isDesktop ? 3 : 2,
+                      crossAxisSpacing: AppSize.p16,
+                      mainAxisSpacing: AppSize.p16,
+                      mainAxisExtent: 160,
+                    ),
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      return _buildLockerCard(list[index]);
+                    },
+                  ),
+                );
+              }
+
               return RefreshIndicator(
                 onRefresh: () => CallApi.callLockerList(),
                 color: AppColor.goldColor,
@@ -95,6 +114,9 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
   }
 
   Widget _buildDecorativeTitle() {
+    final double lineWidth =
+        (AppSize.isDesktop || AppSize.isTablet) ? 40 : AppSize.width * 0.1;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -111,7 +133,7 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: AppSize.width * 0.1,
+              width: lineWidth,
               height: 1,
               color: AppColor.goldColor.withOpacity(0.5),
             ),
@@ -127,7 +149,7 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
               ),
             ),
             Container(
-              width: AppSize.width * 0.1,
+              width: lineWidth,
               height: 1,
               color: AppColor.goldColor.withOpacity(0.5),
             ),
@@ -138,8 +160,10 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
   }
 
   Widget _buildLockerCard(LockerData item) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Container(
-      margin: EdgeInsets.only(bottom: AppSize.p16),
+      margin: isDesktopOrTablet ? EdgeInsets.zero : EdgeInsets.only(bottom: AppSize.p16),
       decoration: BoxDecoration(
         color: AppColor.white,
         borderRadius: BorderRadius.circular(AppSize.p12),

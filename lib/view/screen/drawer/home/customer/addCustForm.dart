@@ -28,66 +28,89 @@ class AddCustForm extends StatelessWidget {
     return Fullscreen(
       isPadding: false,
       backGroundcolor: AppColor.backgroundColor,
-      appBar: appBar(
-        back: true,
-        title: AppString.addCustomerForm,
-      ),
+      appBar: appBar(back: true, title: AppString.addCustomerForm),
       child: SingleChildScrollView(
-        child: Column(
-          children: [
-            customerDetails(addCustForomUI),
-            nomineeDetails(addCustForomUI),
-            identificationProof(
-              addCustForomUI,
-              callSumit: () async {
-                addCustForomUI.isLoading.value = true;
-                final result = await CallApi.callAddCustomer(
-                  name: addCustForomUI.nameController.text,
-                  typeDel: addCustForomUI.selectedCustType.value,
-                  phoneDel: jsonEncode(addCustForomUI.getAddPhoneList()),
-                  phones: addCustForomUI.getAddPhoneList(),
-                  address: addCustForomUI.addressController.text,
-                  gender: addCustForomUI.selectedGender.value,
-                  nName: addCustForomUI.nomineeNameController.text,
-                  nPhone: addCustForomUI.nomineePhoneController.text,
-                  custRelation: addCustForomUI.nomineeRelationController.text,
-                  gracePeriod: addCustForomUI.selectedGraceDays.value,
-                  isProfile: addCustForomUI.customerPhotoControllers.isNotEmpty
-                      ? "1"
-                      : "0",
-                  profileName:
-                      addCustForomUI.customerPhotoControllers.isNotEmpty
-                      ? addCustForomUI.customerPhotoControllers[0].text
-                      : "",
-                  profileNames: addCustForomUI.customerPhotoControllers
-                      .map((e) => e.text)
-                      .toList(),
-                  proofNames: addCustForomUI.identityProofControllers
-                      .map((e) => e.text)
-                      .toList(),
-                  profileImages: addCustForomUI.customerPhotoImages
-                      .map((e) => e.value)
-                      .toList(),
-                  proofImages: addCustForomUI.identityProofImages
-                      .map((e) => e.value)
-                      .toList(),
-                );
-                await CallApi.callCustList(isRefresh: true);
-                addCustForomUI.isLoading.value = false;
-                if (result != null && result.status == true) {
-                  Get.back();
-                }
-              },
-            ),
-            SizedBox(height: AppSize.p40),
-          ],
-        ),
+        child: AppSize.isDesktop || AppSize.isTablet
+            ? Padding(
+                padding: EdgeInsets.symmetric(horizontal: AppSize.p16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Left Column: Customer Details
+                    Expanded(child: customerDetails(addCustForomUI)),
+                    SizedBox(width: AppSize.p16),
+                    // Right Column: Nominee & Identity Proof
+                    Expanded(
+                      child: Column(
+                        children: [
+                          nomineeDetails(addCustForomUI),
+                          identificationProof(
+                            addCustForomUI,
+                            callSumit: () => _handleSubmit(addCustForomUI),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : Column(
+                children: [
+                  customerDetails(addCustForomUI),
+                  nomineeDetails(addCustForomUI),
+                  identificationProof(
+                    addCustForomUI,
+                    callSumit: () => _handleSubmit(addCustForomUI),
+                  ),
+                  SizedBox(height: AppSize.p40),
+                ],
+              ),
       ),
     );
+  }
+
+  static Future<void> _handleSubmit(
+    AddCustFormControllerUI addCustForomUI,
+  ) async {
+    addCustForomUI.isLoading.value = true;
+    final result = await CallApi.callAddCustomer(
+      name: addCustForomUI.nameController.text,
+      typeDel: addCustForomUI.selectedCustType.value,
+      phoneDel: jsonEncode(addCustForomUI.getAddPhoneList()),
+      phones: addCustForomUI.getAddPhoneList(),
+      address: addCustForomUI.addressController.text,
+      gender: addCustForomUI.selectedGender.value,
+      nName: addCustForomUI.nomineeNameController.text,
+      nPhone: addCustForomUI.nomineePhoneController.text,
+      custRelation: addCustForomUI.nomineeRelationController.text,
+      gracePeriod: addCustForomUI.selectedGraceDays.value,
+      isProfile: addCustForomUI.customerPhotoControllers.isNotEmpty ? "1" : "0",
+      profileName: addCustForomUI.customerPhotoControllers.isNotEmpty
+          ? addCustForomUI.customerPhotoControllers[0].text
+          : "",
+      profileNames: addCustForomUI.customerPhotoControllers
+          .map((e) => e.text)
+          .toList(),
+      proofNames: addCustForomUI.identityProofControllers
+          .map((e) => e.text)
+          .toList(),
+      profileImages: addCustForomUI.customerPhotoImages
+          .map((e) => e.value)
+          .toList(),
+      proofImages: addCustForomUI.identityProofImages
+          .map((e) => e.value)
+          .toList(),
+    );
+    await CallApi.callCustList(isRefresh: true);
+    addCustForomUI.isLoading.value = false;
+    if (result != null && result.status == true) {
+      Get.back();
+    }
   }
 }
 
 Widget _sectionHeader(String title, IconData icon) {
+  final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
   return Container(
     padding: EdgeInsets.symmetric(
       horizontal: AppSize.p16,
@@ -111,13 +134,13 @@ Widget _sectionHeader(String title, IconData icon) {
               ),
             ],
           ),
-          child: Icon(icon, color: AppColor.goldColor, size: AppSize.p20),
+          child: Icon(icon, color: AppColor.goldColor, size: isDesktopOrTablet ? 18.0 : AppSize.p20),
         ),
         SizedBox(width: AppSize.p12),
         Text(
           title,
           style: TextStyle(
-            fontSize: AppSize.headingText,
+            fontSize: isDesktopOrTablet ? 16.0 : AppSize.headingText,
             fontWeight: FontWeight.bold,
             color: AppColor.black,
           ),
@@ -134,6 +157,7 @@ Widget _sectionHeader(String title, IconData icon) {
 }
 
 Widget customerDetails(AddCustFormControllerUI controller) {
+  final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
   return horizontalPadding(
     child: Container(
       margin: EdgeInsets.symmetric(vertical: AppSize.p16),
@@ -174,7 +198,8 @@ Widget customerDetails(AddCustFormControllerUI controller) {
                           ],
                           hintText: "${AppString.phone} ${index + 1}",
                           icon: AppIcon.phone,
-                          inputTextcontroller: controller.phoneControllers[index],
+                          inputTextcontroller:
+                              controller.phoneControllers[index],
                           suffixIcon: IconButton(
                             onPressed: () {
                               if (index == 0) {
@@ -186,6 +211,7 @@ Widget customerDetails(AddCustFormControllerUI controller) {
                             icon: Icon(
                               index == 0 ? AppIcon.add : AppIcon.removeCircle,
                               color: AppColor.goldColor,
+                              size: isDesktopOrTablet ? 18.0 : 24.0,
                             ),
                           ),
                         );
@@ -207,7 +233,7 @@ Widget customerDetails(AddCustFormControllerUI controller) {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppColor.black,
-                      fontSize: AppSize.commonText,
+                      fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
                     ),
                   ),
                 ),
@@ -268,14 +294,15 @@ Widget _customRadioButton({
   required Function(String?) onChanged,
 }) {
   bool isSelected = value == groupValue;
+  final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
   return GestureDetector(
     onTap: () => onChanged(value),
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: AppSize.p24 - 2,
-          height: AppSize.p24 - 2,
+          width: isDesktopOrTablet ? 18.0 : AppSize.p24 - 2,
+          height: isDesktopOrTablet ? 18.0 : AppSize.p24 - 2,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
@@ -286,8 +313,8 @@ Widget _customRadioButton({
           child: Center(
             child: isSelected
                 ? Container(
-                    width: AppSize.p12,
-                    height: AppSize.p12,
+                    width: isDesktopOrTablet ? 8.0 : AppSize.p12,
+                    height: isDesktopOrTablet ? 8.0 : AppSize.p12,
                     decoration: BoxDecoration(
                       color: AppColor.goldColor,
                       shape: BoxShape.circle,
@@ -300,7 +327,7 @@ Widget _customRadioButton({
         Text(
           title,
           style: TextStyle(
-            fontSize: AppSize.commonText,
+            fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
             color: AppColor.black,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
@@ -317,6 +344,7 @@ Widget _formDropDown({
   required RxList<String> items,
   required Function(String?) onChanged,
 }) {
+  final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -325,7 +353,7 @@ Widget _formDropDown({
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: AppColor.black,
-          fontSize: AppSize.commonText,
+          fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
         ),
       ),
       SizedBox(height: AppSize.p8),
@@ -340,18 +368,18 @@ Widget _formDropDown({
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: value.value,
-              icon: Icon(AppIcon.arrow_down, color: AppColor.goldColor),
+              icon: Icon(AppIcon.arrow_down, color: AppColor.goldColor, size: isDesktopOrTablet ? 18.0 : 24.0),
               isExpanded: true,
               items: items.map((String item) {
                 return DropdownMenuItem<String>(
                   value: item,
                   child: Row(
                     children: [
-                      Icon(icon, color: AppColor.goldColor, size: AppSize.p20),
+                      Icon(icon, color: AppColor.goldColor, size: isDesktopOrTablet ? 18.0 : AppSize.p20),
                       SizedBox(width: AppSize.p12),
                       Text(
                         item,
-                        style: TextStyle(fontSize: AppSize.commonText),
+                        style: TextStyle(fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText),
                       ),
                     ],
                   ),
@@ -487,6 +515,7 @@ Widget photoListSection({
   required Function(int) onPick,
   required String hintText,
 }) {
+  final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -497,13 +526,13 @@ Widget photoListSection({
             title,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: AppSize.commonText,
+              fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
               color: AppColor.black,
             ),
           ),
           IconButton(
             onPressed: onAdd,
-            icon: Icon(AppIcon.add, color: AppColor.goldColor),
+            icon: Icon(AppIcon.add, color: AppColor.goldColor, size: isDesktopOrTablet ? 18.0 : 24.0),
           ),
         ],
       ),
@@ -519,8 +548,12 @@ Widget photoListSection({
                       onTap: () => onPick(index),
                       child: Obx(
                         () => Container(
-                          width: AppSize.width * 0.15,
-                          height: AppSize.width * 0.15,
+                          width: (AppSize.isDesktop || AppSize.isTablet)
+                              ? 55
+                              : AppSize.width * 0.15,
+                          height: (AppSize.isDesktop || AppSize.isTablet)
+                              ? 55
+                              : AppSize.width * 0.15,
                           decoration: BoxDecoration(
                             color: AppColor.backgroundColor,
                             borderRadius: BorderRadius.circular(AppSize.p8),
@@ -541,12 +574,12 @@ Widget photoListSection({
                                     Icon(
                                       AppIcon.camera,
                                       color: AppColor.goldColor,
-                                      size: AppSize.p20 - 2,
+                                      size: isDesktopOrTablet ? 16.0 : AppSize.p20 - 2,
                                     ),
                                     Text(
                                       AppString.image,
                                       style: TextStyle(
-                                        fontSize: AppSize.extraSmallText,
+                                        fontSize: isDesktopOrTablet ? 10.0 : AppSize.extraSmallText,
                                         color: AppColor.goldColor,
                                       ),
                                     ),
@@ -569,10 +602,11 @@ Widget photoListSection({
                         ),
                         child: TextField(
                           controller: controllers[index],
+                          style: TextStyle(fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText),
                           decoration: InputDecoration(
                             hintText: hintText,
                             hintStyle: TextStyle(
-                              fontSize: AppSize.smallText,
+                              fontSize: isDesktopOrTablet ? 13.0 : AppSize.smallText,
                               color: AppColor.textColor.withOpacity(0.6),
                             ),
                             border: InputBorder.none,
@@ -584,7 +618,7 @@ Widget photoListSection({
                                     icon: Icon(
                                       AppIcon.removeCircle,
                                       color: AppColor.deleteColor,
-                                      size: AppSize.p20,
+                                      size: isDesktopOrTablet ? 18.0 : AppSize.p20,
                                     ),
                                   ),
                           ),

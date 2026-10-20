@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import '../../../../modal/drawer/home/customer/customer_detail_model.dart';
 
 class UpdateCustFormControllerUI extends GetxController {
@@ -53,8 +54,11 @@ class UpdateCustFormControllerUI extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    customerData = Get.arguments as CustomerDetailData;
-    initData();
+    final args = NavDrawerController.getRouteArguments();
+    if (args is CustomerDetailData) {
+      customerData = args;
+      initData();
+    }
   }
 
   void initData() {

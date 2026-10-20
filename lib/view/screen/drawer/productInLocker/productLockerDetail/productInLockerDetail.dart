@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/modal/drawer/productInLocker/cust_product_model.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
@@ -16,7 +17,10 @@ class ProductInLockerDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ProductList? item = Get.arguments;
+    final ProductList? item =
+        NavDrawerController.getRouteArguments(context) as ProductList?;
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Fullscreen(
       isPadding: false,
       backGroundcolor: AppColor.backgroundColor,
@@ -28,30 +32,67 @@ class ProductInLockerDetail extends StatelessWidget {
       child: Column(
         children: [
           Expanded(
-            child: ListView(
+            child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(vertical: AppSize.p16),
-              children: [
-                _buildHeroImageSection(item),
-                SizedBox(height: AppSize.p24),
-                horizontalPadding(
-                  child: _buildSectionHeader(
-                    AppString.productDetail,
-                    AppIcon.product,
-                  ),
-                ),
-                SizedBox(height: AppSize.p16),
-                _buildProductDetailsCard(item),
-                SizedBox(height: AppSize.p24),
-                horizontalPadding(
-                  child: _buildSectionHeader(
-                    AppString.lockerDetail,
-                    AppIcon.locker,
-                  ),
-                ),
-                SizedBox(height: AppSize.p16),
-                _buildLockerDetailCard(item),
-                SizedBox(height: AppSize.p24),
-              ],
+              child: isDesktopOrTablet
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(horizontal: AppSize.p16),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Left Column: Hero Image & Name Panel
+                          SizedBox(
+                            width: 380,
+                            child: _buildHeroImageSection(item),
+                          ),
+                          SizedBox(width: AppSize.p16),
+                          // Right Column: Product Details & Locker Details Cards
+                          Expanded(
+                            child: Column(
+                              children: [
+                                _buildSectionHeader(
+                                  AppString.productDetail,
+                                  AppIcon.product,
+                                ),
+                                SizedBox(height: AppSize.p12),
+                                _buildProductDetailsCard(item),
+                                SizedBox(height: AppSize.p20),
+                                _buildSectionHeader(
+                                  AppString.lockerDetail,
+                                  AppIcon.locker,
+                                ),
+                                SizedBox(height: AppSize.p12),
+                                _buildLockerDetailCard(item),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Column(
+                      children: [
+                        _buildHeroImageSection(item),
+                        SizedBox(height: AppSize.p24),
+                        horizontalPadding(
+                          child: _buildSectionHeader(
+                            AppString.productDetail,
+                            AppIcon.product,
+                          ),
+                        ),
+                        SizedBox(height: AppSize.p16),
+                        _buildProductDetailsCard(item),
+                        SizedBox(height: AppSize.p24),
+                        horizontalPadding(
+                          child: _buildSectionHeader(
+                            AppString.lockerDetail,
+                            AppIcon.locker,
+                          ),
+                        ),
+                        SizedBox(height: AppSize.p16),
+                        _buildLockerDetailCard(item),
+                        SizedBox(height: AppSize.p24),
+                      ],
+                    ),
             ),
           ),
         ],
@@ -103,10 +144,12 @@ class ProductInLockerDetail extends StatelessWidget {
   }
 
   Widget _buildHeroImageSection(ProductList? item) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return horizontalPadding(
       child: Center(
         child: Container(
-          height: AppSize.p4 * 55,
+          height: isDesktopOrTablet ? 220 : AppSize.p4 * 55,
           width: double.infinity,
           decoration: BoxDecoration(
             color: AppColor.white,
@@ -179,7 +222,7 @@ class ProductInLockerDetail extends StatelessWidget {
                             item?.custName ?? "N/A",
                             style: TextStyle(
                               color: AppColor.black,
-                              fontSize: AppSize.headingText,
+                              fontSize: isDesktopOrTablet ? 18.0 : AppSize.headingText,
                               fontWeight: FontWeight.bold,
                             ),
                             maxLines: 1,
@@ -190,7 +233,7 @@ class ProductInLockerDetail extends StatelessWidget {
                             "${item?.metalName} ${item?.prodType} ${item?.catName}",
                             style: TextStyle(
                               color: AppColor.black.withOpacity(0.6),
-                              fontSize: AppSize.commonText,
+                              fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
                             ),
                             maxLines: 2,
                           ),
@@ -235,6 +278,7 @@ class ProductInLockerDetail extends StatelessWidget {
   }
 
   Widget _buildSectionHeader(String title, IconData icon) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSize.p16,
@@ -258,13 +302,13 @@ class ProductInLockerDetail extends StatelessWidget {
                 ),
               ],
             ),
-            child: Icon(icon, color: AppColor.goldColor, size: AppSize.p20),
+            child: Icon(icon, color: AppColor.goldColor, size: isDesktopOrTablet ? 18.0 : AppSize.p20),
           ),
           SizedBox(width: AppSize.p12),
           Text(
             title,
             style: TextStyle(
-              fontSize: AppSize.headingText,
+              fontSize: isDesktopOrTablet ? 16.0 : AppSize.headingText,
               fontWeight: FontWeight.bold,
               color: AppColor.black,
             ),
@@ -349,6 +393,7 @@ class ProductInLockerDetail extends StatelessWidget {
     String value, {
     bool isGoldValue = false,
   }) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: AppSize.p12),
       child: Row(
@@ -359,7 +404,7 @@ class ProductInLockerDetail extends StatelessWidget {
               color: AppColor.whiteOrang.withOpacity(0.5),
               borderRadius: BorderRadius.circular(AppSize.p8),
             ),
-            child: Icon(icon, color: AppColor.goldColor, size: AppSize.p16),
+            child: Icon(icon, color: AppColor.goldColor, size: isDesktopOrTablet ? 16.0 : AppSize.p16),
           ),
           SizedBox(width: AppSize.p16),
           Expanded(
@@ -367,7 +412,7 @@ class ProductInLockerDetail extends StatelessWidget {
             child: Text(
               label,
               style: TextStyle(
-                fontSize: AppSize.commonText,
+                fontSize: isDesktopOrTablet ? 15.0 : AppSize.commonText,
                 fontWeight: FontWeight.w500,
                 color: AppColor.black,
               ),
@@ -379,7 +424,7 @@ class ProductInLockerDetail extends StatelessWidget {
               value,
               textAlign: TextAlign.right,
               style: TextStyle(
-                fontSize: AppSize.commonText,
+                fontSize: isDesktopOrTablet ? 15.0 : AppSize.commonText,
                 color: isGoldValue ? AppColor.goldColor : AppColor.black,
                 fontWeight: isGoldValue ? FontWeight.bold : FontWeight.w500,
               ),
@@ -399,6 +444,7 @@ class ProductInLockerDetail extends StatelessWidget {
   }
 
   Widget _buildLockerDetailCard(ProductList? item) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
     return horizontalPadding(
       child: Container(
         padding: EdgeInsets.all(AppSize.p16),
@@ -425,7 +471,7 @@ class ProductInLockerDetail extends StatelessWidget {
                         AppString.locker,
                         style: TextStyle(
                           color: AppColor.black.withOpacity(0.6),
-                          fontSize: AppSize.size12,
+                          fontSize: isDesktopOrTablet ? 13.0 : AppSize.size12,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -435,14 +481,14 @@ class ProductInLockerDetail extends StatelessWidget {
                           Icon(
                             AppIcon.locker,
                             color: AppColor.goldColor,
-                            size: AppSize.p16,
+                            size: isDesktopOrTablet ? 18.0 : AppSize.p16,
                           ),
                           SizedBox(width: AppSize.p8),
                           Text(
                             "${item?.lockerCode}-${item?.code}",
                             style: TextStyle(
                               color: AppColor.goldColor,
-                              fontSize: AppSize.commonText,
+                              fontSize: isDesktopOrTablet ? 15.0 : AppSize.commonText,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -466,7 +512,7 @@ class ProductInLockerDetail extends StatelessWidget {
                           AppString.returnDate,
                           style: TextStyle(
                             color: AppColor.black.withOpacity(0.6),
-                            fontSize: AppSize.size12,
+                            fontSize: isDesktopOrTablet ? 13.0 : AppSize.size12,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -476,14 +522,14 @@ class ProductInLockerDetail extends StatelessWidget {
                             Icon(
                               AppIcon.calendar,
                               color: AppColor.goldColor,
-                              size: AppSize.p16,
+                              size: isDesktopOrTablet ? 18.0 : AppSize.p16,
                             ),
                             SizedBox(width: AppSize.p8),
                             Text(
                               "-",
                               style: TextStyle(
                                 color: AppColor.black,
-                                fontSize: AppSize.commonText,
+                                fontSize: isDesktopOrTablet ? 15.0 : AppSize.commonText,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

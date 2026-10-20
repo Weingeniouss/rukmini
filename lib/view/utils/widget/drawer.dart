@@ -22,27 +22,32 @@ Widget homeDrawer() {
       children: [
         // Custom Header
         SizedBox(
-          height: AppSize.height * 0.27,
+          height: (AppSize.isDesktop || AppSize.isTablet)
+              ? 140.0
+              : AppSize.height * 0.27,
           child: Stack(
             children: [
               Positioned.fill(child: CustomPaint(painter: HeaderArcPainter())),
               Padding(
                 padding: EdgeInsets.fromLTRB(
                   AppSize.p20,
-                  AppSize.height * 0.07,
+                  (AppSize.isDesktop || AppSize.isTablet)
+                      ? AppSize.p20
+                      : AppSize.height * 0.07,
                   AppSize.p20,
                   AppSize.p20,
                 ),
                 child: GestureDetector(
                   onTap: () {
-                    Get.back();
-                    Get.toNamed('/profile');
+                    NavDrawerController.toNamed('/profile');
                   },
                   child: Row(
                     children: [
                       Image.asset(
                         AppLogo.rukminiLogo2,
-                        height: AppSize.height * 0.12,
+                        height: (AppSize.isDesktop || AppSize.isTablet)
+                            ? 60.0
+                            : AppSize.height * 0.12,
                         fit: BoxFit.contain,
                       ),
                       SizedBox(width: AppSize.p16),
@@ -59,7 +64,9 @@ Widget homeDrawer() {
                                 style: TextStyle(
                                   color: AppColor.primaryColor,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: AppSize.extraLargeText,
+                                  fontSize: (AppSize.isDesktop || AppSize.isTablet)
+                                      ? 18.0
+                                      : AppSize.extraLargeText,
                                 ),
                               );
                             }),
@@ -70,7 +77,9 @@ Widget homeDrawer() {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: AppColor.textField,
-                                fontSize: AppSize.size14,
+                                fontSize: (AppSize.isDesktop || AppSize.isTablet)
+                                    ? 12.0
+                                    : AppSize.size14,
                               ),
                             ),
                           ],
@@ -94,8 +103,7 @@ Widget homeDrawer() {
                 title: AppString.home,
                 icon: AppIcon.home,
                 onTap: () {
-                  navDrawerController.changeIndex(0);
-                  Get.toNamed('/home');
+                  navDrawerController.navigateFromDrawer('/home', 0);
                 },
               ),
               _drawerItem(
@@ -103,8 +111,7 @@ Widget homeDrawer() {
                 title: AppString.allMaster,
                 icon: AppIcon.settings,
                 onTap: () {
-                  navDrawerController.changeIndex(1);
-                  Get.toNamed('/allMaster');
+                  navDrawerController.navigateFromDrawer('/allMaster', 1);
                 },
               ),
               _drawerItem(
@@ -112,8 +119,7 @@ Widget homeDrawer() {
                 title: AppString.customer,
                 icon: AppIcon.personOutline,
                 onTap: () {
-                  navDrawerController.changeIndex(2);
-                  Get.toNamed('/custList');
+                  navDrawerController.navigateFromDrawer('/custList', 2);
                 },
               ),
               _drawerItem(
@@ -121,8 +127,7 @@ Widget homeDrawer() {
                 title: AppString.girvi,
                 icon: AppIcon.bank,
                 onTap: () {
-                  navDrawerController.changeIndex(3);
-                  Get.toNamed('/giriviList');
+                  navDrawerController.navigateFromDrawer('/giriviList', 3);
                 },
               ),
               _drawerItem(
@@ -130,8 +135,7 @@ Widget homeDrawer() {
                 title: AppString.products,
                 icon: AppIcon.grid,
                 onTap: () {
-                  navDrawerController.changeIndex(4);
-                  Get.toNamed('/pendingProduct');
+                  navDrawerController.navigateFromDrawer('/pendingProduct', 4);
                 },
               ),
               _drawerItem(
@@ -139,8 +143,7 @@ Widget homeDrawer() {
                 title: AppString.productinLocker,
                 icon: AppIcon.lockPerson,
                 onTap: () {
-                  navDrawerController.changeIndex(5);
-                  Get.toNamed('/productInLocker');
+                  navDrawerController.navigateFromDrawer('/productInLocker', 5);
                 },
               ),
               _drawerItem(
@@ -148,8 +151,7 @@ Widget homeDrawer() {
                 title: AppString.pendingTransaction,
                 icon: AppIcon.pending,
                 onTap: () {
-                  navDrawerController.changeIndex(6);
-                  Get.toNamed('/dueGirvi');
+                  navDrawerController.navigateFromDrawer('/dueGirvi', 6);
                 },
               ),
               _drawerItem(
@@ -157,8 +159,7 @@ Widget homeDrawer() {
                 title: AppString.lockerTransaction,
                 icon: AppIcon.lockReset,
                 onTap: () {
-                  navDrawerController.changeIndex(7);
-                  Get.toNamed('/lockerTransaction');
+                  navDrawerController.navigateFromDrawer('/lockerTransaction', 7);
                 },
               ),
               _drawerItem(
@@ -166,8 +167,7 @@ Widget homeDrawer() {
                 title: AppString.reports,
                 icon: AppIcon.description,
                 onTap: () {
-                  navDrawerController.changeIndex(8);
-                  Get.toNamed('/report');
+                  navDrawerController.navigateFromDrawer('/report', 8);
                 },
               ),
               _drawerItem(
@@ -176,9 +176,7 @@ Widget homeDrawer() {
                 icon: AppIcon.contact,
                 isSpecial: true,
                 onTap: () {
-                  navDrawerController.changeIndex(9);
-                  Get.back(); // Close drawer
-                  Get.toNamed('/exportContacts');
+                  navDrawerController.navigateFromDrawer('/exportContacts', 9);
                 },
               ),
             ],
@@ -191,7 +189,9 @@ Widget homeDrawer() {
             AppSize.p16,
             AppSize.p8,
             AppSize.p16,
-            AppSize.height * 0.08,
+            (AppSize.isDesktop || AppSize.isTablet)
+                ? 40.0
+                : AppSize.height * 0.08,
           ),
           child: Container(
             decoration: BoxDecoration(
@@ -216,7 +216,7 @@ Widget homeDrawer() {
                 style: TextStyle(
                   color: AppColor.logoutText,
                   fontWeight: FontWeight.w600,
-                  fontSize: 16,
+                  fontSize: (AppSize.isDesktop || AppSize.isTablet) ? 14.0 : 16.0,
                 ),
               ),
               onTap: () async {
@@ -276,7 +276,7 @@ Widget _drawerItem({
                   : isSpecial
                   ? AppColor.goldColor
                   : AppColor.primaryColor,
-              size: 24,
+              size: (AppSize.isDesktop || AppSize.isTablet) ? 20.0 : 24.0,
             ),
             title: Text(
               title,
@@ -286,7 +286,9 @@ Widget _drawerItem({
                     : isSpecial
                     ? AppColor.goldColor
                     : AppColor.primaryColor,
-                fontSize: AppSize.largeText,
+                fontSize: (AppSize.isDesktop || AppSize.isTablet)
+                    ? 14.0
+                    : AppSize.largeText,
                 fontWeight: (isSelected || isSpecial)
                     ? FontWeight.bold
                     : FontWeight.w500,

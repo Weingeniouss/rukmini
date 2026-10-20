@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/girvi/giriviDetail_Controller.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/girvi/giriviList_Controller.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
@@ -27,18 +28,22 @@ class _GiriviDetailState extends State<GiriviDetail> {
   final giriviListController = Get.put(GiriviListController());
   final ScrollController _girviScrollController = ScrollController();
   final ScrollController _custScrollController = ScrollController();
+  bool _isInitialized = false;
 
   @override
-  void initState() {
-    super.initState();
-    giriviDetailController.currentGirviId.value = Get.arguments ?? '';
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      final args = NavDrawerController.getRouteArguments(context);
+      giriviDetailController.currentGirviId.value =
+          (args != null && args is String) ? args : '';
       if (giriviDetailController.currentGirviId.value.isNotEmpty) {
         CallApi.callGiriviDetail(
           girviId: giriviDetailController.currentGirviId.value,
         );
       }
-    });
+      _isInitialized = true;
+    }
   }
 
   @override
@@ -50,6 +55,8 @@ class _GiriviDetailState extends State<GiriviDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return DefaultTabController(
       length: 3,
       child: Fullscreen(
@@ -63,14 +70,6 @@ class _GiriviDetailState extends State<GiriviDetail> {
             return Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Text(
-                //   AppString.girviDetail.toUpperCase(),
-                //   style: TextStyle(
-                //     color: AppColor.black,
-                //     fontSize: AppSize.titleText,
-                //     fontWeight: FontWeight.bold,
-                //   ),
-                // ),
                 SizedBox(width: AppSize.p8),
                 Container(
                   padding: EdgeInsets.symmetric(
@@ -104,7 +103,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
           editOnPressed: () {
             final data = giriviDetailController.giriviDetailData.value.data;
             if (data != null) {
-              Get.toNamed('/giriviadd', arguments: data);
+              NavDrawerController.toNamed('/giriviadd', arguments: data);
             }
           },
           closeOnPressed: () => CallApi.callCloseGirvie(
@@ -123,6 +122,83 @@ class _GiriviDetailState extends State<GiriviDetail> {
 
           if (data == null) {
             return Center(child: Text(AppString.noDataFound));
+          }
+
+          if (isDesktopOrTablet) {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Left Column: Summary Cards & Quick Action Buttons
+                SizedBox(
+                  width: 380,
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(horizontal: AppSize.p16),
+                    child: Column(
+                      children: [
+                        _buildTopHeader(data),
+                        SizedBox(height: AppSize.p16),
+                        _buildActionButtons(data),
+                        SizedBox(height: AppSize.p16),
+                      ],
+                    ),
+                  ),
+                ),
+                // Right Column: Tabbed Details
+                Expanded(
+                  child: Column(
+                    children: [
+                      TabBar(
+                        labelColor: AppColor.goldColor,
+                        unselectedLabelColor: AppColor.textColor,
+                        indicatorColor: AppColor.goldColor,
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        dividerColor: AppColor.grey300.withOpacity(0.5),
+                        isScrollable: true,
+                        tabAlignment: TabAlignment.start,
+                        tabs: [
+                          Tab(
+                            child: Text(
+                              AppString.girviDetails.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: AppSize.size12 * 1.2,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          Tab(
+                            child: Text(
+                              AppString.productDetail.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: AppSize.size12 * 1.2,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          Tab(
+                            child: Text(
+                              AppString.customerDetails.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: AppSize.size12 * 1.2,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            _buildGirviDetailsTab(data),
+                            _buildProductDetailTab(data),
+                            _buildCustomerDetailsTab(data),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
           }
 
           return Column(
@@ -347,75 +423,67 @@ class _GiriviDetailState extends State<GiriviDetail> {
   Widget _buildGirviDetailsTab(data) {
     return SingleChildScrollView(
       child: horizontalPadding(
-        child: Scrollbar(
-          controller: _girviScrollController,
-          thumbVisibility: true,
-          child: SingleChildScrollView(
-            controller: _girviScrollController,
-            scrollDirection: Axis.horizontal,
-            child: Container(
-              margin: EdgeInsets.symmetric(vertical: AppSize.p16),
-              decoration: BoxDecoration(
-                color: AppColor.white,
-                borderRadius: BorderRadius.circular(AppSize.p20),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColor.black.withOpacity(0.05),
-                    blurRadius: AppSize.p10,
-                    offset: Offset(0, AppSize.p4),
-                  ),
-                ],
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: AppSize.p16),
+          decoration: BoxDecoration(
+            color: AppColor.white,
+            borderRadius: BorderRadius.circular(AppSize.p20),
+            boxShadow: [
+              BoxShadow(
+                color: AppColor.black.withOpacity(0.05),
+                blurRadius: AppSize.p10,
+                offset: Offset(0, AppSize.p4),
               ),
-              child: Column(
-                children: [
-                  _buildInfoRow(
-                    AppIcon.category,
-                    AppString.totProd,
-                    data.totalCunt ?? "0",
-                  ),
-                  _buildInfoRow(
-                    AppIcon.calendar,
-                    AppString.girviDate,
-                    data.girviDate ?? "",
-                  ),
-                  _buildInfoRow(
-                    AppIcon.rupee,
-                    AppString.gvnAmt,
-                    data.givenAmt ?? "",
-                  ),
-                  _buildInfoRow(
-                    AppIcon.percent,
-                    AppString.intRate,
-                    "${data.interest}%",
-                  ),
-                  _buildInfoRow(
-                    AppIcon.calendar,
-                    AppString.duration,
-                    "${data.givenMonth} ${AppString.month}",
-                  ),
-                  _buildInfoRow(
-                    AppIcon.calendar,
-                    AppString.dueDate,
-                    data.dueDate ?? "",
-                  ),
-                  _buildInfoRow(
-                    AppIcon.calendar,
-                    AppString.gracePeriod,
-                    "${data.gracePeriod} ${AppString.days}",
-                  ),
-                  _buildInfoRow(
-                    AppIcon.calendar,
-                    AppString.carryforwrdDt,
-                    data.actualDate ?? "",
-                  ),
-                  _buildInfoRow(
-                    AppIcon.rupee,
-                    AppString.carryforwrdAmt,
-                    data.actualAmt ?? "",
-                  ),
-                ],
+            ],
+          ),
+          child: Column(
+            children: [
+              _buildInfoRow(
+                AppIcon.category,
+                AppString.totProd,
+                data.totalCunt ?? "0",
               ),
-            ),
+              _buildInfoRow(
+                AppIcon.calendar,
+                AppString.girviDate,
+                data.girviDate ?? "",
+              ),
+              _buildInfoRow(
+                AppIcon.rupee,
+                AppString.gvnAmt,
+                data.givenAmt ?? "",
+              ),
+              _buildInfoRow(
+                AppIcon.percent,
+                AppString.intRate,
+                "${data.interest}%",
+              ),
+              _buildInfoRow(
+                AppIcon.calendar,
+                AppString.duration,
+                "${data.givenMonth} ${AppString.month}",
+              ),
+              _buildInfoRow(
+                AppIcon.calendar,
+                AppString.dueDate,
+                data.dueDate ?? "",
+              ),
+              _buildInfoRow(
+                AppIcon.calendar,
+                AppString.gracePeriod,
+                "${data.gracePeriod} ${AppString.days}",
+              ),
+              _buildInfoRow(
+                AppIcon.calendar,
+                AppString.carryforwrdDt,
+                data.actualDate ?? "",
+              ),
+              _buildInfoRow(
+                AppIcon.rupee,
+                AppString.carryforwrdAmt,
+                data.actualAmt ?? "",
+              ),
+            ],
           ),
         ),
       ),
@@ -423,6 +491,8 @@ class _GiriviDetailState extends State<GiriviDetail> {
   }
 
   Widget _buildInfoRow(IconData icon, String label, String value) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Column(
       children: [
         Padding(
@@ -431,7 +501,6 @@ class _GiriviDetailState extends State<GiriviDetail> {
             horizontal: AppSize.p16,
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 padding: EdgeInsets.all(AppSize.p8),
@@ -447,7 +516,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
               ),
               SizedBox(width: AppSize.p16),
               SizedBox(
-                width: AppSize.width * 0.35,
+                width: isDesktopOrTablet ? 180 : AppSize.width * 0.35,
                 child: Text(
                   label,
                   style: TextStyle(
@@ -458,8 +527,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
                 ),
               ),
               const Text(" : ", style: TextStyle(fontWeight: FontWeight.bold)),
-              SizedBox(
-                width: AppSize.width * 0.45,
+              Expanded(
                 child: Text(
                   value,
                   style: TextStyle(
@@ -498,10 +566,69 @@ class _GiriviDetailState extends State<GiriviDetail> {
       itemBuilder: (context, index) {
         final product = data.productDetail[index];
         return horizontalPadding(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
+          child: Container(
+            margin: EdgeInsets.only(bottom: AppSize.p12),
+            decoration: BoxDecoration(
+              color: AppColor.white,
+              borderRadius: BorderRadius.circular(AppSize.p20),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColor.black.withOpacity(0.05),
+                  blurRadius: AppSize.p10,
+                  offset: Offset(0, AppSize.p4),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                _buildInfoRow(
+                  AppIcon.category,
+                  AppString.proTyp,
+                  product.prodType ?? "-",
+                ),
+                _buildInfoRow(
+                  AppIcon.metal,
+                  AppString.metal,
+                  product.metalName ?? "-",
+                ),
+                _buildInfoRow(
+                  AppIcon.weight,
+                  AppString.pcs,
+                  "${product.pieces ?? '0'} (${product.weight ?? '0'}gm)",
+                ),
+                _buildInfoRow(
+                  AppIcon.rupee,
+                  AppString.origPrice,
+                  product.origAmount?.toString() ?? "0",
+                ),
+                _buildInfoRow(
+                  AppIcon.trend,
+                  AppString.rate,
+                  product.todayRate?.toString() ?? "0",
+                ),
+                _buildInfoRow(
+                  AppIcon.locker,
+                  AppString.locker,
+                  (product.lockerList != null &&
+                          product.lockerList!.isNotEmpty)
+                      ? product.lockerList!.first.lockerCode ?? '-'
+                      : '-',
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildCustomerDetailsTab(data) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          horizontalPadding(
             child: Container(
-              margin: EdgeInsets.only(bottom: AppSize.p12),
+              margin: EdgeInsets.symmetric(vertical: AppSize.p16),
               decoration: BoxDecoration(
                 color: AppColor.white,
                 borderRadius: BorderRadius.circular(AppSize.p20),
@@ -515,134 +642,64 @@ class _GiriviDetailState extends State<GiriviDetail> {
               ),
               child: Column(
                 children: [
-                  _buildInfoRow(
-                    AppIcon.category,
-                    AppString.proTyp,
-                    product.prodType ?? "-",
-                  ),
-                  _buildInfoRow(
-                    AppIcon.metal,
-                    AppString.metal,
-                    product.metalName ?? "-",
-                  ),
-                  _buildInfoRow(
-                    AppIcon.weight,
-                    AppString.pcs,
-                    "${product.pieces ?? '0'} (${product.weight ?? '0'}gm)",
-                  ),
-                  _buildInfoRow(
-                    AppIcon.rupee,
-                    AppString.origPrice,
-                    product.origAmount?.toString() ?? "0",
-                  ),
-                  _buildInfoRow(
-                    AppIcon.trend,
-                    AppString.rate,
-                    product.todayRate?.toString() ?? "0",
-                  ),
-                  _buildInfoRow(
-                    AppIcon.locker,
-                    AppString.locker,
-                    (product.lockerList != null &&
-                            product.lockerList!.isNotEmpty)
-                        ? product.lockerList!.first.lockerCode ?? '-'
-                        : '-',
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildCustomerDetailsTab(data) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          horizontalPadding(
-            child: Scrollbar(
-              controller: _custScrollController,
-              thumbVisibility: true,
-              child: SingleChildScrollView(
-                controller: _custScrollController,
-                scrollDirection: Axis.horizontal,
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: AppSize.p16),
-                  decoration: BoxDecoration(
-                    color: AppColor.white,
-                    borderRadius: BorderRadius.circular(AppSize.p20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColor.black.withOpacity(0.05),
-                        blurRadius: AppSize.p10,
-                        offset: Offset(0, AppSize.p4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      _sectionHeader(AppString.customerDetails, AppIcon.person),
-                      Padding(
-                        padding: EdgeInsets.all(AppSize.p16),
-                        child: Column(
-                          children: [
-                            if (data.custName != null && data.custName!.isNotEmpty)
-                              _buildInfoRowSimple(
-                                AppIcon.person,
-                                AppString.name,
-                                data.custName ?? "-",
-                              ),
-                            if (data.custPhone != null && data.custPhone!.isNotEmpty)
-                              _buildInfoRowSimple(
-                                AppIcon.phone,
-                                AppString.phoneNumbar,
-                                data.custPhone ?? "-",
-                              ),
-                            if (data.address != null && data.address!.isNotEmpty)
-                              _buildInfoRowSimple(
-                                AppIcon.location,
-                                AppString.address,
-                                data.address ?? "-",
-                              ),
-                          ],
-                        ),
-                      ),
-                      if (data.nominee != null &&
-                          ((data.nominee!.name != null &&
-                                  data.nominee!.name!.isNotEmpty) ||
-                              (data.nominee!.phone != null &&
-                                  data.nominee!.phone!.isNotEmpty) ||
-                              (data.nominee!.custRelation != null &&
-                                  data.nominee!.custRelation!.isNotEmpty))) ...[
-                        _sectionHeader(AppString.nomineeDetail, AppIcon.person),
-                        Padding(
-                          padding: EdgeInsets.all(AppSize.p16),
-                          child: Column(
-                            children: [
-                              _buildInfoRowSimple(
-                                AppIcon.person,
-                                AppString.name,
-                                data.nominee!.name ?? "-",
-                              ),
-                              _buildInfoRowSimple(
-                                AppIcon.phone,
-                                AppString.phoneNumbar,
-                                data.nominee!.phone ?? "-",
-                              ),
-                              _buildInfoRowSimple(
-                                AppIcon.verifiedUser,
-                                AppString.customerRelation,
-                                data.nominee!.custRelation ?? "-",
-                              ),
-                            ],
+                  _sectionHeader(AppString.customerDetails, AppIcon.person),
+                  Padding(
+                    padding: EdgeInsets.all(AppSize.p16),
+                    child: Column(
+                      children: [
+                        if (data.custName != null && data.custName!.isNotEmpty)
+                          _buildInfoRowSimple(
+                            AppIcon.person,
+                            AppString.name,
+                            data.custName ?? "-",
                           ),
-                        ),
+                        if (data.custPhone != null && data.custPhone!.isNotEmpty)
+                          _buildInfoRowSimple(
+                            AppIcon.phone,
+                            AppString.phoneNumbar,
+                            data.custPhone ?? "-",
+                          ),
+                        if (data.address != null && data.address!.isNotEmpty)
+                          _buildInfoRowSimple(
+                            AppIcon.location,
+                            AppString.address,
+                            data.address ?? "-",
+                          ),
                       ],
-                    ],
+                    ),
                   ),
-                ),
+                  if (data.nominee != null &&
+                      ((data.nominee!.name != null &&
+                              data.nominee!.name!.isNotEmpty) ||
+                          (data.nominee!.phone != null &&
+                              data.nominee!.phone!.isNotEmpty) ||
+                          (data.nominee!.custRelation != null &&
+                              data.nominee!.custRelation!.isNotEmpty))) ...[
+                    _sectionHeader(AppString.nomineeDetail, AppIcon.person),
+                    Padding(
+                      padding: EdgeInsets.all(AppSize.p16),
+                      child: Column(
+                        children: [
+                          _buildInfoRowSimple(
+                            AppIcon.person,
+                            AppString.name,
+                            data.nominee!.name ?? "-",
+                          ),
+                          _buildInfoRowSimple(
+                            AppIcon.phone,
+                            AppString.phoneNumbar,
+                            data.nominee!.phone ?? "-",
+                          ),
+                          _buildInfoRowSimple(
+                            AppIcon.verifiedUser,
+                            AppString.customerRelation,
+                            data.nominee!.custRelation ?? "-",
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
           ),
@@ -652,17 +709,18 @@ class _GiriviDetailState extends State<GiriviDetail> {
   }
 
   Widget _buildInfoRowSimple(IconData icon, String label, String value) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Column(
       children: [
         Padding(
           padding: EdgeInsets.symmetric(vertical: AppSize.p8),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, color: AppColor.goldColor, size: AppSize.iconSmall),
               SizedBox(width: AppSize.p16),
               SizedBox(
-                width: AppSize.width * 0.35,
+                width: isDesktopOrTablet ? 180 : AppSize.width * 0.35,
                 child: Text(
                   label,
                   style: TextStyle(
@@ -672,8 +730,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
                 ),
               ),
               const Text(" : ", style: TextStyle(fontWeight: FontWeight.bold)),
-              SizedBox(
-                width: AppSize.width * 0.45,
+              Expanded(
                 child: Text(
                   value,
                   style: TextStyle(
@@ -741,108 +798,6 @@ class _GiriviDetailState extends State<GiriviDetail> {
     );
   }
 
-  // ignore: unused_element
-  Widget _buildTransactionDetailsTab(data) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.all(AppSize.p16),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "${AppString.givenAmt} : ${data.givenAmt}(${data.interest}%)",
-                    style: TextStyle(fontSize: AppSize.commonText),
-                  ),
-                  Text(
-                    "${AppString.totint} : ${data.tillInterest}(${data.tillMonth} mon.)",
-                    style: TextStyle(fontSize: AppSize.commonText),
-                  ),
-                ],
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  data.tillDate ?? "",
-                  style: TextStyle(
-                    fontSize: AppSize.smallText,
-                    color: AppColor.grey300,
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "${AppString.paidAmt} : ${data.totalPaidAmt}",
-                    style: TextStyle(fontSize: AppSize.commonText),
-                  ),
-                  Text(
-                    "${AppString.paidint} : ${data.paidInterset}",
-                    style: TextStyle(fontSize: AppSize.commonText),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        Divider(color: AppColor.grey300.withOpacity(0.5)),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSize.p16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                AppString.date,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: AppSize.smallText,
-                ),
-              ),
-              Text(
-                AppString.muddal,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: AppSize.smallText,
-                ),
-              ),
-              Text(
-                AppString.interest,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: AppSize.smallText,
-                ),
-              ),
-              Text(
-                AppString.recIntAmt,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: AppSize.smallText,
-                ),
-              ),
-              Text(
-                AppString.cr,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: AppSize.smallText,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(color: AppColor.grey300.withOpacity(0.5)),
-        Center(
-          child: Text(
-            AppString.noTransactionHistory,
-            style: TextStyle(fontSize: AppSize.commonText),
-          ),
-        ),
-      ],
-    );
-  }
-
   Future<void> _makeCall(String phoneNumber) async {
     if (phoneNumber.isEmpty) return;
     final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber);
@@ -874,7 +829,6 @@ class _GiriviDetailState extends State<GiriviDetail> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            // Header Card Shimmer
             horizontalPadding(
               child: Container(
                 margin: EdgeInsets.symmetric(vertical: AppSize.p16),
@@ -885,7 +839,6 @@ class _GiriviDetailState extends State<GiriviDetail> {
                 ),
               ),
             ),
-            // Actions Row Shimmer
             horizontalPadding(
               child: Container(
                 height: AppSize.height * 0.1,
@@ -896,7 +849,6 @@ class _GiriviDetailState extends State<GiriviDetail> {
               ),
             ),
             SizedBox(height: AppSize.p16),
-            // TabBar Shimmer
             horizontalPadding(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -913,7 +865,6 @@ class _GiriviDetailState extends State<GiriviDetail> {
                 ),
               ),
             ),
-            // Content Card Shimmer
             horizontalPadding(
               child: Container(
                 margin: EdgeInsets.symmetric(vertical: AppSize.p16),

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/controller/ui/home/locker/locker_trans_ui_controller.dart';
 import 'package:rukmini/modal/drawer/locker/locker_wise_del_modal.dart';
 import 'package:shimmer/shimmer.dart';
@@ -21,6 +22,8 @@ class LockerTranStaion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Fullscreen(
       isPadding: false,
       backGroundcolor: AppColor.backgroundColor,
@@ -76,6 +79,37 @@ class LockerTranStaion extends StatelessWidget {
                 );
               }
 
+              final list = uiController.lockerWiseDelController.lockerWiseList;
+
+              if (isDesktopOrTablet) {
+                return RefreshIndicator(
+                  onRefresh: () => uiController.fetchLockerWiseDetails(
+                    uiController.selectedLocker.value?.lockerId ?? "",
+                  ),
+                  color: AppColor.goldColor,
+                  child: GridView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.all(AppSize.p16),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: AppSize.isDesktop ? 3 : 2,
+                      crossAxisSpacing: AppSize.p16,
+                      mainAxisSpacing: AppSize.p16,
+                      mainAxisExtent: 160,
+                    ),
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      final item = list[index];
+                      return GestureDetector(
+                        onTap: () {
+                          NavDrawerController.toNamed('/lockerTransationDetail', arguments: item);
+                        },
+                        child: _buildTransactionCard(item, isGrid: true),
+                      );
+                    },
+                  ),
+                );
+              }
+
               return RefreshIndicator(
                 onRefresh: () => uiController.fetchLockerWiseDetails(
                   uiController.selectedLocker.value?.lockerId ?? "",
@@ -84,19 +118,14 @@ class LockerTranStaion extends StatelessWidget {
                 child: ListView.builder(
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(vertical: AppSize.p8),
-                  itemCount: uiController
-                      .lockerWiseDelController
-                      .lockerWiseList
-                      .length,
+                  itemCount: list.length,
                   itemBuilder: (context, index) {
-                    final item = uiController
-                        .lockerWiseDelController
-                        .lockerWiseList[index];
+                    final item = list[index];
                     return GestureDetector(
                       onTap: () {
                         Get.toNamed('/lockerTransationDetail', arguments: item);
                       },
-                      child: _buildTransactionCard(item),
+                      child: _buildTransactionCard(item, isGrid: false),
                     );
                   },
                 ),
@@ -315,10 +344,10 @@ class LockerTranStaion extends StatelessWidget {
     );
   }
 
-  Widget _buildTransactionCard(LockerWiseData data) {
+  Widget _buildTransactionCard(LockerWiseData data, {bool isGrid = false}) {
     return horizontalPadding(
       child: Container(
-        margin: EdgeInsets.only(bottom: AppSize.p16),
+        margin: isGrid ? EdgeInsets.zero : EdgeInsets.only(bottom: AppSize.p16),
         decoration: BoxDecoration(
           color: AppColor.white,
           borderRadius: BorderRadius.circular(AppSize.p12),
@@ -326,7 +355,7 @@ class LockerTranStaion extends StatelessWidget {
             BoxShadow(
               color: AppColor.black.withOpacity(0.05),
               blurRadius: AppSize.p10,
-              offset: Offset(0, AppSize.p4),
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -348,6 +377,7 @@ class LockerTranStaion extends StatelessWidget {
                   padding: EdgeInsets.all(AppSize.p12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         data.custName ?? AppString.na,
@@ -356,8 +386,10 @@ class LockerTranStaion extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           fontSize: AppSize.size18,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      SizedBox(height: AppSize.p12),
+                      SizedBox(height: isGrid ? 8 : AppSize.p12),
                       Row(
                         children: [
                           Expanded(
@@ -374,7 +406,7 @@ class LockerTranStaion extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: AppSize.p12),
+                      SizedBox(height: isGrid ? 8 : AppSize.p12),
                       Row(
                         children: [
                           Expanded(
@@ -423,6 +455,8 @@ class LockerTranStaion extends StatelessWidget {
             fontWeight: FontWeight.w600,
             color: isCritical ? AppColor.goldColor : AppColor.dark,
           ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );

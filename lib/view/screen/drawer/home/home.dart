@@ -8,6 +8,7 @@ import 'package:rukmini/controller/api/controllers/credentials/login_controller.
 import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/lockerList_Controller.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/dashbord_Controller.dart';
 import 'package:rukmini/controller/api/controllers/drawer/locker/locker_trans_controller.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/modal/drawer/home/dashboard_model.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
@@ -84,7 +85,7 @@ class _HomeState extends State<Home> {
           ],
         ),
         avatar: GestureDetector(
-          onTap: () => Get.toNamed('/profile'),
+          onTap: () => NavDrawerController.toNamed('/profile'),
           child: CircleAvatar(
             backgroundColor: AppColor.dashboardCream,
             child: Obx(() {
@@ -143,21 +144,46 @@ class _HomeState extends State<Home> {
               children: [
                 topMetricsRow(data),
                 SizedBox(height: AppSize.p24),
-                lokersOverview(
-                  lockerList: data.lockerList,
-                  usedPercentage: usedPercentage,
-                  availablePercentage: availablePercentage,
-                  totalLockersCount: totalLockersCount,
-                  usedLockersCount: usedLockersCount,
-                  availableLockers: availableLockers,
-                ),
-                SizedBox(height: AppSize.p24),
-                lockerActivities(),
+                if (AppSize.isDesktop)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: lokersOverview(
+                          lockerList: data.lockerList,
+                          usedPercentage: usedPercentage,
+                          availablePercentage: availablePercentage,
+                          totalLockersCount: totalLockersCount,
+                          usedLockersCount: usedLockersCount,
+                          availableLockers: availableLockers,
+                        ),
+                      ),
+                      SizedBox(width: AppSize.p24),
+                      Expanded(flex: 2, child: lockerActivities()),
+                    ],
+                  )
+                else ...[
+                  lokersOverview(
+                    lockerList: data.lockerList,
+                    usedPercentage: usedPercentage,
+                    availablePercentage: availablePercentage,
+                    totalLockersCount: totalLockersCount,
+                    usedLockersCount: usedLockersCount,
+                    availableLockers: availableLockers,
+                  ),
+                  SizedBox(height: AppSize.p24),
+                  lockerActivities(),
+                ],
                 SizedBox(height: AppSize.p24),
                 quickActions(),
                 SizedBox(height: AppSize.p24),
                 bottomBanner(),
-                SizedBox(height: AppSize.width * 0.25),
+                SizedBox(
+                  height: AppSize.isDesktop
+                      ? AppSize.p40
+                      : AppSize.width * 0.25,
+                ),
               ],
             ),
           ),
@@ -168,59 +194,74 @@ class _HomeState extends State<Home> {
 
   Widget topMetricsRow(DashboardData data) {
     int totalLockersCount = data.lockerList?.length ?? 0;
+    final cards = [
+      _buildTopCard(
+        icon: AppIcon.customer,
+        value: "${data.totalCust ?? 0}",
+        label: AppString.totalCustomer,
+        trend: "+ 12%",
+        isPositive: true,
+        onTap: () => NavDrawerController.toNamed('/custList'),
+      ),
+      _buildTopCard(
+        icon: AppIcon.diamond,
+        value: data.totalGirvi ?? "0",
+        label: AppString.totalGirvi,
+        trend: "+ 8%",
+        isPositive: true,
+        onTap: () => NavDrawerController.toNamed('/giriviList'),
+      ),
+      _buildTopCard(
+        icon: AppIcon.product,
+        value: data.totalPendingProduct ?? "0",
+        label: AppString.totalPendingProduct,
+        trend: "+ 5%",
+        isPositive: true,
+        onTap: () => NavDrawerController.toNamed('/pendingProduct', arguments: 0),
+      ),
+      _buildTopCard(
+        icon: AppIcon.refresh,
+        value: data.totalReturnProduct ?? "0",
+        label: AppString.totalReturnProduct,
+        trend: "- 2%",
+        isPositive: false,
+        onTap: () => NavDrawerController.toNamed('/pendingProduct', arguments: 1),
+      ),
+      Obx(() {
+        int count = lockerListController.lockerList.length;
+        if (count == 0) count = data.lockerList?.length ?? 0;
+        String valueStr = count > 999
+            ? "${(count / 1000).toStringAsFixed(1)}K"
+            : "$count";
+        return _buildTopCard(
+          icon: AppIcon.locker,
+          value: valueStr,
+          label: AppString.totalLockers,
+          trend: "+ 15%",
+          isPositive: true,
+          onTap: () => NavDrawerController.toNamed('/productInLocker'),
+        );
+      }),
+    ];
+
+    if (AppSize.isDesktop || AppSize.isTablet) {
+      return Row(
+        children: cards
+            .map(
+              (card) => Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: AppSize.p4),
+                  child: card,
+                ),
+              ),
+            )
+            .toList(),
+      );
+    }
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          _buildTopCard(
-            icon: AppIcon.customer,
-            value: "${data.totalCust ?? 0}",
-            label: AppString.totalCustomer,
-            trend: "+ 12%",
-            isPositive: true,
-            onTap: () => Get.toNamed('/custList'),
-          ),
-          _buildTopCard(
-            icon: AppIcon.diamond,
-            value: data.totalGirvi ?? "0",
-            label: AppString.totalGirvi,
-            trend: "+ 8%",
-            isPositive: true,
-            onTap: () => Get.toNamed('/giriviList'),
-          ),
-          _buildTopCard(
-            icon: AppIcon.product,
-            value: data.totalPendingProduct ?? "0",
-            label: AppString.totalPendingProduct,
-            trend: "+ 5%",
-            isPositive: true,
-            onTap: () => Get.toNamed('/pendingProduct', arguments: 0),
-          ),
-          _buildTopCard(
-            icon: AppIcon.refresh,
-            value: data.totalReturnProduct ?? "0",
-            label: AppString.totalReturnProduct,
-            trend: "- 2%",
-            isPositive: false,
-            onTap: () => Get.toNamed('/pendingProduct', arguments: 1),
-          ),
-          Obx(() {
-            int count = lockerListController.lockerList.length;
-            if (count == 0) count = data.lockerList?.length ?? 0;
-            String valueStr = count > 999
-                ? "${(count / 1000).toStringAsFixed(1)}K"
-                : "$count";
-            return _buildTopCard(
-              icon: AppIcon.locker,
-              value: valueStr,
-              label: AppString.totalLockers,
-              trend: "+ 15%",
-              isPositive: true,
-              onTap: () => Get.toNamed('/productInLocker'),
-            );
-          }),
-        ],
-      ),
+      child: Row(children: cards),
     );
   }
 
@@ -251,7 +292,7 @@ class _HomeState extends State<Home> {
               ],
             ),
             TextButton(
-              onPressed: () => Get.toNamed('/lockerTransaction'),
+              onPressed: () => NavDrawerController.toNamed('/lockerTransaction'),
               child: Text(
                 AppString.viewAll,
                 style: TextStyle(
@@ -461,22 +502,25 @@ class _HomeState extends State<Home> {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: AppSize.height * 0.12,
+                      height: 120,
                       child: PieChart(
                         PieChartData(
                           sectionsSpace: 0,
-                          centerSpaceRadius: AppSize.width * 0.08,
+                          centerSpaceRadius: (AppSize.width * 0.08).clamp(
+                            20.0,
+                            32.0,
+                          ),
                           sections: [
                             PieChartSectionData(
                               color: AppColor.dashboardGold,
                               value: usedPercentage.toDouble(),
-                              radius: AppSize.width * 0.04,
+                              radius: (AppSize.width * 0.04).clamp(12.0, 20.0),
                               showTitle: false,
                             ),
                             PieChartSectionData(
                               color: AppColor.dashboardCream,
                               value: availablePercentage.toDouble(),
-                              radius: AppSize.width * 0.04,
+                              radius: (AppSize.width * 0.04).clamp(12.0, 20.0),
                               showTitle: false,
                             ),
                           ],
@@ -536,7 +580,7 @@ class _HomeState extends State<Home> {
               child: _buildQuickAction(
                 AppIcon.addCustomer,
                 AppString.addCustomer,
-                () => Get.toNamed('/addCustForm'),
+                () => NavDrawerController.toNamed('/addCustForm'),
               ),
             ),
             SizedBox(width: AppSize.p8),
@@ -544,7 +588,7 @@ class _HomeState extends State<Home> {
               child: _buildQuickAction(
                 AppIcon.girvi,
                 AppString.addGirvi,
-                () => Get.toNamed('/giriviadd'),
+                () => NavDrawerController.toNamed('/giriviadd'),
               ),
             ),
             SizedBox(width: AppSize.p8),
@@ -552,7 +596,7 @@ class _HomeState extends State<Home> {
               child: _buildQuickAction(
                 AppIcon.product,
                 AppString.addProduct,
-                () => Get.toNamed('/AddProduct'),
+                () => NavDrawerController.toNamed('/AddProduct'),
               ),
             ),
             SizedBox(width: AppSize.p8),
@@ -560,7 +604,7 @@ class _HomeState extends State<Home> {
               child: _buildQuickAction(
                 AppIcon.report,
                 AppString.reportsAction,
-                () => Get.toNamed('/report'),
+                () => NavDrawerController.toNamed('/report'),
               ),
             ),
           ],
@@ -571,7 +615,7 @@ class _HomeState extends State<Home> {
 
   Widget bottomBanner() {
     return Container(
-      height: AppSize.height * 0.18,
+      constraints: const BoxConstraints(minHeight: 120),
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppSize.p16),
@@ -596,6 +640,7 @@ class _HomeState extends State<Home> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               AppIcon.quote,
@@ -613,8 +658,8 @@ class _HomeState extends State<Home> {
             ),
             SizedBox(height: AppSize.p8),
             Container(
-              width: AppSize.width * 0.08,
-              height: AppSize.width * 0.005,
+              width: (AppSize.width * 0.08).clamp(30.0, 80.0),
+              height: 3,
               color: AppColor.dashboardGold,
             ),
           ],
@@ -631,15 +676,19 @@ class _HomeState extends State<Home> {
     required bool isPositive,
     VoidCallback? onTap,
   }) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: AppSize.width * 0.36,
-        margin: EdgeInsets.only(right: AppSize.p12),
-        padding: EdgeInsets.all(AppSize.p16),
+        width: isDesktopOrTablet ? double.infinity : AppSize.width * 0.36,
+        margin: isDesktopOrTablet
+            ? EdgeInsets.zero
+            : EdgeInsets.only(right: AppSize.p12),
+        padding: EdgeInsets.all(isDesktopOrTablet ? 12 : AppSize.p16),
         decoration: BoxDecoration(
           color: AppColor.white,
-          borderRadius: BorderRadius.circular(AppSize.p16),
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(color: AppColor.grey300.withOpacity(0.5)),
           boxShadow: [
             BoxShadow(
@@ -651,9 +700,10 @@ class _HomeState extends State<Home> {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: EdgeInsets.all(AppSize.p8),
+              padding: EdgeInsets.all(isDesktopOrTablet ? 6 : AppSize.p8),
               decoration: BoxDecoration(
                 color: AppColor.whiteOrang.withOpacity(0.5),
                 shape: BoxShape.circle,
@@ -661,15 +711,15 @@ class _HomeState extends State<Home> {
               child: Icon(
                 icon,
                 color: AppColor.goldColor,
-                size: AppSize.p20 + 2,
+                size: isDesktopOrTablet ? 18 : AppSize.p20 + 2,
               ),
             ),
-            SizedBox(height: AppSize.p12),
+            SizedBox(height: isDesktopOrTablet ? 6 : AppSize.p12),
             FittedBox(
               child: Text(
                 value,
                 style: TextStyle(
-                  fontSize: AppSize.extraLargeText,
+                  fontSize: isDesktopOrTablet ? 18 : AppSize.extraLargeText,
                   fontWeight: FontWeight.bold,
                   color: AppColor.black,
                 ),
@@ -680,25 +730,27 @@ class _HomeState extends State<Home> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontSize: AppSize.size12,
+                fontSize: isDesktopOrTablet ? 12 : AppSize.size12,
                 color: AppColor.textColor,
               ),
             ),
-            SizedBox(height: AppSize.p8),
+            SizedBox(height: isDesktopOrTablet ? 4 : AppSize.p8),
             Row(
               children: [
                 Icon(
                   isPositive ? AppIcon.arrowUp : AppIcon.arrowDown,
-                  size: AppSize.width * 0.035,
+                  size: isDesktopOrTablet
+                      ? 12
+                      : (AppSize.width * 0.035).clamp(12.0, 16.0),
                   color: isPositive
                       ? AppColor.activeColor
                       : AppColor.deleteColor,
                 ),
-                SizedBox(width: AppSize.p4 / 2),
+                const SizedBox(width: 4),
                 Text(
                   trend,
                   style: TextStyle(
-                    fontSize: AppSize.extraSmallText * 1.5,
+                    fontSize: isDesktopOrTablet ? 11 : 12,
                     fontWeight: FontWeight.bold,
                     color: isPositive
                         ? AppColor.activeColor

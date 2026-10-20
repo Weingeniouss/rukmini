@@ -11,6 +11,7 @@ import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:rukmini/view/utils/widget/inputField.dart';
+import 'package:rukmini/view/utils/widget/responsive.dart';
 
 class AddLockerCode extends StatelessWidget {
   final LockerMasterControllerUI uiController;
@@ -18,6 +19,8 @@ class AddLockerCode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
     return Fullscreen(
       isPadding: false,
       backGroundcolor: AppColor.backgroundColor,
@@ -31,78 +34,194 @@ class AddLockerCode extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(vertical: AppSize.p12),
-              child: horizontalPadding(
-                child: Column(
-                  children: [
-                    _buildSectionHeader(
-                      uiController.editingId.value == null
-                          ? AppString.addLockerCode
-                          : AppString.updateLockerCode,
-                      AppIcon.locker,
-                    ),
-                    SizedBox(height: AppSize.p16),
-                    inputField(
-                      hintText: AppString.lockerCode,
-                      icon: AppIcon.locker,
-                      iconColor: AppColor.goldColor,
-                      inputTextcontroller: uiController.lockerCodeController,
-                    ),
-                    inputField(
-                      hintText: AppString.companyName,
-                      icon: AppIcon.business,
-                      iconColor: AppColor.goldColor,
-                      inputTextcontroller: uiController.companyNameController,
-                    ),
-                    inputField(
-                      hintText: AppString.companyAddress,
-                      icon: AppIcon.location,
-                      iconColor: AppColor.goldColor,
-                      inputTextcontroller: uiController.companyAddressController,
-                    ),
-                    inputField(
-                      hintText: AppString.personName,
-                      icon: AppIcon.person,
-                      iconColor: AppColor.goldColor,
-                      inputTextcontroller: uiController.personNameController,
-                    ),
-                    inputField(
-                      hintText: AppString.phoneNumber,
-                      icon: AppIcon.phone,
-                      iconColor: AppColor.goldColor,
-                      keyboardType: TextInputType.phone,
-                      inputTextcontroller: uiController.phoneNumberController,
-                    ),
-                    inputField(
-                      hintText: AppString.interestRate,
-                      icon: AppIcon.rate,
-                      iconColor: AppColor.goldColor,
-                      keyboardType: TextInputType.number,
-                      inputTextcontroller: uiController.interestRateController,
-                    ),
-                    Obx(
-                      () => CheckboxListTile(
-                        title: Text(
-                          AppString.setAsDefaultLocker,
-                          style: TextStyle(
-                            fontSize: AppSize.commonText,
-                            fontWeight: FontWeight.w500,
-                            color: AppColor.black,
-                          ),
+              child: isDesktopOrTablet
+                  ? ResponsiveCenter(
+                      maxWidth: 900,
+                      padding: const EdgeInsets.all(16),
+                      child: Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: AppColor.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColor.black.withOpacity(0.04),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                        value: uiController.isDefaultLocker.value,
-                        onChanged: (val) {
-                          uiController.isDefaultLocker.value = val ?? false;
-                        },
-                        activeColor: AppColor.goldColor,
-                        checkColor: AppColor.white,
-                        controlAffinity: ListTileControlAffinity.leading,
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
+                        child: Column(
+                          children: [
+                            _buildSectionHeader(
+                              uiController.editingId.value == null
+                                  ? AppString.addLockerCode
+                                  : AppString.updateLockerCode,
+                              AppIcon.locker,
+                            ),
+                            const SizedBox(height: 24),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      inputField(
+                                        hintText: AppString.lockerCode,
+                                        icon: AppIcon.locker,
+                                        iconColor: AppColor.goldColor,
+                                        inputTextcontroller:
+                                            uiController.lockerCodeController,
+                                      ),
+                                      inputField(
+                                        hintText: AppString.companyName,
+                                        icon: AppIcon.business,
+                                        iconColor: AppColor.goldColor,
+                                        inputTextcontroller:
+                                            uiController.companyNameController,
+                                      ),
+                                      inputField(
+                                        hintText: AppString.companyAddress,
+                                        icon: AppIcon.location,
+                                        iconColor: AppColor.goldColor,
+                                        inputTextcontroller: uiController
+                                            .companyAddressController,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 24),
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      inputField(
+                                        hintText: AppString.personName,
+                                        icon: AppIcon.person,
+                                        iconColor: AppColor.goldColor,
+                                        inputTextcontroller:
+                                            uiController.personNameController,
+                                      ),
+                                      inputField(
+                                        hintText: AppString.phoneNumber,
+                                        icon: AppIcon.phone,
+                                        iconColor: AppColor.goldColor,
+                                        keyboardType: TextInputType.phone,
+                                        inputTextcontroller: uiController
+                                            .phoneNumberController,
+                                      ),
+                                      inputField(
+                                        hintText: AppString.interestRate,
+                                        icon: AppIcon.rate,
+                                        iconColor: AppColor.goldColor,
+                                        keyboardType: TextInputType.number,
+                                        inputTextcontroller: uiController
+                                            .interestRateController,
+                                      ),
+                                      Obx(
+                                        () => CheckboxListTile(
+                                          title: Text(
+                                            AppString.setAsDefaultLocker,
+                                            style: TextStyle(
+                                              fontSize: AppSize.commonText,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColor.black,
+                                            ),
+                                          ),
+                                          value:
+                                              uiController.isDefaultLocker.value,
+                                          onChanged: (val) {
+                                            uiController.isDefaultLocker.value =
+                                                val ?? false;
+                                          },
+                                          activeColor: AppColor.goldColor,
+                                          checkColor: AppColor.white,
+                                          controlAffinity:
+                                              ListTileControlAffinity.leading,
+                                          contentPadding: EdgeInsets.zero,
+                                          dense: true,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : horizontalPadding(
+                      child: Column(
+                        children: [
+                          _buildSectionHeader(
+                            uiController.editingId.value == null
+                                ? AppString.addLockerCode
+                                : AppString.updateLockerCode,
+                            AppIcon.locker,
+                          ),
+                          SizedBox(height: AppSize.p16),
+                          inputField(
+                            hintText: AppString.lockerCode,
+                            icon: AppIcon.locker,
+                            iconColor: AppColor.goldColor,
+                            inputTextcontroller: uiController.lockerCodeController,
+                          ),
+                          inputField(
+                            hintText: AppString.companyName,
+                            icon: AppIcon.business,
+                            iconColor: AppColor.goldColor,
+                            inputTextcontroller: uiController.companyNameController,
+                          ),
+                          inputField(
+                            hintText: AppString.companyAddress,
+                            icon: AppIcon.location,
+                            iconColor: AppColor.goldColor,
+                            inputTextcontroller: uiController.companyAddressController,
+                          ),
+                          inputField(
+                            hintText: AppString.personName,
+                            icon: AppIcon.person,
+                            iconColor: AppColor.goldColor,
+                            inputTextcontroller: uiController.personNameController,
+                          ),
+                          inputField(
+                            hintText: AppString.phoneNumber,
+                            icon: AppIcon.phone,
+                            iconColor: AppColor.goldColor,
+                            keyboardType: TextInputType.phone,
+                            inputTextcontroller: uiController.phoneNumberController,
+                          ),
+                          inputField(
+                            hintText: AppString.interestRate,
+                            icon: AppIcon.rate,
+                            iconColor: AppColor.goldColor,
+                            keyboardType: TextInputType.number,
+                            inputTextcontroller: uiController.interestRateController,
+                          ),
+                          Obx(
+                            () => CheckboxListTile(
+                              title: Text(
+                                AppString.setAsDefaultLocker,
+                                style: TextStyle(
+                                  fontSize: AppSize.commonText,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColor.black,
+                                ),
+                              ),
+                              value: uiController.isDefaultLocker.value,
+                              onChanged: (val) {
+                                uiController.isDefaultLocker.value = val ?? false;
+                              },
+                              activeColor: AppColor.goldColor,
+                              checkColor: AppColor.white,
+                              controlAffinity: ListTileControlAffinity.leading,
+                              contentPadding: EdgeInsets.zero,
+                              dense: true,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
             ),
           ),
           _buildBottomActionRow(),
