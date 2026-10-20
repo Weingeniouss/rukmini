@@ -39,8 +39,8 @@ class Fullscreen extends StatelessWidget {
         isDesktopOrTablet && drawer != null && !insideShell;
 
     return Scaffold(
-      drawer: null,
-      endDrawer: isDesktopOrTablet ? null : drawer,
+      drawer: isDesktopOrTablet ? null : drawer,
+      endDrawer: null,
       appBar: isDesktopOrTablet ? null : appBar,
       floatingActionButton: floatingActionButton,
       extendBodyBehindAppBar: true,

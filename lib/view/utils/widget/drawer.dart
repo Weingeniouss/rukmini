@@ -64,7 +64,8 @@ Widget homeDrawer() {
                                 style: TextStyle(
                                   color: AppColor.primaryColor,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: (AppSize.isDesktop || AppSize.isTablet)
+                                  fontSize:
+                                      (AppSize.isDesktop || AppSize.isTablet)
                                       ? 18.0
                                       : AppSize.extraLargeText,
                                 ),
@@ -77,7 +78,8 @@ Widget homeDrawer() {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: AppColor.textField,
-                                fontSize: (AppSize.isDesktop || AppSize.isTablet)
+                                fontSize:
+                                    (AppSize.isDesktop || AppSize.isTablet)
                                     ? 12.0
                                     : AppSize.size14,
                               ),
@@ -159,7 +161,10 @@ Widget homeDrawer() {
                 title: AppString.lockerTransaction,
                 icon: AppIcon.lockReset,
                 onTap: () {
-                  navDrawerController.navigateFromDrawer('/lockerTransaction', 7);
+                  navDrawerController.navigateFromDrawer(
+                    '/lockerTransaction',
+                    7,
+                  );
                 },
               ),
               _drawerItem(
@@ -216,7 +221,9 @@ Widget homeDrawer() {
                 style: TextStyle(
                   color: AppColor.logoutText,
                   fontWeight: FontWeight.w600,
-                  fontSize: (AppSize.isDesktop || AppSize.isTablet) ? 14.0 : 16.0,
+                  fontSize: (AppSize.isDesktop || AppSize.isTablet)
+                      ? 14.0
+                      : 16.0,
                 ),
               ),
               onTap: () async {

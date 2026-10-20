@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rukmini/view/utils/app_size.dart';
 
 class NavDrawerController extends GetxController {
   var selectedIndex = 0.obs;
@@ -72,7 +71,10 @@ class NavDrawerController extends GetxController {
   void navigateFromDrawer(String routeName, int index) {
     selectedIndex.value = index;
     currentArguments = null;
-    if ((AppSize.isDesktop || AppSize.isTablet) && Get.keys[nestedKey] != null) {
+    if (Get.isOverlaysOpen) {
+      Get.back();
+    }
+    if (Get.keys[nestedKey] != null) {
       Get.offAllNamed(routeName, id: nestedKey);
     } else {
       Get.toNamed(routeName);
@@ -86,7 +88,11 @@ class NavDrawerController extends GetxController {
       nav.selectedIndex.value = nav.getIndexForRoute(page);
     }
 
-    if ((AppSize.isDesktop || AppSize.isTablet) && Get.keys[nestedKey] != null) {
+    if (Get.isOverlaysOpen) {
+      Get.back();
+    }
+
+    if (Get.keys[nestedKey] != null) {
       Get.toNamed(page, id: nestedKey, arguments: arguments);
     } else {
       Get.toNamed(page, arguments: arguments);

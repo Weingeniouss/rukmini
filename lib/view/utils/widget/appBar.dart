@@ -77,7 +77,7 @@ AppBar appBar({
                       padding: EdgeInsets.only(left: AppSize.p10),
                       child: _appBarButton(
                         AppIcon.menu,
-                        () => Scaffold.of(context).openEndDrawer(),
+                        () => Scaffold.of(context).openDrawer(),
                         isPremium: isPremium,
                       ),
                     );

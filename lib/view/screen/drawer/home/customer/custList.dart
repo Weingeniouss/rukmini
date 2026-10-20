@@ -81,7 +81,7 @@ class _CustlistState extends State<Custlist> {
                         color: AppColor.dashboardTextDark,
                         size: AppSize.p24 + AppSize.p4,
                       ),
-                      onPressed: () => Scaffold.of(context).openEndDrawer(),
+                      onPressed: () => Scaffold.of(context).openDrawer(),
                     );
                   },
                 ),
