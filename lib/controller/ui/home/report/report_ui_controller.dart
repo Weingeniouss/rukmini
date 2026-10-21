@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:excel/excel.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
@@ -86,6 +87,7 @@ class ReportUIController extends GetxController {
   }
 
   Future<bool> _requestPermissions() async {
+    if (kIsWeb) return true;
     if (!Platform.isAndroid) return true;
 
     final deviceInfo = DeviceInfoPlugin();
@@ -203,12 +205,23 @@ class ReportUIController extends GetxController {
       var fileBytes = excel.save();
       if (fileBytes == null) return;
 
-      final directory = await getTemporaryDirectory();
-      final path = "${directory.path}/$fileName";
-      final file = File(path);
-      await file.writeAsBytes(fileBytes);
+      if (kIsWeb) {
+        await Share.shareXFiles([
+          XFile.fromData(
+            Uint8List.fromList(fileBytes),
+            name: fileName,
+            mimeType:
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          )
+        ], text: 'Exported $fileName');
+      } else {
+        final directory = await getTemporaryDirectory();
+        final path = "${directory.path}/$fileName";
+        final file = File(path);
+        await file.writeAsBytes(fileBytes);
 
-      await Share.shareXFiles([XFile(path)], text: 'Exported $fileName');
+        await Share.shareXFiles([XFile(path)], text: 'Exported $fileName');
+      }
     } catch (e) {
       ToastificationError.Error("Export Failed: ${e.toString()}");
     }

@@ -2,12 +2,15 @@
 
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/local/localDatabase.dart';
 import 'package:toastification/toastification.dart';
 import 'routes/app_pages.dart';
+import 'view/screen/splash/splash.dart';
 
 /*
   Create by Kheamesh Soni
@@ -26,7 +29,12 @@ class MyHttpOverrides extends HttpOverrides {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  HttpOverrides.global = MyHttpOverrides();
+  if (kIsWeb) {
+    usePathUrlStrategy();
+  } else {
+    HttpOverrides.global = MyHttpOverrides();
+  }
+
   final localdata = LocalDatabase();
 
   await localdata.loadLocalData();
@@ -55,6 +63,10 @@ class MyApp extends StatelessWidget {
         transitionDuration: const Duration(milliseconds: 200),
         initialRoute: AppPages.initial,
         getPages: AppPages.routes,
+        unknownRoute: GetPage(
+          name: '/not-found',
+          page: () => const Splash(),
+        ),
       ),
     );
   }

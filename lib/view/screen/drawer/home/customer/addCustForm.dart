@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -560,9 +561,11 @@ Widget photoListSection({
                             border: Border.all(color: AppColor.grey300),
                             image: images[index].value != null
                                 ? DecorationImage(
-                                    image: FileImage(
-                                      File(images[index].value!.path),
-                                    ),
+                                    image: kIsWeb
+                                        ? NetworkImage(images[index].value!.path) as ImageProvider
+                                        : FileImage(
+                                            File(images[index].value!.path),
+                                          ),
                                     fit: BoxFit.cover,
                                   )
                                 : null,

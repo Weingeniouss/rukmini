@@ -1,7 +1,6 @@
 // ignore_for_file: file_names, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/modal/drawer/productInLocker/cust_product_model.dart';
 import 'package:rukmini/view/utils/app_Color.dart';

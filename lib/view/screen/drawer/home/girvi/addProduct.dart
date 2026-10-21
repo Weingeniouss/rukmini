@@ -419,9 +419,11 @@ class _AddProductState extends State<AddProduct> {
                         borderRadius: BorderRadius.circular(AppSize.p8),
                         border: Border.all(color: AppColor.grey300),
                         image: DecorationImage(
-                          image: FileImage(
-                            File(addProductUI.productImages[index].path),
-                          ),
+                          image: kIsWeb
+                              ? NetworkImage(addProductUI.productImages[index].path) as ImageProvider
+                              : FileImage(
+                                  File(addProductUI.productImages[index].path),
+                                ),
                           fit: BoxFit.cover,
                         ),
                       ),

@@ -790,7 +790,7 @@ class _HomeState extends State<Home> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: AppSize.extraSmallText * 1.45,
+                    fontSize: AppSize.extraSmallText * 1.28,
                     color: AppColor.dashboardTextLight,
                   ),
                 ),
@@ -798,7 +798,7 @@ class _HomeState extends State<Home> {
                   Text(
                     subValue,
                     style: TextStyle(
-                      fontSize: AppSize.extraSmallText * 1.35,
+                      fontSize: AppSize.extraSmallText * 1.20,
                       color: AppColor.dashboardTextLight,
                     ),
                   ),

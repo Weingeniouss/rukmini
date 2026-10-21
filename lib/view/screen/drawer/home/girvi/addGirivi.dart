@@ -1,6 +1,7 @@
 // ignore_for_file: strict_top_level_inference, file_names, deprecated_member_use
 
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
@@ -452,11 +453,17 @@ class _AddgiriviState extends State<Addgirivi> {
                   padding: EdgeInsets.all(AppSize.p8),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(AppSize.p8),
-                    child: Image.file(
-                      File(image.path),
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                    ),
+                    child: kIsWeb
+                        ? Image.network(
+                            image.path,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          )
+                        : Image.file(
+                            File(image.path),
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
                   ),
                 ),
               )

@@ -40,8 +40,13 @@ class GiriviAddServices {
     request.fields[AppString.productDel_body] = productDel ?? '';
 
     if (image_i != null) {
+      final bytes = await image_i.readAsBytes();
       request.files.add(
-        await http.MultipartFile.fromPath(AppString.image_body, image_i.path),
+        http.MultipartFile.fromBytes(
+          AppString.image_body,
+          bytes,
+          filename: image_i.name.isNotEmpty ? image_i.name : 'girvi.jpg',
+        ),
       );
     }
 

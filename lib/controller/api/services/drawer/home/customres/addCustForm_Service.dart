@@ -89,8 +89,13 @@ class AddcustformServices {
     if (profileImages != null) {
       for (var image in profileImages) {
         if (image != null) {
+          final bytes = await image.readAsBytes();
           request.files.add(
-            await http.MultipartFile.fromPath('Profile[]', image.path),
+            http.MultipartFile.fromBytes(
+              'Profile[]',
+              bytes,
+              filename: image.name.isNotEmpty ? image.name : 'profile.jpg',
+            ),
           );
         }
       }
@@ -100,8 +105,13 @@ class AddcustformServices {
     if (proofImages != null) {
       for (var image in proofImages) {
         if (image != null) {
+          final bytes = await image.readAsBytes();
           request.files.add(
-            await http.MultipartFile.fromPath('Proof[]', image.path),
+            http.MultipartFile.fromBytes(
+              'Proof[]',
+              bytes,
+              filename: image.name.isNotEmpty ? image.name : 'proof.jpg',
+            ),
           );
         }
       }

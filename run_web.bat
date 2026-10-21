@@ -1,0 +1,6 @@
+@echo off
+echo Starting rukmini Web Server...
+echo Opening http://localhost:8080 in your browser...
+start http://localhost:8080
+python -m http.server 8080 --directory build/web
+pause
