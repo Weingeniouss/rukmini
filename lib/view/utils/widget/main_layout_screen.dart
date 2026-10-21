@@ -70,8 +70,8 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
   void initState() {
     super.initState();
     navDrawerController = Get.put(NavDrawerController());
-    navDrawerController.selectedIndex.value =
-        navDrawerController.getIndexForRoute(widget.initialRoute);
+    navDrawerController.selectedIndex.value = navDrawerController
+        .getIndexForRoute(widget.initialRoute);
   }
 
   Widget _getWidgetForRoute(String route) {
@@ -85,9 +85,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
       case '/custDetail':
         return const CustDetail();
       case '/addCustForm':
-        return AddCustForm(
-          addCustForomUI: Get.put(AddCustFormControllerUI()),
-        );
+        return AddCustForm(addCustForomUI: Get.put(AddCustFormControllerUI()));
       case '/updateCustForm':
         return UpdateCustForm(
           updateCustUI: Get.put(UpdateCustFormControllerUI()),
@@ -117,17 +115,13 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
       case '/lockerCodeMaster':
         return const LockerCodeMaster();
       case '/addLockerCode':
-        return AddLockerCode(
-          uiController: Get.put(LockerMasterControllerUI()),
-        );
+        return AddLockerCode(uiController: Get.put(LockerMasterControllerUI()));
       case '/metalTouch':
         return const MetalTouch();
       case '/yearMaster':
         return const YearMaster();
       case '/addYearMaster':
-        return AddYearMaster(
-          uiController: Get.put(YearMasterControllerUI()),
-        );
+        return AddYearMaster(uiController: Get.put(YearMasterControllerUI()));
       case '/productInLocker':
         return ProductInLocker(
           custProductController: Get.put(CustProductController()),
@@ -166,21 +160,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
     final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
 
     if (!isDesktopOrTablet) {
-      return ShellScope(
-        child: Navigator(
-          key: Get.nestedKey(NavDrawerController.nestedKey),
-          initialRoute: widget.initialRoute,
-          onGenerateRoute: (settings) {
-            final routeName = settings.name ?? widget.initialRoute;
-            return GetPageRoute(
-              page: () => _getWidgetForRoute(routeName),
-              settings: settings,
-              transition: Transition.fade,
-              transitionDuration: const Duration(milliseconds: 150),
-            );
-          },
-        ),
-      );
+      return ShellScope(child: _getWidgetForRoute(widget.initialRoute));
     }
 
     return ShellScope(

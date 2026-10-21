@@ -22,13 +22,12 @@ Widget inputField({
   TextInputType? keyboardType,
   int? maxLength,
   List<TextInputFormatter>? inputFormatters,
+  TextInputAction? textInputAction,
+  ValueChanged<String>? onSubmitted,
+  FocusNode? focusNode,
 }) {
   final isvisorNot = Get.put(InputFieldController(), tag: hintText);
   final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
-
-  if (isPassword && isvisorNot.obscureText.value == false) {
-    isvisorNot.obscureText.value = true;
-  }
 
   Widget buildTextField(bool obscureText) {
     return Container(
@@ -46,6 +45,7 @@ Widget inputField({
         ],
       ),
       child: TextField(
+        focusNode: focusNode,
         autofocus: false,
         autocorrect: false,
         readOnly: readOnly,
@@ -54,6 +54,8 @@ Widget inputField({
         maxLength: maxLength,
         inputFormatters: inputFormatters,
         controller: inputTextcontroller,
+        textInputAction: textInputAction,
+        onSubmitted: onSubmitted,
         style: TextStyle(
           color: textColor ?? AppColor.loginTextDark,
           fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,

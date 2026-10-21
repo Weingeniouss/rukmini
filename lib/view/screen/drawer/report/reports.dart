@@ -31,7 +31,7 @@ class Reports extends StatelessWidget {
           drawer: homeDrawer(),
           appBar: appBar(
             centerTitle: true,
-            back: false,
+            back: true,
             title: _buildDecorativeTitle(AppString.reports),
           ),
           child: SingleChildScrollView(

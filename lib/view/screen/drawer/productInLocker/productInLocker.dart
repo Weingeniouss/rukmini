@@ -46,6 +46,7 @@ class ProductInLocker extends StatelessWidget {
         child: Obx(
           () => appBar(
             centerTitle: true,
+            back: true,
             title: custProductController.isSearching.value
                 ? TextField(
                     controller: custProductController.searchController,
@@ -72,7 +73,6 @@ class ProductInLocker extends StatelessWidget {
             searchOnPressed: () => custProductController.toggleSearch(),
             closeOnPressed: () => custProductController.closeSearch(),
             filterOnPressed: () => _showLockerFilterPopup(),
-            back: false,
           ),
         ),
       ),

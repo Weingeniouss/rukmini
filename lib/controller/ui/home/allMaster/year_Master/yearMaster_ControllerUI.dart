@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
@@ -79,7 +80,7 @@ class YearMasterControllerUI extends GetxController {
 
     if (result != null) {
       if (result.status == true) {
-        Get.back();
+        NavDrawerController.back();
         ToastificationSuccess.Success(
           result.message ?? "Year added successfully",
         );

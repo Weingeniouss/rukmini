@@ -62,6 +62,7 @@ class _DueGirviState extends State<DueGirvi> {
         drawer: homeDrawer(),
         isPadding: false,
         appBar: appBar(
+          back: true,
           title: pendingTransactionController.isSearching.value
               ? _buildNameSearchField()
               : pendingTransactionController.isLocalitySearching.value

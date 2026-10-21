@@ -13,38 +13,48 @@ import '../../view/utils/widget/pop.dart';
 Future postLogin() async {
   final LoginControllerAPI loginApi = Get.put(LoginControllerAPI());
   final localData = LocalDatabase();
-  final http.Response? response = await loginApi.login();
 
-  if (response != null) {
-    String body = response.body;
-    // Extract JSON if PHP errors are present
-    if (body.contains('{') && body.contains('}')) {
-      body = body.substring(body.indexOf('{'), body.lastIndexOf('}') + 1);
-    }
-    final loginModel = LoginModel.fromJson(jsonDecode(body));
-    if (response.statusCode == 200) {
-      if (loginModel.status == true) {
+  try {
+    final http.Response? response = await loginApi.login();
+
+    if (response != null) {
+      String body = response.body;
+      // Extract JSON if PHP errors are present
+      if (body.contains('{') && body.contains('}')) {
+        body = body.substring(body.indexOf('{'), body.lastIndexOf('}') + 1);
+      }
+      final loginModel = LoginModel.fromJson(jsonDecode(body));
+      if (response.statusCode == 200 && loginModel.status == true) {
         ToastificationSuccess.Success(loginModel.message!);
-        tokans = loginModel.data!.loginToken!;
+        tokans = loginModel.data!.loginToken ?? '';
         print("$tokans :- loginTokan");
-        // this page navigate to home
-        Get.toNamed('/home');
-        //Save Data for Localy Your Mobile Device
-        localData.loginSaveData(
+
+        // Save Data Locally in Your Mobile Device FIRST
+        await localData.loginSaveData(
           email: loginApi.loginUI.emailController.text,
           password: loginApi.loginUI.passwordController.text,
           uId: loginModel.data!.userId,
           userData: body,
         );
+
+        if (Get.isOverlaysOpen) {
+          Get.back();
+        }
+
+        // Navigate directly to Home screen
+        Get.offAllNamed('/home');
+        return;
       } else {
-        ToastificationError.Error(loginModel.message ?? AppString.loginFailed);
+        ToastificationError.Error(
+          loginModel.message ?? AppString.loginFailed,
+        );
       }
     } else {
-      ToastificationError.Error('${loginModel.message}');
+      ToastificationError.Error(AppString.networkError);
     }
-  } else {
-    ToastificationError.Error(
-      AppString.networkError,
-    );
+  } catch (e) {
+    ToastificationError.Error(AppString.loginFailed);
+  } finally {
+    loginApi.isLoading.value = false;
   }
 }

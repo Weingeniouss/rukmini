@@ -77,7 +77,7 @@ class _CustDetailState extends State<CustDetail> {
             onConfirm: () async {
               await CallApi.callCustRemove(custId: customer.custId!);
               await CallApi.callCustList(isRefresh: true);
-              Get.back();
+              NavDrawerController.back();
             },
           );
         },

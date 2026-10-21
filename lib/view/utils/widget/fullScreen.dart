@@ -38,7 +38,7 @@ class Fullscreen extends StatelessWidget {
     final bool showLeftDrawerInFullscreen =
         isDesktopOrTablet && drawer != null && !insideShell;
 
-    return Scaffold(
+    final Widget scaffold = Scaffold(
       drawer: isDesktopOrTablet ? null : drawer,
       endDrawer: null,
       appBar: isDesktopOrTablet ? null : appBar,
@@ -94,5 +94,7 @@ class Fullscreen extends StatelessWidget {
         ),
       ),
     );
+
+    return scaffold;
   }
 }

@@ -230,7 +230,11 @@ class _AllMasterState extends State<AllMaster> {
       drawer: homeDrawer(),
       isPadding: false,
       backGroundcolor: AppColor.backgroundColor,
-      appBar: appBar(title: _buildDecorativeTitle(), centerTitle: true),
+      appBar: appBar(
+        title: _buildDecorativeTitle(),
+        centerTitle: true,
+        back: true,
+      ),
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
           horizontal: AppSize.p16,

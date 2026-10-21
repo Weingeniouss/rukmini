@@ -60,7 +60,7 @@ class LockerMasterControllerUI extends GetxController {
     );
 
     if (result != null && result.status == true) {
-      Get.back();
+      NavDrawerController.back();
     }
     isLoading.value = false;
   }

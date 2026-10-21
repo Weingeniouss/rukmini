@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/lockerList_Controller.dart';
 import 'package:rukmini/controller/api/controllers/drawer/productInLocker/cust_product_controller.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/modal/drawer/allMaster/locker_master/locker_master_modal.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
@@ -126,7 +127,7 @@ class ChangeLockerControllerUI extends GetxController {
 
     if (result != null && result.status == true) {
       custProductController.clearSelection();
-      Get.back();
+      NavDrawerController.back();
       CallApi.callCustProduct();
     }
 

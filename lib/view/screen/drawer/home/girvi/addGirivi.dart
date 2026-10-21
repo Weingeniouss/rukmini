@@ -580,7 +580,7 @@ class _AddgiriviState extends State<Addgirivi> {
         children: [
           Expanded(
             child: OutlinedButton(
-              onPressed: () => Get.back(),
+              onPressed: () => NavDrawerController.back(),
               style: OutlinedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: AppSize.p16),
                 side: BorderSide(color: AppColor.goldColor, width: 1.5),

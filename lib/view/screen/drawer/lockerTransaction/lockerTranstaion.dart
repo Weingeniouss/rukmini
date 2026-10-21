@@ -33,7 +33,7 @@ class LockerTranStaion extends StatelessWidget {
         child: Obx(
           () => appBar(
             centerTitle: true,
-            back: false,
+            back: true,
             title: uiController.isSearching.value
                 ? TextField(
                     controller: uiController.searchController,

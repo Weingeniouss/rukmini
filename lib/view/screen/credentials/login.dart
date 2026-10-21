@@ -33,58 +33,62 @@ class Login extends StatelessWidget {
 
   // --- MOBILE LAYOUT (Preserved 100% Unchanged) ---
   Widget _buildMobileLayout(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: CustomPaint(painter: LoginBackgroundPainter()),
-        ),
-        Positioned(
-          top: AppSize.height * 0.12,
-          left: -AppSize.width * 0.2,
-          right: -AppSize.width * 0.2,
-          bottom: AppSize.height * 0.12,
-          child: Transform.rotate(
-            angle: math.pi / 4,
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColor.white,
-                borderRadius: BorderRadius.circular(100),
-                border: Border.all(
-                  color: AppColor.loginGold.withOpacity(0.2),
-                  width: 1.5,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColor.loginGold.withOpacity(0.08),
-                    blurRadius: 50,
-                    spreadRadius: 10,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      behavior: HitTestBehavior.translucent,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: CustomPaint(painter: LoginBackgroundPainter()),
+          ),
+          Positioned(
+            top: AppSize.height * 0.12,
+            left: -AppSize.width * 0.2,
+            right: -AppSize.width * 0.2,
+            bottom: AppSize.height * 0.12,
+            child: Transform.rotate(
+              angle: math.pi / 4,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  borderRadius: BorderRadius.circular(100),
+                  border: Border.all(
+                    color: AppColor.loginGold.withOpacity(0.2),
+                    width: 1.5,
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColor.loginGold.withOpacity(0.08),
+                      blurRadius: 50,
+                      spreadRadius: 10,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: AppSize.p24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _logo(),
+                  SizedBox(height: AppSize.height * 0.1),
+                  _welcomeSection(),
+                  SizedBox(height: AppSize.height * 0.05),
+                  _loginForm(),
+                  SizedBox(height: AppSize.height * 0.06),
+                  _loginButton(),
+                  SizedBox(height: AppSize.height * 0.1),
+                  _forgotPasswordSection(context),
+                  SizedBox(height: AppSize.p4),
                 ],
               ),
             ),
           ),
-        ),
-        SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: AppSize.p24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _logo(),
-                SizedBox(height: AppSize.height * 0.1),
-                _welcomeSection(),
-                SizedBox(height: AppSize.height * 0.05),
-                _loginForm(),
-                SizedBox(height: AppSize.height * 0.06),
-                _loginButton(),
-                SizedBox(height: AppSize.height * 0.1),
-                _forgotPasswordSection(context),
-                SizedBox(height: AppSize.p4),
-              ],
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -277,6 +281,7 @@ class Login extends StatelessWidget {
             textColor: AppColor.loginTextDark,
             iconColor: AppColor.loginGold,
             inputTextcontroller: loginAPI.loginUI.emailController,
+            textInputAction: TextInputAction.next,
           ),
           inputField(
             hintText: AppString.password,
@@ -285,6 +290,13 @@ class Login extends StatelessWidget {
             textColor: AppColor.loginTextDark,
             iconColor: AppColor.loginGold,
             inputTextcontroller: loginAPI.loginUI.passwordController,
+            textInputAction: TextInputAction.done,
+            onSubmitted: (_) {
+              FocusManager.instance.primaryFocus?.unfocus();
+              if (!loginAPI.isLoading.value) {
+                CallApi.callLogin();
+              }
+            },
           ),
         ],
       ),
@@ -298,7 +310,9 @@ class Login extends StatelessWidget {
         padding: EdgeInsets.only(right: AppSize.p16),
         child: Obx(() {
           return GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
               if (!loginAPI.isLoading.value) {
                 CallApi.callLogin();
               }

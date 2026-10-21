@@ -104,6 +104,7 @@ class _productDetailState extends State<productDetail>
         isPadding: false,
         backGroundcolor: AppColor.backgroundColor,
         appBar: appBar(
+          back: true,
           title: _isSearching.value
               ? TextField(
                   controller: _searchController,

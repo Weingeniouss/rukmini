@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/customers/custList_Controller.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/girvi/giriviAdd_Controller.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
 class AddGiriviControllerUI extends GetxController {
@@ -147,7 +148,7 @@ class AddGiriviControllerUI extends GetxController {
     );
 
     if (response != null && response.status == true) {
-      Get.back();
+      NavDrawerController.back();
     }
   }
 

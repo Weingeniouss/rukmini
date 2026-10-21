@@ -59,18 +59,17 @@ AppBar appBar({
             ),
           )
         : null,
-    leadingWidth: (back == true) ? AppSize.width * 0.18 : null,
-    leading: (back == true)
-        ? Padding(
-            padding: EdgeInsets.only(left: AppSize.p16),
-            child: _appBarButton(
-              AppIcon.backIcon,
-              () => NavDrawerController.back(),
-              isPremium: isPremium,
-            ),
-          )
-        : (AppSize.isDesktop
-              ? null
+    leadingWidth: (!AppSize.isDesktop && !AppSize.isTablet && back == true)
+        ? AppSize.width * 0.18
+        : null,
+    leading: (!AppSize.isDesktop && !AppSize.isTablet)
+        ? ((back == true)
+              ? Padding(
+                  padding: EdgeInsets.only(left: AppSize.p16),
+                  child: _appBarButton(AppIcon.backIcon, () {
+                    NavDrawerController.back();
+                  }, isPremium: isPremium),
+                )
               : Builder(
                   builder: (context) {
                     return Padding(
@@ -82,7 +81,8 @@ AppBar appBar({
                       ),
                     );
                   },
-                )),
+                ))
+        : null,
     actions: [
       if (searchIcon == true)
         _appBarButton(

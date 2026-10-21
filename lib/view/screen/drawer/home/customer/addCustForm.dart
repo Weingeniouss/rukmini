@@ -16,6 +16,7 @@ import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:rukmini/view/utils/widget/inputField.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/controller/ui/home/customer/addCustForm_controller.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 
@@ -105,7 +106,7 @@ class AddCustForm extends StatelessWidget {
     await CallApi.callCustList(isRefresh: true);
     addCustForomUI.isLoading.value = false;
     if (result != null && result.status == true) {
-      Get.back();
+      NavDrawerController.back();
     }
   }
 }

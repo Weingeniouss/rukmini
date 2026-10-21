@@ -62,39 +62,72 @@ class _CustlistState extends State<Custlist> {
       backGroundcolor: AppColor.dashboardIconBg,
       // Matches image background
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(AppSize.width * 0.05),
+        preferredSize: Size.fromHeight(
+          (AppSize.isDesktop || AppSize.isTablet)
+              ? 60.0
+              : kToolbarHeight + AppSize.p8,
+        ),
         child: Container(
           padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top + AppSize.p10,
+            top: MediaQuery.of(context).padding.top + AppSize.p8,
             left: AppSize.p16,
             right: AppSize.p16,
-            bottom: AppSize.p10,
+            bottom: AppSize.p8,
           ),
           child: Row(
             children: [
-              if (!AppSize.isDesktop)
-                Builder(
-                  builder: (context) {
-                    return IconButton(
-                      icon: Icon(
-                        AppIcon.menu,
-                        color: AppColor.dashboardTextDark,
-                        size: AppSize.p24 + AppSize.p4,
+              // Back Button (Mobile View Only)
+              if (!AppSize.isDesktop && !AppSize.isTablet) ...[
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    borderRadius: BorderRadius.circular(AppSize.p10),
+                    border: Border.all(
+                      color: AppColor.goldColor.withOpacity(0.3),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColor.black.withOpacity(0.05),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
                       ),
-                      onPressed: () => Scaffold.of(context).openDrawer(),
-                    );
-                  },
+                    ],
+                  ),
+                  child: IconButton(
+                    padding: const EdgeInsets.all(4),
+                    constraints: const BoxConstraints(),
+                    icon: const Icon(
+                      AppIcon.backIcon,
+                      color: AppColor.goldColor,
+                    ),
+                    onPressed: () => NavDrawerController.back(),
+                  ),
                 ),
-              SizedBox(width: AppSize.p8),
-              Obx(
-                () => _isSearching.value
-                    ? Expanded(
-                        child: TextField(
+                SizedBox(width: AppSize.p12),
+              ],
+
+              // Header Title / Search TextField
+              Expanded(
+                child: Obx(
+                  () => _isSearching.value
+                      ? TextField(
                           controller: _searchController,
                           autofocus: true,
+                          style: TextStyle(
+                            color: AppColor.black,
+                            fontSize: (AppSize.isDesktop || AppSize.isTablet)
+                                ? 16.0
+                                : AppSize.commonText,
+                          ),
                           decoration: InputDecoration(
                             hintText: AppString.searchCustomer,
                             border: InputBorder.none,
+                            hintStyle: TextStyle(
+                              color: AppColor.black.withOpacity(0.4),
+                              fontSize: (AppSize.isDesktop || AppSize.isTablet)
+                                  ? 14.0
+                                  : AppSize.commonText,
+                            ),
                           ),
                           onChanged: (value) {
                             custListController.searchQuery.value = value;
@@ -103,33 +136,46 @@ class _CustlistState extends State<Custlist> {
                               search: value,
                             );
                           },
+                        )
+                      : Text(
+                          AppString.customer,
+                          style: TextStyle(
+                            fontSize: (AppSize.isDesktop || AppSize.isTablet)
+                                ? 22.0
+                                : AppSize.size20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.black54,
+                          ),
                         ),
-                      )
-                    : Text(
-                        AppString.customer,
-                        style: TextStyle(
-                          fontSize: AppSize.size20,
-                          fontWeight: FontWeight.w600,
-                          color: AppColor.black54,
-                        ),
-                      ),
+                ),
               ),
-              const Spacer(),
+
+              // Search Toggle Button
               Container(
                 decoration: BoxDecoration(
                   color: AppColor.white,
                   borderRadius: BorderRadius.circular(AppSize.p10),
+                  border: Border.all(
+                    color: AppColor.goldColor.withOpacity(0.3),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: AppColor.black.withOpacity(0.05),
-                      blurRadius: 5,
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
                 child: IconButton(
-                  icon: const Icon(
-                    AppIcon.searchIcon,
-                    color: AppColor.dashboardGold,
+                  padding: const EdgeInsets.all(6),
+                  constraints: const BoxConstraints(),
+                  icon: Obx(
+                    () => Icon(
+                      _isSearching.value
+                          ? AppIcon.closeIcon
+                          : AppIcon.searchIcon,
+                      color: AppColor.dashboardGold,
+                    ),
                   ),
                   onPressed: () {
                     _isSearching.value = !_isSearching.value;
@@ -344,7 +390,8 @@ class _CustlistState extends State<Custlist> {
       child: Material(
         color: AppColor.transparent,
         child: InkWell(
-          onTap: () => NavDrawerController.toNamed('/custDetail', arguments: customer),
+          onTap: () =>
+              NavDrawerController.toNamed('/custDetail', arguments: customer),
           borderRadius: BorderRadius.circular(AppSize.p16),
           child: Padding(
             padding: EdgeInsets.all(AppSize.p12),

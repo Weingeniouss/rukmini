@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/home/allMaster/year_Master/yearMaster_ControllerUI.dart';
+import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/view/utils/app_Color.dart';
 import 'package:rukmini/view/utils/app_Icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
@@ -321,7 +322,7 @@ class AddYearMaster extends StatelessWidget {
         children: [
           Expanded(
             child: OutlinedButton(
-              onPressed: () => Get.back(),
+              onPressed: () => NavDrawerController.back(),
               style: OutlinedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: AppSize.p16),
                 side: BorderSide(
