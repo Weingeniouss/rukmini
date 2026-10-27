@@ -39,8 +39,6 @@ dependencies:
   get:
   toastification:
   shimmer:
-  internet_connection_checker_plus:
-  connectivity_plus:
   dio:
   http:
   shared_preferences:

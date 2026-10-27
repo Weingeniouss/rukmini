@@ -59,7 +59,7 @@ class LoginControllerAPI extends GetxController {
     } catch (e) {
       if (kDebugMode) print('Login ${AppString.errorLog}$e');
       isLoading.value = false;
-      return null;
+      rethrow;
     }
   }
 }

@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, avoid_print
 
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:rukmini/controller/local/localDatabase.dart';
@@ -25,15 +26,15 @@ Future postLogin() async {
       }
       final loginModel = LoginModel.fromJson(jsonDecode(body));
       if (response.statusCode == 200 && loginModel.status == true) {
-        ToastificationSuccess.Success(loginModel.message!);
-        tokans = loginModel.data!.loginToken ?? '';
+        ToastificationSuccess.Success(loginModel.message ?? 'Login Successful');
+        tokans = loginModel.data?.loginToken ?? '';
         print("$tokans :- loginTokan");
 
         // Save Data Locally in Your Mobile Device FIRST
         await localData.loginSaveData(
           email: loginApi.loginUI.emailController.text,
           password: loginApi.loginUI.passwordController.text,
-          uId: loginModel.data!.userId,
+          uId: loginModel.data?.userId ?? '',
           userData: body,
         );
 
@@ -45,15 +46,23 @@ Future postLogin() async {
         Get.offAllNamed('/home');
         return;
       } else {
-        ToastificationError.Error(
-          loginModel.message ?? AppString.loginFailed,
-        );
+        ToastificationError.Error(loginModel.message ?? AppString.loginFailed);
       }
     } else {
       ToastificationError.Error(AppString.networkError);
     }
   } catch (e) {
-    ToastificationError.Error(AppString.loginFailed);
+    String errorMessage = AppString.loginFailed;
+    if (e.toString().contains('Failed to fetch') ||
+        e.toString().contains('ClientException')) {
+      if (kIsWeb) {
+        errorMessage =
+            'Web CORS Error: Server blocked cross-origin request. Enable CORS on backend.';
+      } else {
+        errorMessage = AppString.networkError;
+      }
+    }
+    ToastificationError.Error(errorMessage);
   } finally {
     loginApi.isLoading.value = false;
   }

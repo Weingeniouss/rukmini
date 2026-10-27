@@ -16,6 +16,7 @@ class LoginServices {
   Future<http.Response> loginApi() async {
     final headers = {
       AppString.apiKey: apiKey,
+      'Accept': 'application/json',
     };
 
     final body = {

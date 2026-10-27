@@ -30,17 +30,23 @@ class LocalDatabase {
   }
 
   //Save Login Start
-  Future loginSaveData({String? email, String? password, String? uId, String? userData}) async {
-    pref!.setString('email', email!);
-    pref!.setString('password', password!);
+  Future loginSaveData({
+    String? email,
+    String? password,
+    String? uId,
+    String? userData,
+  }) async {
+    pref ??= await SharedPreferences.getInstance();
+    if (email != null) pref!.setString('email', email);
+    if (password != null) pref!.setString('password', password);
     pref!.setString('tokan', tokans);
-    pref!.setString('UserId', uId!);
+    if (uId != null) pref!.setString('UserId', uId);
     if (userData != null) pref!.setString('userData', userData);
 
-    emailStrore = pref!.getString('email')!;
-    passwordStrore = pref!.getString('password')!;
-    tokans = pref!.getString('tokan')!;
-    userId = pref!.getString('UserId')!;
+    emailStrore = pref!.getString('email') ?? '';
+    passwordStrore = pref!.getString('password') ?? '';
+    tokans = pref!.getString('tokan') ?? '';
+    userId = pref!.getString('UserId') ?? '';
 
     print('emailStrore :- $emailStrore');
     print('passwordStrore :- $passwordStrore');
@@ -48,7 +54,7 @@ class LocalDatabase {
     print('userId :- $userId');
 
     pref!.setBool('login', true);
-    islogin = pref!.getBool('login')!;
+    islogin = pref!.getBool('login') ?? true;
     print('islogin :- $islogin');
   }
 
