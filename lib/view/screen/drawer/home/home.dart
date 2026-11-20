@@ -217,7 +217,8 @@ class _HomeState extends State<Home> {
         label: AppString.totalPendingProduct,
         trend: "+ 5%",
         isPositive: true,
-        onTap: () => NavDrawerController.toNamed('/pendingProduct', arguments: 0),
+        onTap: () =>
+            NavDrawerController.toNamed('/pendingProduct', arguments: 0),
       ),
       _buildTopCard(
         icon: AppIcon.refresh,
@@ -225,7 +226,8 @@ class _HomeState extends State<Home> {
         label: AppString.totalReturnProduct,
         trend: "- 2%",
         isPositive: false,
-        onTap: () => NavDrawerController.toNamed('/pendingProduct', arguments: 1),
+        onTap: () =>
+            NavDrawerController.toNamed('/pendingProduct', arguments: 1),
       ),
       Obx(() {
         int count = lockerListController.lockerList.length;
@@ -292,7 +294,8 @@ class _HomeState extends State<Home> {
               ],
             ),
             TextButton(
-              onPressed: () => NavDrawerController.toNamed('/lockerTransaction'),
+              onPressed: () =>
+                  NavDrawerController.toNamed('/lockerTransaction'),
               child: Text(
                 AppString.viewAll,
                 style: TextStyle(

@@ -92,7 +92,6 @@ flutter:
   assets:
       - asset/appImage/background/
       - asset/appImage/icon/
-      - asset/appImage/image/
       - asset/appImage/logo/
   #   - images/a_dot_ham.jpeg
 

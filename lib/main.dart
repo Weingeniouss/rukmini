@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_print
 
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +9,7 @@ import 'package:rukmini/controller/local/localDatabase.dart';
 import 'package:toastification/toastification.dart';
 import 'routes/app_pages.dart';
 import 'view/screen/splash/splash.dart';
+import 'view/utils/http_overrides.dart';
 
 /*
   Create by Kheamesh Soni
@@ -18,21 +17,12 @@ import 'view/screen/splash/splash.dart';
   End by 08/ Sep /2026
 */
 
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-  }
-}
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
     usePathUrlStrategy();
   } else {
-    HttpOverrides.global = MyHttpOverrides();
+    setHttpOverrides();
   }
 
   final localdata = LocalDatabase();
