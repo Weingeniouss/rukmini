@@ -1001,7 +1001,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-            SizedBox(height: AppSize.p20),
+            SizedBox(height: AppSize.p24),
 
             // Lockers Overview
             Container(
