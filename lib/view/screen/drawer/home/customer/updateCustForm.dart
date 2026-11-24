@@ -70,7 +70,9 @@ class UpdateCustForm extends StatelessWidget {
     );
   }
 
-  static Future<void> _handleUpdate(UpdateCustFormControllerUI updateCustUI) async {
+  static Future<void> _handleUpdate(
+    UpdateCustFormControllerUI updateCustUI,
+  ) async {
     updateCustUI.isLoading.value = true;
     final result = await CallApi.callCustUpdate(
       custId: updateCustUI.custId,
@@ -138,7 +140,11 @@ Widget _sectionHeader(String title, IconData icon) {
               ),
             ],
           ),
-          child: Icon(icon, color: AppColor.goldColor, size: isDesktopOrTablet ? 18.0 : AppSize.p20),
+          child: Icon(
+            icon,
+            color: AppColor.goldColor,
+            size: isDesktopOrTablet ? 18.0 : AppSize.p20,
+          ),
         ),
         SizedBox(width: AppSize.p12),
         Text(
@@ -372,18 +378,30 @@ Widget _formDropDown({
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: value.value,
-              icon: Icon(AppIcon.arrow_down, color: AppColor.goldColor, size: isDesktopOrTablet ? 18.0 : 24.0),
+              icon: Icon(
+                AppIcon.arrow_down,
+                color: AppColor.goldColor,
+                size: isDesktopOrTablet ? 18.0 : 24.0,
+              ),
               isExpanded: true,
               items: items.map((String item) {
                 return DropdownMenuItem<String>(
                   value: item,
                   child: Row(
                     children: [
-                      Icon(icon, color: AppColor.goldColor, size: isDesktopOrTablet ? 18.0 : AppSize.p20),
+                      Icon(
+                        icon,
+                        color: AppColor.goldColor,
+                        size: isDesktopOrTablet ? 18.0 : AppSize.p20,
+                      ),
                       SizedBox(width: AppSize.p12),
                       Text(
                         item,
-                        style: TextStyle(fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText),
+                        style: TextStyle(
+                          fontSize: isDesktopOrTablet
+                              ? 14.0
+                              : AppSize.commonText,
+                        ),
                       ),
                     ],
                   ),
@@ -536,7 +554,11 @@ Widget photoListSection({
           ),
           IconButton(
             onPressed: onAdd,
-            icon: Icon(AppIcon.add, color: AppColor.goldColor, size: isDesktopOrTablet ? 18.0 : 24.0),
+            icon: Icon(
+              AppIcon.add,
+              color: AppColor.goldColor,
+              size: isDesktopOrTablet ? 18.0 : 24.0,
+            ),
           ),
         ],
       ),
@@ -552,8 +574,12 @@ Widget photoListSection({
                       onTap: () => onPick(index),
                       child: Obx(
                         () => Container(
-                          width: (AppSize.isDesktop || AppSize.isTablet) ? 55 : AppSize.width * 0.15,
-                          height: (AppSize.isDesktop || AppSize.isTablet) ? 55 : AppSize.width * 0.15,
+                          width: (AppSize.isDesktop || AppSize.isTablet)
+                              ? 55
+                              : AppSize.width * 0.15,
+                          height: (AppSize.isDesktop || AppSize.isTablet)
+                              ? 55
+                              : AppSize.width * 0.15,
                           decoration: BoxDecoration(
                             color: AppColor.backgroundColor,
                             borderRadius: BorderRadius.circular(AppSize.p8),
@@ -561,7 +587,10 @@ Widget photoListSection({
                             image: images[index].value != null
                                 ? DecorationImage(
                                     image: kIsWeb
-                                        ? NetworkImage(images[index].value!.path) as ImageProvider
+                                        ? NetworkImage(
+                                                images[index].value!.path,
+                                              )
+                                              as ImageProvider
                                         : FileImage(
                                             File(images[index].value!.path),
                                           ),
@@ -576,12 +605,16 @@ Widget photoListSection({
                                     Icon(
                                       AppIcon.camera,
                                       color: AppColor.goldColor,
-                                      size: isDesktopOrTablet ? 16.0 : AppSize.p20 - 2,
+                                      size: isDesktopOrTablet
+                                          ? 16.0
+                                          : AppSize.p20 - 2,
                                     ),
                                     Text(
                                       AppString.image,
                                       style: TextStyle(
-                                        fontSize: isDesktopOrTablet ? 10.0 : AppSize.extraSmallText,
+                                        fontSize: isDesktopOrTablet
+                                            ? 10.0
+                                            : AppSize.extraSmallText,
                                         color: AppColor.goldColor,
                                       ),
                                     ),
@@ -604,11 +637,17 @@ Widget photoListSection({
                         ),
                         child: TextField(
                           controller: controllers[index],
-                          style: TextStyle(fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText),
+                          style: TextStyle(
+                            fontSize: isDesktopOrTablet
+                                ? 14.0
+                                : AppSize.commonText,
+                          ),
                           decoration: InputDecoration(
                             hintText: hintText,
                             hintStyle: TextStyle(
-                              fontSize: isDesktopOrTablet ? 13.0 : AppSize.smallText,
+                              fontSize: isDesktopOrTablet
+                                  ? 13.0
+                                  : AppSize.smallText,
                               color: AppColor.textColor.withOpacity(0.6),
                             ),
                             border: InputBorder.none,
@@ -620,7 +659,9 @@ Widget photoListSection({
                                     icon: Icon(
                                       AppIcon.removeCircle,
                                       color: AppColor.deleteColor,
-                                      size: isDesktopOrTablet ? 18.0 : AppSize.p20,
+                                      size: isDesktopOrTablet
+                                          ? 18.0
+                                          : AppSize.p20,
                                     ),
                                   ),
                           ),

@@ -4,6 +4,8 @@ name: Deploy Rukmini Flutter Web
 on:
   push:
     branches:
+      - main
+      - master
       - changeUI
   workflow_dispatch:
 
