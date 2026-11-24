@@ -147,6 +147,9 @@ class AppString {
   static const lockerRemovedSuccessfully = 'Locker removed successfully';
   static const loginFailed = 'Login failed';
   static const networkError = 'Network error: Please check your internet connection';
+  static const webCorsError = 'Web CORS Error: Server blocked cross-origin request. Enable CORS on backend or disable browser security for local testing.';
+  static const networkConnectError = 'Network Error: Unable to connect to server. Please check your network connection.';
+  static const connectionTimeoutError = 'Connection Timeout: The server took too long to respond.';
   static const failedToLoadCustomerProducts = 'Failed to load customer products';
   static const lockerChangedSuccessfully = 'Locker changed successfully';
   static const failedToChangeLocker = 'Failed to change locker';
