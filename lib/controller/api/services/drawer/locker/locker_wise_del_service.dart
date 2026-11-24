@@ -16,7 +16,6 @@ class LockerWiseDelServices {
     final headers = {
       AppString.apiKey: apiKey,
       AppString.logintokan: tokans,
-      AppString.userid: userId,
     };
 
     final queryParameters = {

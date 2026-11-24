@@ -27,7 +27,6 @@ class GiriviAddServices {
     request.headers.addAll({
       AppString.apiKey: apiKey,
       AppString.logintokan: tokans,
-      AppString.userid: userId,
     });
 
     request.fields[AppString.custId_body] = custId ?? '';

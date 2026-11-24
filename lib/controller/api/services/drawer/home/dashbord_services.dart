@@ -9,19 +9,18 @@ class DashbordServices {
   final apiKey = AppUrl.apiKey;
 
   Future<http.Response> dashbordApi() async {
-    final queryParameters = {
+    final headers = {
       AppString.apiKey: apiKey,
       AppString.logintokan: tokans,
-      AppString.userid: userId,
     };
     
     if (kDebugMode) {
       print('--- Dashboard API Request ---');
       print('URL: $url');
-      print('queryParameters: $queryParameters');
+      print('headers: $headers');
       print('--- Dashboard API Request ---');
     }
 
-    return await http.get(Uri.parse(url), headers: queryParameters);
+    return await http.get(Uri.parse(url), headers: headers);
   }
 }

@@ -14,7 +14,6 @@ class CloseGirvieServices {
     final headers = {
       AppString.apiKey: apiKey,
       AppString.logintokan: tokans,
-      AppString.userid: userId,
     };
 
     final Map<String, String> queryParams = {

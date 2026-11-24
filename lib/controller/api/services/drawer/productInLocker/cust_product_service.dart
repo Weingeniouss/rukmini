@@ -12,7 +12,6 @@ class CustProductService {
     final headers = {
       AppString.apiKey: apiKey,
       AppString.logintokan: tokans,
-      AppString.userid: userId,
     };
 
     if (kDebugMode) {

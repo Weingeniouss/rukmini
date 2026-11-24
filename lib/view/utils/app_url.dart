@@ -2,7 +2,12 @@
 
 class AppUrl {
   //BaseURL
+
+  //Live
   static const baseURL = 'https://balaji.weingenious.in/';
+
+  //Local
+  // static const baseURL = 'http://192.168.1.178/balaji-api/';
   static const baseAPI = '${baseURL}api/v1/';
   static const apiKey = '0A2CDC5AFCFB7D91432684960959A84D';
 

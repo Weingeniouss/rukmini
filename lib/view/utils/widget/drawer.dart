@@ -198,11 +198,10 @@ Widget homeDrawer() {
                 ? 40.0
                 : AppSize.height * 0.08,
           ),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColor.logoutBg,
-              borderRadius: BorderRadius.circular(10),
-            ),
+          child: Material(
+            color: AppColor.logoutBg,
+            borderRadius: BorderRadius.circular(10),
+            clipBehavior: Clip.antiAlias,
             child: ListTile(
               leading: Container(
                 padding: const EdgeInsets.all(8),
@@ -249,65 +248,77 @@ Widget _drawerItem({
   return Obx(() {
     bool isSelected = navDrawerController.selectedIndex.value == index;
 
+    final Color bgColor = isSelected
+        ? AppColor.drawerSelectedBg
+        : isSpecial
+            ? AppColor.goldColor.withOpacity(0.05)
+            : Colors.transparent;
+
+    final Border? border = isSelected
+        ? Border.all(
+            color: AppColor.drawerSelectedBorder,
+            width: 1,
+          )
+        : isSpecial
+            ? Border.all(
+                color: AppColor.goldColor.withOpacity(0.2),
+                width: 1,
+              )
+            : null;
+
     return Column(
       children: [
         Container(
           margin: EdgeInsets.symmetric(vertical: AppSize.p4),
-          decoration: isSelected
-              ? BoxDecoration(
-                  color: AppColor.drawerSelectedBg,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: AppColor.drawerSelectedBorder,
-                    width: 1,
+          child: Material(
+            color: bgColor,
+            borderRadius: BorderRadius.circular(10),
+            clipBehavior: Clip.antiAlias,
+            child: Container(
+              decoration: border != null
+                  ? BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: border,
+                    )
+                  : null,
+              child: ListTile(
+                onTap: onTap,
+                dense: true,
+                visualDensity: const VisualDensity(vertical: -1),
+                leading: Icon(
+                  icon,
+                  color: isSelected
+                      ? AppColor.goldColor
+                      : isSpecial
+                          ? AppColor.goldColor
+                          : AppColor.primaryColor,
+                  size: (AppSize.isDesktop || AppSize.isTablet) ? 20.0 : 24.0,
+                ),
+                title: Text(
+                  title,
+                  style: TextStyle(
+                    color: isSelected
+                        ? AppColor.goldColor
+                        : isSpecial
+                            ? AppColor.goldColor
+                            : AppColor.primaryColor,
+                    fontSize: (AppSize.isDesktop || AppSize.isTablet)
+                        ? 14.0
+                        : AppSize.largeText,
+                    fontWeight: (isSelected || isSpecial)
+                        ? FontWeight.bold
+                        : FontWeight.w500,
                   ),
-                )
-              : isSpecial
-              ? BoxDecoration(
-                  color: AppColor.goldColor.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: AppColor.goldColor.withOpacity(0.2),
-                    width: 1,
-                  ),
-                )
-              : null,
-          child: ListTile(
-            onTap: onTap,
-            dense: true,
-            visualDensity: const VisualDensity(vertical: -1),
-            leading: Icon(
-              icon,
-              color: isSelected
-                  ? AppColor.goldColor
-                  : isSpecial
-                  ? AppColor.goldColor
-                  : AppColor.primaryColor,
-              size: (AppSize.isDesktop || AppSize.isTablet) ? 20.0 : 24.0,
-            ),
-            title: Text(
-              title,
-              style: TextStyle(
-                color: isSelected
-                    ? AppColor.goldColor
-                    : isSpecial
-                    ? AppColor.goldColor
-                    : AppColor.primaryColor,
-                fontSize: (AppSize.isDesktop || AppSize.isTablet)
-                    ? 14.0
-                    : AppSize.largeText,
-                fontWeight: (isSelected || isSpecial)
-                    ? FontWeight.bold
-                    : FontWeight.w500,
+                ),
+                trailing: isSpecial
+                    ? Icon(
+                        Icons.star_outline,
+                        color: AppColor.goldColor.withOpacity(0.5),
+                        size: 18,
+                      )
+                    : null,
               ),
             ),
-            trailing: isSpecial
-                ? Icon(
-                    Icons.star_outline,
-                    color: AppColor.goldColor.withOpacity(0.5),
-                    size: 18,
-                  )
-                : null,
           ),
         ),
         if (!isSelected && !isSpecial)

@@ -137,19 +137,23 @@ class _AllMasterState extends State<AllMaster> {
 
                         return Container(
                           margin: const EdgeInsets.only(bottom: 8),
-                          decoration: BoxDecoration(
+                          child: Material(
                             color: isSelected
                                 ? AppColor.goldColor.withOpacity(0.12)
                                 : Colors.transparent,
                             borderRadius: BorderRadius.circular(10),
-                            border: isSelected
-                                ? Border.all(
-                                    color: AppColor.goldColor,
-                                    width: 1,
-                                  )
-                                : null,
-                          ),
-                          child: ListTile(
+                            clipBehavior: Clip.antiAlias,
+                            child: Container(
+                              decoration: isSelected
+                                  ? BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: AppColor.goldColor,
+                                        width: 1,
+                                      ),
+                                    )
+                                  : null,
+                              child: ListTile(
                             dense: true,
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 12,
@@ -199,7 +203,9 @@ class _AllMasterState extends State<AllMaster> {
                               });
                             },
                           ),
-                        );
+                        ),
+                      ),
+                    );
                       },
                     ),
                   ),

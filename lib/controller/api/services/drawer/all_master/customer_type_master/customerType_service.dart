@@ -16,7 +16,6 @@ class CustomerTypeServices {
     final Map<String, String> headers = {
       AppString.apiKey: apiKey,
       AppString.logintokan: tokans,
-      AppString.userid: userId,
     };
     final uri = Uri.parse(listUrl);
     if (kDebugMode) {
@@ -32,7 +31,6 @@ class CustomerTypeServices {
     request.headers.addAll({
       AppString.apiKey: apiKey,
       AppString.logintokan: tokans,
-      AppString.userid: userId,
     });
     request.fields[AppString.customerType_Name] = name;
     if (typeId != null && typeId.isNotEmpty) {
@@ -52,7 +50,6 @@ class CustomerTypeServices {
     final Map<String, String> headers = {
       AppString.apiKey: apiKey,
       AppString.logintokan: tokans,
-      AppString.userid: userId,
     };
     final Map<String, String> queryParameters = {
       AppString.customerType_Id: typeId,

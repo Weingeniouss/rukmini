@@ -19,7 +19,6 @@ class CustReportServices {
     final Map<String, String> headers = {
       AppString.apiKey: apiKey,
       AppString.logintokan: tokans,
-      AppString.userid: userId,
     };
 
     final Map<String, dynamic> body = {

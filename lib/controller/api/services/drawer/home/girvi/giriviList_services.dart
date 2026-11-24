@@ -22,7 +22,6 @@ class GiriviListServices {
     final headers = {
       AppString.apiKey: apiKey,
       AppString.logintokan: tokans,
-      AppString.userid: userId,
     };
 
     final Map<String, dynamic> body = {

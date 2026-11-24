@@ -20,7 +20,6 @@ class CustListServices {
     final Map<String, String> headers = {
       AppString.apiKey: apiKey,
       AppString.logintokan: tokans,
-      AppString.userid: userId,
     };
 
     final Map<String, String> queryParameters = {

@@ -20,7 +20,6 @@ class MetalAddServices {
     request.headers.addAll({
       AppString.apiKey: apiKey,
       AppString.logintokan: tokans,
-      AppString.userid: userId,
     });
 
     request.fields[AppString.karat_Name] = karat;
