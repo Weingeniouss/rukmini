@@ -8,16 +8,16 @@ import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/girvi/giriviList_Controller.dart';
 import 'package:rukmini/controller/api/controllers/year/year_Controller.dart';
 import 'package:rukmini/modal/year/year_modal.dart';
-import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_color.dart';
 import 'package:rukmini/view/utils/app_size.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../../utils/app_Icon.dart';
+import '../../../../utils/app_icon.dart';
 
 class GiriviList extends StatefulWidget {
   const GiriviList({super.key});

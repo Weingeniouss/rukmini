@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import '../../../controller/api/controllers/drawer/home/dashbord_Controller.dart';
 import '../../../controller/local/localDatabase.dart';
 import '../../../modal/drawer/home/dashboard_model.dart';

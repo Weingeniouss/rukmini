@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_color.dart';
 import 'package:toastification/toastification.dart';
 
 class ToastificationSuccess {

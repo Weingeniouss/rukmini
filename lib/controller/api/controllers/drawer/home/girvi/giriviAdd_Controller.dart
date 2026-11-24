@@ -1,6 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, file_names
 
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;

@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:rukmini/view/utils/app_constants.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/controller/ui/credentials/login_controllerUI.dart';
 import 'package:rukmini/modal/credentials/login_model.dart';
 import '../../services/credentials/loginServices.dart';

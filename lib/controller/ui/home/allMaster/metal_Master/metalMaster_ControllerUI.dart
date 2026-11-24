@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/api/controllers/product/productType_Controller.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
 class MetalMasterControllerUI extends GetxController {

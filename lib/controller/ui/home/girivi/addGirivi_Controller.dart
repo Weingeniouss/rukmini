@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:rukmini/modal/drawer/home/girvi/girvi_detail_modal.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

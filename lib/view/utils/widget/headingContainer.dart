@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/cupertino.dart';
-import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_color.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 
 Widget headingContainer(String title) {

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../controller/api/controllers/metal/metal_Controller.dart';
 import '../../modal/metal/metalList_Modal.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import '../../view/utils/widget/pop.dart';
 
 Future<MetalListModal?> getMetalList() async {

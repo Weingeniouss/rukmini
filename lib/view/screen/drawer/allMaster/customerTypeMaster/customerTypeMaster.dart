@@ -7,10 +7,10 @@ import 'package:rukmini/controller/api/controllers/drawer/all_master/customer_ty
 import 'package:rukmini/controller/api/controllers/drawer/all_master/customer_type_master/customerTypeRemove_Controller.dart';
 import 'package:rukmini/controller/ui/home/allMaster/customerType_Master/customerTypeMaster_ControllerUI.dart';
 import 'package:rukmini/modal/drawer/allMaster/customer_type_master/customer_type_master_modal.dart';
-import 'package:rukmini/view/utils/app_Color.dart';
-import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_color.dart';
+import 'package:rukmini/view/utils/app_icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:shimmer/shimmer.dart';

@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../controller/api/services/metal/metalAdd_service.dart';
 import '../../modal/metal/metalAdd_modal.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import '../../view/utils/widget/pop.dart';
 
 Future<MetalAddModal?> postMetalAdd({

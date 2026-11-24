@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
 
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,7 +10,7 @@ import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_mast
 import 'package:rukmini/controller/api/controllers/drawer/productInLocker/cust_product_controller.dart';
 import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/modal/drawer/allMaster/locker_master/locker_master_modal.dart';
-import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_color.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
 class ChangeLockerControllerUI extends GetxController {

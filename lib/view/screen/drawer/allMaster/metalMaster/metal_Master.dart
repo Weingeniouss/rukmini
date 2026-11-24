@@ -7,10 +7,10 @@ import 'package:rukmini/controller/api/controllers/product/productType_Controlle
 import 'package:rukmini/controller/api/controllers/product/productTypeRemove_Controller.dart';
 import 'package:rukmini/controller/ui/home/allMaster/metal_Master/metalMaster_ControllerUI.dart';
 import 'package:rukmini/modal/product/productTypeList_Modal.dart';
-import 'package:rukmini/view/utils/app_Color.dart';
-import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_color.dart';
+import 'package:rukmini/view/utils/app_icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:shimmer/shimmer.dart';

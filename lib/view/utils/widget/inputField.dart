@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/widget/inputField.dart';
-import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_color.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 
 Widget inputField({

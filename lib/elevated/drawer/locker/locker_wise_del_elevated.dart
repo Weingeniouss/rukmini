@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:rukmini/controller/api/controllers/drawer/locker/locker_wise_del_controller.dart';
 import 'package:rukmini/modal/drawer/locker/locker_wise_del_modal.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
 Future<LockerWiseDelModal?> getLockerWiseDel({

@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/controller/api/services/drawer/productInLocker/cust_product_service.dart';
 import 'package:rukmini/modal/drawer/productInLocker/cust_product_model.dart';
 

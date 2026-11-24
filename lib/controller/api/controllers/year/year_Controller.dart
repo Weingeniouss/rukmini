@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/controller/api/services/year/year_services.dart';
 import 'package:rukmini/modal/year/year_modal.dart';
 

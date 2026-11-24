@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../../controller/api/services/drawer/all_master/customer_type_master/customerType_service.dart';
 import '../../../../modal/drawer/allMaster/customer_type_master/customer_type_add_modal.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import '../../../../view/utils/widget/pop.dart';
 
 Future<CustomerTypeAddModal?> postCustomerTypeAdd({

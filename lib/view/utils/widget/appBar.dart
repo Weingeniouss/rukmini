@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/view/utils/app_background.dart';
 import 'package:rukmini/view/utils/app_size.dart';
-import 'package:rukmini/view/utils/app_Color.dart';
-import '../app_Icon.dart';
+import 'package:rukmini/view/utils/app_color.dart';
+import '../app_icon.dart';
 
 AppBar appBar({
   dynamic title,

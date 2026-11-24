@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:rukmini/controller/api/controllers/drawer/home/customers/custRemove_Controller.dart';
 import 'package:rukmini/modal/drawer/home/customer/remove_customer_model.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
 Future<RemoveCustomerModel?> postRemoveCustomer({

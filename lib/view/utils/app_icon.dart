@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names, file_names
 
 import 'package:flutter/material.dart';
-import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_color.dart';
 
 class AppIcon {
   // Login Assets

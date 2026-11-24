@@ -2,7 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/controller/api/services/credentials/forgotPasswordServices.dart';
 import '../../../ui/credentials/login_controllerUI.dart';
 import 'package:http/http.dart' as http;

@@ -5,10 +5,10 @@ import 'package:get/get.dart';
 import 'package:rukmini/controller/api/controllers/credentials/login_controller.dart';
 import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/view/utils/app_size.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import '../../../controller/local/localDatabase.dart';
-import '../app_Color.dart';
-import '../app_Icon.dart';
+import '../app_color.dart';
+import '../app_icon.dart';
 import '../app_logo.dart';
 
 Widget homeDrawer() {

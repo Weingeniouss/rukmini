@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/customers/custUpdate_Controller.dart';
 import 'package:rukmini/modal/drawer/home/customer/update_customer_model.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
 Future<UpdateCustomerModel?> postUpdateCustomer({

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:rukmini/controller/api/services/credentials/forgot_password_service.dart';
 import 'package:rukmini/modal/credentials/forgot_password_model.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
 class ForgotPasswordController extends GetxController {

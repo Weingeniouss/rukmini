@@ -39,7 +39,7 @@ import 'package:rukmini/view/screen/drawer/productInLocker/productLockerDetail/p
 import 'package:rukmini/view/screen/drawer/report/export_customer_contacts.dart';
 import 'package:rukmini/view/screen/drawer/report/report_view_screen.dart';
 import 'package:rukmini/view/screen/drawer/report/reports.dart';
-import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_color.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
 

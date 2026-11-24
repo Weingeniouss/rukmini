@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:rukmini/controller/local/localDatabase.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import '../../../../controller/api/controllers/drawer/home/customers/custDetail_Controller.dart';
 import '../../../../modal/drawer/home/customer/customer_detail_model.dart';
 import '../../../../view/utils/widget/pop.dart';

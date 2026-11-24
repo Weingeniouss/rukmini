@@ -8,16 +8,16 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/button.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:rukmini/view/utils/widget/inputField.dart';
-import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_icon.dart';
 import 'package:rukmini/controller/ui/home/customer/addCustForm_controller.dart';
 import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
-import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_color.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 
 class AddCustForm extends StatelessWidget {

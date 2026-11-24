@@ -3,7 +3,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import '../../controller/api/controllers/product/productType_Controller.dart';
 import '../../modal/product/productTypeList_Modal.dart';
 import '../../view/utils/widget/pop.dart';

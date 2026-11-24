@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import '../../../../controller/api/services/drawer/all_master/category_master/categoryRemove_service.dart';
 import '../../../../modal/drawer/allMaster/category_Master/categoryRemove_modal.dart';
 import '../../../../view/utils/widget/pop.dart';

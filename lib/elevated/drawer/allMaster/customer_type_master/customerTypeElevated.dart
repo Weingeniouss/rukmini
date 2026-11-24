@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:rukmini/controller/api/controllers/drawer/all_master/customer_type_master/customerType_Controller.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/modal/drawer/allMaster/customer_type_master/customer_type_master_modal.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
 Future<CustomerTypeMaster?> getCustomerTypeList() async {

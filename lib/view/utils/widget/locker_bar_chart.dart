@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:rukmini/modal/drawer/home/dashboard_model.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
-import '../app_Color.dart';
+import '../app_color.dart';
 
 class LockerBarChart extends StatelessWidget {
   final List<LockerList> lockerList;

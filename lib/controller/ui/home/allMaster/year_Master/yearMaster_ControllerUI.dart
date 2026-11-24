@@ -1,12 +1,12 @@
 // ignore_for_file: file_names
 
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
-import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_color.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
 class YearMasterControllerUI extends GetxController {

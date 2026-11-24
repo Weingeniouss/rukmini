@@ -1,6 +1,6 @@
 // ignore_for_file: file_names, non_constant_identifier_names
 
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';

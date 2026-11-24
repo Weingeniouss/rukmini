@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_unnecessary_containers, file_names
 
 import 'package:flutter/material.dart';
-import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_color.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:rukmini/view/utils/widget/main_layout_screen.dart';

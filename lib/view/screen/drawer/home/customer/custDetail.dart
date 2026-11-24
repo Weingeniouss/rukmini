@@ -8,10 +8,10 @@ import 'package:rukmini/controller/api/controllers/drawer/home/customers/custDet
 import 'package:rukmini/modal/drawer/home/customer/customer_detail_model.dart';
 import 'package:rukmini/modal/drawer/home/customer/customer_list_model.dart'
     as list;
-import 'package:rukmini/view/utils/app_Color.dart';
-import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_color.dart';
+import 'package:rukmini/view/utils/app_icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/headingContainer.dart';

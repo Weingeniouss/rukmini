@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:rukmini/view/utils/app_String.dart';
-import 'package:rukmini/view/utils/app_URL.dart';
+import 'package:rukmini/view/utils/app_string.dart';
+import 'package:rukmini/view/utils/app_url.dart';
 import 'package:http/http.dart' as http;
 import '../../../../../view/utils/app_constants.dart';
 

@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/lockerList_Controller.dart';
 import 'package:rukmini/modal/drawer/allMaster/locker_master/locker_master_modal.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
 Future<LockerMasterModal?> getLockerList() async {

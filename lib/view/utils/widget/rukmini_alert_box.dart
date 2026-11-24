@@ -3,10 +3,10 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rukmini/view/utils/app_Color.dart';
-import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_color.dart';
+import 'package:rukmini/view/utils/app_icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 
 class RukminiAlertBox {
   static void show({

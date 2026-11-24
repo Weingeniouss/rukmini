@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rukmini/view/utils/app_Color.dart';
+import 'package:rukmini/view/utils/app_color.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 
 Widget clickButton(String name, {bool isLoading = false}) {

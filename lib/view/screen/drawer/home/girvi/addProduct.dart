@@ -11,10 +11,10 @@ import 'package:rukmini/controller/api/controllers/product/productType_Controlle
 import 'package:rukmini/controller/api/controllers/drawer/all_master/category_master/category_Controller.dart';
 import 'package:rukmini/controller/ui/home/girivi/addProduct_Controller.dart';
 import 'package:rukmini/controller/api/controllers/drawer/all_master/locker_master/lockerList_Controller.dart';
-import 'package:rukmini/view/utils/app_Color.dart';
-import 'package:rukmini/view/utils/app_Icon.dart';
+import 'package:rukmini/view/utils/app_color.dart';
+import 'package:rukmini/view/utils/app_icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/inputField.dart';

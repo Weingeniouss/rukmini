@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:rukmini/view/utils/app_String.dart';
+import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/controller/api/services/drawer/home/customres/custUpdate_service.dart';
 import 'package:rukmini/modal/drawer/home/customer/update_customer_model.dart';
 
