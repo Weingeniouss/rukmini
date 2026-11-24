@@ -13,10 +13,17 @@ class forgotPasswordServices {
   final apiKey = AppUrl.apiKey;
 
   Future<http.Response> forgotPasswordApi() async {
+    final headers = {
+      AppString.apiKey: apiKey,
+      'Accept': 'application/json',
+    };
+
     final body = {
-      AppString.emailBody: loginUI.emailController.text,
+      AppString.emailBody: loginUI.emailController.text.trim(),
       AppString.apiKey: apiKey,
     };
-    return await http.post(login, body: body);
+    return await http.post(login, headers: headers, body: body).timeout(
+      const Duration(seconds: 15),
+    );
   }
 }

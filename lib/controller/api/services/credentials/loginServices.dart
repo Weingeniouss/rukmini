@@ -1,5 +1,4 @@
-// ignore_for_file: file_names
-
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/view/utils/app_string.dart';
@@ -20,8 +19,9 @@ class LoginServices {
     };
 
     final body = {
-      AppString.emailBody: loginUI.emailController.text,
-      AppString.passwordBody: loginUI.passwordController.text,
+      AppString.emailBody: loginUI.emailController.text.trim(),
+      AppString.passwordBody: loginUI.passwordController.text.trim(),
+      AppString.apiKey: apiKey,
     };
 
     if (kDebugMode) {
@@ -32,6 +32,8 @@ class LoginServices {
       print('--- Login API Request ---');
     }
 
-    return await http.post(login, headers: headers, body: body);
+    return await http.post(login, headers: headers, body: body).timeout(
+      const Duration(seconds: 15),
+    );
   }
 }

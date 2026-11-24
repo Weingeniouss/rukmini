@@ -1,6 +1,9 @@
 @echo off
-echo Starting rukmini Web Server...
-echo Opening http://localhost:8080 in your browser...
-start http://localhost:8080
-python -m http.server 8080 --directory build/web
+echo ========================================================
+echo   Starting Flutter Web Server on http://localhost:8080
+echo   Opening Chrome with Disabled Web Security (No CORS)
+echo ========================================================
+echo.
+start "" chrome.exe --disable-web-security --user-data-dir="%TEMP%\chrome_dev_session" http://localhost:8080
+flutter run -d web-server --web-port 8080
 pause

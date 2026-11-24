@@ -57,10 +57,13 @@ Future postLogin() async {
         e.toString().contains('ClientException')) {
       if (kIsWeb) {
         errorMessage =
-            'Web CORS Error: Server blocked cross-origin request. Enable CORS on backend.';
+            'Web CORS Error: Server blocked cross-origin request. Enable CORS on backend or disable browser security for local testing.';
       } else {
-        errorMessage = AppString.networkError;
+        errorMessage =
+            'Network Error: Unable to connect to server. Please check your network connection.';
       }
+    } else if (e.toString().contains('TimeoutException')) {
+      errorMessage = 'Connection Timeout: The server took too long to respond.';
     }
     ToastificationError.Error(errorMessage);
   } finally {

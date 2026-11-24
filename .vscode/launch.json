@@ -5,6 +5,7 @@
       "name": "rukmini (Web Chrome - No CORS)",
       "request": "launch",
       "type": "dart",
+      "program": "lib/main.dart",
       "args": [
         "-d",
         "chrome",
