@@ -343,7 +343,7 @@ class _CustlistState extends State<Custlist> {
             child: SingleChildScrollView(
               controller: _scrollController,
               physics: const AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.all(AppSize.p16),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
               child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

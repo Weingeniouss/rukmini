@@ -172,34 +172,40 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
     return ShellScope(
       child: Scaffold(
         backgroundColor: AppColor.backgroundColor,
-        body: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Left Side: Persistent Navigation Drawer
-            SizedBox(
-              width: AppSize.isDesktop ? 350 : 240,
-              height: double.infinity,
-              child: homeDrawer(),
-            ),
+        body: Obx(() {
+          final bool isCollapsed = navDrawerController.isDrawerCollapsed.value;
+          final double drawerWidth = isCollapsed ? 70.0 : 260.0;
 
-            // Right Side: Content Area Navigator
-            Expanded(
-              child: Navigator(
-                key: Get.nestedKey(NavDrawerController.nestedKey),
-                initialRoute: widget.initialRoute,
-                onGenerateRoute: (settings) {
-                  final routeName = settings.name ?? widget.initialRoute;
-                  return GetPageRoute(
-                    page: () => _getWidgetForRoute(routeName),
-                    settings: settings,
-                    transition: Transition.fade,
-                    transitionDuration: const Duration(milliseconds: 150),
-                  );
-                },
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Left Side: Collapsible Persistent Navigation Drawer
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: drawerWidth,
+                height: double.infinity,
+                child: homeDrawer(isCollapsed: isCollapsed),
               ),
-            ),
-          ],
-        ),
+
+              // Right Side: Content Area Navigator
+              Expanded(
+                child: Navigator(
+                  key: Get.nestedKey(NavDrawerController.nestedKey),
+                  initialRoute: widget.initialRoute,
+                  onGenerateRoute: (settings) {
+                    final routeName = settings.name ?? widget.initialRoute;
+                    return GetPageRoute(
+                      page: () => _getWidgetForRoute(routeName),
+                      settings: settings,
+                      transition: Transition.fade,
+                      transitionDuration: const Duration(milliseconds: 150),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }

@@ -11,7 +11,7 @@ import '../app_color.dart';
 import '../app_icon.dart';
 import '../app_logo.dart';
 
-Widget homeDrawer() {
+Widget homeDrawer({bool isCollapsed = false}) {
   final loginAPI = Get.put(LoginControllerAPI());
   final navDrawerController = Get.put(NavDrawerController());
 
@@ -20,90 +20,24 @@ Widget homeDrawer() {
     elevation: 0,
     child: Column(
       children: [
-        // Custom Header
-        SizedBox(
-          height: (AppSize.isDesktop || AppSize.isTablet)
-              ? 140.0
-              : AppSize.height * 0.27,
-          child: Stack(
-            children: [
-              Positioned.fill(child: CustomPaint(painter: HeaderArcPainter())),
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                  AppSize.p20,
-                  (AppSize.isDesktop || AppSize.isTablet)
-                      ? AppSize.p20
-                      : AppSize.height * 0.07,
-                  AppSize.p20,
-                  AppSize.p20,
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    NavDrawerController.toNamed('/profile');
-                  },
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        AppLogo.rukminiLogo2,
-                        height: (AppSize.isDesktop || AppSize.isTablet)
-                            ? 60.0
-                            : AppSize.height * 0.12,
-                        fit: BoxFit.contain,
-                      ),
-                      SizedBox(width: AppSize.p16),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Obx(() {
-                              final role =
-                                  loginAPI.loginData.value.data?.roleName;
-                              return Text(
-                                role ?? AppString.user,
-                                style: TextStyle(
-                                  color: AppColor.primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize:
-                                      (AppSize.isDesktop || AppSize.isTablet)
-                                      ? 18.0
-                                      : AppSize.extraLargeText,
-                                ),
-                              );
-                            }),
-                            const SizedBox(height: 4),
-                            Text(
-                              loginAPI.loginUI.emailController.text,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: AppColor.textField,
-                                fontSize:
-                                    (AppSize.isDesktop || AppSize.isTablet)
-                                    ? 12.0
-                                    : AppSize.size14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        // Custom Header with Collapse/Expand Toggle
+        if (isCollapsed)
+          _buildCollapsedHeader(navDrawerController)
+        else
+          _buildExpandedHeader(loginAPI, navDrawerController),
 
         // Drawer Items
         Expanded(
           child: ListView(
-            padding: EdgeInsets.symmetric(horizontal: AppSize.p16),
+            padding: EdgeInsets.symmetric(
+              horizontal: isCollapsed ? 6 : AppSize.p16,
+            ),
             children: [
               _drawerItem(
                 index: 0,
                 title: AppString.home,
                 icon: AppIcon.home,
+                isCollapsed: isCollapsed,
                 onTap: () {
                   navDrawerController.navigateFromDrawer('/home', 0);
                 },
@@ -112,6 +46,7 @@ Widget homeDrawer() {
                 index: 1,
                 title: AppString.allMaster,
                 icon: AppIcon.settings,
+                isCollapsed: isCollapsed,
                 onTap: () {
                   navDrawerController.navigateFromDrawer('/allMaster', 1);
                 },
@@ -120,6 +55,7 @@ Widget homeDrawer() {
                 index: 2,
                 title: AppString.customer,
                 icon: AppIcon.personOutline,
+                isCollapsed: isCollapsed,
                 onTap: () {
                   navDrawerController.navigateFromDrawer('/custList', 2);
                 },
@@ -128,6 +64,7 @@ Widget homeDrawer() {
                 index: 3,
                 title: AppString.girvi,
                 icon: AppIcon.bank,
+                isCollapsed: isCollapsed,
                 onTap: () {
                   navDrawerController.navigateFromDrawer('/giriviList', 3);
                 },
@@ -136,6 +73,7 @@ Widget homeDrawer() {
                 index: 4,
                 title: AppString.products,
                 icon: AppIcon.grid,
+                isCollapsed: isCollapsed,
                 onTap: () {
                   navDrawerController.navigateFromDrawer('/pendingProduct', 4);
                 },
@@ -144,14 +82,19 @@ Widget homeDrawer() {
                 index: 5,
                 title: AppString.productinLocker,
                 icon: AppIcon.lockPerson,
+                isCollapsed: isCollapsed,
                 onTap: () {
-                  navDrawerController.navigateFromDrawer('/productInLocker', 5);
+                  navDrawerController.navigateFromDrawer(
+                    '/productInLocker',
+                    5,
+                  );
                 },
               ),
               _drawerItem(
                 index: 6,
                 title: AppString.pendingTransaction,
                 icon: AppIcon.pending,
+                isCollapsed: isCollapsed,
                 onTap: () {
                   navDrawerController.navigateFromDrawer('/dueGirvi', 6);
                 },
@@ -160,6 +103,7 @@ Widget homeDrawer() {
                 index: 7,
                 title: AppString.lockerTransaction,
                 icon: AppIcon.lockReset,
+                isCollapsed: isCollapsed,
                 onTap: () {
                   navDrawerController.navigateFromDrawer(
                     '/lockerTransaction',
@@ -171,6 +115,7 @@ Widget homeDrawer() {
                 index: 8,
                 title: AppString.reports,
                 icon: AppIcon.description,
+                isCollapsed: isCollapsed,
                 onTap: () {
                   navDrawerController.navigateFromDrawer('/report', 8);
                 },
@@ -180,6 +125,7 @@ Widget homeDrawer() {
                 title: AppString.exportCustomersContacts,
                 icon: AppIcon.contact,
                 isSpecial: true,
+                isCollapsed: isCollapsed,
                 onTap: () {
                   navDrawerController.navigateFromDrawer('/exportContacts', 9);
                 },
@@ -189,46 +135,123 @@ Widget homeDrawer() {
         ),
 
         // Logout Section
-        Padding(
-          padding: EdgeInsets.fromLTRB(
-            AppSize.p16,
-            AppSize.p8,
-            AppSize.p16,
-            (AppSize.isDesktop || AppSize.isTablet)
-                ? 40.0
-                : AppSize.height * 0.08,
+        _buildLogoutButton(isCollapsed),
+      ],
+    ),
+  );
+}
+
+Widget _buildCollapsedHeader(NavDrawerController navDrawerController) {
+  return Container(
+    height: 100,
+    padding: const EdgeInsets.only(top: 20),
+    alignment: Alignment.center,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          tooltip: "Expand Drawer",
+          icon: Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: AppColor.goldTagBg,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Icon(
+              AppIcon.chevronRight,
+              color: AppColor.dashboardGold,
+              size: 20,
+            ),
           ),
-          child: Material(
-            color: AppColor.logoutBg,
-            borderRadius: BorderRadius.circular(10),
-            clipBehavior: Clip.antiAlias,
-            child: ListTile(
-              leading: Container(
-                padding: const EdgeInsets.all(8),
+          onPressed: () => navDrawerController.toggleDrawerCollapse(),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildExpandedHeader(
+  LoginControllerAPI loginAPI,
+  NavDrawerController navDrawerController,
+) {
+  final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
+  return SizedBox(
+    height: isDesktopOrTablet ? 140.0 : AppSize.height * 0.27,
+    child: Stack(
+      children: [
+        Positioned.fill(child: CustomPaint(painter: HeaderArcPainter())),
+        if (isDesktopOrTablet)
+          Positioned(
+            top: 10,
+            right: 10,
+            child: IconButton(
+              tooltip: "Collapse Drawer",
+              icon: Container(
+                padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: AppColor.white,
+                  color: AppColor.goldTagBg,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(
-                  AppIcon.logout,
-                  color: AppColor.logoutIcon,
-                  size: 20,
+                  AppIcon.chevronLeft,
+                  color: AppColor.dashboardGold,
+                  size: 18,
                 ),
               ),
-              title: Text(
-                AppString.logout,
-                style: TextStyle(
-                  color: AppColor.logoutText,
-                  fontWeight: FontWeight.w600,
-                  fontSize: (AppSize.isDesktop || AppSize.isTablet)
-                      ? 14.0
-                      : 16.0,
+              onPressed: () => navDrawerController.toggleDrawerCollapse(),
+            ),
+          ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+            AppSize.p16,
+            isDesktopOrTablet ? AppSize.p20 : AppSize.height * 0.07,
+            AppSize.p16,
+            AppSize.p16,
+          ),
+          child: GestureDetector(
+            onTap: () {
+              NavDrawerController.toNamed('/profile');
+            },
+            child: Row(
+              children: [
+                Image.asset(
+                  AppLogo.rukminiLogo2,
+                  height: isDesktopOrTablet ? 54.0 : AppSize.height * 0.12,
+                  fit: BoxFit.contain,
                 ),
-              ),
-              onTap: () async {
-                await LocalDatabase().logout();
-                Get.offAllNamed('/login');
-              },
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Obx(() {
+                        final role = loginAPI.loginData.value.data?.roleName;
+                        return Text(
+                          role ?? AppString.user,
+                          style: TextStyle(
+                            color: AppColor.primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize:
+                                isDesktopOrTablet ? 16.0 : AppSize.extraLargeText,
+                          ),
+                        );
+                      }),
+                      const SizedBox(height: 2),
+                      Text(
+                        loginAPI.loginUI.emailController.text,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: AppColor.textField,
+                          fontSize: isDesktopOrTablet ? 11.0 : AppSize.size14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -243,6 +266,7 @@ Widget _drawerItem({
   required IconData icon,
   required void Function()? onTap,
   bool isSpecial = false,
+  bool isCollapsed = false,
 }) {
   final NavDrawerController navDrawerController = Get.find();
   return Obx(() {
@@ -265,6 +289,40 @@ Widget _drawerItem({
                 width: 1,
               )
             : null;
+
+    if (isCollapsed) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Tooltip(
+          message: title,
+          preferBelow: false,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(10),
+            child: Container(
+              height: 44,
+              width: 44,
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(10),
+                border: border,
+              ),
+              child: Center(
+                child: Icon(
+                  icon,
+                  color: isSelected
+                      ? AppColor.goldColor
+                      : isSpecial
+                          ? AppColor.goldColor
+                          : AppColor.primaryColor,
+                  size: 20,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
     return Column(
       children: [
@@ -303,7 +361,7 @@ Widget _drawerItem({
                             ? AppColor.goldColor
                             : AppColor.primaryColor,
                     fontSize: (AppSize.isDesktop || AppSize.isTablet)
-                        ? 14.0
+                        ? 13.0
                         : AppSize.largeText,
                     fontWeight: (isSelected || isSpecial)
                         ? FontWeight.bold
@@ -332,6 +390,80 @@ Widget _drawerItem({
       ],
     );
   });
+}
+
+Widget _buildLogoutButton(bool isCollapsed) {
+  final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
+  if (isCollapsed) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20, top: 8),
+      child: Tooltip(
+        message: AppString.logout,
+        preferBelow: false,
+        child: InkWell(
+          onTap: () async {
+            await LocalDatabase().logout();
+            Get.offAllNamed('/login');
+          },
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: AppColor.logoutBg,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Icon(
+              AppIcon.logout,
+              color: AppColor.logoutIcon,
+              size: 20,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  return Padding(
+    padding: EdgeInsets.fromLTRB(
+      AppSize.p16,
+      AppSize.p8,
+      AppSize.p16,
+      isDesktopOrTablet ? 30.0 : AppSize.height * 0.08,
+    ),
+    child: Material(
+      color: AppColor.logoutBg,
+      borderRadius: BorderRadius.circular(10),
+      clipBehavior: Clip.antiAlias,
+      child: ListTile(
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: AppColor.white,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Icon(
+            AppIcon.logout,
+            color: AppColor.logoutIcon,
+            size: 20,
+          ),
+        ),
+        title: Text(
+          AppString.logout,
+          style: TextStyle(
+            color: AppColor.logoutText,
+            fontWeight: FontWeight.w600,
+            fontSize: isDesktopOrTablet ? 13.0 : 16.0,
+          ),
+        ),
+        onTap: () async {
+          await LocalDatabase().logout();
+          Get.offAllNamed('/login');
+        },
+      ),
+    ),
+  );
 }
 
 class HeaderArcPainter extends CustomPainter {

@@ -6,8 +6,13 @@ import 'package:rukmini/view/utils/app_size.dart';
 
 class NavDrawerController extends GetxController {
   var selectedIndex = 0.obs;
+  var isDrawerCollapsed = false.obs;
   static const int nestedKey = 1;
   static dynamic currentArguments;
+
+  void toggleDrawerCollapse() {
+    isDrawerCollapsed.value = !isDrawerCollapsed.value;
+  }
 
   void changeIndex(int index) {
     selectedIndex.value = index;

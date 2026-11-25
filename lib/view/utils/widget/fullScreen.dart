@@ -28,7 +28,7 @@ class Fullscreen extends StatelessWidget {
     this.drawer,
     this.isPadding = true,
     this.floatingActionButton,
-    this.maxDesktopWidth = 1600,
+    this.maxDesktopWidth = double.infinity,
   });
 
   @override
