@@ -11,6 +11,7 @@ import 'package:rukmini/view/utils/app_icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/app_url.dart';
+import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:shimmer/shimmer.dart';
@@ -25,6 +26,7 @@ class Custlist extends StatefulWidget {
 class _CustlistState extends State<Custlist> {
   final custListController = Get.put(CustListController());
   final ScrollController _scrollController = ScrollController();
+  final ScrollController _horizontalScrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
 
   final RxBool _isGridView = false.obs;
@@ -59,6 +61,7 @@ class _CustlistState extends State<Custlist> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _horizontalScrollController.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -277,65 +280,10 @@ class _CustlistState extends State<Custlist> {
     return Fullscreen(
       isPadding: false,
       drawer: homeDrawer(),
-      backGroundcolor: AppColor.dashboardIconBg,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(
-          (AppSize.isDesktop || AppSize.isTablet)
-              ? 60.0
-              : kToolbarHeight + AppSize.p8,
-        ),
-        child: Container(
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top + AppSize.p8,
-            left: AppSize.p16,
-            right: AppSize.p16,
-            bottom: AppSize.p8,
-          ),
-          child: Row(
-            children: [
-              if (!AppSize.isDesktop && !AppSize.isTablet) ...[
-                Container(
-                  decoration: BoxDecoration(
-                    color: AppColor.white,
-                    borderRadius: BorderRadius.circular(AppSize.p10),
-                    border: Border.all(
-                      color: AppColor.goldColor.withOpacity(0.3),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColor.black.withOpacity(0.05),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: IconButton(
-                    padding: const EdgeInsets.all(4),
-                    constraints: const BoxConstraints(),
-                    icon: const Icon(
-                      AppIcon.backIcon,
-                      color: AppColor.goldColor,
-                    ),
-                    onPressed: () => NavDrawerController.back(),
-                  ),
-                ),
-                SizedBox(width: AppSize.p12),
-              ],
-              Expanded(
-                child: Text(
-                  AppString.customer,
-                  style: TextStyle(
-                    fontSize: (AppSize.isDesktop || AppSize.isTablet)
-                        ? 22.0
-                        : AppSize.size20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColor.black54,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+      backGroundcolor: AppColor.backgroundColor,
+      appBar: appBar(
+        back: true,
+        title: AppString.customer,
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColor.dashboardGold,
@@ -389,11 +337,14 @@ class _CustlistState extends State<Custlist> {
             isRefresh: true,
             search: _searchController.text,
           ),
-          child: SingleChildScrollView(
+          child: Scrollbar(
             controller: _scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsets.all(AppSize.p16),
-            child: Column(
+            thumbVisibility: true,
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.all(AppSize.p16),
+              child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildFilterBar(),
@@ -434,9 +385,10 @@ class _CustlistState extends State<Custlist> {
               ],
             ),
           ),
-        );
-      }),
-    );
+        ),
+      );
+    }),
+  );
   }
 
   Widget _buildFilterBar() {
@@ -810,13 +762,20 @@ class _CustlistState extends State<Custlist> {
           ),
         ],
       ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minWidth: MediaQuery.of(context).size.width - 32,
-          ),
-          child: DataTable(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Scrollbar(
+            controller: _horizontalScrollController,
+            thumbVisibility: true,
+            scrollbarOrientation: ScrollbarOrientation.bottom,
+            child: SingleChildScrollView(
+              controller: _horizontalScrollController,
+              scrollDirection: Axis.horizontal,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minWidth: constraints.maxWidth,
+                ),
+                child: DataTable(
             headingRowColor: WidgetStateProperty.all(AppColor.tableHeaderBg),
             headingRowHeight: 48,
             dataRowMinHeight: 56,
@@ -1068,7 +1027,10 @@ class _CustlistState extends State<Custlist> {
         ),
       ),
     );
-  }
+  },
+),
+);
+}
 
   Widget _tableHeaderWithSort(String text) {
     return Row(
