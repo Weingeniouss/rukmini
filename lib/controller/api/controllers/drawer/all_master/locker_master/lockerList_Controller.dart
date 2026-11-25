@@ -33,7 +33,9 @@ class LockerListController extends GetxController {
 
   Future<http.Response?> getLockerList() async {
     try {
-      isLoading.value = true;
+      if (lockerList.isEmpty) {
+        isLoading.value = true;
+      }
       final http.Response response = await _services.lockerListApi();
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);

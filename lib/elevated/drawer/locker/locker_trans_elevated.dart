@@ -7,7 +7,10 @@ import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
 Future<LockerTransModal?> getLockerTransList() async {
-  final LockerTransController controller = Get.put(LockerTransController());
+  final LockerTransController controller =
+      Get.isRegistered<LockerTransController>()
+          ? Get.find<LockerTransController>()
+          : Get.put(LockerTransController(), permanent: true);
 
   final http.Response? response = await controller.getLockerTransList();
 

@@ -11,7 +11,10 @@ import '../../../modal/drawer/home/dashboard_model.dart';
 import '../../../view/utils/widget/pop.dart';
 
 Future<DashboardModel?> getDashboard() async {
-  final DashbordController dashboardController = Get.put(DashbordController());
+  final DashbordController dashboardController =
+      Get.isRegistered<DashbordController>()
+          ? Get.find<DashbordController>()
+          : Get.put(DashbordController(), permanent: true);
   final http.Response? response = await dashboardController.dashbord();
 
   if (response != null) {

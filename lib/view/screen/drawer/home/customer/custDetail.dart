@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use, strict_top_level_inference, file_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
@@ -12,10 +13,10 @@ import 'package:rukmini/view/utils/app_color.dart';
 import 'package:rukmini/view/utils/app_icon.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_string.dart';
+import 'package:rukmini/view/utils/app_url.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/headingContainer.dart';
-import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:rukmini/view/utils/widget/rukmini_alert_box.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -49,6 +50,30 @@ class _CustDetailState extends State<CustDetail> {
   void dispose() {
     custDetailController.dispose();
     super.dispose();
+  }
+
+  String? _getImageUrl(String? path, [String? fallbackPath]) {
+    String? p = path;
+    if (p == null || p == "null" || p.trim().isEmpty) {
+      p = fallbackPath;
+    }
+    if (p == null || p == "null" || p.trim().isEmpty) {
+      return null;
+    }
+
+    p = p.trim();
+    if (p.startsWith('http://') || p.startsWith('https://')) {
+      return p;
+    }
+
+    final String base = AppUrl.baseURL;
+    if (base.endsWith('/') && p.startsWith('/')) {
+      return "${base.substring(0, base.length - 1)}$p";
+    } else if (!base.endsWith('/') && !p.startsWith('/')) {
+      return "$base/$p";
+    } else {
+      return "$base$p";
+    }
   }
 
   @override
@@ -102,202 +127,1045 @@ class _CustDetailState extends State<CustDetail> {
                 SizedBox(
                   width: 360,
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(horizontal: AppSize.p16),
-                    child: heddingData(
-                      name: data.name ?? '',
-                      custcode: data.custCode ?? '',
-                      totalGivenAmt: data.totalGivenAmt.toString(),
-                      gracePeriod: data.gracePeriod.toString(),
-                      phone: (data.phone != null && data.phone!.isNotEmpty)
-                          ? data.phone!.first.phone ?? ''
-                          : '',
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        _buildProfileCard(data),
+                        const SizedBox(height: 16),
+                        _buildAccountSummaryCard(data),
+                      ],
                     ),
                   ),
                 ),
-                Expanded(child: tabBar(data)),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 16,
+                      right: 16,
+                      bottom: 16,
+                    ),
+                    child: _buildRightTabsContent(data),
+                  ),
+                ),
               ],
             );
           }
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              horizontalPadding(
-                child: heddingData(
-                  name: data.name ?? '',
-                  custcode: data.custCode ?? '',
-                  totalGivenAmt: data.totalGivenAmt.toString(),
-                  gracePeriod: data.gracePeriod.toString(),
-                  phone: (data.phone != null && data.phone!.isNotEmpty)
-                      ? data.phone!.first.phone ?? ''
-                      : '',
-                ),
-              ),
-              Expanded(child: tabBar(data)),
-            ],
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildProfileCard(data),
+                const SizedBox(height: 16),
+                _buildAccountSummaryCard(data),
+                const SizedBox(height: 16),
+                SizedBox(height: 600, child: _buildRightTabsContent(data)),
+              ],
+            ),
           );
         }),
       ),
     );
   }
 
-  Widget tabBarHedings(String text, {bool showDivider = false}) {
-    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+  Widget _buildProfileCard(CustomerDetailData data) {
+    final phoneStr = (data.phone != null && data.phone!.isNotEmpty)
+        ? data.phone!.first.phone ?? ''
+        : '';
+
+    String? fullUrl = _getImageUrl(data.imagePath);
+    fullUrl ??= _getImageUrl(customer.imagePath);
+    fullUrl ??= _getImageUrl(customer.image);
+
+    if (fullUrl == null && data.profile != null && data.profile!.isNotEmpty) {
+      for (var prof in data.profile!) {
+        fullUrl = _getImageUrl(prof.imagePath) ?? _getImageUrl(prof.image);
+        if (fullUrl != null) break;
+      }
+    }
+
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: AppSize.p8),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Stack(
         children: [
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: isDesktopOrTablet ? 15.0 : AppSize.size14,
-              fontWeight: FontWeight.w500,
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColor.goldTagBg,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: AppColor.goldTagDot.withOpacity(0.3),
+                ),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(AppIcon.star, size: 12, color: AppColor.goldTagDot),
+                  SizedBox(width: 4),
+                  Text(
+                    AppString.vip,
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: AppColor.goldTagText,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          if (showDivider) ...[
-            SizedBox(width: AppSize.p12),
-            Container(height: AppSize.p20, width: 1, color: AppColor.grey300),
-          ],
+          Column(
+            children: [
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () {
+                  if (fullUrl != null) {
+                    _showFullScreenImage(
+                      context,
+                      fullUrl,
+                      data.name ?? AppString.profileImage,
+                    );
+                  }
+                },
+                child: Container(
+                  width: 90,
+                  height: 90,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: AppColor.dashboardGold,
+                      width: 2.5,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColor.dashboardGold.withOpacity(0.15),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: ClipOval(
+                    child: fullUrl != null
+                        ? Image.network(
+                            fullUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(
+                                  AppIcon.person,
+                                  size: 50,
+                                  color: AppColor.dashboardGold,
+                                ),
+                          )
+                        : const Icon(
+                            AppIcon.person,
+                            size: 50,
+                            color: AppColor.dashboardGold,
+                          ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                data.name ?? AppString.noName,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.black87,
+                ),
+              ),
+              const SizedBox(height: 8),
+              InkWell(
+                onTap: () {
+                  if (data.custCode != null && data.custCode!.isNotEmpty) {
+                    Clipboard.setData(ClipboardData(text: data.custCode!));
+                    Get.snackbar(
+                      AppString.copied,
+                      AppString.customerCodeCopied,
+                      backgroundColor: AppColor.white,
+                      colorText: AppColor.black87,
+                      snackPosition: SnackPosition.BOTTOM,
+                      duration: const Duration(seconds: 2),
+                    );
+                  }
+                },
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 5,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColor.goldTagBg.withOpacity(0.6),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        data.custCode ?? "-",
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.goldTagText,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      const Icon(
+                        AppIcon.copy,
+                        size: 14,
+                        color: AppColor.goldTagText,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              _buildStatusBadge(data.status),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildCircularActionButton(
+                    icon: AppIcon.call,
+                    bgColor: AppColor.goldTagBg,
+                    iconColor: AppColor.dashboardGold,
+                    label: AppString.call,
+                    onTap: () => _makeCall(phoneStr),
+                  ),
+                  _buildCircularActionButton(
+                    icon: AppIcon.message,
+                    bgColor: AppColor.goldTagBg,
+                    iconColor: AppColor.dashboardGold,
+                    label: AppString.message,
+                    onTap: () => _sendSMS(phoneStr),
+                  ),
+                  _buildCircularActionButton(
+                    icon: AppIcon.phone,
+                    bgColor: AppColor.greenTagBg,
+                    iconColor: AppColor.greenText,
+                    label: AppString.whatsapp,
+                    onTap: () => _launchWhatsApp(phoneStr),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget tabBar(CustomerDetailData data) {
-    return Column(
-      children: [
-        horizontalPadding(
-          child: TabBar(
-            labelColor: AppColor.goldColor,
-            unselectedLabelColor: AppColor.textColor,
-            indicatorColor: AppColor.goldColor,
-            indicatorSize: TabBarIndicatorSize.tab,
-            dividerColor: AppColor.grey300,
-            isScrollable: true,
-            tabAlignment: TabAlignment.start,
-            tabs: [
-              Tab(
-                child: tabBarHedings(
-                  AppString.customerDetails,
-                  showDivider: true,
+  Widget _buildCircularActionButton({
+    required IconData icon,
+    required Color bgColor,
+    required Color iconColor,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(30),
+      child: Column(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: bgColor,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: iconColor.withOpacity(0.15),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
                 ),
-              ),
-              Tab(
-                child: tabBarHedings(AppString.girviDetails, showDivider: true),
-              ),
-              Tab(
-                child: tabBarHedings(
-                  AppString.transactionDetails,
-                  showDivider: true,
-                ),
-              ),
-              Tab(
-                child: tabBarHedings(
-                  AppString.identiyProof,
-                  showDivider: false,
+              ],
+            ),
+            child: Icon(icon, color: iconColor, size: 22),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: AppColor.black87,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAccountSummaryCard(CustomerDetailData data) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(AppIcon.report, color: AppColor.dashboardGold, size: 22),
+              SizedBox(width: 8),
+              Text(
+                AppString.accountSummary,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.black87,
                 ),
               ),
             ],
           ),
-        ),
-        Expanded(
-          child: TabBarView(
+          const SizedBox(height: 14),
+          _summaryRow(
+            icon: AppIcon.rupee,
+            bgColor: AppColor.goldTagBg,
+            iconColor: AppColor.dashboardGold,
+            label: AppString.gvnAmt,
+            value: "₹ ${data.totalGivenAmt ?? 0.00}",
+          ),
+          const SizedBox(height: 10),
+          _summaryRow(
+            icon: AppIcon.accessTime,
+            bgColor: AppColor.orangeLightBg,
+            iconColor: AppColor.orangeText,
+            label: AppString.pendingAmt,
+            value: "₹ ${data.gracePeriod ?? '0.00'}",
+          ),
+          const SizedBox(height: 10),
+          _summaryRow(
+            icon: AppIcon.receipt,
+            bgColor: AppColor.blueTagBg,
+            iconColor: AppColor.blueTagText,
+            label: AppString.totalTransactions,
+            value: "${data.girviList?.length ?? 0}",
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _summaryRow({
+    required IconData icon,
+    required Color bgColor,
+    required Color iconColor,
+    required String label,
+    required String value,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColor.tableBg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColor.grey300),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
+            child: Icon(icon, color: iconColor, size: 18),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 13,
+              color: AppColor.black54,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const Spacer(),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: AppColor.black87,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRightTabsContent(CustomerDetailData data) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: const BoxDecoration(
+              color: AppColor.tableBg,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              border: Border(bottom: BorderSide(color: AppColor.grey300)),
+            ),
+            child: TabBar(
+              labelColor: AppColor.dashboardGold,
+              unselectedLabelColor: AppColor.black54,
+              indicatorColor: AppColor.dashboardGold,
+              indicatorWeight: 3,
+              indicatorSize: TabBarIndicatorSize.tab,
+              dividerColor: AppColor.transparent,
+              isScrollable: true,
+              tabAlignment: TabAlignment.start,
+              tabs: const [
+                Tab(
+                  child: Row(
+                    children: [
+                      Icon(AppIcon.person, size: 18),
+                      SizedBox(width: 6),
+                      Text(
+                        AppString.customerDetails,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Tab(
+                  child: Row(
+                    children: [
+                      Icon(AppIcon.balance, size: 18),
+                      SizedBox(width: 6),
+                      Text(
+                        AppString.girviDetails,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Tab(
+                  child: Row(
+                    children: [
+                      Icon(AppIcon.swap, size: 18),
+                      SizedBox(width: 6),
+                      Text(
+                        AppString.transactionDetails,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Tab(
+                  child: Row(
+                    children: [
+                      Icon(AppIcon.description, size: 18),
+                      SizedBox(width: 6),
+                      Text(
+                        AppString.identiyProof,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
+                  child: _buildCustomerDetailsTab(data),
+                ),
+                SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
+                  child: _buildGirviDetailsTab(data),
+                ),
+                SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
+                  child: _buildTransactionDetailsTab(data),
+                ),
+                SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
+                  child: identityProofTab(data),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCustomerDetailsTab(CustomerDetailData data) {
+    final custTypes = data.custType ?? [];
+    final phones = data.phone ?? [];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildCardSection(
+          icon: AppIcon.person,
+          title: AppString.basicInformation,
+          child: Column(
             children: [
-              // Customer Details Tab
-              SingleChildScrollView(
-                child: horizontalPadding(
-                  child: customerDetails(
-                    address: data.address ?? '',
-                    gender: data.gender ?? '',
-                    status: data.status ?? '',
-                    gracePeriod: data.gracePeriod ?? '',
-                    phone: data.phone ?? <Phone>[],
-                    custType: data.custType ?? <CustType>[],
-                    nomineeName: data.nominee?.name ?? '',
-                    nomineephoneNumbar: data.nominee?.phone ?? '',
-                    nomineeRelation: data.nominee?.custRelation ?? '',
+              _buildInfoRowPair(
+                icon1: AppIcon.badge,
+                label1: AppString.custCode,
+                value1: data.custCode ?? "-",
+                isCopyable1: true,
+                icon2: AppIcon.location,
+                label2: AppString.branch,
+                value2: "Pandesara",
+              ),
+              const Divider(height: 1, color: AppColor.grey200),
+              _buildInfoRowPair(
+                icon1: AppIcon.person,
+                label1: AppString.name,
+                value1: data.name ?? "-",
+                icon2: AppIcon.group,
+                label2: AppString.type,
+                value2: custTypes.isNotEmpty
+                    ? custTypes.first.typeName ?? "Regular"
+                    : "Regular",
+              ),
+              const Divider(height: 1, color: AppColor.grey200),
+              _buildInfoRowPair(
+                icon1: AppIcon.wc,
+                label1: AppString.gender,
+                value1: data.gender ?? "Male",
+                icon2: AppIcon.calendar,
+                label2: AppString.createdOn,
+                value2: "24 Nov 2026",
+              ),
+              const Divider(height: 1, color: AppColor.grey200),
+              _buildInfoRowPair(
+                icon1: AppIcon.checkCircle,
+                label1: AppString.status,
+                value1Widget: _buildStatusBadge(data.status),
+                icon2: AppIcon.calendar,
+                label2: AppString.updatedOn,
+                value2: "24 Nov 2026",
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+
+        if (data.address != null && data.address!.isNotEmpty) ...[
+          _buildCardSection(
+            icon: AppIcon.location,
+            title: AppString.address,
+            child: Row(
+              children: [
+                const Icon(
+                  AppIcon.location,
+                  color: AppColor.dashboardGold,
+                  size: 20,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    data.address!,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColor.black87,
+                    ),
                   ),
                 ),
-              ),
-              // Girvi Details
-              SingleChildScrollView(
-                child: horizontalPadding(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(vertical: AppSize.p16),
-                    padding: EdgeInsets.all(AppSize.p8),
-                    decoration: BoxDecoration(
-                      color: AppColor.white,
-                      borderRadius: BorderRadius.circular(AppSize.p20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColor.black.withOpacity(0.05),
-                          blurRadius: AppSize.p10,
-                          offset: Offset(0, AppSize.p4),
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: AppColor.goldTagBg,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    AppIcon.map,
+                    color: AppColor.dashboardGold,
+                    size: 18,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+
+        _buildCardSection(
+          icon: AppIcon.phone,
+          title: AppString.phoneNumbar,
+          child: Column(
+            children: [
+              if (phones.isEmpty)
+                const Text(
+                  AppString.noPhoneNumbersAvailable,
+                  style: TextStyle(color: AppColor.grey500),
+                )
+              else
+                ...phones.map(
+                  (p) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: const BoxDecoration(
+                            color: AppColor.goldTagBg,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            AppIcon.phone,
+                            color: AppColor.dashboardGold,
+                            size: 16,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          p.phone ?? "-",
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.black87,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        if (p.isDefault == "1")
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColor.goldTagBg,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Text(
+                              AppString.defaultLabel,
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.goldTagText,
+                              ),
+                            ),
+                          ),
+                        const Spacer(),
+                        OutlinedButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(
+                            AppIcon.add,
+                            size: 14,
+                            color: AppColor.dashboardGold,
+                          ),
+                          label: const Text(
+                            AppString.addNumber,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColor.dashboardGold,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(
+                              color: AppColor.dashboardGold,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
                         ),
                       ],
                     ),
-                    child: Column(
-                      children: [
-                        if (data.girviList == null || data.girviList!.isEmpty)
-                          Padding(
-                            padding: EdgeInsets.all(AppSize.p20),
-                            child: Center(
-                              child: Text(AppString.noGirviRecordsFound),
-                            ),
-                          )
-                        else
-                          ...data.girviList!.map(
-                            (girvi) => girviDetail(girvi: girvi),
-                          ),
-                      ],
-                    ),
                   ),
                 ),
-              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
 
-              //Transaction Details
-              SingleChildScrollView(
-                child: horizontalPadding(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(vertical: AppSize.p16),
-                    padding: EdgeInsets.all(AppSize.p8),
-                    decoration: BoxDecoration(
-                      color: AppColor.white,
-                      borderRadius: BorderRadius.circular(AppSize.p20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColor.black.withOpacity(0.05),
-                          blurRadius: AppSize.p10,
-                          offset: Offset(0, AppSize.p4),
+        if (custTypes.isNotEmpty) ...[
+          _buildCardSection(
+            icon: AppIcon.group,
+            title: AppString.customerTypes,
+            child: Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: custTypes.map((t) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColor.tableBg,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: AppColor.grey300),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        AppIcon.group,
+                        size: 16,
+                        color: AppColor.dashboardGold,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        t.typeName ?? "Regular",
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.black87,
                         ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        if (data.girviList == null || data.girviList!.isEmpty)
-                          Padding(
-                            padding: EdgeInsets.all(AppSize.p20),
-                            child: Center(
-                              child: Text(AppString.noGirviRecordsFound),
-                            ),
-                          )
-                        else
-                          ...data.girviList!.map(
-                            (girvi) => translationDetail(girvi: girvi),
-                          ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 8),
+                      _buildStatusBadge(t.status),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+
+        if (data.nominee != null) ...[
+          _buildCardSection(
+            icon: AppIcon.verifiedUser,
+            title: AppString.nomineeInformation,
+            child: Column(
+              children: [
+                _buildInfoRowPair(
+                  icon1: AppIcon.person,
+                  label1: AppString.nomineeName,
+                  value1: data.nominee!.name ?? "-",
+                  icon2: AppIcon.group,
+                  label2: AppString.customerRelation,
+                  value2: data.nominee!.custRelation ?? "-",
+                ),
+                if (data.nominee!.phone != null) ...[
+                  const Divider(height: 1, color: AppColor.grey200),
+                  _buildInfoRowPair(
+                    icon1: AppIcon.phone,
+                    label1: AppString.phone,
+                    value1: data.nominee!.phone!,
+                    label2: "",
+                    value2: "",
+                  ),
+                ],
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+
+        _buildCardSection(
+          icon: AppIcon.editNote,
+          title: AppString.notes,
+          child: Row(
+            children: [
+              const Expanded(
+                child: Text(
+                  AppString.defaultNotes,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: AppColor.black87,
+                    fontStyle: FontStyle.italic,
                   ),
                 ),
               ),
-
-              //Identity Proof Tab
-              horizontalPadding(child: identityProofTab(data)),
+              IconButton(
+                icon: const Icon(
+                  AppIcon.editIcon,
+                  color: AppColor.dashboardGold,
+                  size: 18,
+                ),
+                onPressed: () {},
+              ),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildGirviDetailsTab(CustomerDetailData data) {
+    final girviList = data.girviList ?? [];
+    if (girviList.isEmpty) {
+      return Container(
+        height: 200,
+        alignment: Alignment.center,
+        child: Text(
+          AppString.noGirviRecordsFound,
+          style: const TextStyle(fontSize: 15, color: AppColor.grey500),
+        ),
+      );
+    }
+
+    return Column(
+      children: girviList.map((girvi) => girviDetail(girvi: girvi)).toList(),
+    );
+  }
+
+  Widget _buildTransactionDetailsTab(CustomerDetailData data) {
+    final girviList = data.girviList ?? [];
+    if (girviList.isEmpty) {
+      return Container(
+        height: 200,
+        alignment: Alignment.center,
+        child: Text(
+          AppString.noGirviRecordsFound,
+          style: const TextStyle(fontSize: 15, color: AppColor.grey500),
+        ),
+      );
+    }
+
+    return Column(
+      children: girviList
+          .map((girvi) => translationDetail(girvi: girvi))
+          .toList(),
+    );
+  }
+
+  Widget _buildCardSection({
+    required IconData icon,
+    required String title,
+    required Widget child,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColor.tableBg,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColor.grey300),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: AppColor.dashboardGold, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          child,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRowPair({
+    IconData? icon1,
+    required String label1,
+    String? value1,
+    Widget? value1Widget,
+    bool isCopyable1 = false,
+    IconData? icon2,
+    required String label2,
+    String? value2,
+    Widget? value2Widget,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    if (icon1 != null) ...[
+                      Icon(icon1, size: 15, color: AppColor.dashboardGold),
+                      const SizedBox(width: 6),
+                    ],
+                    Text(
+                      label1,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColor.grey500,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 3),
+                value1Widget ??
+                    Row(
+                      children: [
+                        Text(
+                          value1 ?? "-",
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.black87,
+                          ),
+                        ),
+                        if (isCopyable1 &&
+                            value1 != null &&
+                            value1.isNotEmpty) ...[
+                          const SizedBox(width: 6),
+                          InkWell(
+                            onTap: () {
+                              Clipboard.setData(ClipboardData(text: value1));
+                              Get.snackbar(
+                                AppString.copied,
+                                "$label1 copied to clipboard",
+                                snackPosition: SnackPosition.BOTTOM,
+                              );
+                            },
+                            child: const Icon(
+                              AppIcon.copy,
+                              size: 14,
+                              color: AppColor.dashboardGold,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+              ],
+            ),
+          ),
+          if (label2.isNotEmpty)
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      if (icon2 != null) ...[
+                        Icon(icon2, size: 15, color: AppColor.dashboardGold),
+                        const SizedBox(width: 6),
+                      ],
+                      Text(
+                        label2,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColor.grey500,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 3),
+                  value2Widget ??
+                      Text(
+                        value2 ?? "-",
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.black87,
+                        ),
+                      ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusBadge(String? statusStr) {
+    final s = (statusStr ?? "active").toLowerCase();
+    final isPending = s.contains("pending") || s == "0";
+    final isInactive = s.contains("inactive") || s == "false";
+
+    Color bg;
+    Color textColor;
+    String text;
+
+    if (isPending) {
+      bg = AppColor.goldTagBg;
+      textColor = AppColor.goldTagDot;
+      text = AppString.pending;
+    } else if (isInactive) {
+      bg = AppColor.redLightBg;
+      textColor = AppColor.redText;
+      text = AppString.closed;
+    } else {
+      bg = AppColor.greenTagBg;
+      textColor = AppColor.greenTagText;
+      text = AppString.active;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(AppIcon.checkCircle, size: 13, color: textColor),
+          const SizedBox(width: 4),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: textColor,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -308,8 +1176,9 @@ class _CustDetailState extends State<CustDetail> {
         children: [
           if (data.proof != null && data.proof!.isNotEmpty) ...[
             headingContainer(AppString.identiyProof),
-            ...data.proof!.map(
-              (proof) => Card(
+            ...data.proof!.map((proof) {
+              final proofUrl = _getImageUrl(proof.imagePath, proof.image);
+              return Card(
                 color: AppColor.white,
                 margin: EdgeInsets.symmetric(vertical: AppSize.p4),
                 child: Column(
@@ -318,14 +1187,18 @@ class _CustDetailState extends State<CustDetail> {
                       title: Text(
                         proof.name ?? '',
                         style: TextStyle(
-                          fontSize: isDesktopOrTablet ? 15.0 : AppSize.commonText,
+                          fontSize: isDesktopOrTablet
+                              ? 15.0
+                              : AppSize.commonText,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       subtitle: Text(
                         proof.status ?? '',
                         style: TextStyle(
-                          fontSize: isDesktopOrTablet ? 13.0 : AppSize.smallText,
+                          fontSize: isDesktopOrTablet
+                              ? 13.0
+                              : AppSize.smallText,
                         ),
                       ),
                       leading: const Icon(
@@ -333,12 +1206,12 @@ class _CustDetailState extends State<CustDetail> {
                         color: AppColor.activeColor,
                       ),
                     ),
-                    if (proof.imagePath != null)
+                    if (proofUrl != null)
                       GestureDetector(
                         onTap: () {
                           _showFullScreenImage(
                             context,
-                            proof.imagePath!,
+                            proofUrl,
                             proof.name ?? AppString.proofImage,
                           );
                         },
@@ -347,7 +1220,7 @@ class _CustDetailState extends State<CustDetail> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(AppSize.p8),
                             child: Image.network(
-                              proof.imagePath!,
+                              proofUrl,
                               width: double.infinity,
                               height: AppSize.height * 0.25,
                               fit: BoxFit.cover,
@@ -363,13 +1236,14 @@ class _CustDetailState extends State<CustDetail> {
                       ),
                   ],
                 ),
-              ),
-            ),
+              );
+            }),
           ],
           if (data.profile != null && data.profile!.isNotEmpty) ...[
             headingContainer(AppString.profilePhotos),
-            ...data.profile!.map(
-              (profile) => Card(
+            ...data.profile!.map((profile) {
+              final profileUrl = _getImageUrl(profile.imagePath, profile.image);
+              return Card(
                 color: AppColor.white,
                 margin: EdgeInsets.symmetric(vertical: AppSize.p4),
                 child: Column(
@@ -378,14 +1252,18 @@ class _CustDetailState extends State<CustDetail> {
                       title: Text(
                         profile.name ?? '',
                         style: TextStyle(
-                          fontSize: isDesktopOrTablet ? 15.0 : AppSize.commonText,
+                          fontSize: isDesktopOrTablet
+                              ? 15.0
+                              : AppSize.commonText,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       subtitle: Text(
                         profile.status ?? '',
                         style: TextStyle(
-                          fontSize: isDesktopOrTablet ? 13.0 : AppSize.smallText,
+                          fontSize: isDesktopOrTablet
+                              ? 13.0
+                              : AppSize.smallText,
                         ),
                       ),
                       leading: const Icon(
@@ -393,11 +1271,11 @@ class _CustDetailState extends State<CustDetail> {
                         color: AppColor.activeColor,
                       ),
                     ),
-                    if (profile.imagePath != null)
+                    if (profileUrl != null)
                       GestureDetector(
                         onTap: () => _showFullScreenImage(
                           context,
-                          profile.imagePath!,
+                          profileUrl,
                           profile.name ?? AppString.profileImage,
                         ),
                         child: Padding(
@@ -406,15 +1284,19 @@ class _CustDetailState extends State<CustDetail> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                width: isDesktopOrTablet ? 100 : AppSize.width * 0.25,
-                                height: isDesktopOrTablet ? 140 : AppSize.width * 0.45,
+                                width: isDesktopOrTablet
+                                    ? 100
+                                    : AppSize.width * 0.25,
+                                height: isDesktopOrTablet
+                                    ? 140
+                                    : AppSize.width * 0.45,
                                 decoration: BoxDecoration(
                                   color: AppColor.grey200,
                                   borderRadius: BorderRadius.circular(
                                     AppSize.p10,
                                   ),
                                   image: DecorationImage(
-                                    image: NetworkImage(profile.imagePath!),
+                                    image: NetworkImage(profileUrl),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -427,7 +1309,9 @@ class _CustDetailState extends State<CustDetail> {
                                     Text(
                                       profile.name ?? '',
                                       style: TextStyle(
-                                        fontSize: isDesktopOrTablet ? 15.0 : AppSize.p16,
+                                        fontSize: isDesktopOrTablet
+                                            ? 15.0
+                                            : AppSize.p16,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -436,7 +1320,9 @@ class _CustDetailState extends State<CustDetail> {
                                       profile.status ?? '',
                                       style: TextStyle(
                                         color: AppColor.textColor,
-                                        fontSize: isDesktopOrTablet ? 13.0 : AppSize.size14,
+                                        fontSize: isDesktopOrTablet
+                                            ? 13.0
+                                            : AppSize.size14,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -445,7 +1331,9 @@ class _CustDetailState extends State<CustDetail> {
                                       "${AppString.idColon}${profile.custId ?? ''}",
                                       style: TextStyle(
                                         color: AppColor.activeColor,
-                                        fontSize: isDesktopOrTablet ? 13.0 : AppSize.size14,
+                                        fontSize: isDesktopOrTablet
+                                            ? 13.0
+                                            : AppSize.size14,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -458,8 +1346,8 @@ class _CustDetailState extends State<CustDetail> {
                       ),
                   ],
                 ),
-              ),
-            ),
+              );
+            }),
           ],
           if ((data.proof == null || data.proof!.isEmpty) &&
               (data.profile == null || data.profile!.isEmpty))
@@ -494,6 +1382,7 @@ class _CustDetailState extends State<CustDetail> {
     String imageUrl,
     String title,
   ) {
+    final fullUrl = _getImageUrl(imageUrl) ?? imageUrl;
     Get.to(
       () => Scaffold(
         backgroundColor: AppColor.black,
@@ -508,7 +1397,7 @@ class _CustDetailState extends State<CustDetail> {
             minScale: 0.5,
             maxScale: 4.0,
             child: Image.network(
-              imageUrl,
+              fullUrl,
               fit: BoxFit.contain,
               width: double.infinity,
               height: double.infinity,
@@ -528,308 +1417,6 @@ class _CustDetailState extends State<CustDetail> {
         ),
       ),
       fullscreenDialog: true,
-    );
-  }
-
-  Widget customerDetails({
-    required String address,
-    required String gender,
-    required String status,
-    required String gracePeriod,
-    required List<Phone> phone,
-    required List<CustType> custType,
-    required String nomineeName,
-    required String nomineephoneNumbar,
-    required String nomineeRelation,
-  }) {
-    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: AppSize.p16),
-      decoration: BoxDecoration(
-        color: AppColor.white,
-        borderRadius: BorderRadius.circular(AppSize.p20),
-        boxShadow: [
-          BoxShadow(
-            color: AppColor.black.withOpacity(0.05),
-            blurRadius: AppSize.p10,
-            offset: Offset(0, AppSize.p4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _sectionHeader(AppString.customerDetail),
-          if (address.isNotEmpty)
-            _detailRow(AppIcon.location, AppString.address, address),
-          if (gender.isNotEmpty)
-            _detailRow(AppIcon.person, AppString.gender, gender),
-          if (status.isNotEmpty)
-            _detailRow(
-              AppIcon.status,
-              AppString.status,
-              status,
-              valueColor: AppColor.activeColor,
-            ),
-          if (gracePeriod.isNotEmpty && gracePeriod != "0")
-            _detailRow(AppIcon.calendar, AppString.gracePeriod, gracePeriod),
-
-          if (custType.isNotEmpty) ...[
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                AppSize.p16,
-                AppSize.p16,
-                AppSize.p16,
-                8,
-              ),
-              child: Text(
-                AppString.customerTypes,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: isDesktopOrTablet ? 16.0 : AppSize.headingText,
-                ),
-              ),
-            ),
-            ...custType.map(
-              (type) => _customItemCard(
-                AppIcon.category,
-                type.typeName ?? '',
-                type.status ?? '',
-              ),
-            ),
-          ],
-
-          if (phone.isNotEmpty) ...[
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                AppSize.p16,
-                AppSize.p16,
-                AppSize.p16,
-                8,
-              ),
-              child: Text(
-                AppString.phoneNumbar,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: isDesktopOrTablet ? 16.0 : AppSize.headingText,
-                ),
-              ),
-            ),
-            ...phone.map(
-              (p) => _phoneItemCard(p.phone ?? '', p.isDefault == "1"),
-            ),
-          ],
-          if (nomineeName.isNotEmpty ||
-              nomineephoneNumbar.isNotEmpty ||
-              nomineeRelation.isNotEmpty) ...[
-            _sectionHeader(AppString.nomineeDetail),
-            if (nomineeName.isNotEmpty)
-              _detailRow(AppIcon.person, AppString.name, nomineeName),
-            if (nomineephoneNumbar.isNotEmpty)
-              _detailRow(AppIcon.phone, AppString.phone, nomineephoneNumbar),
-            if (nomineeRelation.isNotEmpty)
-              _detailRow(
-                AppIcon.verifiedUser,
-                AppString.customerRelation,
-                nomineeRelation,
-              ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _sectionHeader(String title) {
-    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSize.p16,
-        vertical: AppSize.p12,
-      ),
-      decoration: BoxDecoration(
-        color: AppColor.whiteOrang.withOpacity(0.3),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSize.p20)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: AppSize.p4,
-            height: AppSize.p20,
-            decoration: BoxDecoration(
-              color: AppColor.goldColor,
-              borderRadius: BorderRadius.circular(AppSize.p4 / 2),
-            ),
-          ),
-          SizedBox(width: AppSize.p8),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: isDesktopOrTablet ? 16.0 : AppSize.headingText,
-              fontWeight: FontWeight.bold,
-              color: AppColor.black,
-            ),
-          ),
-          const Spacer(),
-          Icon(
-            AppIcon.leaf,
-            color: AppColor.goldColor.withOpacity(0.1),
-            size: AppSize.iconLarge * 1.25,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _detailRow(
-    IconData icon,
-    String label,
-    String value, {
-    Color? valueColor,
-  }) {
-    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: AppSize.p12,
-            horizontal: AppSize.p16,
-          ),
-          child: Row(
-            children: [
-              Icon(icon, color: AppColor.goldColor, size: isDesktopOrTablet ? 20.0 : AppSize.iconMedium),
-              SizedBox(width: AppSize.p16),
-              Expanded(
-                flex: 3,
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: isDesktopOrTablet ? 15.0 : AppSize.commonText,
-                    color: AppColor.black,
-                  ),
-                ),
-              ),
-              const Text(" : ", style: TextStyle(fontWeight: FontWeight.bold)),
-              Expanded(
-                flex: 5,
-                child: Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: isDesktopOrTablet ? 15.0 : AppSize.commonText,
-                    color: valueColor ?? AppColor.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          height: 1,
-          thickness: 0.5,
-          color: AppColor.grey300,
-          indent: AppSize.p16,
-          endIndent: AppSize.p16,
-        ),
-      ],
-    );
-  }
-
-  Widget _customItemCard(IconData icon, String title, String status) {
-    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: AppSize.p16,
-        vertical: AppSize.p8,
-      ),
-      padding: EdgeInsets.all(AppSize.p12),
-      decoration: BoxDecoration(
-        color: AppColor.backgroundColor,
-        borderRadius: BorderRadius.circular(AppSize.p16 - 1),
-        border: Border.all(color: AppColor.grey300),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(AppSize.p8),
-            decoration: BoxDecoration(
-              color: AppColor.whiteOrang,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: AppColor.goldColor, size: isDesktopOrTablet ? 20.0 : 24.0),
-          ),
-          SizedBox(width: AppSize.p16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: isDesktopOrTablet ? 15.0 : AppSize.commonText,
-                ),
-              ),
-              Text(
-                status,
-                style: TextStyle(
-                  color: AppColor.activeColor,
-                  fontSize: isDesktopOrTablet ? 13.0 : AppSize.mediumText * 1.1,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _phoneItemCard(String phone, bool isDefault) {
-    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: AppSize.p16,
-        vertical: AppSize.p8,
-      ),
-      padding: EdgeInsets.all(AppSize.p12),
-      decoration: BoxDecoration(
-        color: AppColor.backgroundColor,
-        borderRadius: BorderRadius.circular(AppSize.p16 - 1),
-        border: Border.all(color: AppColor.grey300),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(AppSize.p8),
-            decoration: BoxDecoration(
-              color: AppColor.whiteOrang,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(AppIcon.phone, color: AppColor.goldColor, size: isDesktopOrTablet ? 20.0 : 24.0),
-          ),
-          SizedBox(width: AppSize.p16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                phone,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: isDesktopOrTablet ? 15.0 : AppSize.commonText,
-                ),
-              ),
-              if (isDefault)
-                Text(
-                  AppString.defaultLabel,
-                  style: TextStyle(
-                    color: AppColor.goldColor,
-                    fontSize: isDesktopOrTablet ? 13.0 : AppSize.mediumText * 1.1,
-                  ),
-                ),
-            ],
-          ),
-          const Spacer(),
-          Icon(AppIcon.rightArrow, color: AppColor.goldColor, size: isDesktopOrTablet ? 18.0 : 24.0),
-        ],
-      ),
     );
   }
 
@@ -950,7 +1537,11 @@ class _CustDetailState extends State<CustDetail> {
         children: [
           Row(
             children: [
-              Icon(icon, color: AppColor.goldColor, size: isDesktopOrTablet ? 16.0 : AppSize.iconSmall),
+              Icon(
+                icon,
+                color: AppColor.goldColor,
+                size: isDesktopOrTablet ? 16.0 : AppSize.iconSmall,
+              ),
               SizedBox(width: AppSize.p4),
               Text(
                 label,
@@ -968,196 +1559,6 @@ class _CustDetailState extends State<CustDetail> {
               fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
               fontWeight: FontWeight.bold,
               color: valueColor ?? AppColor.black,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget heddingData({
-    required String name,
-    required String custcode,
-    required String totalGivenAmt,
-    required String gracePeriod,
-    required String phone,
-  }) {
-    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: AppSize.p16),
-      padding: EdgeInsets.all(AppSize.p16),
-      decoration: BoxDecoration(
-        color: AppColor.white,
-        borderRadius: BorderRadius.circular(AppSize.p20),
-        boxShadow: [
-          BoxShadow(
-            color: AppColor.black.withOpacity(0.05),
-            blurRadius: AppSize.p10,
-            offset: Offset(0, AppSize.p4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  if (customer.imagePath != null) {
-                    _showFullScreenImage(
-                      context,
-                      customer.imagePath!,
-                      customer.name ?? AppString.profileImage,
-                    );
-                  }
-                },
-                child: Container(
-                  width: isDesktopOrTablet ? 100 : AppSize.width * 0.25,
-                  height: isDesktopOrTablet ? 130 : AppSize.width * 0.35,
-                  decoration: BoxDecoration(
-                    color: AppColor.dashboardIconBg,
-                    borderRadius: BorderRadius.circular(AppSize.p16),
-                    border: Border(
-                      bottom: BorderSide(
-                        color: AppColor.goldColor,
-                        width: AppSize.width * 0.008,
-                      ),
-                    ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(AppSize.p16),
-                    child: customer.imagePath != null
-                        ? Image.network(customer.imagePath!, fit: BoxFit.cover)
-                        : Icon(
-                            AppIcon.person,
-                            size: isDesktopOrTablet ? 40.0 : AppSize.iconLarge * 1.5,
-                            color: AppColor.goldColor,
-                          ),
-                  ),
-                ),
-              ),
-              SizedBox(width: AppSize.p16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: TextStyle(
-                        fontSize: isDesktopOrTablet ? 18.0 : AppSize.headingText,
-                        fontWeight: FontWeight.bold,
-                        color: AppColor.black,
-                      ),
-                    ),
-                    Text(
-                      custcode,
-                      style: TextStyle(
-                        fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
-                        color: AppColor.goldColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(height: AppSize.p8),
-                    _amtRow(AppString.gvnAmtColon, totalGivenAmt),
-                    _amtRow("${AppString.pendingAmt}: ", gracePeriod),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: AppSize.p16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _actionButton(
-                AppIcon.call,
-                AppString.call,
-                () => _makeCall(phone),
-              ),
-              _actionButton(
-                AppIcon.message,
-                AppString.message,
-                () => _sendSMS(phone),
-              ),
-              _actionButton(
-                AppIcon.whatsapp,
-                AppString.whatsapp,
-                () => _launchWhatsApp(phone),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _amtRow(String label, String value) {
-    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: AppSize.p4 / 2),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            child: Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: isDesktopOrTablet ? 13.0 : AppSize.mediumText,
-                color: AppColor.textColor,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
-              fontWeight: FontWeight.bold,
-              color: AppColor.goldColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _actionButton(IconData icon, String label, VoidCallback onTap) {
-    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.all(isDesktopOrTablet ? 10 : AppSize.p12),
-            decoration: BoxDecoration(
-              color: AppColor.white,
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColor.goldColor.withOpacity(0.2)),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColor.black.withOpacity(0.05),
-                  blurRadius: AppSize.p4,
-                  offset: Offset(0, AppSize.p4 / 2),
-                ),
-              ],
-            ),
-            child: Icon(
-              icon,
-              color: AppColor.goldColor,
-              size: isDesktopOrTablet ? 20.0 : AppSize.iconMedium,
-            ),
-          ),
-          SizedBox(height: AppSize.p8),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: isDesktopOrTablet ? 13.0 : AppSize.mediumText,
-              color: AppColor.black,
-              fontWeight: FontWeight.w500,
             ),
           ),
         ],
@@ -1194,169 +1595,32 @@ Widget loadingState() {
   return Shimmer.fromColors(
     baseColor: AppColor.grey300,
     highlightColor: AppColor.white,
-    child: SingleChildScrollView(
+    child: Padding(
+      padding: EdgeInsets.all(AppSize.p16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Card Shimmer
-          horizontalPadding(
-            child: Container(
-              margin: EdgeInsets.symmetric(vertical: AppSize.p16),
-              padding: EdgeInsets.all(AppSize.p16),
-              decoration: BoxDecoration(
-                color: AppColor.white,
-                borderRadius: BorderRadius.circular(AppSize.p20),
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: AppSize.width * 0.25,
-                        height: AppSize.width * 0.35,
-                        decoration: BoxDecoration(
-                          color: AppColor.white,
-                          borderRadius: BorderRadius.circular(AppSize.p16),
-                        ),
-                      ),
-                      SizedBox(width: AppSize.p16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 150,
-                              height: 20,
-                              color: AppColor.white,
-                            ),
-                            SizedBox(height: AppSize.p8),
-                            Container(
-                              width: 80,
-                              height: 15,
-                              color: AppColor.white,
-                            ),
-                            SizedBox(height: AppSize.p12),
-                            Container(
-                              width: double.infinity,
-                              height: 12,
-                              color: AppColor.white,
-                            ),
-                            SizedBox(height: 5),
-                            Container(
-                              width: double.infinity,
-                              height: 12,
-                              color: AppColor.white,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: AppSize.p20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: List.generate(
-                      3,
-                      (index) => Column(
-                        children: [
-                          Container(
-                            width: 50,
-                            height: 50,
-                            decoration: const BoxDecoration(
-                              color: AppColor.white,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          SizedBox(height: AppSize.p8),
-                          Container(
-                            width: 40,
-                            height: 10,
-                            color: AppColor.white,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // TabBar Shimmer
-          horizontalPadding(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(
-                3,
-                (index) => Container(
-                  width: AppSize.width * 0.25,
-                  height: 35,
-                  decoration: BoxDecoration(
-                    color: AppColor.white,
-                    borderRadius: BorderRadius.circular(AppSize.p8),
-                  ),
-                ),
-              ),
+          Container(
+            height: 180,
+            decoration: BoxDecoration(
+              color: AppColor.white,
+              borderRadius: BorderRadius.circular(AppSize.p20),
             ),
           ),
           SizedBox(height: AppSize.p16),
-
-          // Content Card Shimmer
-          horizontalPadding(
+          Container(
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColor.white,
+              borderRadius: BorderRadius.circular(AppSize.p10),
+            ),
+          ),
+          SizedBox(height: AppSize.p16),
+          Expanded(
             child: Container(
               decoration: BoxDecoration(
                 color: AppColor.white,
                 borderRadius: BorderRadius.circular(AppSize.p20),
-              ),
-              child: Column(
-                children: [
-                  // Section Header Shimmer
-                  Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: AppColor.white.withOpacity(0.3),
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(AppSize.p20),
-                      ),
-                    ),
-                  ),
-                  // Detail Rows Shimmer
-                  Padding(
-                    padding: EdgeInsets.all(AppSize.p16),
-                    child: Column(
-                      children: List.generate(
-                        5,
-                        (index) => Padding(
-                          padding: EdgeInsets.symmetric(vertical: AppSize.p12),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 24,
-                                height: 24,
-                                decoration: const BoxDecoration(
-                                  color: AppColor.white,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              SizedBox(width: AppSize.p16),
-                              Container(
-                                width: 80,
-                                height: 15,
-                                color: AppColor.white,
-                              ),
-                              const Spacer(),
-                              Container(
-                                width: 120,
-                                height: 15,
-                                color: AppColor.white,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
           ),

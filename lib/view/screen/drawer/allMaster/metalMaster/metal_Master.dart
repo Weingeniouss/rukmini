@@ -9,7 +9,6 @@ import 'package:rukmini/controller/ui/home/allMaster/metal_Master/metalMaster_Co
 import 'package:rukmini/modal/product/productTypeList_Modal.dart';
 import 'package:rukmini/view/utils/app_color.dart';
 import 'package:rukmini/view/utils/app_icon.dart';
-import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
@@ -27,12 +26,81 @@ class _MetalMasterState extends State<MetalMaster> {
   final metalMasterUI = Get.put(MetalMasterControllerUI());
   final productTypeRemoveController = Get.put(ProductTypeRemoveController());
 
+  final TextEditingController _searchController = TextEditingController();
+  final RxString _selectedMetalFilter = AppString.allMetal.obs;
+  final RxString _selectedStatusFilter = AppString.allStatus.obs;
+  final RxSet<String> _selectedIds = <String>{}.obs;
+  final RxBool _selectAll = false.obs;
+  final RxInt _rowsPerPage = 10.obs;
+  final RxInt _currentPage = 1.obs;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       CallApi.callProductTypeList();
     });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  List<ProductTypeData> getFilteredList(List<ProductTypeData> list) {
+    final query = _searchController.text.toLowerCase().trim();
+    final metalFilter = _selectedMetalFilter.value.toLowerCase();
+    final statusFilter = _selectedStatusFilter.value.toLowerCase();
+
+    return list.where((item) {
+      final name = (item.name ?? '').toLowerCase();
+      final code = _generateCode(item.name).toLowerCase();
+
+      if (query.isNotEmpty) {
+        if (!name.contains(query) && !code.contains(query)) {
+          return false;
+        }
+      }
+
+      if (metalFilter != "all metal" && metalFilter != "all") {
+        if (!name.contains(metalFilter)) {
+          return false;
+        }
+      }
+
+      if (statusFilter == "active") {
+        // All active by default
+      } else if (statusFilter == "inactive") {
+        return false;
+      }
+
+      return true;
+    }).toList();
+  }
+
+  String _generateCode(String? name) {
+    if (name == null || name.isEmpty) return "MT-GEN";
+    final clean = name.trim().replaceAll(" ", "").toUpperCase();
+    if (clean.length <= 4) return "MT-$clean";
+    return "MT-${clean.substring(0, 4)}";
+  }
+
+  String _getWeightUnit(String? name) {
+    if (name == null) return "0.00 gm";
+    final n = name.toLowerCase();
+    if (n.contains("diamond")) return "0.00 ct";
+    return "0.00 gm";
+  }
+
+  IconData _getMetalIcon(String? name) {
+    if (name == null) return AppIcon.metal;
+    final n = name.toLowerCase();
+    if (n.contains("diamond")) return AppIcon.diamond;
+    if (n.contains("gold") || n.contains("silver") || n.contains("platinum")) {
+      return AppIcon.metal;
+    }
+    return AppIcon.layers;
   }
 
   @override
@@ -43,109 +111,909 @@ class _MetalMasterState extends State<MetalMaster> {
       appBar: appBar(
         back: true,
         centerTitle: true,
-        title: _buildDecorativeTitle(),
+        title: _buildHeaderTitle(),
       ),
-      child: Column(
-        children: [
-          _buildFilterAndAddSection(),
-          const Divider(height: 1),
-          Expanded(
-            child: Obx(() {
-              if (productTypeController.isLoading.value &&
-                  productTypeController.productTypeList.isEmpty) {
-                return _shimmerLoading();
-              }
+      child: Obx(() {
+        final bool isLoading = productTypeController.isLoading.value;
+        final rawList = productTypeController.productTypeList.toList();
+        final filteredList = getFilteredList(rawList);
 
-              if (productTypeController.productTypeList.isEmpty) {
-                return Center(child: Text(AppString.noDataFound));
-              }
+        _selectedMetalFilter.value;
+        _selectedStatusFilter.value;
+        _selectedIds.length;
+        _selectAll.value;
+        _rowsPerPage.value;
+        _currentPage.value;
 
-              if (AppSize.isDesktop || AppSize.isTablet) {
-                return RefreshIndicator(
-                  onRefresh: () => CallApi.callProductTypeList(),
-                  color: AppColor.goldColor,
-                  child: GridView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.all(AppSize.p16),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: AppSize.isDesktop ? 3 : 2,
-                      crossAxisSpacing: AppSize.p16,
-                      mainAxisSpacing: AppSize.p16,
-                      mainAxisExtent: 80,
+        if (isLoading && rawList.isEmpty) {
+          return _shimmerLoading();
+        }
+
+        final totalCount = filteredList.length;
+        final perPage = _rowsPerPage.value;
+        int pageIndex = _currentPage.value;
+
+        int startIndex = (pageIndex - 1) * perPage;
+        if (startIndex >= totalCount && totalCount > 0) {
+          startIndex = (totalCount - 1) ~/ perPage * perPage;
+        }
+        final endIndex = (startIndex + perPage).clamp(0, totalCount);
+        final pagedList = filteredList.sublist(startIndex, endIndex);
+
+        final startNum = totalCount == 0 ? 0 : startIndex + 1;
+        final endNum = endIndex;
+
+        return RefreshIndicator(
+          onRefresh: () => CallApi.callProductTypeList(),
+          color: AppColor.dashboardGold,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSummaryCards(rawList),
+                _buildFilterBar(),
+                if (filteredList.isEmpty)
+                  Container(
+                    height: 200,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColor.grey300),
                     ),
-                    itemCount: productTypeController.productTypeList.length,
-                    itemBuilder: (context, index) {
-                      return _buildMetalCard(
-                        productTypeController.productTypeList[index],
-                      );
-                    },
-                  ),
-                );
-              }
+                    child: Text(
+                      AppString.noDataFound,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: AppColor.grey500,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  )
+                else
+                  _buildTableView(pagedList, startIndex: startIndex),
+                const SizedBox(height: 12),
+                _buildPaginationBar(startNum, endNum, totalCount),
+              ],
+            ),
+          ),
+        );
+      }),
+    );
+  }
 
-              return RefreshIndicator(
-                onRefresh: () => CallApi.callProductTypeList(),
-                color: AppColor.goldColor,
-                child: ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSize.p16,
-                    vertical: AppSize.p12,
+  Widget _buildHeaderTitle() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Icon(
+          AppIcon.layers,
+          color: AppColor.dashboardGold,
+          size: 22,
+        ),
+        const SizedBox(width: 8),
+        Text(
+          AppString.metalMaster,
+          style: const TextStyle(
+            color: AppColor.black87,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSummaryCards(List<ProductTypeData> list) {
+    String goldRate = "1,45,500.00";
+    String silverRate = "90,000.00";
+
+    for (var item in list) {
+      final n = (item.name ?? '').toLowerCase();
+      if (n.contains("gold") && !n.contains("rose")) {
+        if (item.rate != null && item.rate!.isNotEmpty) {
+          goldRate = item.rate!;
+        }
+      } else if (n.contains("silver")) {
+        if (item.rate != null && item.rate!.isNotEmpty) {
+          silverRate = item.rate!;
+        }
+      }
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColor.goldTagBg.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColor.goldTagBg),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 46,
+                    height: 46,
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      AppIcon.metal,
+                      color: AppColor.dashboardGold,
+                      size: 26,
+                    ),
                   ),
-                  itemCount: productTypeController.productTypeList.length,
-                  itemBuilder: (context, index) {
-                    return _buildMetalCard(
-                      productTypeController.productTypeList[index],
-                    );
-                  },
-                ),
-              );
-            }),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Gold",
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          "₹ $goldRate",
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.black87,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColor.blueTagBg.withOpacity(0.4),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColor.blueTagBg),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 46,
+                    height: 46,
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      AppIcon.metal,
+                      color: AppColor.blueTagText,
+                      size: 26,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Silver",
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          "₹ $silverRate",
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.black87,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDecorativeTitle() {
-    final double lineWidth =
-        (AppSize.isDesktop || AppSize.isTablet) ? 40 : AppSize.width * 0.1;
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          AppString.metalMaster,
-          style: TextStyle(
-            color: AppColor.black,
-            fontSize: AppSize.titleText,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: AppSize.p4 / 2),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: lineWidth,
-              height: 1,
-              color: AppColor.goldColor.withOpacity(0.5),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Transform.rotate(
-                angle: 0.785,
+  Widget _buildFilterBar() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isCompact = constraints.maxWidth < 650;
+        return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          child: Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              SizedBox(
+                width: isCompact ? constraints.maxWidth : 300,
                 child: Container(
-                  width: AppSize.p8,
-                  height: AppSize.p8,
-                  color: AppColor.goldColor,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: AppColor.grey300),
+                  ),
+                  child: TextField(
+                    controller: _searchController,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: AppColor.black87,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: AppString.searchMetalPlaceholder,
+                      hintStyle: const TextStyle(
+                        color: AppColor.grey500,
+                        fontSize: 13,
+                      ),
+                      prefixIcon: const Icon(
+                        AppIcon.searchIcon,
+                        color: AppColor.grey500,
+                        size: 20,
+                      ),
+                      suffixIcon: _searchController.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(AppIcon.clearIcon, size: 18),
+                              onPressed: () {
+                                _searchController.clear();
+                                setState(() {});
+                              },
+                            )
+                          : null,
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 12,
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {});
+                    },
+                  ),
                 ),
               ),
+
+              Builder(
+                builder: (btnContext) => _buildFilterPill(
+                  icon: AppIcon.layers,
+                  label: _selectedMetalFilter.value,
+                  onTap: () => _showMetalMenu(btnContext),
+                ),
+              ),
+
+              Builder(
+                builder: (btnContext) => _buildFilterPill(
+                  icon: AppIcon.trend,
+                  label: _selectedStatusFilter.value,
+                  onTap: () => _showStatusMenu(btnContext),
+                ),
+              ),
+
+              Container(
+                height: 42,
+                width: 42,
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppColor.grey300),
+                ),
+                child: IconButton(
+                  icon: const Icon(
+                    AppIcon.refresh,
+                    color: AppColor.dashboardGold,
+                    size: 20,
+                  ),
+                  tooltip: AppString.resetFilters,
+                  onPressed: _resetFilters,
+                ),
+              ),
+
+              OutlinedButton.icon(
+                onPressed: () {
+                  Get.snackbar(
+                    AppString.export,
+                    "Exporting Metal Master list...",
+                    backgroundColor: AppColor.white,
+                    colorText: AppColor.black,
+                    borderColor: AppColor.dashboardGold,
+                    borderWidth: 1,
+                    snackPosition: SnackPosition.BOTTOM,
+                  );
+                },
+                icon: const Icon(
+                  AppIcon.fileDownload,
+                  size: 16,
+                  color: AppColor.black87,
+                ),
+                label: const Text(
+                  AppString.export,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.black87,
+                  ),
+                ),
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: AppColor.white,
+                  side: const BorderSide(color: AppColor.grey300),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 11,
+                  ),
+                ),
+              ),
+
+              ElevatedButton.icon(
+                onPressed: () => _showAddEditDialog(),
+                icon: const Icon(AppIcon.add, size: 16, color: AppColor.white),
+                label: const Text(
+                  AppString.addMetal,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColor.dashboardGold,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 11,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFilterPill({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    final bool isSelected =
+        label != AppString.allMetal && label != AppString.allStatus;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        height: 42,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColor.dashboardGold.withOpacity(0.08)
+              : AppColor.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isSelected ? AppColor.dashboardGold : AppColor.grey300,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 18,
+              color: isSelected ? AppColor.dashboardGold : AppColor.grey500,
             ),
-            Container(
-              width: lineWidth,
-              height: 1,
-              color: AppColor.goldColor.withOpacity(0.5),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                color: isSelected ? AppColor.dashboardGold : AppColor.black87,
+              ),
+            ),
+            const SizedBox(width: 6),
+            Icon(
+              AppIcon.arrow_down,
+              size: 18,
+              color: isSelected ? AppColor.dashboardGold : AppColor.grey500,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showMetalMenu(BuildContext btnContext) {
+    final RenderBox renderBox = btnContext.findRenderObject() as RenderBox;
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+
+    showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        offset.dx,
+        offset.dy + renderBox.size.height,
+        offset.dx + renderBox.size.width,
+        0,
+      ),
+      items: [AppString.allMetal, "Gold", "Silver", "Platinum", "Diamond"].map((m) {
+        return PopupMenuItem<String>(
+          value: m,
+          child: Text(m, style: const TextStyle(fontSize: 13)),
+        );
+      }).toList(),
+    ).then((value) {
+      if (value != null) {
+        _selectedMetalFilter.value = value;
+      }
+    });
+  }
+
+  void _showStatusMenu(BuildContext btnContext) {
+    final RenderBox renderBox = btnContext.findRenderObject() as RenderBox;
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+
+    showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        offset.dx,
+        offset.dy + renderBox.size.height,
+        offset.dx + renderBox.size.width,
+        0,
+      ),
+      items: [AppString.allStatus, "Active", "Inactive"].map((s) {
+        return PopupMenuItem<String>(
+          value: s,
+          child: Text(s, style: const TextStyle(fontSize: 13)),
+        );
+      }).toList(),
+    ).then((value) {
+      if (value != null) {
+        _selectedStatusFilter.value = value;
+      }
+    });
+  }
+
+  void _resetFilters() {
+    _searchController.clear();
+    _selectedMetalFilter.value = AppString.allMetal;
+    _selectedStatusFilter.value = AppString.allStatus;
+    setState(() {});
+  }
+
+  Widget _buildTableView(List<ProductTypeData> list, {int startIndex = 0}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColor.grey300),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            headingRowColor: WidgetStateProperty.all(AppColor.dashboardGold),
+            headingTextStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColor.white,
+              fontSize: 13,
+            ),
+            dataRowMinHeight: 52,
+            dataRowMaxHeight: 52,
+            horizontalMargin: 16,
+            columnSpacing: 24,
+            columns: [
+              DataColumn(
+                label: Checkbox(
+                  value: _selectAll.value,
+                  activeColor: AppColor.white,
+                  checkColor: AppColor.dashboardGold,
+                  side: const BorderSide(color: AppColor.white, width: 1.5),
+                  onChanged: (val) {
+                    _selectAll.value = val ?? false;
+                    if (_selectAll.value) {
+                      _selectedIds.addAll(
+                        list.map((e) => e.productTypeId ?? ''),
+                      );
+                    } else {
+                      _selectedIds.clear();
+                    }
+                  },
+                ),
+              ),
+              const DataColumn(label: Text("#")),
+              const DataColumn(label: Text("Metal")),
+              const DataColumn(label: Text("Code")),
+              DataColumn(label: _sortHeader("Rate (₹)")),
+              DataColumn(label: _sortHeader("Qty / Weight")),
+              DataColumn(label: _sortHeader("Status")),
+              const DataColumn(label: Text("Actions")),
+            ],
+            rows: List.generate(list.length, (index) {
+              final item = list[index];
+              final id = item.productTypeId ?? '';
+              final isChecked = _selectedIds.contains(id);
+              final code = _generateCode(item.name);
+              final weightUnit = _getWeightUnit(item.name);
+
+              return DataRow(
+                selected: isChecked,
+                cells: [
+                  DataCell(
+                    Checkbox(
+                      value: isChecked,
+                      activeColor: AppColor.dashboardGold,
+                      onChanged: (val) {
+                        if (val == true) {
+                          _selectedIds.add(id);
+                        } else {
+                          _selectedIds.remove(id);
+                          _selectAll.value = false;
+                        }
+                      },
+                    ),
+                  ),
+                  DataCell(
+                    Text(
+                      "${startIndex + index + 1}",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                        color: AppColor.black87,
+                      ),
+                    ),
+                  ),
+                  DataCell(
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          _getMetalIcon(item.name),
+                          color: AppColor.dashboardGold,
+                          size: 18,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          item.name ?? AppString.noName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                            color: AppColor.black87,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  DataCell(
+                    Text(
+                      code,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.textSecondary,
+                      ),
+                    ),
+                  ),
+                  DataCell(
+                    Text(
+                      item.rate ?? "0.00",
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.black87,
+                      ),
+                    ),
+                  ),
+                  DataCell(
+                    Text(
+                      weightUnit,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: AppColor.textSecondary,
+                      ),
+                    ),
+                  ),
+                  DataCell(_buildStatusBadge("Active")),
+                  DataCell(
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            AppIcon.eyeOutline,
+                            color: AppColor.black87,
+                            size: 18,
+                          ),
+                          tooltip: AppString.view,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          onPressed: () => _showAddEditDialog(item: item),
+                        ),
+                        const SizedBox(width: 10),
+                        IconButton(
+                          icon: const Icon(
+                            AppIcon.editOutline,
+                            color: AppColor.black87,
+                            size: 18,
+                          ),
+                          tooltip: AppString.edit,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          onPressed: () => _showAddEditDialog(item: item),
+                        ),
+                        const SizedBox(width: 10),
+                        IconButton(
+                          icon: const Icon(
+                            AppIcon.deleteIcon,
+                            color: AppColor.deleteColor,
+                            size: 18,
+                          ),
+                          tooltip: AppString.delete,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          onPressed: () => _showDeleteDialog(item),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _sortHeader(String label) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(label),
+        const SizedBox(width: 4),
+        const Icon(
+          AppIcon.unfoldMore,
+          size: 14,
+          color: AppColor.white,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatusBadge(String statusStr) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColor.greenTagBg,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            AppIcon.checkCircle,
+            size: 12,
+            color: AppColor.greenTagText,
+          ),
+          SizedBox(width: 4),
+          Text(
+            "Active",
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: AppColor.greenTagText,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPaginationBar(int startNum, int endNum, int totalCount) {
+    if (totalCount <= 0) return const SizedBox.shrink();
+
+    final perPage = _rowsPerPage.value;
+    final totalPages = (totalCount / perPage).ceil().clamp(1, 9999);
+    final currentPage = _currentPage.value.clamp(1, totalPages);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          "Showing $startNum – $endNum of $totalCount records",
+          style: const TextStyle(
+            fontSize: 13,
+            color: AppColor.black54,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Row(
+          children: [
+            Row(
+              children: [
+                InkWell(
+                  onTap: currentPage > 1 ? () => _currentPage.value = 1 : null,
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColor.grey300),
+                    ),
+                    child: Icon(
+                      AppIcon.chevronLeft,
+                      size: 16,
+                      color: currentPage > 1
+                          ? AppColor.black87
+                          : AppColor.grey400,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                InkWell(
+                  onTap: currentPage > 1
+                      ? () => _currentPage.value = currentPage - 1
+                      : null,
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColor.grey300),
+                    ),
+                    child: Icon(
+                      AppIcon.chevronLeft,
+                      size: 16,
+                      color: currentPage > 1
+                          ? AppColor.black87
+                          : AppColor.grey400,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppColor.dashboardGold,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    "$currentPage",
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: AppColor.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                InkWell(
+                  onTap: currentPage < totalPages
+                      ? () => _currentPage.value = currentPage + 1
+                      : null,
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColor.grey300),
+                    ),
+                    child: Icon(
+                      AppIcon.chevronRight,
+                      size: 16,
+                      color: currentPage < totalPages
+                          ? AppColor.black87
+                          : AppColor.grey400,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                InkWell(
+                  onTap: currentPage < totalPages
+                      ? () => _currentPage.value = totalPages
+                      : null,
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColor.grey300),
+                    ),
+                    child: Icon(
+                      AppIcon.chevronRight,
+                      size: 16,
+                      color: currentPage < totalPages
+                          ? AppColor.black87
+                          : AppColor.grey400,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 14),
+            PopupMenuButton<int>(
+              onSelected: (count) {
+                _rowsPerPage.value = count;
+                _currentPage.value = 1;
+              },
+              itemBuilder: (context) => [10, 25, 50, 100]
+                  .map(
+                    (count) => PopupMenuItem<int>(
+                      value: count,
+                      child: Text(
+                        "$count / page",
+                        style: const TextStyle(fontSize: 13),
+                      ),
+                    ),
+                  )
+                  .toList(),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColor.grey300),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "${_rowsPerPage.value} / page",
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.black87,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    const Icon(
+                      AppIcon.arrow_down,
+                      size: 16,
+                      color: AppColor.grey500,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -153,320 +1021,97 @@ class _MetalMasterState extends State<MetalMaster> {
     );
   }
 
-  Widget _buildFilterAndAddSection() {
-    if (AppSize.isDesktop || AppSize.isTablet) {
-      return Container(
-        margin: EdgeInsets.all(AppSize.p16),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColor.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: AppColor.black.withOpacity(0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            const Icon(AppIcon.grid, color: AppColor.goldColor, size: 24),
-            const SizedBox(width: 16),
-            Expanded(
-              flex: 3,
-              child: TextField(
-                controller: metalMasterUI.metalController,
-                textAlign: TextAlign.left,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: AppColor.black,
-                  fontWeight: FontWeight.w500,
-                ),
-                decoration: InputDecoration(
-                  labelText: AppString.metal,
-                  hintText: AppString.metal,
-                  border: const OutlineInputBorder(),
-                  isDense: true,
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              flex: 2,
-              child: TextField(
-                controller: metalMasterUI.rateController,
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.left,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: AppColor.black,
-                  fontWeight: FontWeight.w500,
-                ),
-                decoration: InputDecoration(
-                  labelText: AppString.rate,
-                  hintText: AppString.rate,
-                  border: const OutlineInputBorder(),
-                  isDense: true,
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Obx(
-              () => metalMasterUI.isLoading.value
-                  ? const SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: AppColor.goldColor,
-                      ),
-                    )
-                  : ElevatedButton.icon(
-                      onPressed: () => metalMasterUI.save(),
-                      icon: Icon(
-                        metalMasterUI.editingId.value == null
-                            ? AppIcon.add
-                            : AppIcon.check,
-                        color: AppColor.white,
-                      ),
-                      label: Text(
-                        metalMasterUI.editingId.value == null
-                            ? "Add"
-                            : AppString.update,
-                        style: const TextStyle(
-                          color: AppColor.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColor.goldColor,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 16,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-            ),
-          ],
-        ),
+  void _showAddEditDialog({ProductTypeData? item}) {
+    if (item != null) {
+      metalMasterUI.startEditing(
+        item.productTypeId,
+        item.name,
+        item.rate,
       );
+    } else {
+      metalMasterUI.editingId.value = null;
+      metalMasterUI.metalController.clear();
+      metalMasterUI.rateController.clear();
     }
 
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSize.p16,
-        vertical: AppSize.p8,
-      ),
-      color: AppColor.white,
-      child: Row(
-        children: [
-          Icon(AppIcon.grid, color: AppColor.goldColor, size: AppSize.p24),
-          SizedBox(width: AppSize.p16),
-          Expanded(
-            flex: 3,
-            child: TextField(
-              controller: metalMasterUI.metalController,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontSize: AppSize.commonText,
-                color: AppColor.black,
-                fontWeight: FontWeight.w500,
-              ),
-              decoration: InputDecoration(
-                hintText: AppString.metal,
-                hintStyle: TextStyle(
-                  color: AppColor.textColor.withOpacity(0.5),
-                ),
-                border: InputBorder.none,
-                isDense: true,
-              ),
-            ),
-          ),
-          Container(
-            height: AppSize.p16,
-            width: 1,
-            color: AppColor.grey300,
-            margin: EdgeInsets.symmetric(horizontal: AppSize.p12),
-          ),
-          Expanded(
-            flex: 2,
-            child: TextField(
-              controller: metalMasterUI.rateController,
-              keyboardType: TextInputType.number,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontSize: AppSize.commonText,
-                color: AppColor.black,
-                fontWeight: FontWeight.w500,
-              ),
-              decoration: InputDecoration(
-                hintText: AppString.rate,
-                hintStyle: TextStyle(
-                  color: AppColor.textColor.withOpacity(0.5),
-                ),
-                border: InputBorder.none,
-                isDense: true,
-              ),
-            ),
-          ),
-          Obx(
-            () => metalMasterUI.isLoading.value
-                ? SizedBox(
-                    height: AppSize.p24,
-                    width: AppSize.p24,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: AppColor.goldColor,
-                    ),
-                  )
-                : GestureDetector(
-                    onTap: () => metalMasterUI.save(),
-                    child: Container(
-                      padding: EdgeInsets.all(AppSize.p4),
-                      decoration: BoxDecoration(
-                        color: AppColor.white,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: AppColor.goldColor,
-                          width: 1.5,
-                        ),
-                      ),
-                      child: Icon(
-                        metalMasterUI.editingId.value == null
-                            ? AppIcon.add
-                            : AppIcon.check,
-                        color: AppColor.goldColor,
-                        size: AppSize.p20,
-                      ),
-                    ),
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMetalCard(ProductTypeData item) {
-    bool isGold = item.name?.toLowerCase().contains("gold") ?? false;
-    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
-
-    return Container(
-      margin: isDesktopOrTablet
-          ? EdgeInsets.zero
-          : EdgeInsets.only(bottom: AppSize.p16),
-      decoration: BoxDecoration(
-        color: AppColor.white,
-        borderRadius: BorderRadius.circular(AppSize.p12),
-        boxShadow: [
-          BoxShadow(
-            color: AppColor.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppSize.p12),
-        child: IntrinsicHeight(
-          child: Row(
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Container(
+          width: 400,
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Left gold indicator
-              Container(width: AppSize.p4, color: AppColor.goldColor),
-              Padding(
-                padding: EdgeInsets.all(AppSize.p12),
-                child: Row(
-                  children: [
-                    // Checkmark icon
-                    Container(
-                      padding: EdgeInsets.all(AppSize.p4 / 2),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: AppColor.goldColor,
-                          width: 1.5,
-                        ),
-                      ),
-                      child: Icon(
-                        AppIcon.check,
-                        color: AppColor.goldColor,
-                        size: AppSize.size14,
-                      ),
+              Row(
+                children: [
+                  const Icon(
+                    AppIcon.layers,
+                    color: AppColor.dashboardGold,
+                    size: 22,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    item == null ? AppString.addMetal : "Edit Metal Master",
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppColor.black87,
                     ),
-                    SizedBox(width: AppSize.p12),
-                    // Metal Icon in Cream Circle
-                    Container(
-                      padding: EdgeInsets.all(AppSize.p8),
-                      decoration: BoxDecoration(
-                        color: AppColor.whiteOrang.withOpacity(0.5),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        isGold ? Icons.radio_button_checked : Icons.local_offer,
-                        color: isGold ? AppColor.goldColor : Colors.grey,
-                        size: AppSize.p24,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(AppIcon.clearIcon, size: 20),
+                    onPressed: () => Get.back(),
+                  ),
+                ],
               ),
-              // Title and Price
-              Expanded(
-                child: Text(
-                  "${item.name} (${item.rate})",
-                  style: TextStyle(
-                    color: AppColor.black,
-                    fontSize: AppSize.commonText,
-                    fontWeight: FontWeight.bold,
+              const Divider(height: 20),
+              const SizedBox(height: 10),
+              TextField(
+                controller: metalMasterUI.metalController,
+                decoration: InputDecoration(
+                  labelText: AppString.metal,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
-              // Actions
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppSize.p8),
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        metalMasterUI.startEditing(
-                          item.productTypeId,
-                          item.name,
-                          item.rate,
-                        );
-                      },
-                      icon: Icon(AppIcon.editNote, color: AppColor.goldColor),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
+              const SizedBox(height: 16),
+              TextField(
+                controller: metalMasterUI.rateController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: AppString.rate,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 44,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    Get.back();
+                    await metalMasterUI.save();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColor.dashboardGold,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    Container(
-                      width: 1,
-                      height: AppSize.p20,
-                      color: AppColor.grey300,
-                      margin: EdgeInsets.symmetric(horizontal: AppSize.p8),
+                  ),
+                  child: Text(
+                    item == null ? AppString.save : AppString.update,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: AppColor.white,
                     ),
-                    IconButton(
-                      onPressed: () => _showDeleteDialog(item),
-                      icon: Container(
-                        padding: EdgeInsets.all(AppSize.p4),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: AppColor.red.withOpacity(0.5),
-                          ),
-                        ),
-                        child: Icon(
-                          AppIcon.deleteIcon,
-                          color: AppColor.red,
-                          size: AppSize.p16,
-                        ),
-                      ),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ],
@@ -480,19 +1125,21 @@ class _MetalMasterState extends State<MetalMaster> {
     return Shimmer.fromColors(
       baseColor: AppColor.grey300,
       highlightColor: AppColor.white,
-      child: ListView.builder(
-        itemCount: 6,
-        padding: EdgeInsets.all(AppSize.p16),
-        itemBuilder: (context, index) {
-          return Container(
-            height: AppSize.width * 0.2,
-            margin: EdgeInsets.only(bottom: AppSize.p16),
-            decoration: BoxDecoration(
-              color: AppColor.white,
-              borderRadius: BorderRadius.circular(AppSize.p12),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: List.generate(
+            6,
+            (index) => Container(
+              height: 52,
+              margin: const EdgeInsets.only(bottom: 12),
+              decoration: BoxDecoration(
+                color: AppColor.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
@@ -504,7 +1151,7 @@ class _MetalMasterState extends State<MetalMaster> {
       textConfirm: AppString.delete,
       textCancel: AppString.cancel,
       confirmTextColor: AppColor.white,
-      buttonColor: AppColor.red,
+      buttonColor: AppColor.deleteColor,
       onConfirm: () async {
         Get.back();
         await CallApi.callProductTypeRemove(

@@ -7,7 +7,6 @@ import 'package:rukmini/controller/api/controllers/year/year_Controller.dart';
 import 'package:rukmini/modal/year/year_modal.dart';
 import 'package:rukmini/view/utils/app_color.dart';
 import 'package:rukmini/view/utils/app_icon.dart';
-import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
@@ -23,6 +22,14 @@ class YearMaster extends StatefulWidget {
 class _YearMasterState extends State<YearMaster> {
   final yearController = Get.put(YearController());
 
+  final TextEditingController _searchController = TextEditingController();
+  final RxString _selectedYearFilter = AppString.allYears.obs;
+  final RxString _selectedStatusFilter = AppString.allStatus.obs;
+  final RxSet<String> _selectedIds = <String>{}.obs;
+  final RxBool _selectAll = false.obs;
+  final RxInt _rowsPerPage = 10.obs;
+  final RxInt _currentPage = 1.obs;
+
   @override
   void initState() {
     super.initState();
@@ -32,382 +39,842 @@ class _YearMasterState extends State<YearMaster> {
   }
 
   @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  List<YearData> getFilteredList(List<YearData> list) {
+    final query = _searchController.text.toLowerCase().trim();
+    final yearFilter = _selectedYearFilter.value.toLowerCase();
+    final statusFilter = _selectedStatusFilter.value.toLowerCase();
+
+    return list.where((item) {
+      final title = (item.title ?? '').toLowerCase();
+      final from = (item.formDate ?? '').toLowerCase();
+      final to = (item.toDate ?? '').toLowerCase();
+
+      if (query.isNotEmpty) {
+        if (!title.contains(query) && !from.contains(query) && !to.contains(query)) {
+          return false;
+        }
+      }
+
+      if (yearFilter != "all years" && yearFilter != "all") {
+        if (!title.contains(yearFilter)) {
+          return false;
+        }
+      }
+
+      if (statusFilter == "active") {
+        // Active
+      } else if (statusFilter == "inactive") {
+        return false;
+      }
+
+      return true;
+    }).toList();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Fullscreen(
       isPadding: false,
       backGroundcolor: AppColor.backgroundColor,
       appBar: appBar(
-        title: _buildDecorativeTitle(),
         back: true,
         centerTitle: true,
+        title: _buildHeaderTitle(),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.toNamed('/addYearMaster');
-        },
-        backgroundColor: AppColor.primaryColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSize.p12),
-        ),
-        child: Icon(
-          AppIcon.add,
-          color: AppColor.goldColor,
-          size: AppSize.p24 + AppSize.p4,
-        ),
-      ),
-      child: Column(
-        children: [
-          _buildFilterAndAddSection(),
-          const Divider(height: 1),
-          Expanded(
-            child: Obx(() {
-              if (yearController.isLoading.value &&
-                  yearController.yearList.isEmpty) {
-                return _shimmerLoading();
-              }
+      child: Obx(() {
+        final bool isLoading = yearController.isLoading.value;
+        final rawList = yearController.yearList.toList();
+        final filteredList = getFilteredList(rawList);
 
-              if (yearController.yearList.isEmpty) {
-                return Center(child: Text(AppString.noDataFound));
-              }
+        _selectedYearFilter.value;
+        _selectedStatusFilter.value;
+        _selectedIds.length;
+        _selectAll.value;
+        _rowsPerPage.value;
+        _currentPage.value;
 
-              if (AppSize.isDesktop || AppSize.isTablet) {
-                return RefreshIndicator(
-                  onRefresh: CallApi.callYearList,
-                  color: AppColor.goldColor,
-                  child: GridView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.all(AppSize.p16),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: AppSize.isDesktop ? 3 : 2,
-                      crossAxisSpacing: AppSize.p16,
-                      mainAxisSpacing: AppSize.p16,
-                      mainAxisExtent: 110,
+        if (isLoading && rawList.isEmpty) {
+          return _shimmerLoading();
+        }
+
+        final totalCount = filteredList.length;
+        final perPage = _rowsPerPage.value;
+        int pageIndex = _currentPage.value;
+
+        int startIndex = (pageIndex - 1) * perPage;
+        if (startIndex >= totalCount && totalCount > 0) {
+          startIndex = (totalCount - 1) ~/ perPage * perPage;
+        }
+        final endIndex = (startIndex + perPage).clamp(0, totalCount);
+        final pagedList = filteredList.sublist(startIndex, endIndex);
+
+        final startNum = totalCount == 0 ? 0 : startIndex + 1;
+        final endNum = endIndex;
+
+        return RefreshIndicator(
+          onRefresh: CallApi.callYearList,
+          color: AppColor.dashboardGold,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildFilterBar(),
+                if (filteredList.isEmpty)
+                  Container(
+                    height: 200,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColor.grey300),
                     ),
-                    itemCount: yearController.yearList.length,
-                    itemBuilder: (context, index) {
-                      return _buildYearCard(yearController.yearList[index]);
-                    },
-                  ),
-                );
-              }
-
-              return RefreshIndicator(
-                onRefresh: CallApi.callYearList,
-                color: AppColor.goldColor,
-                child: ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSize.p16,
-                    vertical: AppSize.p12,
-                  ),
-                  itemCount: yearController.yearList.length,
-                  itemBuilder: (context, index) {
-                    return _buildYearCard(yearController.yearList[index]);
-                  },
-                ),
-              );
-            }),
+                    child: const Text(
+                      AppString.noDataFound,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: AppColor.grey500,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  )
+                else
+                  _buildTableView(pagedList, startIndex: startIndex),
+                const SizedBox(height: 12),
+                _buildPaginationBar(startNum, endNum, totalCount),
+              ],
+            ),
           ),
-        ],
-      ),
+        );
+      }),
     );
   }
 
-  Widget _buildDecorativeTitle() {
-    final double lineWidth =
-        (AppSize.isDesktop || AppSize.isTablet) ? 40 : AppSize.width * 0.1;
-
-    return Column(
+  Widget _buildHeaderTitle() {
+    return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
+        const Icon(
+          AppIcon.calendar,
+          color: AppColor.dashboardGold,
+          size: 22,
+        ),
+        const SizedBox(width: 8),
         Text(
           AppString.yearMaster,
-          style: TextStyle(
-            color: AppColor.black,
-            fontSize: AppSize.titleText,
+          style: const TextStyle(
+            color: AppColor.black87,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
-        ),
-        SizedBox(height: AppSize.p4 / 2),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: lineWidth,
-              height: 1,
-              color: AppColor.goldColor.withOpacity(0.5),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSize.p4),
-              child: Transform.rotate(
-                angle: 0.785, // 45 degrees
-                child: Container(
-                  width: AppSize.p8,
-                  height: AppSize.p8,
-                  color: AppColor.goldColor,
-                ),
-              ),
-            ),
-            Container(
-              width: lineWidth,
-              height: 1,
-              color: AppColor.goldColor.withOpacity(0.5),
-            ),
-          ],
         ),
       ],
     );
   }
 
-  Widget _buildFilterAndAddSection() {
-    if (AppSize.isDesktop || AppSize.isTablet) {
-      return Container(
-        margin: EdgeInsets.all(AppSize.p16),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        decoration: BoxDecoration(
-          color: AppColor.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: AppColor.black.withOpacity(0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            const Icon(AppIcon.grid, color: AppColor.goldColor, size: 24),
-            const SizedBox(width: 16),
-            const Text(
-              AppString.yearMaster,
-              style: TextStyle(
-                fontSize: 16,
-                color: AppColor.goldColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Spacer(),
-            ElevatedButton.icon(
-              onPressed: () => Get.toNamed('/addYearMaster'),
-              icon: const Icon(AppIcon.add, color: AppColor.white),
-              label: const Text(
-                "Add Year",
-                style: TextStyle(color: AppColor.white, fontWeight: FontWeight.bold),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColor.goldColor,
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+  Widget _buildFilterBar() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isCompact = constraints.maxWidth < 650;
+        return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          child: Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              SizedBox(
+                width: isCompact ? constraints.maxWidth : 300,
+                child: Container(
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: AppColor.grey300),
+                  ),
+                  child: TextField(
+                    controller: _searchController,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: AppColor.black87,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: AppString.searchYearPlaceholder,
+                      hintStyle: const TextStyle(
+                        color: AppColor.grey500,
+                        fontSize: 13,
+                      ),
+                      prefixIcon: const Icon(
+                        AppIcon.searchIcon,
+                        color: AppColor.grey500,
+                        size: 20,
+                      ),
+                      suffixIcon: _searchController.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(AppIcon.clearIcon, size: 18),
+                              onPressed: () {
+                                _searchController.clear();
+                                setState(() {});
+                              },
+                            )
+                          : null,
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 12,
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {});
+                    },
+                  ),
                 ),
               ),
+
+              Builder(
+                builder: (btnContext) => _buildFilterPill(
+                  icon: AppIcon.calendar,
+                  label: _selectedYearFilter.value,
+                  onTap: () => _showYearMenu(btnContext),
+                ),
+              ),
+
+              Builder(
+                builder: (btnContext) => _buildFilterPill(
+                  icon: AppIcon.trend,
+                  label: _selectedStatusFilter.value,
+                  onTap: () => _showStatusMenu(btnContext),
+                ),
+              ),
+
+              Container(
+                height: 42,
+                width: 42,
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppColor.grey300),
+                ),
+                child: IconButton(
+                  icon: const Icon(
+                    AppIcon.refresh,
+                    color: AppColor.dashboardGold,
+                    size: 20,
+                  ),
+                  tooltip: AppString.resetFilters,
+                  onPressed: _resetFilters,
+                ),
+              ),
+
+              OutlinedButton.icon(
+                onPressed: () {
+                  Get.snackbar(
+                    AppString.export,
+                    "Exporting Year Master list...",
+                    backgroundColor: AppColor.white,
+                    colorText: AppColor.black,
+                    borderColor: AppColor.dashboardGold,
+                    borderWidth: 1,
+                    snackPosition: SnackPosition.BOTTOM,
+                  );
+                },
+                icon: const Icon(
+                  AppIcon.fileDownload,
+                  size: 16,
+                  color: AppColor.black87,
+                ),
+                label: const Text(
+                  AppString.export,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.black87,
+                  ),
+                ),
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: AppColor.white,
+                  side: const BorderSide(color: AppColor.grey300),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 11,
+                  ),
+                ),
+              ),
+
+              ElevatedButton.icon(
+                onPressed: () => Get.toNamed('/addYearMaster'),
+                icon: const Icon(AppIcon.add, size: 16, color: AppColor.white),
+                label: const Text(
+                  AppString.addYear,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColor.dashboardGold,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 11,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFilterPill({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    final bool isSelected =
+        label != AppString.allYears && label != AppString.allStatus;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        height: 42,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColor.dashboardGold.withOpacity(0.08)
+              : AppColor.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isSelected ? AppColor.dashboardGold : AppColor.grey300,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 18,
+              color: isSelected ? AppColor.dashboardGold : AppColor.grey500,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                color: isSelected ? AppColor.dashboardGold : AppColor.black87,
+              ),
+            ),
+            const SizedBox(width: 6),
+            Icon(
+              AppIcon.arrow_down,
+              size: 18,
+              color: isSelected ? AppColor.dashboardGold : AppColor.grey500,
             ),
           ],
         ),
-      );
-    }
-
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSize.p16,
-        vertical: AppSize.p8,
-      ),
-      color: AppColor.white,
-      child: Row(
-        children: [
-          Icon(AppIcon.grid, color: AppColor.goldColor, size: AppSize.p24),
-          SizedBox(width: AppSize.p16),
-          Text(
-            AppString.yearMaster,
-            style: TextStyle(
-              fontSize: AppSize.commonText,
-              color: AppColor.goldColor,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const Spacer(),
-          GestureDetector(
-            onTap: () => Get.toNamed('/addYearMaster'),
-            child: Container(
-              padding: EdgeInsets.all(AppSize.p4),
-              decoration: BoxDecoration(
-                color: AppColor.white,
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColor.goldColor, width: 1.5),
-              ),
-              child: Icon(
-                AppIcon.add,
-                color: AppColor.goldColor,
-                size: AppSize.p20,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
 
-  Widget _buildYearCard(YearData year) {
-    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+  void _showYearMenu(BuildContext btnContext) {
+    final RenderBox renderBox = btnContext.findRenderObject() as RenderBox;
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
 
+    showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        offset.dx,
+        offset.dy + renderBox.size.height,
+        offset.dx + renderBox.size.width,
+        0,
+      ),
+      items: [
+        AppString.allYears,
+        "2024",
+        "2025",
+        "2026"
+      ].map((y) {
+        return PopupMenuItem<String>(
+          value: y,
+          child: Text(y, style: const TextStyle(fontSize: 13)),
+        );
+      }).toList(),
+    ).then((value) {
+      if (value != null) {
+        _selectedYearFilter.value = value;
+      }
+    });
+  }
+
+  void _showStatusMenu(BuildContext btnContext) {
+    final RenderBox renderBox = btnContext.findRenderObject() as RenderBox;
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+
+    showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        offset.dx,
+        offset.dy + renderBox.size.height,
+        offset.dx + renderBox.size.width,
+        0,
+      ),
+      items: [AppString.allStatus, "Active", "Inactive"].map((s) {
+        return PopupMenuItem<String>(
+          value: s,
+          child: Text(s, style: const TextStyle(fontSize: 13)),
+        );
+      }).toList(),
+    ).then((value) {
+      if (value != null) {
+        _selectedStatusFilter.value = value;
+      }
+    });
+  }
+
+  void _resetFilters() {
+    _searchController.clear();
+    _selectedYearFilter.value = AppString.allYears;
+    _selectedStatusFilter.value = AppString.allStatus;
+    setState(() {});
+  }
+
+  Widget _buildTableView(List<YearData> list, {int startIndex = 0}) {
     return Container(
-      margin: isDesktopOrTablet ? EdgeInsets.zero : EdgeInsets.only(bottom: AppSize.p16),
       decoration: BoxDecoration(
         color: AppColor.white,
-        borderRadius: BorderRadius.circular(AppSize.p12),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColor.grey300),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.05),
-            blurRadius: AppSize.p10,
-            offset: Offset(0, AppSize.p4),
+            color: AppColor.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppSize.p12),
-        child: IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Left gold indicator
-              Container(width: AppSize.p4, color: AppColor.goldColor),
-              _buildYearCardDetails(year),
+        borderRadius: BorderRadius.circular(16),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            headingRowColor: WidgetStateProperty.all(AppColor.dashboardGold),
+            headingTextStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColor.white,
+              fontSize: 13,
+            ),
+            dataRowMinHeight: 52,
+            dataRowMaxHeight: 52,
+            horizontalMargin: 16,
+            columnSpacing: 28,
+            columns: [
+              DataColumn(
+                label: Checkbox(
+                  value: _selectAll.value,
+                  activeColor: AppColor.white,
+                  checkColor: AppColor.dashboardGold,
+                  side: const BorderSide(color: AppColor.white, width: 1.5),
+                  onChanged: (val) {
+                    _selectAll.value = val ?? false;
+                    if (_selectAll.value) {
+                      _selectedIds.addAll(
+                        list.map((e) => e.yearId ?? ''),
+                      );
+                    } else {
+                      _selectedIds.clear();
+                    }
+                  },
+                ),
+              ),
+              const DataColumn(label: Text("#")),
+              const DataColumn(label: Text("Year Title")),
+              const DataColumn(label: Text("From Date")),
+              const DataColumn(label: Text("To Date")),
+              DataColumn(label: _sortHeader("Status")),
+              const DataColumn(label: Text("Actions")),
             ],
-          ),
-        ),
-      ),
-    );
-  }
+            rows: List.generate(list.length, (index) {
+              final item = list[index];
+              final id = item.yearId ?? '';
+              final isChecked = _selectedIds.contains(id);
 
-  Widget _buildYearCardDetails(YearData year) {
-    return Expanded(
-      child: Padding(
-        padding: EdgeInsets.all(AppSize.p12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                // Checkmark icon
-                Container(
-                  padding: EdgeInsets.all(AppSize.p4 / 2),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: AppColor.goldColor, width: 1.5),
-                  ),
-                  child: Icon(
-                    AppIcon.check,
-                    color: AppColor.goldColor,
-                    size: AppSize.size14,
-                  ),
-                ),
-                SizedBox(width: AppSize.p12),
-                // Icon in Cream Circle
-                Container(
-                  padding: EdgeInsets.all(AppSize.p8),
-                  decoration: BoxDecoration(
-                    color: AppColor.whiteOrang.withOpacity(0.5),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    AppIcon.calendar,
-                    color: AppColor.goldColor,
-                    size: AppSize.p24,
-                  ),
-                ),
-                SizedBox(width: AppSize.p12),
-                // Title
-                Expanded(
-                  child: Text(
-                    year.title ?? "",
-                    style: TextStyle(
-                      color: AppColor.black,
-                      fontSize: AppSize.commonText,
-                      fontWeight: FontWeight.bold,
+              return DataRow(
+                selected: isChecked,
+                cells: [
+                  DataCell(
+                    Checkbox(
+                      value: isChecked,
+                      activeColor: AppColor.dashboardGold,
+                      onChanged: (val) {
+                        if (val == true) {
+                          _selectedIds.add(id);
+                        } else {
+                          _selectedIds.remove(id);
+                          _selectAll.value = false;
+                        }
+                      },
                     ),
                   ),
-                ),
-                // Actions
-                _buildActionButtons(year),
-              ],
-            ),
-            SizedBox(height: AppSize.p12),
-            const Divider(height: 1),
-            SizedBox(height: AppSize.p8),
-            // Date Details
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildDetailItem(AppIcon.date, year.formDate ?? ""),
-                _buildDetailItem(AppIcon.date, year.toDate ?? ""),
-              ],
-            ),
-          ],
+                  DataCell(
+                    Text(
+                      "${startIndex + index + 1}",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                        color: AppColor.black87,
+                      ),
+                    ),
+                  ),
+                  DataCell(
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          AppIcon.calendar,
+                          color: AppColor.dashboardGold,
+                          size: 18,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          item.title ?? AppString.noName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                            color: AppColor.black87,
+                          ),
+                        ),
+                        if (item.isCurrent == "1") ...[
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColor.goldTagBg,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: const Text(
+                              AppString.defaultLabel,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.goldTagText,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  DataCell(
+                    Text(
+                      item.formDate ?? "-",
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.textSecondary,
+                      ),
+                    ),
+                  ),
+                  DataCell(
+                    Text(
+                      item.toDate ?? "-",
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.textSecondary,
+                      ),
+                    ),
+                  ),
+                  DataCell(_buildStatusBadge("Active")),
+                  DataCell(
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            AppIcon.eyeOutline,
+                            color: AppColor.black87,
+                            size: 18,
+                          ),
+                          tooltip: AppString.view,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          onPressed: () => Get.toNamed(
+                            '/addYearMaster',
+                            arguments: item,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        IconButton(
+                          icon: const Icon(
+                            AppIcon.editOutline,
+                            color: AppColor.black87,
+                            size: 18,
+                          ),
+                          tooltip: AppString.edit,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          onPressed: () => Get.toNamed(
+                            '/addYearMaster',
+                            arguments: item,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        IconButton(
+                          icon: const Icon(
+                            AppIcon.deleteIcon,
+                            color: AppColor.deleteColor,
+                            size: 18,
+                          ),
+                          tooltip: AppString.delete,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          onPressed: () => _showDeleteDialog(item),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildActionButtons(YearData year) {
+  Widget _sortHeader(String label) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        IconButton(
-          onPressed: () {
-            Get.toNamed('/addYearMaster', arguments: year);
-          },
-          icon: Icon(AppIcon.editNote, color: AppColor.goldColor),
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
-        ),
-        Container(
-          width: 1,
-          height: AppSize.p20,
-          color: AppColor.grey300,
-          margin: EdgeInsets.symmetric(horizontal: AppSize.p8),
-        ),
-        IconButton(
-          onPressed: () => _showDeleteDialog(year),
-          icon: Container(
-            padding: EdgeInsets.all(AppSize.p4),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColor.red.withOpacity(0.5)),
-            ),
-            child: Icon(
-              AppIcon.deleteIcon,
-              color: AppColor.red,
-              size: AppSize.p16,
-            ),
-          ),
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
+        Text(label),
+        const SizedBox(width: 4),
+        const Icon(
+          AppIcon.unfoldMore,
+          size: 14,
+          color: AppColor.white,
         ),
       ],
     );
   }
 
-  Widget _buildDetailItem(IconData icon, String value) {
-    return Expanded(
-      child: Row(
+  Widget _buildStatusBadge(String statusStr) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColor.greenTagBg,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: AppSize.p16, color: AppColor.goldColor),
-          SizedBox(width: AppSize.p8),
-          Flexible(
-            child: Text(
-              value,
-              style: TextStyle(
-                color: AppColor.black,
-                fontSize: AppSize.size12,
-                fontWeight: FontWeight.w500,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+          Icon(
+            AppIcon.checkCircle,
+            size: 12,
+            color: AppColor.greenTagText,
+          ),
+          SizedBox(width: 4),
+          Text(
+            "Active",
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: AppColor.greenTagText,
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildPaginationBar(int startNum, int endNum, int totalCount) {
+    if (totalCount <= 0) return const SizedBox.shrink();
+
+    final perPage = _rowsPerPage.value;
+    final totalPages = (totalCount / perPage).ceil().clamp(1, 9999);
+    final currentPage = _currentPage.value.clamp(1, totalPages);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          "Showing $startNum – $endNum of $totalCount records",
+          style: const TextStyle(
+            fontSize: 13,
+            color: AppColor.black54,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Row(
+          children: [
+            Row(
+              children: [
+                InkWell(
+                  onTap: currentPage > 1 ? () => _currentPage.value = 1 : null,
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColor.grey300),
+                    ),
+                    child: Icon(
+                      AppIcon.chevronLeft,
+                      size: 16,
+                      color: currentPage > 1
+                          ? AppColor.black87
+                          : AppColor.grey400,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                InkWell(
+                  onTap: currentPage > 1
+                      ? () => _currentPage.value = currentPage - 1
+                      : null,
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColor.grey300),
+                    ),
+                    child: Icon(
+                      AppIcon.chevronLeft,
+                      size: 16,
+                      color: currentPage > 1
+                          ? AppColor.black87
+                          : AppColor.grey400,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppColor.dashboardGold,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    "$currentPage",
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: AppColor.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                InkWell(
+                  onTap: currentPage < totalPages
+                      ? () => _currentPage.value = currentPage + 1
+                      : null,
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColor.grey300),
+                    ),
+                    child: Icon(
+                      AppIcon.chevronRight,
+                      size: 16,
+                      color: currentPage < totalPages
+                          ? AppColor.black87
+                          : AppColor.grey400,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                InkWell(
+                  onTap: currentPage < totalPages
+                      ? () => _currentPage.value = totalPages
+                      : null,
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColor.grey300),
+                    ),
+                    child: Icon(
+                      AppIcon.chevronRight,
+                      size: 16,
+                      color: currentPage < totalPages
+                          ? AppColor.black87
+                          : AppColor.grey400,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 14),
+            PopupMenuButton<int>(
+              onSelected: (count) {
+                _rowsPerPage.value = count;
+                _currentPage.value = 1;
+              },
+              itemBuilder: (context) => [10, 25, 50, 100]
+                  .map(
+                    (count) => PopupMenuItem<int>(
+                      value: count,
+                      child: Text(
+                        "$count / page",
+                        style: const TextStyle(fontSize: 13),
+                      ),
+                    ),
+                  )
+                  .toList(),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColor.grey300),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "${_rowsPerPage.value} / page",
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.black87,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    const Icon(
+                      AppIcon.arrow_down,
+                      size: 16,
+                      color: AppColor.grey500,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -418,7 +885,7 @@ class _YearMasterState extends State<YearMaster> {
       textConfirm: AppString.delete,
       textCancel: AppString.cancel,
       confirmTextColor: AppColor.white,
-      buttonColor: AppColor.red,
+      buttonColor: AppColor.deleteColor,
       onConfirm: () async {
         Get.back();
         await CallApi.callYearRemove(yearId: year.yearId ?? "");
@@ -431,19 +898,21 @@ class _YearMasterState extends State<YearMaster> {
     return Shimmer.fromColors(
       baseColor: AppColor.grey300,
       highlightColor: AppColor.white,
-      child: ListView.builder(
-        itemCount: 6,
-        padding: EdgeInsets.all(AppSize.p16),
-        itemBuilder: (context, index) {
-          return Container(
-            height: AppSize.width * 0.25,
-            margin: EdgeInsets.only(bottom: AppSize.p16),
-            decoration: BoxDecoration(
-              color: AppColor.white,
-              borderRadius: BorderRadius.circular(AppSize.p12),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: List.generate(
+            6,
+            (index) => Container(
+              height: 52,
+              margin: const EdgeInsets.only(bottom: 12),
+              decoration: BoxDecoration(
+                color: AppColor.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

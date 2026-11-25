@@ -16,6 +16,7 @@ import 'package:rukmini/view/utils/widget/responsive.dart';
 
 class AddLockerCode extends StatelessWidget {
   final LockerMasterControllerUI uiController;
+
   const AddLockerCode({super.key, required this.uiController});
 
   @override
@@ -107,16 +108,16 @@ class AddLockerCode extends StatelessWidget {
                                         icon: AppIcon.phone,
                                         iconColor: AppColor.goldColor,
                                         keyboardType: TextInputType.phone,
-                                        inputTextcontroller: uiController
-                                            .phoneNumberController,
+                                        inputTextcontroller:
+                                            uiController.phoneNumberController,
                                       ),
                                       inputField(
                                         hintText: AppString.interestRate,
                                         icon: AppIcon.rate,
                                         iconColor: AppColor.goldColor,
                                         keyboardType: TextInputType.number,
-                                        inputTextcontroller: uiController
-                                            .interestRateController,
+                                        inputTextcontroller:
+                                            uiController.interestRateController,
                                       ),
                                       Obx(
                                         () => CheckboxListTile(
@@ -128,8 +129,9 @@ class AddLockerCode extends StatelessWidget {
                                               color: AppColor.black,
                                             ),
                                           ),
-                                          value:
-                                              uiController.isDefaultLocker.value,
+                                          value: uiController
+                                              .isDefaultLocker
+                                              .value,
                                           onChanged: (val) {
                                             uiController.isDefaultLocker.value =
                                                 val ?? false;
@@ -165,39 +167,45 @@ class AddLockerCode extends StatelessWidget {
                             hintText: AppString.lockerCode,
                             icon: AppIcon.locker,
                             iconColor: AppColor.goldColor,
-                            inputTextcontroller: uiController.lockerCodeController,
+                            inputTextcontroller:
+                                uiController.lockerCodeController,
                           ),
                           inputField(
                             hintText: AppString.companyName,
                             icon: AppIcon.business,
                             iconColor: AppColor.goldColor,
-                            inputTextcontroller: uiController.companyNameController,
+                            inputTextcontroller:
+                                uiController.companyNameController,
                           ),
                           inputField(
                             hintText: AppString.companyAddress,
                             icon: AppIcon.location,
                             iconColor: AppColor.goldColor,
-                            inputTextcontroller: uiController.companyAddressController,
+                            inputTextcontroller:
+                                uiController.companyAddressController,
                           ),
                           inputField(
                             hintText: AppString.personName,
                             icon: AppIcon.person,
                             iconColor: AppColor.goldColor,
-                            inputTextcontroller: uiController.personNameController,
+                            inputTextcontroller:
+                                uiController.personNameController,
                           ),
                           inputField(
                             hintText: AppString.phoneNumber,
                             icon: AppIcon.phone,
                             iconColor: AppColor.goldColor,
                             keyboardType: TextInputType.phone,
-                            inputTextcontroller: uiController.phoneNumberController,
+                            inputTextcontroller:
+                                uiController.phoneNumberController,
                           ),
                           inputField(
                             hintText: AppString.interestRate,
                             icon: AppIcon.rate,
                             iconColor: AppColor.goldColor,
                             keyboardType: TextInputType.number,
-                            inputTextcontroller: uiController.interestRateController,
+                            inputTextcontroller:
+                                uiController.interestRateController,
                           ),
                           Obx(
                             () => CheckboxListTile(
@@ -211,7 +219,8 @@ class AddLockerCode extends StatelessWidget {
                               ),
                               value: uiController.isDefaultLocker.value,
                               onChanged: (val) {
-                                uiController.isDefaultLocker.value = val ?? false;
+                                uiController.isDefaultLocker.value =
+                                    val ?? false;
                               },
                               activeColor: AppColor.goldColor,
                               checkColor: AppColor.white,

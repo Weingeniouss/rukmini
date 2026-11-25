@@ -9,7 +9,9 @@ import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
 Future<LockerMasterModal?> getLockerList() async {
-  final controller = Get.put(LockerListController());
+  final controller = Get.isRegistered<LockerListController>()
+      ? Get.find<LockerListController>()
+      : Get.put(LockerListController(), permanent: true);
   final http.Response? response = await controller.getLockerList();
   if (response != null) {
     final decoded = jsonDecode(response.body);

@@ -16,7 +16,9 @@ class LockerDetailController extends GetxController {
     required String code,
   }) async {
     try {
-      isLoading.value = true;
+      if (lockerDetailData.value.data == null) {
+        isLoading.value = true;
+      }
       final http.Response response = await _services.lockerDetailApi(
         lockerId: lockerId,
         code: code,

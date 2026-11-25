@@ -9,7 +9,10 @@ import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/pop.dart';
 
 Future<CustProductModel?> getCustProduct() async {
-  final CustProductController custProductController = Get.put(CustProductController());
+  final CustProductController custProductController =
+      Get.isRegistered<CustProductController>()
+          ? Get.find<CustProductController>()
+          : Get.put(CustProductController(), permanent: true);
 
   final http.Response? response = await custProductController.getCustProduct();
 

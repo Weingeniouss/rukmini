@@ -17,7 +17,9 @@ class LockerWiseDelController extends GetxController {
     String? search,
   }) async {
     try {
-      isLoading.value = true;
+      if (lockerWiseList.isEmpty) {
+        isLoading.value = true;
+      }
       final http.Response response = await _services.lockerWiseDelApi(
         lockerId: lockerId,
         page: page,

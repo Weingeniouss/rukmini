@@ -6,8 +6,12 @@ import 'package:rukmini/controller/api/controllers/drawer/locker/locker_wise_del
 import 'package:rukmini/modal/drawer/locker/locker_trans_modal.dart';
 
 class LockerTransUIController extends GetxController {
-  final lockerTransController = Get.put(LockerTransController());
-  final lockerWiseDelController = Get.put(LockerWiseDelController());
+  final lockerTransController = Get.isRegistered<LockerTransController>()
+      ? Get.find<LockerTransController>()
+      : Get.put(LockerTransController(), permanent: true);
+  final lockerWiseDelController = Get.isRegistered<LockerWiseDelController>()
+      ? Get.find<LockerWiseDelController>()
+      : Get.put(LockerWiseDelController(), permanent: true);
   var selectedLocker = Rxn<LockerTransData>();
   var currentPage = 1.obs;
   var searchQuery = "".obs;
@@ -44,8 +48,12 @@ class LockerTransUIController extends GetxController {
   }
 
   Future<void> fetchLockerTrans() async {
+    if (lockerTransController.lockerTransList.isEmpty) {
+      lockerTransController.isLoading.value = true;
+    }
     await CallApi.callLockerListTrans();
-    if (lockerTransController.lockerTransList.isNotEmpty) {
+    if (lockerTransController.lockerTransList.isNotEmpty &&
+        selectedLocker.value == null) {
       selectedLocker.value = lockerTransController.lockerTransList.firstWhere(
         (l) => l.isDefault == "1",
         orElse: () => lockerTransController.lockerTransList.first,

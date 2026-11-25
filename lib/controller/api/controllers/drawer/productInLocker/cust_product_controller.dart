@@ -102,9 +102,11 @@ class CustProductController extends GetxController {
     super.onClose();
   }
 
-  Future<http.Response?> getCustProduct() async {
+  Future<http.Response?> getCustProduct({bool forceLoading = false}) async {
     try {
-      isLoading.value = true;
+      if (productList.isEmpty || forceLoading) {
+        isLoading.value = true;
+      }
       final http.Response response = await _custProductService.custProductApi();
 
       if (kDebugMode) {
@@ -122,7 +124,47 @@ class CustProductController extends GetxController {
           custProductData.value = model;
           if (model.data != null) {
             custList.assignAll(model.data?.custList ?? []);
-            productList.assignAll(model.data?.productList ?? []);
+
+            List<ProductList> allProducts = [];
+            Set<String> seenKeys = {};
+
+            void addProductIfNew(ProductList p) {
+              String key = (p.prodLockerId != null && p.prodLockerId!.trim().isNotEmpty)
+                  ? p.prodLockerId!.trim()
+                  : (p.productId != null && p.productId!.trim().isNotEmpty)
+                      ? p.productId!.trim()
+                      : (p.uniqueId != null && p.uniqueId!.trim().isNotEmpty)
+                          ? p.uniqueId!.trim()
+                          : '${p.custName}_${p.code}_${p.weight}';
+              if (!seenKeys.contains(key)) {
+                seenKeys.add(key);
+                allProducts.add(p);
+              }
+            }
+
+            if (model.data?.productList != null && model.data!.productList!.isNotEmpty) {
+              for (var p in model.data!.productList!) {
+                addProductIfNew(p);
+              }
+            }
+
+            if (custList.isNotEmpty) {
+              for (var cust in custList) {
+                if (cust.productList != null && cust.productList!.isNotEmpty) {
+                  for (var p in cust.productList!) {
+                    if ((p.custName == null || p.custName!.trim().isEmpty) && cust.name != null) {
+                      p.custName = cust.name;
+                    }
+                    if ((p.custId == null || p.custId!.trim().isEmpty) && cust.custId != null) {
+                      p.custId = cust.custId;
+                    }
+                    addProductIfNew(p);
+                  }
+                }
+              }
+            }
+
+            productList.assignAll(allProducts);
             applyFilters(); // Apply filters to initial data
           }
         }

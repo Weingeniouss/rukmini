@@ -8,7 +8,19 @@ class CustProductModel {
   CustProductModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    if (json['data'] != null) {
+      if (json['data'] is Map<String, dynamic>) {
+        data = Data.fromJson(json['data']);
+      } else if (json['data'] is List) {
+        data = Data();
+        data!.productList = <ProductList>[];
+        json['data'].forEach((v) {
+          if (v is Map<String, dynamic>) {
+            data!.productList!.add(ProductList.fromJson(v));
+          }
+        });
+      }
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -29,17 +41,34 @@ class Data {
   Data({this.custList, this.productList});
 
   Data.fromJson(Map<String, dynamic> json) {
-    if (json['CustList'] != null) {
+    var cList = json['CustList'] ?? json['custList'] ?? json['cust_list'] ?? json['customers'];
+    if (cList != null && cList is List) {
       custList = <CustList>[];
-      json['CustList'].forEach((v) {
-        custList!.add(CustList.fromJson(v));
+      cList.forEach((v) {
+        if (v is Map<String, dynamic>) {
+          custList!.add(CustList.fromJson(v));
+        }
       });
     }
-    if (json['ProductList'] != null) {
+
+    var pList = json['ProductList'] ?? json['productList'] ?? json['product_list'] ?? json['products'];
+    if (pList != null && pList is List) {
       productList = <ProductList>[];
-      json['ProductList'].forEach((v) {
-        productList!.add(ProductList.fromJson(v));
+      pList.forEach((v) {
+        if (v is Map<String, dynamic>) {
+          productList!.add(ProductList.fromJson(v));
+        }
       });
+    }
+
+    // If top-level ProductList is empty, aggregate products from CustList
+    if ((productList == null || productList!.isEmpty) && custList != null && custList!.isNotEmpty) {
+      productList = <ProductList>[];
+      for (var cust in custList!) {
+        if (cust.productList != null && cust.productList!.isNotEmpty) {
+          productList!.addAll(cust.productList!);
+        }
+      }
     }
   }
 
@@ -76,16 +105,21 @@ class CustList {
     name = json['Name'];
     custCode = json['CustCode'];
     address = json['Address'];
-    if (json['PhoneList'] != null) {
+    if (json['PhoneList'] != null && json['PhoneList'] is List) {
       phoneList = <PhoneList>[];
       json['PhoneList'].forEach((v) {
-        phoneList!.add(PhoneList.fromJson(v));
+        if (v is Map<String, dynamic>) {
+          phoneList!.add(PhoneList.fromJson(v));
+        }
       });
     }
-    if (json['ProductList'] != null) {
+    var pList = json['ProductList'] ?? json['productList'] ?? json['product_list'] ?? json['products'];
+    if (pList != null && pList is List) {
       productList = <ProductList>[];
-      json['ProductList'].forEach((v) {
-        productList!.add(ProductList.fromJson(v));
+      pList.forEach((v) {
+        if (v is Map<String, dynamic>) {
+          productList!.add(ProductList.fromJson(v));
+        }
       });
     }
   }

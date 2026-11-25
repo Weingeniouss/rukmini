@@ -43,6 +43,8 @@ AppBar appBar({
     titleWidget = const SizedBox();
   }
 
+  final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
+
   return AppBar(
     surfaceTintColor: isPremium ? AppColor.black : AppColor.backgroundColor,
     foregroundColor: isPremium ? AppColor.black : AppColor.backgroundColor,
@@ -59,29 +61,36 @@ AppBar appBar({
             ),
           )
         : null,
-    leadingWidth: (!AppSize.isDesktop && !AppSize.isTablet && back == true)
-        ? AppSize.width * 0.18
+    leadingWidth: (back == true)
+        ? (isDesktopOrTablet ? 60.0 : AppSize.width * 0.18)
         : null,
-    leading: (!AppSize.isDesktop && !AppSize.isTablet)
-        ? ((back == true)
-              ? Padding(
-                  padding: EdgeInsets.only(left: AppSize.p16),
-                  child: _appBarButton(AppIcon.backIcon, () {
-                    NavDrawerController.back();
-                  }, isPremium: isPremium),
-                )
-              : Builder(
-                  builder: (context) {
-                    return Padding(
-                      padding: EdgeInsets.only(left: AppSize.p10),
-                      child: _appBarButton(
-                        AppIcon.menu,
-                        () => Scaffold.of(context).openDrawer(),
-                        isPremium: isPremium,
-                      ),
-                    );
-                  },
-                ))
+    leading: (back == true)
+        ? Padding(
+            padding: EdgeInsets.only(
+              left: isDesktopOrTablet ? 16.0 : AppSize.p16,
+            ),
+            child: _appBarButton(
+              AppIcon.backIcon,
+              () {
+                NavDrawerController.back();
+              },
+              isPremium: isPremium,
+              iconColor: isDesktopOrTablet ? AppColor.black : null,
+            ),
+          )
+        : (!isDesktopOrTablet)
+        ? Builder(
+            builder: (context) {
+              return Padding(
+                padding: EdgeInsets.only(left: AppSize.p10),
+                child: _appBarButton(
+                  AppIcon.menu,
+                  () => Scaffold.of(context).openDrawer(),
+                  isPremium: isPremium,
+                ),
+              );
+            },
+          )
         : null,
     actions: [
       if (searchIcon == true)
@@ -179,6 +188,7 @@ Widget _appBarButton(
   IconData icon,
   VoidCallback onTap, {
   bool isPremium = false,
+  Color? iconColor,
 }) {
   return GestureDetector(
     onTap: onTap,
@@ -199,7 +209,11 @@ Widget _appBarButton(
                 ),
               ],
       ),
-      child: Icon(icon, color: AppColor.goldColor, size: AppSize.iconMedium),
+      child: Icon(
+        icon,
+        color: iconColor ?? AppColor.goldColor,
+        size: AppSize.iconMedium,
+      ),
     ),
   );
 }

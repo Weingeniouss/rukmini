@@ -124,8 +124,12 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
         return AddYearMaster(uiController: Get.put(YearMasterControllerUI()));
       case '/productInLocker':
         return ProductInLocker(
-          custProductController: Get.put(CustProductController()),
-          lockerListController: Get.put(LockerListController()),
+          custProductController: Get.isRegistered<CustProductController>()
+              ? Get.find<CustProductController>()
+              : Get.put(CustProductController(), permanent: true),
+          lockerListController: Get.isRegistered<LockerListController>()
+              ? Get.find<LockerListController>()
+              : Get.put(LockerListController(), permanent: true),
         );
       case '/productInLockerDetail':
         return const ProductInLockerDetail();
@@ -136,7 +140,9 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
         );
       case '/lockerTransaction':
         return LockerTranStaion(
-          uiController: Get.put(LockerTransUIController()),
+          uiController: Get.isRegistered<LockerTransUIController>()
+              ? Get.find<LockerTransUIController>()
+              : Get.put(LockerTransUIController(), permanent: true),
         );
       case '/lockerTransationDetail':
         return const LockerTransationDetail();

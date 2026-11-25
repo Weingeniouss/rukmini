@@ -13,7 +13,9 @@ class LockerTransController extends GetxController {
 
   Future<http.Response?> getLockerTransList() async {
     try {
-      isLoading.value = true;
+      if (lockerTransList.isEmpty) {
+        isLoading.value = true;
+      }
       final http.Response response = await _services.lockerListTransApi();
 
       if (kDebugMode) {

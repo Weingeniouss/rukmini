@@ -117,4 +117,39 @@ class AppIcon {
   static const IconData download = Icons.download_outlined;
   static const IconData star = Icons.star;
   static const IconData infoOutline = Icons.info_outline;
+  static const IconData copy = Icons.copy;
+  static const IconData map = Icons.map_outlined;
+  static const IconData group = Icons.group_outlined;
+  static const IconData wc = Icons.wc_outlined;
+  static const IconData receipt = Icons.receipt_long_outlined;
+
+  // Modern Layout & Table Icons
+  static const IconData chevronRight = Icons.chevron_right;
+  static const IconData chevronLeft = Icons.chevron_left_rounded;
+  static const IconData chevronRightRounded = Icons.chevron_right_rounded;
+  static const IconData searchOutline = Icons.search;
+  static const IconData clearIcon = Icons.clear;
+  static const IconData layers = Icons.layers_outlined;
+  static const IconData lockOutline = Icons.lock_outline;
+  static const IconData lockClock = Icons.lock_clock_outlined;
+  static const IconData peopleOutline = Icons.people_outline_rounded;
+  static const IconData checkCircleOutline = Icons.check_circle_outline_rounded;
+  static const IconData checkCircleFilled = Icons.check_circle_rounded;
+  static const IconData calendarOutline = Icons.calendar_today_outlined;
+  static const IconData tune = Icons.tune_rounded;
+  static const IconData arrowDownRounded = Icons.keyboard_arrow_down_rounded;
+  static const IconData listBulleted = Icons.format_list_bulleted_rounded;
+  static const IconData gridView = Icons.grid_view_rounded;
+  static const IconData fileDownload = Icons.file_download_outlined;
+  static const IconData addRounded = Icons.add_rounded;
+  static const IconData eyeOutline = Icons.remove_red_eye_outlined;
+  static const IconData swapHoriz = Icons.swap_horiz_rounded;
+  static const IconData searchOff = Icons.search_off_rounded;
+  static const IconData accessTime = Icons.access_time_rounded;
+  static const IconData inventoryRounded = Icons.inventory_rounded;
+  static const IconData sellOutline = Icons.sell_outlined;
+  static const IconData unfoldMore = Icons.unfold_more;
+  static const IconData moreVert = Icons.more_vert_rounded;
+  static const IconData editOutline = Icons.edit_outlined;
+  static const IconData taskAlt = Icons.task_alt_rounded;
 }

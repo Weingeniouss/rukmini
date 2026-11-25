@@ -200,6 +200,8 @@ class AppString {
   static const noCustomersFound = 'No Customers Found';
   static const noName = 'No Name';
   static const na = 'N/A';
+  static const zeroAmount = '0.00';
+  static const hashSymbol = '#';
   static const upload = 'Upload';
 
   //Units & Labels
@@ -436,6 +438,34 @@ class AppString {
       static const defaultLabel = 'Default';
       static const fromColon = 'From :';
       static const toColon = 'To:';
+      static const searchCustomerPlaceholder = 'Search by Name, Code, Phone...';
+      static const resetFilters = 'Reset Filters';
+      static const allType = 'All Type';
+      static const allStatus = 'All Status';
+      static const view = 'View';
+      static const edit = 'Edit';
+      static const silver = 'Silver';
+      static const exportingContacts = 'Exporting customer contacts...';
+      static const girviManagement = 'Girvi Management';
+      static const manageGirviSubtitle = 'Manage all girvi (pawn) entries, track amount and status';
+      static const searchGirviPlaceholder = 'Search by Customer, Girvi No., Mobile...';
+      static const allBranches = 'All Branches';
+      static const addMetal = 'Add Metal';
+      static const searchMetalPlaceholder = 'Search Metal / Code...';
+      static const allMetal = 'All Metal';
+      static const addCategory = 'Add Category';
+      static const allCategories = 'All Categories';
+      static const searchCategoryPlaceholder = 'Search Category / Code...';
+      static const addCustomerType = 'Add Customer Type';
+      static const allTypes = 'All Types';
+      static const searchCustomerTypePlaceholder = 'Search Customer Type / Code...';
+      static const allLockers = 'All Lockers';
+      static const searchLockerPlaceholder = 'Search Locker / Code...';
+      static const addMetalTouch = 'Add Metal Touch';
+      static const allMetalTouch = 'All Metal Touch';
+      static const searchMetalTouchPlaceholder = 'Search Metal Touch / Karat...';
+      static const addYear = 'Add Year';
+      static const searchYearPlaceholder = 'Search Year / Title...';
     //Pending Transaction
       static const totAmtGvn = 'Tot Amt Gvn';
       static const gvnDt = 'Gvn Dt';
@@ -502,4 +532,58 @@ class AppString {
   static const responseLog = 'Response: ';
   static const statusCodeLog = 'Status Code: ';
   static const bodyLog = 'Body: ';
+
+  // Product in Locker & Product List specific
+  static const productInLockerTitle = 'Product In Locker';
+  static const productInLockerSubtitle = 'Manage products stored in lockers, customer items and locker allocation';
+  static const manageProductsSubtitle = 'Manage your jewellery products, stock and pricing';
+  static const totalInLocker = 'Total In Locker';
+  static const lockersUsed = 'Lockers Used';
+  static const totalCustomers = 'Total Customers';
+  static const selectedItems = 'Selected Items';
+  static const allLocker = 'All Locker';
+  static const allCustomer = 'All Customer';
+  static const searchPlaceholderLocker = 'Search by Customer, Product Name, Code, Locker...';
+  static const searchPlaceholderProduct = 'Search by Product Name, Code, Locker, Metal...';
+  static const showingProducts = 'Showing';
+  static const list = 'List';
+  static const grid = 'Grid';
+  static const export = 'Export';
+  static const changeLocker = 'Change Locker';
+  static const productCustomer = 'Product / Customer';
+  static const productCode = 'Product Code';
+  static const weightGm = 'Weight (gm)';
+  static const givenAmtRs = 'Given Amt (₹)';
+  static const rateRs = 'Rate (₹)';
+  static const actions = 'Actions';
+  static const viewDetails = 'View Details';
+  static const editProduct = 'Edit Product';
+  static const clearSelection = 'Clear Selection';
+  static const selectedProductsCount = 'product(s) selected';
+  static const selectAtLeastOneProduct = 'Please select at least one product to change locker.';
+  static const noProductsInLockerFound = 'No Products In Locker Found';
+  static const tryAdjustingSearch = 'Try adjusting your search query or filter options.';
+  static const totalProducts = 'Total Products';
+  static const exportingProductsCsv = 'Exporting products list to CSV...';
+  static const codeColon = 'Code: ';
+  static const weight = 'Weight';
+  static const productName = 'Product Name';
+  static const metalName = 'Metal Name';
+  static const close = 'Close';
+
+  // CustDetail Additional Strings
+  static const vip = 'VIP';
+  static const accountSummary = 'Account Summary';
+  static const totalTransactions = 'Total Transactions';
+  static const basicInformation = 'Basic Information';
+  static const branch = 'Branch';
+  static const createdOn = 'Created On';
+  static const updatedOn = 'Updated On';
+  static const noPhoneNumbersAvailable = 'No phone numbers available';
+  static const addNumber = 'Add Number';
+  static const nomineeInformation = 'Nominee Information';
+  static const notes = 'Notes';
+  static const defaultNotes = 'Preferred customer. Regular transactions.';
+  static const copied = 'Copied';
+  static const customerCodeCopied = 'Customer Code copied to clipboard';
 }

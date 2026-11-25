@@ -32,9 +32,9 @@ class ProductController extends GetxController {
 
       if (!hasMoreData.value && !isRefresh) return null;
 
-      if (currentPage == 1) {
+      if (products.isEmpty) {
         isLoading.value = true;
-      } else {
+      } else if (currentPage > 1) {
         isMoreLoading.value = true;
       }
 

@@ -78,4 +78,46 @@ class AppColor {
   static const splashDivider = Color(0xFFD4AF37);
   static const quoteCardBg = Colors.white10;
   static const quoteText = Colors.white;
+
+  // Modern Layout & Table Colors
+  static const tableBg = Color(0xFFF8FAFC);
+  static const tableHeaderBg = Color(0xFFF8FAFC);
+  static const tableBorder = Color(0xFFE2E8F0);
+  static const tableDivider = Color(0xFFF1F5F9);
+  
+  // Slate Text Colors
+  static const textDark = Color(0xFF0F172A);
+  static const textMedium = Color(0xFF475569);
+  static const textSecondary = Color(0xFF334155);
+  static const textMuted = Color(0xFF64748B);
+  static const textLight = Color(0xFF94A3B8);
+
+  // Status & Tag Light Pill Colors
+  static const orangeLightBg = Color(0xFFFFF7ED);
+  static const orangeText = Color(0xFFEA580C);
+  static const orangeBorder = Color(0xFFFED7AA);
+
+  static const greenLightBg = Color(0xFFF0FDF4);
+  static const greenText = Color(0xFF16A34A);
+  
+  static const yellowLightBg = Color(0xFFFEFCE8);
+  static const yellowText = Color(0xFFCA8A04);
+
+  static const purpleLightBg = Color(0xFFF5F3FF);
+  static const purpleText = Color(0xFF7C3AED);
+
+  static const goldTagBg = Color(0xFFFEF3C7);
+  static const goldTagDot = Color(0xFFD97706);
+  static const goldTagText = Color(0xFFB45309);
+
+  static const blueTagBg = Color(0xFFE0F2FE);
+  static const blueTagText = Color(0xFF0369A1);
+
+  static const greenTagBg = Color(0xFFDCFCE7);
+  static const greenTagText = Color(0xFF15803D);
+
+  static const redLightBg = Color(0xFFFEE2E2);
+  static const redText = Color(0xFFDC2626);
+
+  static const darkBannerBg = Color(0xFF0F172A);
 }

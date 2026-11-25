@@ -7,17 +7,15 @@ import 'package:rukmini/controller/api/call/call_api.dart';
 import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/controller/api/controllers/drawer/home/girvi/giriviList_Controller.dart';
 import 'package:rukmini/controller/api/controllers/year/year_Controller.dart';
+import 'package:rukmini/modal/drawer/home/girvi/girvi_list_model.dart';
 import 'package:rukmini/modal/year/year_modal.dart';
 import 'package:rukmini/view/utils/app_color.dart';
-import 'package:rukmini/view/utils/app_size.dart';
+import 'package:rukmini/view/utils/app_icon.dart';
 import 'package:rukmini/view/utils/app_string.dart';
 import 'package:rukmini/view/utils/widget/appBar.dart';
 import 'package:rukmini/view/utils/widget/drawer.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
-import 'package:rukmini/view/utils/widget/horizontalPadding.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../../../utils/app_icon.dart';
 
 class GiriviList extends StatefulWidget {
   const GiriviList({super.key});
@@ -30,6 +28,10 @@ class _GiriviListState extends State<GiriviList> {
   final giriviListController = Get.put(GiriviListController());
   final yearController = Get.put(YearController());
   final ScrollController _scrollController = ScrollController();
+
+  final RxBool _isGridView = true.obs;
+  final RxString _selectedBranch = "All Branches".obs;
+  final RxString _selectedStatus = "All Status".obs;
 
   @override
   void initState() {
@@ -58,7 +60,7 @@ class _GiriviListState extends State<GiriviList> {
 
       giriviListController.selectedYearId.value = selectedYear.yearId ?? '0';
       giriviListController.selectedYearTitle.value =
-          selectedYear.title ?? 'All';
+          selectedYear.title ?? 'All Years';
     }
     await CallApi.callGiriviList(
       search: giriviListController.searchTextController.text,
@@ -76,37 +78,54 @@ class _GiriviListState extends State<GiriviList> {
     super.dispose();
   }
 
+  List<GirviData> getFilteredData(List<GirviData> list) {
+    final query =
+        giriviListController.searchTextController.text.toLowerCase().trim();
+    final status = _selectedStatus.value.toLowerCase();
+
+    return list.where((item) {
+      if (query.isNotEmpty) {
+        final name = (item.custName ?? '').toLowerCase();
+        final uid = (item.uniqueId ?? '').toLowerCase();
+        final phone = (item.custPhone ?? '').toLowerCase();
+        if (!name.contains(query) &&
+            !uid.contains(query) &&
+            !phone.contains(query)) {
+          return false;
+        }
+      }
+
+      if (status != "all status" && status != "all") {
+        bool isClosed = item.isClosed == "1";
+        if (status == "open" && isClosed) return false;
+        if (status == "closed" && !isClosed) return false;
+      }
+
+      return true;
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
-
     return Fullscreen(
       drawer: homeDrawer(),
       isPadding: false,
       backGroundcolor: AppColor.backgroundColor,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColor.primaryColor,
+        backgroundColor: AppColor.dashboardGold,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         onPressed: () {
           NavDrawerController.toNamed('/giriviadd');
         },
-        child: Icon(AppIcon.add, color: AppColor.goldColor, size: 30),
+        child: const Icon(AppIcon.add, color: AppColor.white, size: 28),
       ),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: Obx(
-          () => appBar(
-            back: true,
-            title: giriviListController.isSearching.value
-                ? _searchField()
-                : AppString.giriviList,
-            searchIcon: !giriviListController.isSearching.value,
-            filter: !giriviListController.isSearching.value,
-            filterOnPressed: () => _showFilterOption(),
-            searchOnPressed: () {
-              giriviListController.isSearching.value = true;
-            },
-          ),
+        child: appBar(
+          back: true,
+          title: AppString.giriviList,
+          searchIcon: false,
+          filter: false,
         ),
       ),
       child: Obx(() {
@@ -115,165 +134,660 @@ class _GiriviListState extends State<GiriviList> {
           return _shimmerLoading();
         }
 
-        final data = giriviListController.giriviList;
+        final rawList = giriviListController.giriviList;
+        final filteredList = getFilteredData(rawList);
+        final totalCount =
+            giriviListController.giriviListData.value.custCount ??
+                rawList.length;
 
-        if (data.isEmpty) {
-          return Center(child: Text(AppString.noDataFound));
-        }
+        _isGridView.value;
+        _selectedBranch.value;
+        _selectedStatus.value;
+        giriviListController.selectedYearTitle.value;
 
         return RefreshIndicator(
           backgroundColor: AppColor.white,
-          color: AppColor.goldColor,
+          color: AppColor.dashboardGold,
           elevation: 2.0,
           onRefresh: () => callApiGirviList(giriviListController),
-          child: Column(
-            children: [
-              yearListSelector(),
-              Expanded(
-                child: isDesktopOrTablet
-                    ? GridView.builder(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        controller: _scrollController,
-                        padding: EdgeInsets.all(AppSize.p16),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: AppSize.isDesktop ? 3 : 2,
-                          crossAxisSpacing: AppSize.p12,
-                          mainAxisSpacing: AppSize.p12,
-                          mainAxisExtent: 175,
-                        ),
-                        itemCount:
-                            data.length +
-                            (giriviListController.isLoadMore.value ? 1 : 0),
-                        itemBuilder: (context, index) {
-                          if (index < data.length) {
-                            return _buildGirviCardItem(
-                              data[index],
-                              isGrid: true,
-                            );
-                          } else {
-                            return _paginationShimmer();
-                          }
-                        },
-                      )
-                    : horizontalPadding(child: listItem(data)),
-              ),
-            ],
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSummaryCards(filteredList, totalCount),
+                _buildFilterBar(),
+                if (filteredList.isEmpty)
+                  Container(
+                    height: 200,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColor.grey300),
+                    ),
+                    child: Text(
+                      AppString.noDataFound,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: AppColor.grey500,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  )
+                else
+                  _isGridView.value
+                      ? _buildGridView(filteredList)
+                      : _buildListView(filteredList),
+                if (giriviListController.isLoadMore.value)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: AppColor.dashboardGold,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         );
       }),
     );
   }
 
-  Widget yearListSelector() {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSize.p16,
-        vertical: AppSize.p8,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            '${AppString.selectYear}:',
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: AppSize.size14,
-              color: AppColor.textColor,
+  Widget _buildSummaryCards(List<GirviData> list, int totalCount) {
+    int openCount = list.where((x) => x.isClosed != "1").length;
+    int closedCount = list.where((x) => x.isClosed == "1").length;
+
+    double totalAmtSum = 0.0;
+    for (var x in list) {
+      if (x.givenAmt != null) {
+        final clean = x.givenAmt!.replaceAll(',', '').replaceAll('₹', '').trim();
+        totalAmtSum += double.tryParse(clean) ?? 0.0;
+      }
+    }
+
+    final String formattedTotalAmt = NumberFormat.currency(
+      symbol: '₹',
+      decimalDigits: 2,
+      locale: 'en_IN',
+    ).format(totalAmtSum);
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final bool isCompact = constraints.maxWidth < 700;
+        if (isCompact) {
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Row(
+              children: [
+                _summaryCard(
+                  icon: AppIcon.inventoryRounded,
+                  iconBg: AppColor.goldTagBg,
+                  iconColor: AppColor.dashboardGold,
+                  label: "Total Girvi",
+                  value: "$totalCount",
+                ),
+                const SizedBox(width: 12),
+                _summaryCard(
+                  icon: AppIcon.lockOutline,
+                  iconBg: AppColor.greenTagBg,
+                  iconColor: AppColor.greenTagText,
+                  label: AppString.open,
+                  value: "$openCount",
+                ),
+                const SizedBox(width: 12),
+                _summaryCard(
+                  icon: AppIcon.lockClock,
+                  iconBg: AppColor.redLightBg,
+                  iconColor: AppColor.redText,
+                  label: AppString.closed,
+                  value: "$closedCount",
+                ),
+                const SizedBox(width: 12),
+                _summaryCard(
+                  icon: AppIcon.rupee,
+                  iconBg: AppColor.orangeLightBg,
+                  iconColor: AppColor.orangeText,
+                  label: "Total Amount",
+                  value: formattedTotalAmt,
+                ),
+              ],
             ),
-          ),
-          Obx(
-            () => Container(
-              padding: EdgeInsets.symmetric(horizontal: AppSize.p12),
-              decoration: BoxDecoration(
-                color: AppColor.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColor.grey300.withOpacity(0.5)),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColor.black.withOpacity(0.02),
-                    blurRadius: 5,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: giriviListController.selectedYearId.value,
-                  icon: const Icon(
-                    AppIcon.arrow_down,
-                    color: AppColor.goldColor,
-                  ),
-                  items: [
-                    DropdownMenuItem(
-                      value: '0',
-                      child: Text(
-                        AppString.allYears,
-                        style: TextStyle(fontSize: AppSize.size14),
-                      ),
-                    ),
-                    ...yearController.yearList.map((YearData year) {
-                      return DropdownMenuItem(
-                        value: year.yearId,
-                        child: Text(
-                          year.title ?? '',
-                          style: TextStyle(fontSize: AppSize.size14),
-                        ),
-                      );
-                    }).toList(),
-                  ],
-                  onChanged: (String? value) {
-                    changeYaer(value);
-                  },
+          );
+        }
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: _summaryCard(
+                  icon: AppIcon.inventoryRounded,
+                  iconBg: AppColor.goldTagBg,
+                  iconColor: AppColor.dashboardGold,
+                  label: "Total Girvi",
+                  value: "$totalCount",
                 ),
               ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _summaryCard(
+                  icon: AppIcon.lockOutline,
+                  iconBg: AppColor.greenTagBg,
+                  iconColor: AppColor.greenTagText,
+                  label: AppString.open,
+                  value: "$openCount",
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _summaryCard(
+                  icon: AppIcon.lockClock,
+                  iconBg: AppColor.redLightBg,
+                  iconColor: AppColor.redText,
+                  label: AppString.closed,
+                  value: "$closedCount",
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _summaryCard(
+                  icon: AppIcon.rupee,
+                  iconBg: AppColor.orangeLightBg,
+                  iconColor: AppColor.orangeText,
+                  label: "Total Amount",
+                  value: formattedTotalAmt,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _summaryCard({
+    required IconData icon,
+    required Color iconBg,
+    required Color iconColor,
+    required String label,
+    required String value,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColor.grey300.withOpacity(0.6)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(0.02),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: iconBg,
+              borderRadius: BorderRadius.circular(12),
             ),
+            child: Icon(icon, color: iconColor, size: 22),
+          ),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.grey500,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.black87,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  void changeYaer(String? value) {
-    final api = giriviListController;
-    if (value != null) {
-      api.selectedYearId.value = value;
-      final selected = yearController.yearList.firstWhereOrNull(
-        (y) => y.yearId == value,
-      );
-      api.selectedYearTitle.value = selected?.title ?? AppString.allYears;
-      callApiGirviList(giriviListController);
-    }
-  }
+  Widget _buildFilterBar() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isCompact = constraints.maxWidth < 650;
+        return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          child: Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              SizedBox(
+                width: isCompact ? constraints.maxWidth : 320,
+                child: Container(
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: AppColor.grey300),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColor.black.withOpacity(0.02),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: TextField(
+                    controller: giriviListController.searchTextController,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: AppColor.black87,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: AppString.searchGirviPlaceholder,
+                      hintStyle: const TextStyle(
+                        color: AppColor.grey500,
+                        fontSize: 13,
+                      ),
+                      prefixIcon: const Icon(
+                        AppIcon.searchIcon,
+                        color: AppColor.grey500,
+                        size: 20,
+                      ),
+                      suffixIcon: giriviListController
+                              .searchTextController.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(AppIcon.clearIcon, size: 18),
+                              onPressed: () {
+                                giriviListController.searchTextController.clear();
+                                setState(() {});
+                                callApiGirviList(giriviListController);
+                              },
+                            )
+                          : null,
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 12,
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {});
+                      callApiGirviList(giriviListController);
+                    },
+                  ),
+                ),
+              ),
 
-  Widget listItem(List<dynamic> data) {
-    return ListView.builder(
-      physics: const AlwaysScrollableScrollPhysics(),
-      controller: _scrollController,
-      itemCount: data.length + (giriviListController.isLoadMore.value ? 1 : 0),
-      itemBuilder: (context, index) {
-        if (index < data.length) {
-          return _buildGirviCardItem(data[index], isGrid: false);
-        } else {
-          return _paginationShimmer();
-        }
+              Builder(
+                builder: (btnContext) => _buildFilterPill(
+                  icon: AppIcon.calendarOutline,
+                  label: giriviListController.selectedYearTitle.value,
+                  onTap: () => _showYearMenu(btnContext),
+                ),
+              ),
+
+              Builder(
+                builder: (btnContext) => _buildFilterPill(
+                  icon: AppIcon.location,
+                  label: _selectedBranch.value,
+                  onTap: () => _showBranchMenu(btnContext),
+                ),
+              ),
+
+              Builder(
+                builder: (btnContext) => _buildFilterPill(
+                  icon: AppIcon.sellOutline,
+                  label: _selectedStatus.value,
+                  onTap: () => _showStatusMenu(btnContext),
+                ),
+              ),
+
+              Container(
+                height: 42,
+                width: 42,
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppColor.grey300),
+                ),
+                child: IconButton(
+                  icon: const Icon(
+                    AppIcon.refresh,
+                    color: AppColor.dashboardGold,
+                    size: 20,
+                  ),
+                  tooltip: AppString.resetFilters,
+                  onPressed: _resetFilters,
+                ),
+              ),
+
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppColor.grey300),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    InkWell(
+                      onTap: () => _isGridView.value = true,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(9),
+                        bottomLeft: Radius.circular(9),
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _isGridView.value
+                              ? AppColor.dashboardGold
+                              : AppColor.transparent,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(9),
+                            bottomLeft: Radius.circular(9),
+                          ),
+                        ),
+                        child: Icon(
+                          AppIcon.gridView,
+                          size: 18,
+                          color: _isGridView.value
+                              ? AppColor.white
+                              : AppColor.grey500,
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () => _isGridView.value = false,
+                      borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(9),
+                        bottomRight: Radius.circular(9),
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: !_isGridView.value
+                              ? AppColor.dashboardGold
+                              : AppColor.transparent,
+                          borderRadius: const BorderRadius.only(
+                            topRight: Radius.circular(9),
+                            bottomRight: Radius.circular(9),
+                          ),
+                        ),
+                        child: Icon(
+                          AppIcon.listBulleted,
+                          size: 18,
+                          color: !_isGridView.value
+                              ? AppColor.white
+                              : AppColor.grey500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
       },
     );
   }
 
-  Widget _buildGirviCardItem(dynamic item, {bool isGrid = false}) {
-    bool isClosed = item.isClosed == "1";
+  Widget _buildFilterPill({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    final bool isSelected = label != "All Years" &&
+        label != AppString.allBranches &&
+        label != AppString.allStatus &&
+        label != "All";
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        height: 42,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColor.dashboardGold.withOpacity(0.08)
+              : AppColor.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isSelected ? AppColor.dashboardGold : AppColor.grey300,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 18,
+              color: isSelected ? AppColor.dashboardGold : AppColor.grey500,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                color: isSelected ? AppColor.dashboardGold : AppColor.black87,
+              ),
+            ),
+            const SizedBox(width: 6),
+            Icon(
+              AppIcon.arrow_down,
+              size: 18,
+              color: isSelected ? AppColor.dashboardGold : AppColor.grey500,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showYearMenu(BuildContext btnContext) {
+    final RenderBox renderBox = btnContext.findRenderObject() as RenderBox;
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+
+    showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        offset.dx,
+        offset.dy + renderBox.size.height,
+        offset.dx + renderBox.size.width,
+        0,
+      ),
+      items: [
+        const PopupMenuItem<String>(
+          value: '0',
+          child: Text("All Years", style: TextStyle(fontSize: 13)),
+        ),
+        ...yearController.yearList.map((YearData year) {
+          return PopupMenuItem<String>(
+            value: year.yearId ?? '0',
+            child: Text(year.title ?? '', style: const TextStyle(fontSize: 13)),
+          );
+        }).toList(),
+      ],
+    ).then((value) {
+      if (value != null) {
+        changeYear(value);
+      }
+    });
+  }
+
+  void changeYear(String value) {
+    giriviListController.selectedYearId.value = value;
+    if (value == '0') {
+      giriviListController.selectedYearTitle.value = "All Years";
+    } else {
+      final selected =
+          yearController.yearList.firstWhereOrNull((y) => y.yearId == value);
+      giriviListController.selectedYearTitle.value =
+          selected?.title ?? "All Years";
+    }
+    callApiGirviList(giriviListController);
+  }
+
+  void _showBranchMenu(BuildContext btnContext) {
+    final RenderBox renderBox = btnContext.findRenderObject() as RenderBox;
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+
+    showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        offset.dx,
+        offset.dy + renderBox.size.height,
+        offset.dx + renderBox.size.width,
+        0,
+      ),
+      items: [
+        AppString.allBranches,
+        "Pandesara",
+        "Gambhir",
+        "Panchavati",
+      ].map((b) {
+        return PopupMenuItem<String>(
+          value: b,
+          child: Text(b, style: const TextStyle(fontSize: 13)),
+        );
+      }).toList(),
+    ).then((value) {
+      if (value != null) {
+        _selectedBranch.value = value;
+      }
+    });
+  }
+
+  void _showStatusMenu(BuildContext btnContext) {
+    final RenderBox renderBox = btnContext.findRenderObject() as RenderBox;
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+
+    showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        offset.dx,
+        offset.dy + renderBox.size.height,
+        offset.dx + renderBox.size.width,
+        0,
+      ),
+      items: [
+        AppString.allStatus,
+        AppString.open,
+        AppString.closed,
+        "Carry Forward",
+      ].map((s) {
+        return PopupMenuItem<String>(
+          value: s,
+          child: Text(s, style: const TextStyle(fontSize: 13)),
+        );
+      }).toList(),
+    ).then((value) {
+      if (value != null) {
+        _selectedStatus.value = value;
+        giriviListController.selectedFilterType.value =
+            value == AppString.allStatus ? "All" : value;
+        callApiGirviList(giriviListController);
+      }
+    });
+  }
+
+  void _resetFilters() {
+    giriviListController.searchTextController.clear();
+    giriviListController.selectedYearId.value = '0';
+    giriviListController.selectedYearTitle.value = "All Years";
+    _selectedBranch.value = AppString.allBranches;
+    _selectedStatus.value = AppString.allStatus;
+    giriviListController.selectedFilterType.value = "All";
+    giriviListController.fromDateController.clear();
+    giriviListController.toDateController.clear();
+    setState(() {});
+    callApiGirviList(giriviListController);
+  }
+
+  Widget _buildGridView(List<GirviData> list) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    int crossAxisCount = 3;
+    if (screenWidth < 750) {
+      crossAxisCount = 1;
+    } else if (screenWidth < 1100) {
+      crossAxisCount = 2;
+    }
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
+        crossAxisSpacing: 14,
+        mainAxisSpacing: 14,
+        mainAxisExtent: 155,
+      ),
+      itemCount: list.length,
+      itemBuilder: (context, index) {
+        return _buildGirviCardItem(list[index], isGrid: true);
+      },
+    );
+  }
+
+  Widget _buildListView(List<GirviData> list) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: list.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 12),
+      itemBuilder: (context, index) {
+        return _buildGirviCardItem(list[index], isGrid: false);
+      },
+    );
+  }
+
+  Widget _buildGirviCardItem(GirviData item, {bool isGrid = false}) {
+    final bool isClosed = item.isClosed == "1";
+    final String formattedDate = _formatDate(item.girviDate);
+
     return Container(
-      margin: isGrid
-          ? EdgeInsets.zero
-          : EdgeInsets.symmetric(vertical: AppSize.p8),
       decoration: BoxDecoration(
         color: AppColor.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColor.goldTagBg.withOpacity(0.8)),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: AppColor.black.withOpacity(0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -283,149 +797,187 @@ class _GiriviListState extends State<GiriviList> {
         },
         borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: EdgeInsets.all(isGrid ? 12 : AppSize.p16),
+          padding: const EdgeInsets.all(14),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(isGrid ? 6 : AppSize.p10),
-                    decoration: BoxDecoration(
-                      color: AppColor.whiteOrang.withOpacity(0.5),
+                    width: 36,
+                    height: 36,
+                    decoration: const BoxDecoration(
+                      color: AppColor.goldTagBg,
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
+                    child: const Icon(
                       AppIcon.person,
-                      color: AppColor.goldColor,
-                      size: isGrid ? 18 : 24,
+                      color: AppColor.dashboardGold,
+                      size: 20,
                     ),
                   ),
-                  SizedBox(width: isGrid ? 8 : AppSize.p12),
+                  const SizedBox(width: 10),
                   Expanded(
-                    child: Text(
-                      item.custName ?? '',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: isGrid ? 14 : AppSize.mediumText * 1.3,
-                        color: AppColor.black,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: isGrid ? 8 : 12,
-                      vertical: isGrid ? 4 : 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isClosed
-                          ? AppColor.red.withOpacity(0.1)
-                          : AppColor.activeColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      isClosed ? AppString.closed : AppString.open,
-                      style: TextStyle(
-                        color: isClosed ? AppColor.red : AppColor.activeColor,
-                        fontSize: isGrid ? 11 : AppSize.smallText,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: isGrid ? 8 : AppSize.p12,
-                ),
-                child: Divider(
-                  height: 1,
-                  thickness: 0.5,
-                  color: AppColor.grey300.withOpacity(0.5),
-                ),
-              ),
-              Row(
-                children: [
-                  _infoColumn(
-                    item.uniqueId ?? 'N/A',
-                    icon: AppIcon.fingerprint,
-                  ),
-                  Container(
-                    height: 16,
-                    width: 1,
-                    color: AppColor.grey300.withOpacity(0.5),
-                  ),
-                  _infoColumn(
-                    _formatDate(item.girviDate),
-                    icon: AppIcon.calendar,
-                  ),
-                ],
-              ),
-              SizedBox(height: isGrid ? 8 : AppSize.p16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: isGrid ? 10 : AppSize.p16,
-                      vertical: isGrid ? 6 : AppSize.p10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColor.whiteOrang.withOpacity(0.4),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(
-                          AppIcon.rupee,
-                          color: AppColor.goldColor,
-                          size: 18,
-                        ),
-                        SizedBox(width: AppSize.p4),
                         Text(
-                          item.givenAmt ?? '0.00',
-                          style: TextStyle(
+                          item.custName ?? AppString.noName,
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: isGrid ? 13.0 : AppSize.mediumText * 1.3,
-                            color: AppColor.goldColor,
+                            fontSize: 14,
+                            color: AppColor.black87,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(width: AppSize.p8),
-                        Text(
-                          '(${item.interest ?? '0.00'}%)',
-                          style: TextStyle(
-                            color: AppColor.textColor,
-                            fontSize: isGrid ? 11.0 : AppSize.smallText,
-                            fontWeight: FontWeight.w500,
+                        const SizedBox(height: 3),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColor.goldTagBg.withOpacity(0.6),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            "# ${item.uniqueId ?? '-'}",
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: AppColor.goldTagText,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
+                  const SizedBox(width: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color:
+                          isClosed ? AppColor.redLightBg : AppColor.greenTagBg,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      isClosed ? AppString.closed : AppString.open,
+                      style: TextStyle(
+                        color:
+                            isClosed ? AppColor.redText : AppColor.greenTagText,
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const Divider(height: 16, color: AppColor.grey200),
+
+              Row(
+                children: [
+                  const Icon(
+                    AppIcon.calendarOutline,
+                    size: 14,
+                    color: AppColor.dashboardGold,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    formattedDate,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColor.textSecondary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  const Icon(
+                    AppIcon.location,
+                    size: 14,
+                    color: AppColor.dashboardGold,
+                  ),
+                  const SizedBox(width: 4),
+                  const Expanded(
+                    child: Text(
+                      "Pandesara",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColor.textSecondary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 4),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Row(
                     children: [
-                      Container(
-                        padding: EdgeInsets.all(isGrid ? 6 : AppSize.p8),
-                        decoration: BoxDecoration(
-                          color: AppColor.whiteOrang.withOpacity(0.3),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          AppIcon.phone,
-                          color: AppColor.goldColor,
-                          size: isGrid ? 16 : 18,
+                      const Icon(
+                        AppIcon.rupee,
+                        color: AppColor.dashboardGold,
+                        size: 14,
+                      ),
+                      const SizedBox(width: 2),
+                      Text(
+                        item.givenAmt ?? '0.00',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                          color: AppColor.dashboardGold,
                         ),
                       ),
-                      SizedBox(width: isGrid ? 6 : AppSize.p8),
+                      const SizedBox(width: 4),
+                      Text(
+                        '(${item.interest ?? '0.00'}%)',
+                        style: const TextStyle(
+                          color: AppColor.textMuted,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  Row(
+                    children: [
+                      const Icon(
+                        AppIcon.phone,
+                        color: AppColor.dashboardGold,
+                        size: 14,
+                      ),
+                      const SizedBox(width: 4),
                       Text(
                         item.custPhone ?? '',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: AppColor.black,
-                          fontSize: isGrid ? 13.0 : AppSize.commonText,
+                          color: AppColor.black87,
+                          fontSize: 12,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: AppColor.goldTagBg.withOpacity(0.6),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          AppIcon.chevronRight,
+                          size: 14,
+                          color: AppColor.dashboardGold,
                         ),
                       ),
                     ],
@@ -439,363 +991,40 @@ class _GiriviListState extends State<GiriviList> {
     );
   }
 
-  Widget _infoColumn(String value, {IconData? icon}) {
-    final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
-
-    return Expanded(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (icon != null) ...[
-            Icon(icon, size: isDesktopOrTablet ? 14 : AppSize.p16, color: AppColor.goldColor),
-            SizedBox(width: isDesktopOrTablet ? 4 : AppSize.p8),
-          ],
-          Flexible(
-            child: Text(
-              value,
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: AppColor.black,
-                fontSize: isDesktopOrTablet ? 12.0 : AppSize.commonText,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   String _formatDate(String? dateStr) {
-    if (dateStr == null || dateStr.isEmpty) return 'N/A';
+    if (dateStr == null || dateStr.isEmpty) return AppString.na;
     try {
       DateTime date = DateTime.parse(dateStr);
-      return DateFormat('dd/MMMM/yyyy').format(date);
+      return DateFormat('dd MMMM yyyy').format(date);
     } catch (e) {
       return dateStr;
     }
   }
 
-  void _showFilterOption() {
-    Get.bottomSheet(
-      enableDrag: true,
-      Container(
-        height: Get.height * 0.7,
-        padding: EdgeInsets.all(Get.width * 0.05),
-        decoration: BoxDecoration(
-          color: AppColor.fullScreenColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(25),
-            topRight: Radius.circular(25),
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: Get.width * 0.1,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: AppColor.grey300,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              SizedBox(height: Get.height * 0.02),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    AppString.filterOptions,
-                    style: TextStyle(
-                      fontSize: Get.width * 0.03,
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.primaryColor,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      giriviListController.selectedFilterType.value =
-                          AppString.all;
-                      giriviListController.fromDateController.clear();
-                      giriviListController.toDateController.clear();
-                    },
-                    child: Text(AppString.reset),
-                  ),
-                ],
-              ),
-              Divider(),
-              SizedBox(height: Get.height * 0.015),
-              Text(
-                AppString.status,
-                style: TextStyle(
-                  fontSize: Get.width * 0.02,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: Get.height * 0.015),
-              Obx(
-                () => Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: ['All', 'Open', 'Closed', 'Carry Forward'].map((
-                    status,
-                  ) {
-                    bool isSelected =
-                        giriviListController.selectedFilterType.value == status;
-
-                    return ChoiceChip(
-                      label: Text(
-                        status,
-                        style: TextStyle(
-                          color: isSelected ? AppColor.white : AppColor.black,
-                          fontSize: AppSize.commonText,
-                        ),
-                      ),
-                      selected: isSelected,
-                      selectedColor: _getStatusColor(status),
-                      backgroundColor: AppColor.grey200,
-                      onSelected: (selected) {
-                        if (selected) {
-                          giriviListController.selectedFilterType.value =
-                              status;
-                        }
-                      },
-                    );
-                  }).toList(),
-                ),
-              ),
-              SizedBox(height: Get.height * 0.03),
-              Text(
-                AppString.dateRange,
-                style: TextStyle(
-                  fontSize: Get.width * 0.02,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: Get.height * 0.02),
-              Row(
-                children: [
-                  Expanded(
-                    child: _dateTextField(
-                      controller: giriviListController.fromDateController,
-                      label: AppString.fromeDate,
-                    ),
-                  ),
-                  SizedBox(width: Get.width * 0.04),
-                  Expanded(
-                    child: _dateTextField(
-                      controller: giriviListController.toDateController,
-                      label: AppString.toDate,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: Get.height * 0.04),
-              SizedBox(
-                width: double.infinity,
-                height: Get.height * 0.06,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColor.primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
-                  ),
-                  onPressed: () {
-                    callApiGirviList(giriviListController);
-                    Get.back();
-                  },
-                  child: Text(
-                    AppString.applyFilter,
-                    style: TextStyle(
-                      color: AppColor.white,
-                      fontSize: AppSize.size14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).viewInsets.bottom + AppSize.p20,
-              ),
-            ],
-          ),
-        ),
-      ),
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-    );
-  }
-
-  Widget _searchField() {
-    return TextField(
-      controller: giriviListController.searchTextController,
-      autofocus: true,
-      style: const TextStyle(color: AppColor.black),
-      cursorColor: AppColor.goldColor,
-      decoration: InputDecoration(
-        hintText: AppString.search,
-        hintStyle: TextStyle(color: AppColor.black.withOpacity(0.5)),
-        border: InputBorder.none,
-        suffixIcon: IconButton(
-          icon: const Icon(AppIcon.closeIcon, color: AppColor.goldColor),
-          onPressed: () {
-            giriviListController.searchTextController.clear();
-            giriviListController.isSearching.value = false;
-            fetchData();
-          },
-        ),
-      ),
-      onChanged: (value) {
-        CallApi.callGiriviList(
-          isRefresh: true,
-          search: value,
-          yearId: giriviListController.selectedYearId.value,
-          filterType: giriviListController.selectedFilterType.value,
-          formDate: giriviListController.fromDateController.text,
-          toDate: giriviListController.toDateController.text,
-        );
-      },
-    );
-  }
-
-  Widget _dateTextField({
-    required TextEditingController controller,
-    required String label,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: Get.width * 0.032,
-            color: AppColor.textColor,
-          ),
-        ),
-        SizedBox(height: AppSize.p8),
-        TextField(
-          controller: controller,
-          readOnly: true,
-          style: TextStyle(fontSize: AppSize.commonText),
-          decoration: InputDecoration(
-            hintText: 'YYYY-MM-DD',
-            hintStyle: TextStyle(
-              fontSize: AppSize.smallText,
-              color: AppColor.grey400,
-            ),
-            suffixIcon: const Icon(AppIcon.date, size: 18),
-            filled: true,
-            fillColor: AppColor.grey200,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSize.p10),
-              borderSide: const BorderSide(color: AppColor.grey300),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSize.p10),
-              borderSide: const BorderSide(color: AppColor.grey300),
-            ),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: AppSize.p12,
-              vertical: 0,
-            ),
-          ),
-          onTap: () => _selectDate(controller),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _selectDate(TextEditingController controller) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-      builder: _datePickerTheme,
-    );
-    if (pickedDate != null) {
-      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-      controller.text = formattedDate;
-    }
-  }
-
-  Widget _datePickerTheme(BuildContext context, Widget? child) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        colorScheme: const ColorScheme.light(
-          primary: AppColor.primaryColor,
-          onPrimary: AppColor.white,
-          onSurface: AppColor.textColor,
-        ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(foregroundColor: AppColor.primaryColor),
-        ),
-      ),
-      child: child!,
-    );
-  }
-
   Widget _shimmerLoading() {
     return ListView.builder(
       itemCount: 6,
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSize.p16,
-        vertical: AppSize.p4,
-      ),
+      padding: const EdgeInsets.all(16),
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
           baseColor: AppColor.grey300,
           highlightColor: AppColor.white,
           child: Container(
-            margin: EdgeInsets.symmetric(vertical: AppSize.p8),
-            height: AppSize.height * 0.22,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            height: 155,
             decoration: BoxDecoration(
               color: AppColor.white,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(16),
             ),
           ),
         );
       },
     );
   }
-
-  Widget _paginationShimmer() {
-    return Shimmer.fromColors(
-      baseColor: AppColor.grey300,
-      highlightColor: AppColor.white,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: AppSize.p8),
-        height: AppSize.height * 0.1,
-        decoration: BoxDecoration(
-          color: AppColor.white,
-          borderRadius: BorderRadius.circular(20),
-        ),
-      ),
-    );
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status) {
-      case 'Open':
-        return AppColor.activeColor;
-      case 'Closed':
-        return AppColor.deleteColor;
-      case 'Carry Forward':
-        return AppColor.orange;
-      default:
-        return AppColor.primaryColor;
-    }
-  }
 }
 
-Future<void> callApiGirviList(GiriviListController giriviListController) async {
+Future<void> callApiGirviList(
+    GiriviListController giriviListController) async {
   CallApi.callGiriviList(
     isRefresh: true,
     search: giriviListController.searchTextController.text,
