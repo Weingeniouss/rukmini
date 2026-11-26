@@ -188,11 +188,12 @@ class _CustDetailState extends State<CustDetail> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.04),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -212,7 +213,7 @@ class _CustDetailState extends State<CustDetail> {
                   color: AppColor.goldTagDot.withOpacity(0.3),
                 ),
               ),
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(AppIcon.star, size: 12, color: AppColor.goldTagDot),
@@ -283,10 +284,10 @@ class _CustDetailState extends State<CustDetail> {
               Text(
                 data.name ?? AppString.noName,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: AppColor.black87,
+                  color: AppColor.mainText,
                 ),
               ),
               const SizedBox(height: 8),
@@ -297,8 +298,8 @@ class _CustDetailState extends State<CustDetail> {
                     Get.snackbar(
                       AppString.copied,
                       AppString.customerCodeCopied,
-                      backgroundColor: AppColor.white,
-                      colorText: AppColor.black87,
+                      backgroundColor: AppColor.cardBg,
+                      colorText: AppColor.mainText,
                       snackPosition: SnackPosition.BOTTOM,
                       duration: const Duration(seconds: 2),
                     );
@@ -319,14 +320,14 @@ class _CustDetailState extends State<CustDetail> {
                     children: [
                       Text(
                         data.custCode ?? "-",
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
                           color: AppColor.goldTagText,
                         ),
                       ),
                       const SizedBox(width: 6),
-                      const Icon(
+                      Icon(
                         AppIcon.copy,
                         size: 14,
                         color: AppColor.goldTagText,
@@ -402,10 +403,10 @@ class _CustDetailState extends State<CustDetail> {
           const SizedBox(height: 6),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: AppColor.black87,
+              color: AppColor.mainText,
             ),
           ),
         ],
@@ -417,11 +418,12 @@ class _CustDetailState extends State<CustDetail> {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.04),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -430,16 +432,16 @@ class _CustDetailState extends State<CustDetail> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(AppIcon.report, color: AppColor.dashboardGold, size: 22),
-              SizedBox(width: 8),
+              const Icon(AppIcon.report, color: AppColor.dashboardGold, size: 22),
+              const SizedBox(width: 8),
               Text(
                 AppString.accountSummary,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: AppColor.black87,
+                  color: AppColor.mainText,
                 ),
               ),
             ],
@@ -485,7 +487,7 @@ class _CustDetailState extends State<CustDetail> {
       decoration: BoxDecoration(
         color: AppColor.tableBg,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColor.grey300),
+        border: Border.all(color: AppColor.border),
       ),
       child: Row(
         children: [
@@ -498,19 +500,19 @@ class _CustDetailState extends State<CustDetail> {
           const SizedBox(width: 12),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
-              color: AppColor.black54,
+              color: AppColor.subText,
               fontWeight: FontWeight.w500,
             ),
           ),
           const Spacer(),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: AppColor.black87,
+              color: AppColor.mainText,
             ),
           ),
         ],
@@ -521,11 +523,12 @@ class _CustDetailState extends State<CustDetail> {
   Widget _buildRightTabsContent(CustomerDetailData data) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.04),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -535,14 +538,14 @@ class _CustDetailState extends State<CustDetail> {
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: AppColor.tableBg,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-              border: Border(bottom: BorderSide(color: AppColor.grey300)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              border: Border(bottom: BorderSide(color: AppColor.border)),
             ),
             child: TabBar(
               labelColor: AppColor.dashboardGold,
-              unselectedLabelColor: AppColor.black54,
+              unselectedLabelColor: AppColor.subText,
               indicatorColor: AppColor.dashboardGold,
               indicatorWeight: 3,
               indicatorSize: TabBarIndicatorSize.tab,
@@ -661,7 +664,7 @@ class _CustDetailState extends State<CustDetail> {
                 label2: AppString.branch,
                 value2: "Pandesara",
               ),
-              const Divider(height: 1, color: AppColor.grey200),
+              Divider(height: 1, color: AppColor.border),
               _buildInfoRowPair(
                 icon1: AppIcon.person,
                 label1: AppString.name,
@@ -672,7 +675,7 @@ class _CustDetailState extends State<CustDetail> {
                     ? custTypes.first.typeName ?? "Regular"
                     : "Regular",
               ),
-              const Divider(height: 1, color: AppColor.grey200),
+              Divider(height: 1, color: AppColor.border),
               _buildInfoRowPair(
                 icon1: AppIcon.wc,
                 label1: AppString.gender,
@@ -681,7 +684,7 @@ class _CustDetailState extends State<CustDetail> {
                 label2: AppString.createdOn,
                 value2: "24 Nov 2026",
               ),
-              const Divider(height: 1, color: AppColor.grey200),
+              Divider(height: 1, color: AppColor.border),
               _buildInfoRowPair(
                 icon1: AppIcon.checkCircle,
                 label1: AppString.status,
@@ -710,10 +713,10 @@ class _CustDetailState extends State<CustDetail> {
                 Expanded(
                   child: Text(
                     data.address!,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: AppColor.black87,
+                      color: AppColor.mainText,
                     ),
                   ),
                 ),
@@ -741,9 +744,9 @@ class _CustDetailState extends State<CustDetail> {
           child: Column(
             children: [
               if (phones.isEmpty)
-                const Text(
+                Text(
                   AppString.noPhoneNumbersAvailable,
-                  style: TextStyle(color: AppColor.grey500),
+                  style: TextStyle(color: AppColor.subText),
                 )
               else
                 ...phones.map(
@@ -753,11 +756,11 @@ class _CustDetailState extends State<CustDetail> {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             color: AppColor.goldTagBg,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(
+                          child: Icon(
                             AppIcon.phone,
                             color: AppColor.dashboardGold,
                             size: 16,
@@ -766,10 +769,10 @@ class _CustDetailState extends State<CustDetail> {
                         const SizedBox(width: 12),
                         Text(
                           p.phone ?? "-",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: AppColor.black87,
+                            color: AppColor.mainText,
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -783,7 +786,7 @@ class _CustDetailState extends State<CustDetail> {
                               color: AppColor.goldTagBg,
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: const Text(
+                            child: Text(
                               AppString.defaultLabel,
                               style: TextStyle(
                                 fontSize: 11,
@@ -845,9 +848,9 @@ class _CustDetailState extends State<CustDetail> {
                     vertical: 8,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColor.tableBg,
+                    color: AppColor.cardBg,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColor.grey300),
+                    border: Border.all(color: AppColor.border),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -860,10 +863,10 @@ class _CustDetailState extends State<CustDetail> {
                       const SizedBox(width: 8),
                       Text(
                         t.typeName ?? "Regular",
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
-                          color: AppColor.black87,
+                          color: AppColor.mainText,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -892,7 +895,7 @@ class _CustDetailState extends State<CustDetail> {
                   value2: data.nominee!.custRelation ?? "-",
                 ),
                 if (data.nominee!.phone != null) ...[
-                  const Divider(height: 1, color: AppColor.grey200),
+                  Divider(height: 1, color: AppColor.border),
                   _buildInfoRowPair(
                     icon1: AppIcon.phone,
                     label1: AppString.phone,
@@ -912,12 +915,12 @@ class _CustDetailState extends State<CustDetail> {
           title: AppString.notes,
           child: Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Text(
                   AppString.defaultNotes,
                   style: TextStyle(
                     fontSize: 13,
-                    color: AppColor.black87,
+                    color: AppColor.mainText,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
@@ -945,7 +948,7 @@ class _CustDetailState extends State<CustDetail> {
         alignment: Alignment.center,
         child: Text(
           AppString.noGirviRecordsFound,
-          style: const TextStyle(fontSize: 15, color: AppColor.grey500),
+          style: TextStyle(fontSize: 15, color: AppColor.grey500),
         ),
       );
     }
@@ -963,7 +966,7 @@ class _CustDetailState extends State<CustDetail> {
         alignment: Alignment.center,
         child: Text(
           AppString.noGirviRecordsFound,
-          style: const TextStyle(fontSize: 15, color: AppColor.grey500),
+          style: TextStyle(fontSize: 15, color: AppColor.grey500),
         ),
       );
     }
@@ -983,9 +986,9 @@ class _CustDetailState extends State<CustDetail> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColor.tableBg,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColor.grey300),
+        border: Border.all(color: AppColor.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -996,10 +999,10 @@ class _CustDetailState extends State<CustDetail> {
               const SizedBox(width: 8),
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: AppColor.black87,
+                  color: AppColor.mainText,
                 ),
               ),
             ],
@@ -1038,9 +1041,9 @@ class _CustDetailState extends State<CustDetail> {
                     ],
                     Text(
                       label1,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColor.grey500,
+                        color: AppColor.subText,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -1052,10 +1055,10 @@ class _CustDetailState extends State<CustDetail> {
                       children: [
                         Text(
                           value1 ?? "-",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            color: AppColor.black87,
+                            color: AppColor.mainText,
                           ),
                         ),
                         if (isCopyable1 &&
@@ -1096,9 +1099,9 @@ class _CustDetailState extends State<CustDetail> {
                       ],
                       Text(
                         label2,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: AppColor.grey500,
+                          color: AppColor.subText,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -1108,10 +1111,10 @@ class _CustDetailState extends State<CustDetail> {
                   value2Widget ??
                       Text(
                         value2 ?? "-",
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
-                          color: AppColor.black87,
+                          color: AppColor.mainText,
                         ),
                       ),
                 ],
@@ -1423,11 +1426,11 @@ class _CustDetailState extends State<CustDetail> {
   Widget girviDetail({required Girvi girvi}) {
     return Card(
       elevation: 0,
-      color: AppColor.white,
+      color: AppColor.cardBg,
       margin: EdgeInsets.only(bottom: AppSize.p8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSize.p16 - 1),
-        side: BorderSide(color: AppColor.grey300),
+        side: BorderSide(color: AppColor.border),
       ),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -1558,7 +1561,7 @@ class _CustDetailState extends State<CustDetail> {
             style: TextStyle(
               fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
               fontWeight: FontWeight.bold,
-              color: valueColor ?? AppColor.black,
+              color: valueColor ?? AppColor.mainText,
             ),
           ),
         ],
@@ -1593,8 +1596,8 @@ class _CustDetailState extends State<CustDetail> {
 
 Widget loadingState() {
   return Shimmer.fromColors(
-    baseColor: AppColor.grey300,
-    highlightColor: AppColor.white,
+    baseColor: AppColor.isDark ? const Color(0xFF1E293B) : AppColor.grey300,
+    highlightColor: AppColor.isDark ? const Color(0xFF334155) : AppColor.white,
     child: Padding(
       padding: EdgeInsets.all(AppSize.p16),
       child: Column(
@@ -1603,7 +1606,7 @@ Widget loadingState() {
           Container(
             height: 180,
             decoration: BoxDecoration(
-              color: AppColor.white,
+              color: AppColor.cardBg,
               borderRadius: BorderRadius.circular(AppSize.p20),
             ),
           ),
@@ -1611,7 +1614,7 @@ Widget loadingState() {
           Container(
             height: 40,
             decoration: BoxDecoration(
-              color: AppColor.white,
+              color: AppColor.cardBg,
               borderRadius: BorderRadius.circular(AppSize.p10),
             ),
           ),
@@ -1619,7 +1622,7 @@ Widget loadingState() {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: AppColor.white,
+                color: AppColor.cardBg,
                 borderRadius: BorderRadius.circular(AppSize.p20),
               ),
             ),

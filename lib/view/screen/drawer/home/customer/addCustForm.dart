@@ -127,7 +127,7 @@ Widget _sectionHeader(String title, IconData icon) {
         Container(
           padding: EdgeInsets.all(AppSize.p8),
           decoration: BoxDecoration(
-            color: AppColor.white,
+            color: AppColor.cardBg,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
@@ -144,7 +144,7 @@ Widget _sectionHeader(String title, IconData icon) {
           style: TextStyle(
             fontSize: isDesktopOrTablet ? 16.0 : AppSize.headingText,
             fontWeight: FontWeight.bold,
-            color: AppColor.black,
+            color: AppColor.mainText,
           ),
         ),
         const Spacer(),
@@ -164,11 +164,12 @@ Widget customerDetails(AddCustFormControllerUI controller) {
     child: Container(
       margin: EdgeInsets.symmetric(vertical: AppSize.p16),
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(AppSize.p20),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.05),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.05),
             blurRadius: AppSize.p10,
             offset: Offset(0, AppSize.p4),
           ),
@@ -330,7 +331,7 @@ Widget _customRadioButton({
           title,
           style: TextStyle(
             fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
-            color: AppColor.black,
+            color: AppColor.mainText,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),
@@ -354,7 +355,7 @@ Widget _formDropDown({
         title,
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: AppColor.black,
+          color: AppColor.mainText,
           fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
         ),
       ),
@@ -363,9 +364,9 @@ Widget _formDropDown({
         () => Container(
           padding: EdgeInsets.symmetric(horizontal: AppSize.p16),
           decoration: BoxDecoration(
-            color: AppColor.white,
+            color: AppColor.cardBg,
             borderRadius: BorderRadius.circular(AppSize.p12),
-            border: Border.all(color: AppColor.grey300.withOpacity(0.5)),
+            border: Border.all(color: AppColor.border),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
@@ -401,11 +402,12 @@ Widget nomineeDetails(AddCustFormControllerUI controller) {
     child: Container(
       margin: EdgeInsets.only(bottom: AppSize.p16),
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(AppSize.p20),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.05),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.05),
             blurRadius: AppSize.p10,
             offset: Offset(0, AppSize.p4),
           ),
@@ -451,11 +453,12 @@ Widget identificationProof(
   return horizontalPadding(
     child: Container(
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(AppSize.p20),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.05),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.05),
             blurRadius: AppSize.p10,
             offset: Offset(0, AppSize.p4),
           ),
@@ -529,7 +532,7 @@ Widget photoListSection({
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
-              color: AppColor.black,
+              color: AppColor.mainText,
             ),
           ),
           IconButton(
@@ -559,7 +562,7 @@ Widget photoListSection({
                           decoration: BoxDecoration(
                             color: AppColor.backgroundColor,
                             borderRadius: BorderRadius.circular(AppSize.p8),
-                            border: Border.all(color: AppColor.grey300),
+                            border: Border.all(color: AppColor.border),
                             image: images[index].value != null
                                 ? DecorationImage(
                                     image: kIsWeb
@@ -598,10 +601,10 @@ Widget photoListSection({
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: AppSize.p12),
                         decoration: BoxDecoration(
-                          color: AppColor.white,
+                          color: AppColor.cardBg,
                           borderRadius: BorderRadius.circular(AppSize.p8),
                           border: Border.all(
-                            color: AppColor.grey300.withOpacity(0.5),
+                            color: AppColor.border,
                           ),
                         ),
                         child: TextField(

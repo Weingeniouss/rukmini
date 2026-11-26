@@ -369,11 +369,11 @@ class _DueGirviState extends State<DueGirvi> {
     return TextField(
       controller: pendingTransactionController.searchTextController,
       autofocus: true,
-      style: const TextStyle(color: AppColor.fullScreenColor),
-      cursorColor: AppColor.fullScreenColor,
+      style: const TextStyle(color: AppColor.white),
+      cursorColor: AppColor.white,
       decoration: InputDecoration(
         hintText: AppString.searchName,
-        hintStyle: const TextStyle(color: AppColor.otherWhite),
+        hintStyle: TextStyle(color: AppColor.white.withOpacity(0.7)),
         border: InputBorder.none,
       ),
       onChanged: (value) {
@@ -391,11 +391,11 @@ class _DueGirviState extends State<DueGirvi> {
     return TextField(
       controller: pendingTransactionController.localityTextController,
       autofocus: true,
-      style: const TextStyle(color: AppColor.fullScreenColor),
-      cursorColor: AppColor.fullScreenColor,
+      style: const TextStyle(color: AppColor.white),
+      cursorColor: AppColor.white,
       decoration: InputDecoration(
         hintText: AppString.searchLocality,
-        hintStyle: const TextStyle(color: AppColor.otherWhite),
+        hintStyle: TextStyle(color: AppColor.white.withOpacity(0.7)),
         border: InputBorder.none,
       ),
       onChanged: (value) {

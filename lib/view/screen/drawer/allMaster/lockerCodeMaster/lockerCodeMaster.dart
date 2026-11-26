@@ -137,11 +137,11 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
                     height: 200,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColor.grey300),
+                      border: Border.all(color: AppColor.border),
                     ),
-                    child: const Text(
+                    child: Text(
                       AppString.noLockersAvailable,
                       style: TextStyle(
                         fontSize: 15,
@@ -174,8 +174,8 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
         const SizedBox(width: 8),
         Text(
           AppString.lockerCodeMaster,
-          style: const TextStyle(
-            color: AppColor.black87,
+          style: TextStyle(
+            color: AppColor.mainText,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
@@ -200,23 +200,23 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
                 child: Container(
                   height: 42,
                   decoration: BoxDecoration(
-                    color: AppColor.white,
+                    color: AppColor.cardBg,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColor.grey300),
+                    border: Border.all(color: AppColor.border),
                   ),
                   child: TextField(
                     controller: _searchController,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: AppColor.black87,
+                      color: AppColor.mainText,
                     ),
                     decoration: InputDecoration(
                       hintText: AppString.searchLockerPlaceholder,
-                      hintStyle: const TextStyle(
+                      hintStyle: TextStyle(
                         color: AppColor.grey500,
                         fontSize: 13,
                       ),
-                      prefixIcon: const Icon(
+                      prefixIcon: Icon(
                         AppIcon.searchIcon,
                         color: AppColor.grey500,
                         size: 20,
@@ -305,7 +305,7 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
                 ),
                 style: OutlinedButton.styleFrom(
                   backgroundColor: AppColor.white,
-                  side: const BorderSide(color: AppColor.grey300),
+                  side: BorderSide(color: AppColor.grey300),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -461,13 +461,14 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
 
   Widget _buildTableView(List<LockerData> list, {int startIndex = 0}) {
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColor.grey300),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.03),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -475,209 +476,215 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            headingRowColor: WidgetStateProperty.all(AppColor.dashboardGold),
-            headingTextStyle: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: AppColor.white,
-              fontSize: 13,
-            ),
-            dataRowMinHeight: 52,
-            dataRowMaxHeight: 52,
-            horizontalMargin: 16,
-            columnSpacing: 28,
-            columns: [
-              DataColumn(
-                label: Checkbox(
-                  value: _selectAll.value,
-                  activeColor: AppColor.white,
-                  checkColor: AppColor.dashboardGold,
-                  side: const BorderSide(color: AppColor.white, width: 1.5),
-                  onChanged: (val) {
-                    _selectAll.value = val ?? false;
-                    if (_selectAll.value) {
-                      _selectedIds.addAll(
-                        list.map((e) => e.lockerId ?? ''),
-                      );
-                    } else {
-                      _selectedIds.clear();
-                    }
-                  },
-                ),
-              ),
-              const DataColumn(label: Text("#")),
-              const DataColumn(label: Text("Locker Code")),
-              const DataColumn(label: Text("Company")),
-              const DataColumn(label: Text("Contact Person")),
-              DataColumn(label: _sortHeader("Interest Rate")),
-              DataColumn(label: _sortHeader("Status")),
-              const DataColumn(label: Text("Actions")),
-            ],
-            rows: List.generate(list.length, (index) {
-              final item = list[index];
-              final id = item.lockerId ?? '';
-              final isChecked = _selectedIds.contains(id);
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                child: DataTable(
+                  headingRowColor:
+                      WidgetStateProperty.all(AppColor.dashboardGold),
+                  headingTextStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: AppColor.white,
+                    fontSize: 13,
+                  ),
+                  dataRowMinHeight: 52,
+                  dataRowMaxHeight: 52,
+                  horizontalMargin: 16,
+                  columnSpacing: 28,
+                  columns: [
+                    DataColumn(
+                      label: Checkbox(
+                        value: _selectAll.value,
+                        activeColor: AppColor.white,
+                        checkColor: AppColor.dashboardGold,
+                        side:
+                            const BorderSide(color: AppColor.white, width: 1.5),
+                        onChanged: (val) {
+                          _selectAll.value = val ?? false;
+                          if (_selectAll.value) {
+                            _selectedIds.addAll(
+                              list.map((e) => e.lockerId ?? ''),
+                            );
+                          } else {
+                            _selectedIds.clear();
+                          }
+                        },
+                      ),
+                    ),
+                    const DataColumn(label: Text("#")),
+                    const DataColumn(label: Text("Locker Code")),
+                    const DataColumn(label: Text("Company")),
+                    const DataColumn(label: Text("Contact Person")),
+                    DataColumn(label: _sortHeader("Interest Rate")),
+                    DataColumn(label: _sortHeader("Status")),
+                    const DataColumn(label: Text("Actions")),
+                  ],
+                  rows: List.generate(list.length, (index) {
+                    final item = list[index];
+                    final id = item.lockerId ?? '';
+                    final isChecked = _selectedIds.contains(id);
 
-              return DataRow(
-                selected: isChecked,
-                cells: [
-                  DataCell(
-                    Checkbox(
-                      value: isChecked,
-                      activeColor: AppColor.dashboardGold,
-                      onChanged: (val) {
-                        if (val == true) {
-                          _selectedIds.add(id);
-                        } else {
-                          _selectedIds.remove(id);
-                          _selectAll.value = false;
-                        }
-                      },
-                    ),
-                  ),
-                  DataCell(
-                    Text(
-                      "${startIndex + index + 1}",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                        color: AppColor.black87,
-                      ),
-                    ),
-                  ),
-                  DataCell(
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          AppIcon.locker,
-                          color: AppColor.dashboardGold,
-                          size: 18,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          item.lockerCode ?? "-",
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            color: AppColor.black87,
+                    return DataRow(
+                      selected: isChecked,
+                      cells: [
+                        DataCell(
+                          Checkbox(
+                            value: isChecked,
+                            activeColor: AppColor.dashboardGold,
+                            onChanged: (val) {
+                              if (val == true) {
+                                _selectedIds.add(id);
+                              } else {
+                                _selectedIds.remove(id);
+                                _selectAll.value = false;
+                              }
+                            },
                           ),
                         ),
-                        if (item.isDefault == "1") ...[
-                          const SizedBox(width: 6),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColor.goldTagBg,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: const Text(
-                              AppString.defaultLabel,
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: AppColor.goldTagText,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                  DataCell(
-                    Text(
-                      item.comName ?? "-",
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: AppColor.textSecondary,
-                      ),
-                    ),
-                  ),
-                  DataCell(
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.personName ?? "-",
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: AppColor.black87,
-                          ),
-                        ),
-                        if (item.personPhone != null &&
-                            item.personPhone!.isNotEmpty)
+                        DataCell(
                           Text(
-                            item.personPhone!,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: AppColor.textMuted,
+                            "${startIndex + index + 1}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              color: AppColor.mainText,
                             ),
                           ),
-                      ],
-                    ),
-                  ),
-                  DataCell(
-                    Text(
-                      "${item.interestRate ?? '0.00'} %",
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: AppColor.black87,
-                      ),
-                    ),
-                  ),
-                  DataCell(_buildStatusBadge("Active")),
-                  DataCell(
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            AppIcon.eyeOutline,
-                            color: AppColor.black87,
-                            size: 18,
-                          ),
-                          tooltip: AppString.view,
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                          onPressed: () => Get.toNamed(
-                            '/addLockerCode',
-                            arguments: item,
+                        ),
+                        DataCell(
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                AppIcon.locker,
+                                color: AppColor.dashboardGold,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                item.lockerCode ?? "-",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                  color: AppColor.mainText,
+                                ),
+                              ),
+                              if (item.isDefault == "1") ...[
+                                const SizedBox(width: 6),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.goldTagBg,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    AppString.defaultLabel,
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColor.goldTagText,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
                           ),
                         ),
-                        const SizedBox(width: 10),
-                        IconButton(
-                          icon: const Icon(
-                            AppIcon.editOutline,
-                            color: AppColor.black87,
-                            size: 18,
-                          ),
-                          tooltip: AppString.edit,
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                          onPressed: () => Get.toNamed(
-                            '/addLockerCode',
-                            arguments: item,
+                        DataCell(
+                          Text(
+                            item.comName ?? "-",
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: AppColor.subText,
+                            ),
                           ),
                         ),
-                        const SizedBox(width: 10),
-                        IconButton(
-                          icon: const Icon(
-                            AppIcon.deleteIcon,
-                            color: AppColor.deleteColor,
-                            size: 18,
+                        DataCell(
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item.personName ?? "-",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColor.mainText,
+                                ),
+                              ),
+                              if (item.personPhone != null &&
+                                  item.personPhone!.isNotEmpty)
+                                Text(
+                                  item.personPhone!,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: AppColor.textMuted,
+                                  ),
+                                ),
+                            ],
                           ),
-                          tooltip: AppString.delete,
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
+                        ),
+                        DataCell(
+                          Text(
+                            "${item.interestRate ?? '0.00'} %",
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: AppColor.mainText,
+                            ),
+                          ),
+                        ),
+                        DataCell(_buildStatusBadge("Active")),
+                        DataCell(
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  AppIcon.eyeOutline,
+                                  color: AppColor.mainText,
+                                  size: 18,
+                                ),
+                                tooltip: AppString.view,
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                onPressed: () => Get.toNamed(
+                                  '/addLockerCode',
+                                  arguments: item,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              IconButton(
+                                icon: Icon(
+                                  AppIcon.editOutline,
+                                  color: AppColor.mainText,
+                                  size: 18,
+                                ),
+                                tooltip: AppString.edit,
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                onPressed: () => Get.toNamed(
+                                  '/addLockerCode',
+                                  arguments: item,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              IconButton(
+                                icon: const Icon(
+                                  AppIcon.deleteIcon,
+                                  color: AppColor.deleteColor,
+                                  size: 18,
+                                ),
+                                tooltip: AppString.delete,
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
                           onPressed: () => _showDeleteDialog(item),
                         ),
                       ],
@@ -688,7 +695,10 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
             }),
           ),
         ),
-      ),
+      );
+    },
+  ),
+),
     );
   }
 
@@ -714,7 +724,7 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
         color: AppColor.greenTagBg,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
@@ -895,7 +905,7 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
                       ),
                     ),
                     const SizedBox(width: 6),
-                    const Icon(
+                    Icon(
                       AppIcon.arrow_down,
                       size: 16,
                       color: AppColor.grey500,
@@ -929,8 +939,8 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
 
   Widget _shimmerLoading() {
     return Shimmer.fromColors(
-      baseColor: AppColor.grey300,
-      highlightColor: AppColor.white,
+      baseColor: AppColor.isDark ? const Color(0xFF1E293B) : AppColor.grey300,
+      highlightColor: AppColor.isDark ? const Color(0xFF334155) : AppColor.white,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -940,7 +950,7 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
               height: 52,
               margin: const EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
-                color: AppColor.white,
+                color: AppColor.cardBg,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),

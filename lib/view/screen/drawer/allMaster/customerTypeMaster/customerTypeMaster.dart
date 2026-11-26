@@ -141,11 +141,11 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
                     height: 200,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColor.grey300),
+                      border: Border.all(color: AppColor.border),
                     ),
-                    child: const Text(
+                    child: Text(
                       AppString.noDataFound,
                       style: TextStyle(
                         fontSize: 15,
@@ -178,8 +178,8 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
         const SizedBox(width: 8),
         Text(
           AppString.customerTypeMaster,
-          style: const TextStyle(
-            color: AppColor.black87,
+          style: TextStyle(
+            color: AppColor.mainText,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
@@ -204,23 +204,23 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
                 child: Container(
                   height: 42,
                   decoration: BoxDecoration(
-                    color: AppColor.white,
+                    color: AppColor.cardBg,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColor.grey300),
+                    border: Border.all(color: AppColor.border),
                   ),
                   child: TextField(
                     controller: _searchController,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: AppColor.black87,
+                      color: AppColor.mainText,
                     ),
                     decoration: InputDecoration(
                       hintText: AppString.searchCustomerTypePlaceholder,
-                      hintStyle: const TextStyle(
+                      hintStyle: TextStyle(
                         color: AppColor.grey500,
                         fontSize: 13,
                       ),
-                      prefixIcon: const Icon(
+                      prefixIcon: Icon(
                         AppIcon.searchIcon,
                         color: AppColor.grey500,
                         size: 20,
@@ -309,7 +309,7 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
                 ),
                 style: OutlinedButton.styleFrom(
                   backgroundColor: AppColor.white,
-                  side: const BorderSide(color: AppColor.grey300),
+                  side: BorderSide(color: AppColor.grey300),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -466,13 +466,14 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
 
   Widget _buildTableView(List<CustomerTypeData> list, {int startIndex = 0}) {
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColor.grey300),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.03),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -480,155 +481,164 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            headingRowColor: WidgetStateProperty.all(AppColor.dashboardGold),
-            headingTextStyle: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: AppColor.white,
-              fontSize: 13,
-            ),
-            dataRowMinHeight: 52,
-            dataRowMaxHeight: 52,
-            horizontalMargin: 16,
-            columnSpacing: 28,
-            columns: [
-              DataColumn(
-                label: Checkbox(
-                  value: _selectAll.value,
-                  activeColor: AppColor.white,
-                  checkColor: AppColor.dashboardGold,
-                  side: const BorderSide(color: AppColor.white, width: 1.5),
-                  onChanged: (val) {
-                    _selectAll.value = val ?? false;
-                    if (_selectAll.value) {
-                      _selectedIds.addAll(
-                        list.map((e) => e.typeId ?? ''),
-                      );
-                    } else {
-                      _selectedIds.clear();
-                    }
-                  },
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                child: DataTable(
+                  headingRowColor:
+                      WidgetStateProperty.all(AppColor.dashboardGold),
+                  headingTextStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: AppColor.white,
+                    fontSize: 13,
+                  ),
+                  dataRowMinHeight: 52,
+                  dataRowMaxHeight: 52,
+                  horizontalMargin: 16,
+                  columnSpacing: 28,
+                  columns: [
+                    DataColumn(
+                      label: Checkbox(
+                        value: _selectAll.value,
+                        activeColor: AppColor.white,
+                        checkColor: AppColor.dashboardGold,
+                        side:
+                            const BorderSide(color: AppColor.white, width: 1.5),
+                        onChanged: (val) {
+                          _selectAll.value = val ?? false;
+                          if (_selectAll.value) {
+                            _selectedIds.addAll(
+                              list.map((e) => e.typeId ?? ''),
+                            );
+                          } else {
+                            _selectedIds.clear();
+                          }
+                        },
+                      ),
+                    ),
+                    const DataColumn(label: Text("#")),
+                    const DataColumn(label: Text("Customer Type")),
+                    const DataColumn(label: Text("Code")),
+                    DataColumn(label: _sortHeader("Status")),
+                    const DataColumn(label: Text("Actions")),
+                  ],
+                  rows: List.generate(list.length, (index) {
+                    final item = list[index];
+                    final id = item.typeId ?? '';
+                    final isChecked = _selectedIds.contains(id);
+                    final code = _generateCode(item.name);
+
+                    return DataRow(
+                      selected: isChecked,
+                      cells: [
+                        DataCell(
+                          Checkbox(
+                            value: isChecked,
+                            activeColor: AppColor.dashboardGold,
+                            onChanged: (val) {
+                              if (val == true) {
+                                _selectedIds.add(id);
+                              } else {
+                                _selectedIds.remove(id);
+                                _selectAll.value = false;
+                              }
+                            },
+                          ),
+                        ),
+                        DataCell(
+                          Text(
+                            "${startIndex + index + 1}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              color: AppColor.mainText,
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                AppIcon.group,
+                                color: AppColor.dashboardGold,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                item.name ?? AppString.noName,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                  color: AppColor.mainText,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        DataCell(
+                          Text(
+                            code,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: AppColor.subText,
+                            ),
+                          ),
+                        ),
+                        DataCell(_buildStatusBadge("Active")),
+                        DataCell(
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  AppIcon.eyeOutline,
+                                  color: AppColor.mainText,
+                                  size: 18,
+                                ),
+                                tooltip: AppString.view,
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                onPressed: () => _showAddEditDialog(item: item),
+                              ),
+                              const SizedBox(width: 10),
+                              IconButton(
+                                icon: Icon(
+                                  AppIcon.editOutline,
+                                  color: AppColor.mainText,
+                                  size: 18,
+                                ),
+                                tooltip: AppString.edit,
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                onPressed: () => _showAddEditDialog(item: item),
+                              ),
+                              const SizedBox(width: 10),
+                              IconButton(
+                                icon: const Icon(
+                                  AppIcon.deleteIcon,
+                                  color: AppColor.deleteColor,
+                                  size: 18,
+                                ),
+                                tooltip: AppString.delete,
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                onPressed: () => _showDeleteDialog(item),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
                 ),
               ),
-              const DataColumn(label: Text("#")),
-              const DataColumn(label: Text("Customer Type")),
-              const DataColumn(label: Text("Code")),
-              DataColumn(label: _sortHeader("Status")),
-              const DataColumn(label: Text("Actions")),
-            ],
-            rows: List.generate(list.length, (index) {
-              final item = list[index];
-              final id = item.typeId ?? '';
-              final isChecked = _selectedIds.contains(id);
-              final code = _generateCode(item.name);
-
-              return DataRow(
-                selected: isChecked,
-                cells: [
-                  DataCell(
-                    Checkbox(
-                      value: isChecked,
-                      activeColor: AppColor.dashboardGold,
-                      onChanged: (val) {
-                        if (val == true) {
-                          _selectedIds.add(id);
-                        } else {
-                          _selectedIds.remove(id);
-                          _selectAll.value = false;
-                        }
-                      },
-                    ),
-                  ),
-                  DataCell(
-                    Text(
-                      "${startIndex + index + 1}",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                        color: AppColor.black87,
-                      ),
-                    ),
-                  ),
-                  DataCell(
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          AppIcon.group,
-                          color: AppColor.dashboardGold,
-                          size: 18,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          item.name ?? AppString.noName,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            color: AppColor.black87,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  DataCell(
-                    Text(
-                      code,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: AppColor.textSecondary,
-                      ),
-                    ),
-                  ),
-                  DataCell(_buildStatusBadge("Active")),
-                  DataCell(
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            AppIcon.eyeOutline,
-                            color: AppColor.black87,
-                            size: 18,
-                          ),
-                          tooltip: AppString.view,
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                          onPressed: () => _showAddEditDialog(item: item),
-                        ),
-                        const SizedBox(width: 10),
-                        IconButton(
-                          icon: const Icon(
-                            AppIcon.editOutline,
-                            color: AppColor.black87,
-                            size: 18,
-                          ),
-                          tooltip: AppString.edit,
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                          onPressed: () => _showAddEditDialog(item: item),
-                        ),
-                        const SizedBox(width: 10),
-                        IconButton(
-                          icon: const Icon(
-                            AppIcon.deleteIcon,
-                            color: AppColor.deleteColor,
-                            size: 18,
-                          ),
-                          tooltip: AppString.delete,
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                          onPressed: () => _showDeleteDialog(item),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            }),
-          ),
+            );
+          },
         ),
       ),
     );
@@ -656,7 +666,7 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
         color: AppColor.greenTagBg,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
@@ -690,9 +700,9 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
       children: [
         Text(
           "Showing $startNum – $endNum of $totalCount records",
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 13,
-            color: AppColor.black54,
+            color: AppColor.subText,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -705,15 +715,15 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: AppColor.grey300),
+                      border: Border.all(color: AppColor.border),
                     ),
                     child: Icon(
                       AppIcon.chevronLeft,
                       size: 16,
                       color: currentPage > 1
-                          ? AppColor.black87
+                          ? AppColor.mainText
                           : AppColor.grey400,
                     ),
                   ),
@@ -726,15 +736,15 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: AppColor.grey300),
+                      border: Border.all(color: AppColor.border),
                     ),
                     child: Icon(
                       AppIcon.chevronLeft,
                       size: 16,
                       color: currentPage > 1
-                          ? AppColor.black87
+                          ? AppColor.mainText
                           : AppColor.grey400,
                     ),
                   ),
@@ -819,7 +829,7 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
                   .toList(),
               child: Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                     EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
                   color: AppColor.white,
                   borderRadius: BorderRadius.circular(8),
@@ -837,7 +847,7 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
                       ),
                     ),
                     const SizedBox(width: 6),
-                    const Icon(
+                    Icon(
                       AppIcon.arrow_down,
                       size: 16,
                       color: AppColor.grey500,
@@ -865,6 +875,7 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
 
     Get.dialog(
       Dialog(
+        backgroundColor: AppColor.cardBg,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Container(
           width: 380,
@@ -885,25 +896,35 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
                     item == null
                         ? AppString.addCustomerType
                         : "Edit Customer Type",
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: AppColor.black87,
+                      color: AppColor.mainText,
                     ),
                   ),
                   const Spacer(),
                   IconButton(
-                    icon: const Icon(AppIcon.clearIcon, size: 20),
+                    icon: Icon(AppIcon.clearIcon, size: 20, color: AppColor.mainText),
                     onPressed: () => Get.back(),
                   ),
                 ],
               ),
-              const Divider(height: 20),
+              Divider(height: 20, color: AppColor.border),
               const SizedBox(height: 10),
               TextField(
                 controller: uiController.nameController,
+                style: TextStyle(color: AppColor.mainText),
                 decoration: InputDecoration(
                   labelText: AppString.customerTypes,
+                  labelStyle: TextStyle(color: AppColor.subText),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: AppColor.border),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: AppColor.dashboardGold),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -958,8 +979,8 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
 
   Widget _shimmerLoading() {
     return Shimmer.fromColors(
-      baseColor: AppColor.grey300,
-      highlightColor: AppColor.white,
+      baseColor: AppColor.isDark ? const Color(0xFF1E293B) : AppColor.grey300,
+      highlightColor: AppColor.isDark ? const Color(0xFF334155) : AppColor.white,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -969,7 +990,7 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
               height: 52,
               margin: const EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
-                color: AppColor.white,
+                color: AppColor.cardBg,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),

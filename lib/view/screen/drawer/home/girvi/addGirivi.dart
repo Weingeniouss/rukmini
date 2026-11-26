@@ -51,7 +51,7 @@ class _AddgiriviState extends State<Addgirivi> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(AppSize.p16),
+              padding: EdgeInsets.all(AppSize.p8),
               child: isDesktopOrTablet
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +73,7 @@ class _AddgiriviState extends State<Addgirivi> {
                             ],
                           ),
                         ),
-                        SizedBox(width: AppSize.p16),
+                        SizedBox(width: AppSize.p12),
                         // Right Column: Products List & Add Product Button
                         Expanded(
                           child: Column(
@@ -122,12 +122,12 @@ class _AddgiriviState extends State<Addgirivi> {
         itemBuilder: (context, index) {
           final product = addGiriviUI.productsList[index];
           return Container(
-            margin: EdgeInsets.only(bottom: AppSize.p12),
-            padding: EdgeInsets.all(AppSize.p12),
+            margin: const EdgeInsets.only(bottom: 6),
+            padding: EdgeInsets.all(AppSize.p8),
             decoration: BoxDecoration(
-              color: AppColor.white,
-              borderRadius: BorderRadius.circular(AppSize.p16),
-              border: Border.all(color: AppColor.grey300.withOpacity(0.5)),
+              color: AppColor.cardBg,
+              borderRadius: BorderRadius.circular(AppSize.p12),
+              border: Border.all(color: AppColor.border),
             ),
             child: Row(
               children: [
@@ -177,23 +177,23 @@ class _AddgiriviState extends State<Addgirivi> {
 
   Widget _buildAddProductButton() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: AppSize.p16),
+      padding: EdgeInsets.symmetric(vertical: AppSize.p8),
       child: GestureDetector(
         onTap: () => Get.toNamed('/AddProduct'),
         child: Container(
-          padding: EdgeInsets.all(AppSize.p12),
+          padding: EdgeInsets.all(AppSize.p8),
           decoration: BoxDecoration(
-            color: AppColor.white,
-            borderRadius: BorderRadius.circular(AppSize.p16),
+            color: AppColor.cardBg,
+            borderRadius: BorderRadius.circular(AppSize.p12),
             border: Border.all(
               color: AppColor.goldColor.withOpacity(0.5),
               style: BorderStyle.solid,
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColor.black.withOpacity(0.02),
-                blurRadius: AppSize.p4 + 1,
-                offset: Offset(0, AppSize.p4 / 2),
+                color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.02),
+                blurRadius: AppSize.p4,
+                offset: Offset(0, 2),
               ),
             ],
           ),
@@ -334,7 +334,7 @@ class _AddgiriviState extends State<Addgirivi> {
 
   Widget _customerSelection() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: AppSize.p16),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -384,20 +384,20 @@ class _AddgiriviState extends State<Addgirivi> {
   Widget _sectionHeader(String title, IconData icon) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: AppSize.p16,
-        vertical: AppSize.p12,
+        horizontal: AppSize.p12,
+        vertical: AppSize.p8,
       ),
-      margin: EdgeInsets.only(bottom: AppSize.p12),
+      margin: const EdgeInsets.only(bottom: 6),
       decoration: BoxDecoration(
         color: AppColor.whiteOrang.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(AppSize.p20),
+        borderRadius: BorderRadius.circular(AppSize.p12),
       ),
       child: Row(
         children: [
           Container(
             padding: EdgeInsets.all(AppSize.p8),
             decoration: BoxDecoration(
-              color: AppColor.white,
+              color: AppColor.cardBg,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
@@ -414,7 +414,7 @@ class _AddgiriviState extends State<Addgirivi> {
             style: TextStyle(
               fontSize: AppSize.headingText,
               fontWeight: FontWeight.bold,
-              color: AppColor.black,
+              color: AppColor.mainText,
             ),
           ),
           const Spacer(),
@@ -435,7 +435,7 @@ class _AddgiriviState extends State<Addgirivi> {
       width: isDesktopOrTablet ? 120 : AppSize.width * 0.3,
       height: isDesktopOrTablet ? 160 : AppSize.width * 0.53,
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(AppSize.p16),
         border: Border.all(
           color: AppColor.goldColor.withOpacity(0.5),
@@ -540,8 +540,8 @@ class _AddgiriviState extends State<Addgirivi> {
         if (hasIndicator)
           Container(
             width: AppSize.p4,
-            height: AppSize.width * 0.08,
-            margin: EdgeInsets.only(bottom: AppSize.p12),
+            height: AppSize.width * 0.030,
+            margin: EdgeInsets.only(bottom: AppSize.p8),
             decoration: BoxDecoration(
               color: AppColor.goldColor,
               borderRadius: BorderRadius.circular(AppSize.p4),
@@ -565,14 +565,15 @@ class _AddgiriviState extends State<Addgirivi> {
 
   Widget _buildBottomActionRow() {
     return Container(
-      padding: EdgeInsets.all(AppSize.p16),
+      padding: EdgeInsets.all(AppSize.p8),
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
+        border: Border(top: BorderSide(color: AppColor.border)),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.05),
-            blurRadius: AppSize.p10,
-            offset: Offset(0, -AppSize.p4 - 1),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.05),
+            blurRadius: AppSize.p8,
+            offset: Offset(0, -AppSize.p4),
           ),
         ],
       ),
@@ -582,10 +583,10 @@ class _AddgiriviState extends State<Addgirivi> {
             child: OutlinedButton(
               onPressed: () => NavDrawerController.back(),
               style: OutlinedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: AppSize.p16),
+                padding: EdgeInsets.symmetric(vertical: AppSize.p12),
                 side: BorderSide(color: AppColor.goldColor, width: 1.5),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppSize.p16),
+                  borderRadius: BorderRadius.circular(AppSize.p12),
                 ),
               ),
               child: Row(
@@ -609,7 +610,7 @@ class _AddgiriviState extends State<Addgirivi> {
               ),
             ),
           ),
-          SizedBox(width: AppSize.p16),
+          SizedBox(width: AppSize.p12),
           Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -618,12 +619,12 @@ class _AddgiriviState extends State<Addgirivi> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(AppSize.p16),
+                borderRadius: BorderRadius.circular(AppSize.p12),
                 boxShadow: [
                   BoxShadow(
                     color: AppColor.goldColor.withOpacity(0.3),
-                    blurRadius: AppSize.p8,
-                    offset: Offset(0, AppSize.p4),
+                    blurRadius: 6,
+                    offset: Offset(0, 2),
                   ),
                 ],
               ),
@@ -632,9 +633,9 @@ class _AddgiriviState extends State<Addgirivi> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColor.transparent,
                   shadowColor: AppColor.transparent,
-                  padding: EdgeInsets.symmetric(vertical: AppSize.p16),
+                  padding: EdgeInsets.symmetric(vertical: AppSize.p12),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppSize.p16),
+                    borderRadius: BorderRadius.circular(AppSize.p12),
                   ),
                 ),
                 child: Row(

@@ -43,11 +43,12 @@ class AddLockerCode extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
-                          color: AppColor.white,
+                          color: AppColor.cardBg,
                           borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColor.border),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColor.black.withOpacity(0.04),
+                              color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.04),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -247,7 +248,7 @@ class AddLockerCode extends StatelessWidget {
         Text(
           AppString.lockerCodeMaster,
           style: TextStyle(
-            color: AppColor.black,
+            color: AppColor.mainText,
             fontSize: AppSize.titleText,
             fontWeight: FontWeight.bold,
           ),
@@ -298,7 +299,7 @@ class AddLockerCode extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(AppSize.p8),
             decoration: BoxDecoration(
-              color: AppColor.white,
+              color: AppColor.cardBg,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
@@ -315,7 +316,7 @@ class AddLockerCode extends StatelessWidget {
             style: TextStyle(
               fontSize: AppSize.headingText,
               fontWeight: FontWeight.bold,
-              color: AppColor.black,
+              color: AppColor.mainText,
             ),
           ),
           const Spacer(),
@@ -333,10 +334,11 @@ class AddLockerCode extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppSize.p16),
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
+        border: Border(top: BorderSide(color: AppColor.border)),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.05),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.05),
             blurRadius: AppSize.p10,
             offset: Offset(0, -AppSize.p4),
           ),

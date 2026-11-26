@@ -155,7 +155,7 @@ class Login extends StatelessWidget {
                             const SizedBox(height: 8),
                             Text(
                               AppString.rukminiJewellers,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColor.loginTextDark,
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold,
@@ -191,7 +191,7 @@ class Login extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               AppString.logIn,
                               style: TextStyle(
                                 fontSize: 28,

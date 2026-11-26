@@ -165,12 +165,12 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
             ),
       padding: EdgeInsets.all(AppSize.p16),
       decoration: BoxDecoration(
-        color: AppColor.white,
-        border: Border.all(color: AppColor.boderSideColor.withOpacity(0.2)),
+        color: AppColor.cardBg,
+        border: Border.all(color: AppColor.border),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.04),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -242,12 +242,12 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
       margin: EdgeInsets.all(AppSize.p12),
       padding: EdgeInsets.all(AppSize.p16),
       decoration: BoxDecoration(
-        color: AppColor.white,
-        border: Border.all(color: AppColor.boderSideColor.withOpacity(0.2)),
+        color: AppColor.cardBg,
+        border: Border.all(color: AppColor.border),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.04),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

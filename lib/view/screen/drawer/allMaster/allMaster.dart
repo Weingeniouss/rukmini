@@ -105,10 +105,11 @@ class _AllMasterState extends State<AllMaster> {
             Container(
               width: 280,
               decoration: BoxDecoration(
-                color: AppColor.white,
+                color: AppColor.cardBg,
+                border: Border(right: BorderSide(color: AppColor.border)),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColor.black.withOpacity(0.05),
+                    color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.05),
                     blurRadius: 10,
                     offset: const Offset(2, 0),
                   ),
@@ -124,7 +125,7 @@ class _AllMasterState extends State<AllMaster> {
                     ),
                     child: _buildDecorativeTitle(),
                   ),
-                  const Divider(height: 1),
+                  Divider(height: 1, color: AppColor.border),
                   const SizedBox(height: 8),
                   // Master Items List
                   Expanded(
@@ -183,7 +184,7 @@ class _AllMasterState extends State<AllMaster> {
                               style: TextStyle(
                                 color: isSelected
                                     ? AppColor.goldColor
-                                    : AppColor.black,
+                                    : AppColor.mainText,
                                 fontSize: 14,
                                 fontWeight: isSelected
                                     ? FontWeight.bold
@@ -194,7 +195,7 @@ class _AllMasterState extends State<AllMaster> {
                               AppIcon.rightArrow,
                               color: isSelected
                                   ? AppColor.goldColor
-                                  : Colors.grey.shade400,
+                                  : AppColor.subText,
                               size: 16,
                             ),
                             onTap: () {
@@ -263,7 +264,7 @@ class _AllMasterState extends State<AllMaster> {
         Text(
           AppString.allMasters,
           style: TextStyle(
-            color: AppColor.black,
+            color: AppColor.mainText,
             fontSize: AppSize.titleText,
             fontWeight: FontWeight.bold,
           ),
@@ -307,11 +308,12 @@ class _AllMasterState extends State<AllMaster> {
     return Container(
       margin: EdgeInsets.only(bottom: AppSize.p16),
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(AppSize.p12),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.05),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -348,7 +350,7 @@ class _AllMasterState extends State<AllMaster> {
                       Container(
                         width: 1,
                         height: AppSize.p24,
-                        color: AppColor.grey300.withOpacity(0.5),
+                        color: AppColor.border,
                       ),
                     ],
                   ),
@@ -358,7 +360,7 @@ class _AllMasterState extends State<AllMaster> {
                   child: Text(
                     title,
                     style: TextStyle(
-                      color: AppColor.black,
+                      color: AppColor.mainText,
                       fontSize: AppSize.commonText,
                       fontWeight: FontWeight.w600,
                     ),

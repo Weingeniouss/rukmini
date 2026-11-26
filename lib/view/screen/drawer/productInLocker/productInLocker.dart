@@ -290,12 +290,14 @@ class _ProductInLockerState extends State<ProductInLocker> {
 
                     // 4. Content Area Container (Controls Bar + Table/Grid + Pagination)
                     Container(
+                      width: double.infinity,
                       decoration: BoxDecoration(
-                        color: AppColor.white,
+                        color: AppColor.cardBg,
                         borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColor.border),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColor.black.withOpacity(0.04),
+                            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.04),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
@@ -357,11 +359,12 @@ class _ProductInLockerState extends State<ProductInLocker> {
       width: double.infinity,
       padding: EdgeInsets.all(isDesktopOrTablet ? 24 : 16),
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.03),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.03),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -371,7 +374,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
+            children: [
               Icon(AppIcon.home, size: 16, color: AppColor.textMuted),
               SizedBox(width: 6),
               Text(
@@ -415,20 +418,20 @@ class _ProductInLockerState extends State<ProductInLocker> {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       AppString.productInLockerTitle,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: AppColor.textDark,
+                        color: AppColor.mainText,
                         letterSpacing: -0.5,
                       ),
                     ),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     Text(
                       AppString.productInLockerSubtitle,
-                      style: TextStyle(fontSize: 14, color: AppColor.textMuted),
+                      style: TextStyle(fontSize: 14, color: AppColor.subText),
                     ),
                   ],
                 ),
@@ -525,11 +528,12 @@ class _ProductInLockerState extends State<ProductInLocker> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.03),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.03),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -553,7 +557,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                     color: AppColor.textMuted,
@@ -562,7 +566,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                 const SizedBox(height: 4),
                 Text(
                   count,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: AppColor.textDark,
@@ -637,11 +641,12 @@ class _ProductInLockerState extends State<ProductInLocker> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.03),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.03),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -660,8 +665,8 @@ class _ProductInLockerState extends State<ProductInLocker> {
               onChanged: (_) => setState(() {}),
               decoration: InputDecoration(
                 hintText: AppString.searchPlaceholderLocker,
-                hintStyle: const TextStyle(fontSize: 13, color: AppColor.textLight),
-                prefixIcon: const Icon(
+                hintStyle: TextStyle(fontSize: 13, color: AppColor.textLight),
+                prefixIcon: Icon(
                   AppIcon.searchOutline,
                   color: AppColor.textMuted,
                   size: 20,
@@ -683,7 +688,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: AppColor.tableBorder),
+                  borderSide: BorderSide(color: AppColor.tableBorder),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -747,7 +752,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                 setState(() => _selectedDateRange = picked);
               }
             },
-            icon: const Icon(
+            icon: Icon(
               AppIcon.calendarOutline,
               size: 16,
               color: AppColor.textMedium,
@@ -793,12 +798,12 @@ class _ProductInLockerState extends State<ProductInLocker> {
               });
               _fetchData(isRefresh: true);
             },
-            icon: const Icon(AppIcon.tune, color: AppColor.textMuted),
+            icon: Icon(AppIcon.tune, color: AppColor.textMuted),
             style: IconButton.styleFrom(
               padding: const EdgeInsets.all(12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
-                side: const BorderSide(color: AppColor.tableBorder),
+                side: BorderSide(color: AppColor.tableBorder),
               ),
               backgroundColor: AppColor.tableBg,
             ),
@@ -824,12 +829,12 @@ class _ProductInLockerState extends State<ProductInLocker> {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: items.contains(value) ? value : items.first,
-          icon: const Icon(
+          icon: Icon(
             AppIcon.arrowDownRounded,
             size: 18,
             color: AppColor.textMuted,
           ),
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 13,
             color: AppColor.textSecondary,
             fontWeight: FontWeight.w500,
@@ -862,7 +867,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
   ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: AppColor.tableDivider)),
       ),
       child: Row(
@@ -873,7 +878,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
             totalItems == 0
                 ? "${AppString.showingProducts} 0 ${AppString.products.toLowerCase()}"
                 : "${AppString.showingProducts} ${startIndex + 1} – $endIndex of $totalItems ${AppString.products.toLowerCase()}",
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
               color: AppColor.textMedium,
@@ -996,307 +1001,325 @@ class _ProductInLockerState extends State<ProductInLocker> {
 
   // 5. Data Table View
   Widget _buildTableView(List<ProductList> items, bool isDesktopOrTablet) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: AppColor.tableDivider),
-        child: DataTable(
-          showCheckboxColumn: false,
-          headingRowColor: WidgetStateProperty.all(AppColor.tableHeaderBg),
-          headingRowHeight: 48,
-          dataRowHeight: 64,
-          horizontalMargin: 20,
-          columnSpacing: 24,
-          columns: [
-            DataColumn(
-              label: Checkbox(
-                value: _selectAll,
-                activeColor: AppColor.goldColor,
-                onChanged: (val) {
-                  setState(() {
-                    _selectAll = val ?? false;
-                    if (_selectAll) {
-                      custProductController.selectedProducts.assignAll(items);
-                    } else {
-                      custProductController.selectedProducts.clear();
-                    }
-                  });
-                },
-              ),
-            ),
-            const DataColumn(
-              label: Text(
-                "#",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColor.textMedium,
-                  fontSize: 13,
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Text(
-                AppString.productCustomer,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColor.textMedium,
-                  fontSize: 13,
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Text(
-                AppString.productCode,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColor.textMedium,
-                  fontSize: 13,
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Text(
-                AppString.metal,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColor.textMedium,
-                  fontSize: 13,
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Text(
-                AppString.weightGm,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColor.textMedium,
-                  fontSize: 13,
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Text(
-                AppString.givenAmtRs,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColor.textMedium,
-                  fontSize: 13,
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Text(
-                AppString.locker,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColor.textMedium,
-                  fontSize: 13,
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Text(
-                AppString.status,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColor.textMedium,
-                  fontSize: 13,
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Text(
-                AppString.date,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColor.textMedium,
-                  fontSize: 13,
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Text(
-                AppString.actions,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColor.textMedium,
-                  fontSize: 13,
-                ),
-              ),
-            ),
-          ],
-          rows: List.generate(items.length, (index) {
-            final item = items[index];
-            final isChecked = custProductController.selectedProducts.contains(
-              item,
-            );
-            final rowIndex = (_currentPage - 1) * _itemsPerPage + index + 1;
-
-            return DataRow(
-              selected: isChecked,
-              cells: [
-                // Single Checkbox
-                DataCell(
-                  Checkbox(
-                    value: isChecked,
-                    activeColor: AppColor.goldColor,
-                    onChanged: (val) {
-                      custProductController.toggleSelection(item);
-                      setState(() {});
-                    },
-                  ),
-                ),
-
-                // Index
-                DataCell(
-                  Text(
-                    "$rowIndex",
-                    style: const TextStyle(
-                      color: AppColor.textMuted,
-                      fontWeight: FontWeight.w500,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: constraints.maxWidth),
+            child: Theme(
+              data: Theme.of(context)
+                  .copyWith(dividerColor: AppColor.tableDivider),
+              child: DataTable(
+                showCheckboxColumn: false,
+                headingRowColor:
+                    WidgetStateProperty.all(AppColor.tableHeaderBg),
+                headingRowHeight: 48,
+                dataRowHeight: 64,
+                horizontalMargin: 20,
+                columnSpacing: 24,
+                columns: [
+                  DataColumn(
+                    label: Checkbox(
+                      value: _selectAll,
+                      activeColor: AppColor.goldColor,
+                      onChanged: (val) {
+                        setState(() {
+                          _selectAll = val ?? false;
+                          if (_selectAll) {
+                            custProductController.selectedProducts
+                                .assignAll(items);
+                          } else {
+                            custProductController.selectedProducts.clear();
+                          }
+                        });
+                      },
                     ),
                   ),
-                ),
+                  DataColumn(
+                    label: Text(
+                      "#",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.mainText,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      AppString.productCustomer,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.mainText,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      AppString.productCode,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.mainText,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      AppString.metal,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.mainText,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      AppString.weightGm,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.mainText,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      AppString.givenAmtRs,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.mainText,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      AppString.locker,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.mainText,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      AppString.status,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.mainText,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      AppString.date,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.mainText,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      AppString.actions,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.mainText,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ],
+                rows: List.generate(items.length, (index) {
+                  final item = items[index];
+                  final isChecked =
+                      custProductController.selectedProducts.contains(
+                    item,
+                  );
+                  final rowIndex =
+                      (_currentPage - 1) * _itemsPerPage + index + 1;
 
-                // Product (Image + Name)
-                DataCell(
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: AppColor.orangeLightBg,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: AppColor.orangeBorder),
-                        ),
-                        child: const Icon(
-                          AppIcon.inventory,
-                          color: AppColor.goldColor,
-                          size: 20,
+                  return DataRow(
+                    selected: isChecked,
+                    cells: [
+                      // Single Checkbox
+                      DataCell(
+                        Checkbox(
+                          value: isChecked,
+                          activeColor: AppColor.goldColor,
+                          onChanged: (val) {
+                            custProductController.toggleSelection(item);
+                            setState(() {});
+                          },
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Text(
-                        _getProductName(item),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: AppColor.textDark,
-                          fontSize: 14,
+
+                      // Index
+                      DataCell(
+                        Text(
+                          "$rowIndex",
+                          style: TextStyle(
+                            color: AppColor.subText,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+
+                      // Product (Image + Name)
+                      DataCell(
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: AppColor.orangeLightBg,
+                                borderRadius: BorderRadius.circular(8),
+                                border:
+                                    Border.all(color: AppColor.orangeBorder),
+                              ),
+                              child: const Icon(
+                                AppIcon.inventory,
+                                color: AppColor.goldColor,
+                                size: 20,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              _getProductName(item),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.mainText,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Product Code
+                      DataCell(
+                        Text(
+                          item.uniqueId ??
+                              item.code ??
+                              item.productId ??
+                              AppString.na,
+                          style: TextStyle(
+                            fontFamily: 'monospace',
+                            fontWeight: FontWeight.w600,
+                            color: AppColor.subText,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+
+                      // Metal Pill
+                      DataCell(_metalPillTag(item.metalName ?? "Gold")),
+
+                      // Weight (gm)
+                      DataCell(
+                        Text(
+                          item.weight ?? "0.00",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: AppColor.mainText,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+
+                      // Given Amt (₹)
+                      DataCell(
+                        Text(
+                          "${_formatCurrency(item.givenAmount)}.00",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.mainText,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+
+                      // Locker Code
+                      DataCell(
+                        Text(
+                          "${item.lockerCode ?? ''}-${item.code ?? ''}",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: AppColor.subText,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+
+                      // Status Pill
+                      DataCell(_statusPillTag(
+                          item.status ?? AppString.productinLocker)),
+
+                      // Date
+                      DataCell(
+                        Text(
+                          item.girviDate ?? item.lockerDate ?? AppString.na,
+                          style: TextStyle(
+                            color: AppColor.subText,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+
+                      // Actions
+                      DataCell(
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                AppIcon.eyeOutline,
+                                size: 18,
+                                color: AppColor.mainText,
+                              ),
+                              tooltip: AppString.viewDetails,
+                              onPressed: () {
+                                NavDrawerController.toNamed(
+                                  '/productInLockerDetail',
+                                  arguments: item,
+                                );
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                AppIcon.swapHoriz,
+                                size: 18,
+                                color: AppColor.mainText,
+                              ),
+                              tooltip: AppString.changeLocker,
+                              onPressed: () {
+                                custProductController.selectedProducts
+                                    .assignAll([
+                                  item,
+                                ]);
+                                NavDrawerController.toNamed('/changeTheLocker');
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ],
-                  ),
-                ),
-
-                // Product Code
-                DataCell(
-                  Text(
-                    item.uniqueId ?? item.code ?? item.productId ?? AppString.na,
-                    style: const TextStyle(
-                      fontFamily: 'monospace',
-                      fontWeight: FontWeight.w600,
-                      color: AppColor.textSecondary,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-
-                // Metal Pill
-                DataCell(_metalPillTag(item.metalName ?? "Gold")),
-
-                // Weight (gm)
-                DataCell(
-                  Text(
-                    item.weight ?? "0.00",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: AppColor.textDark,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-
-                // Given Amt (₹)
-                DataCell(
-                  Text(
-                    "${_formatCurrency(item.givenAmount)}.00",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.textDark,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-
-                // Locker Code
-                DataCell(
-                  Text(
-                    "${item.lockerCode ?? ''}-${item.code ?? ''}",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: AppColor.textMedium,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-
-                // Status Pill
-                DataCell(_statusPillTag(item.status ?? AppString.productinLocker)),
-
-                // Date
-                DataCell(
-                  Text(
-                    item.girviDate ?? item.lockerDate ?? AppString.na,
-                    style: const TextStyle(
-                      color: AppColor.textMuted,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-
-                // Actions
-                DataCell(
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          AppIcon.eyeOutline,
-                          size: 18,
-                          color: AppColor.textMuted,
-                        ),
-                        tooltip: AppString.viewDetails,
-                        onPressed: () {
-                          NavDrawerController.toNamed(
-                            '/productInLockerDetail',
-                            arguments: item,
-                          );
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          AppIcon.swapHoriz,
-                          size: 18,
-                          color: AppColor.textMuted,
-                        ),
-                        tooltip: AppString.changeLocker,
-                        onPressed: () {
-                          custProductController.selectedProducts.assignAll([
-                            item,
-                          ]);
-                          NavDrawerController.toNamed('/changeTheLocker');
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          }),
-        ),
-      ),
+                  );
+                }),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -1346,7 +1369,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
+          Icon(
             AppIcon.lockClock,
             size: 14,
             color: AppColor.blueTagText,
@@ -1354,7 +1377,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
           const SizedBox(width: 6),
           Text(
             status.isEmpty ? AppString.productinLocker : status,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
               color: AppColor.blueTagText,
@@ -1450,7 +1473,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                           children: [
                             Text(
                               _getProductName(item),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
                                 color: AppColor.textDark,
@@ -1461,7 +1484,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                             const SizedBox(height: 2),
                             Text(
                               "Code: ${item.uniqueId ?? item.code ?? AppString.na}",
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 12,
                                 color: AppColor.textMuted,
                                 fontWeight: FontWeight.w500,
@@ -1473,7 +1496,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                     ],
                   ),
                   const Spacer(),
-                  const Divider(height: 1, color: AppColor.tableDivider),
+                  Divider(height: 1, color: AppColor.tableDivider),
                   const SizedBox(height: 8),
 
                   // Key Info: Weight, Given Amt, Locker
@@ -1483,7 +1506,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             "Weight",
                             style: TextStyle(
                               fontSize: 11,
@@ -1502,7 +1525,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             "Given Amt",
                             style: TextStyle(
                               fontSize: 11,
@@ -1522,7 +1545,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             "Locker",
                             style: TextStyle(
                               fontSize: 11,
@@ -1548,7 +1571,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                     children: [
                       Text(
                         item.girviDate ?? item.lockerDate ?? AppString.na,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                           color: AppColor.textLight,
                         ),
@@ -1556,7 +1579,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                       Row(
                         children: [
                           IconButton(
-                            icon: const Icon(
+                            icon: Icon(
                               AppIcon.eyeOutline,
                               size: 18,
                               color: AppColor.textMuted,
@@ -1572,7 +1595,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                           ),
                           const SizedBox(width: 12),
                           IconButton(
-                            icon: const Icon(
+                            icon: Icon(
                               AppIcon.swapHoriz,
                               size: 18,
                               color: AppColor.textMuted,
@@ -1607,7 +1630,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
   ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(top: BorderSide(color: AppColor.tableDivider)),
       ),
       child: Row(
@@ -1625,7 +1648,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                   backgroundColor: AppColor.tableBg,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
-                    side: const BorderSide(color: AppColor.tableBorder),
+                    side: BorderSide(color: AppColor.tableBorder),
                   ),
                 ),
               ),
@@ -1668,12 +1691,9 @@ class _ProductInLockerState extends State<ProductInLocker> {
               }),
 
               if (totalPages > 5) ...[
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
-                  child: Text(
-                    "...",
-                    style: TextStyle(color: AppColor.textLight),
-                  ),
+                Text(
+                  "...",
+                  style: TextStyle(color: AppColor.textLight),
                 ),
                 InkWell(
                   onTap: () => setState(() => _currentPage = totalPages),
@@ -1715,7 +1735,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                   backgroundColor: AppColor.tableBg,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
-                    side: const BorderSide(color: AppColor.tableBorder),
+                    side: BorderSide(color: AppColor.tableBorder),
                   ),
                 ),
               ),
@@ -1733,12 +1753,12 @@ class _ProductInLockerState extends State<ProductInLocker> {
             child: DropdownButtonHideUnderline(
               child: DropdownButton<int>(
                 value: _itemsPerPage,
-                icon: const Icon(
+                icon: Icon(
                   AppIcon.arrowDownRounded,
                   size: 18,
                   color: AppColor.textMuted,
                 ),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   color: AppColor.textSecondary,
                   fontWeight: FontWeight.w600,
@@ -1827,7 +1847,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                     custProductController.clearSelection();
                     setState(() {});
                   },
-                  child: const Text(
+                  child: Text(
                     AppString.clearSelection,
                     style: TextStyle(color: AppColor.textLight, fontSize: 13),
                   ),
@@ -1871,7 +1891,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
       padding: const EdgeInsets.all(48),
       child: Center(
         child: Column(
-          children: const [
+          children: [
             Icon(AppIcon.searchOff, size: 56, color: AppColor.textLight),
             SizedBox(height: 16),
             Text(

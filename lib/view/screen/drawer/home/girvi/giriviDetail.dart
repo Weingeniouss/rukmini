@@ -136,9 +136,9 @@ class _GiriviDetailState extends State<GiriviDetail> {
                     child: Column(
                       children: [
                         _buildTopHeader(data),
-                        SizedBox(height: AppSize.p16),
+                        SizedBox(height: AppSize.p8),
                         _buildActionButtons(data),
-                        SizedBox(height: AppSize.p16),
+                        SizedBox(height: AppSize.p8),
                       ],
                     ),
                   ),
@@ -207,9 +207,9 @@ class _GiriviDetailState extends State<GiriviDetail> {
                 child: Column(
                   children: [
                     _buildTopHeader(data),
-                    SizedBox(height: AppSize.p16),
+                    SizedBox(height: AppSize.p8),
                     _buildActionButtons(data),
-                    SizedBox(height: AppSize.p16),
+                    SizedBox(height: AppSize.p8),
                   ],
                 ),
               ),
@@ -269,7 +269,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
 
   Widget _buildTopHeader(data) {
     return Container(
-      margin: EdgeInsets.only(top: AppSize.p16),
+      margin: EdgeInsets.only(top: AppSize.p4),
       child: Row(
         children: [
           Expanded(
@@ -279,7 +279,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
               icon: AppIcon.badge,
             ),
           ),
-          SizedBox(width: AppSize.p12),
+          SizedBox(width: AppSize.p8),
           Expanded(
             child: _buildSummaryCard(
               label: AppString.pendingAmt,
@@ -298,29 +298,33 @@ class _GiriviDetailState extends State<GiriviDetail> {
     required IconData icon,
   }) {
     return Container(
-      padding: EdgeInsets.all(AppSize.p16),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSize.p12,
+        vertical: AppSize.p8,
+      ),
       decoration: BoxDecoration(
-        color: AppColor.white,
-        borderRadius: BorderRadius.circular(AppSize.p20),
+        color: AppColor.cardBg,
+        borderRadius: BorderRadius.circular(AppSize.p12),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.05),
-            blurRadius: AppSize.p10,
-            offset: Offset(0, AppSize.p4),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.05),
+            blurRadius: AppSize.p4,
+            offset: Offset(0, Offset(0, 2).dy),
           ),
         ],
       ),
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(AppSize.p10),
+            padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
               color: AppColor.whiteOrang.withOpacity(0.5),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: AppColor.goldColor, size: AppSize.p24),
+            child: Icon(icon, color: AppColor.goldColor, size: 18),
           ),
-          SizedBox(width: AppSize.p12),
+          SizedBox(width: AppSize.p8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -328,17 +332,17 @@ class _GiriviDetailState extends State<GiriviDetail> {
                 Text(
                   label,
                   style: TextStyle(
-                    fontSize: AppSize.smallText,
-                    color: AppColor.textColor,
+                    fontSize: AppSize.extraSmallText,
+                    color: AppColor.subText,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
                   value,
                   style: TextStyle(
-                    fontSize: AppSize.commonText,
+                    fontSize: AppSize.smallText + 2,
                     fontWeight: FontWeight.bold,
-                    color: AppColor.black,
+                    color: AppColor.mainText,
                   ),
                 ),
               ],
@@ -351,15 +355,16 @@ class _GiriviDetailState extends State<GiriviDetail> {
 
   Widget _buildActionButtons(data) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: AppSize.p16),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       decoration: BoxDecoration(
-        color: AppColor.white,
-        borderRadius: BorderRadius.circular(AppSize.p20),
+        color: AppColor.cardBg,
+        borderRadius: BorderRadius.circular(AppSize.p12),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.05),
-            blurRadius: AppSize.p10,
-            offset: Offset(0, AppSize.p4),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.05),
+            blurRadius: AppSize.p4,
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -392,7 +397,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.all(AppSize.p12),
+            padding: EdgeInsets.all(AppSize.p8),
             decoration: BoxDecoration(
               color: AppColor.primaryColor,
               shape: BoxShape.circle,
@@ -404,14 +409,14 @@ class _GiriviDetailState extends State<GiriviDetail> {
                 ),
               ],
             ),
-            child: Icon(icon, color: AppColor.goldColor, size: AppSize.p24),
+            child: Icon(icon, color: AppColor.goldColor, size: 18),
           ),
-          SizedBox(height: AppSize.p8),
+          SizedBox(height: 2),
           Text(
             label,
             style: TextStyle(
-              fontSize: AppSize.mediumText,
-              color: AppColor.black,
+              fontSize: AppSize.extraSmallText + 1,
+              color: AppColor.mainText,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -424,15 +429,16 @@ class _GiriviDetailState extends State<GiriviDetail> {
     return SingleChildScrollView(
       child: horizontalPadding(
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: AppSize.p16),
+          margin: EdgeInsets.symmetric(vertical: AppSize.p4),
           decoration: BoxDecoration(
-            color: AppColor.white,
-            borderRadius: BorderRadius.circular(AppSize.p20),
+            color: AppColor.cardBg,
+            borderRadius: BorderRadius.circular(AppSize.p12),
+            border: Border.all(color: AppColor.border),
             boxShadow: [
               BoxShadow(
-                color: AppColor.black.withOpacity(0.05),
-                blurRadius: AppSize.p10,
-                offset: Offset(0, AppSize.p4),
+                color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.05),
+                blurRadius: AppSize.p4,
+                offset: Offset(0, 2),
               ),
             ],
           ),
@@ -496,43 +502,42 @@ class _GiriviDetailState extends State<GiriviDetail> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: AppSize.p12,
-            horizontal: AppSize.p16,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
           child: Row(
             children: [
               Container(
-                padding: EdgeInsets.all(AppSize.p8),
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   color: AppColor.whiteOrang.withOpacity(0.5),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  icon,
-                  color: AppColor.goldColor,
-                  size: AppSize.p20 - 2,
-                ),
+                child: Icon(icon, color: AppColor.goldColor, size: 16),
               ),
-              SizedBox(width: AppSize.p16),
+              SizedBox(width: AppSize.p10),
               SizedBox(
                 width: isDesktopOrTablet ? 180 : AppSize.width * 0.35,
                 child: Text(
                   label,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: AppSize.commonText,
-                    color: AppColor.black,
+                    fontSize: AppSize.smallText + 1,
+                    color: AppColor.mainText,
                   ),
                 ),
               ),
-              const Text(" : ", style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                " : ",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.mainText,
+                ),
+              ),
               Expanded(
                 child: Text(
                   value,
                   style: TextStyle(
-                    fontSize: AppSize.commonText,
-                    color: AppColor.black,
+                    fontSize: AppSize.smallText + 1,
+                    color: AppColor.mainText,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -544,8 +549,8 @@ class _GiriviDetailState extends State<GiriviDetail> {
           height: 1,
           thickness: 0.5,
           color: AppColor.grey300.withOpacity(0.5),
-          indent: AppSize.p16,
-          endIndent: AppSize.p16,
+          indent: AppSize.p12,
+          endIndent: AppSize.p12,
         ),
       ],
     );
@@ -561,13 +566,13 @@ class _GiriviDetailState extends State<GiriviDetail> {
       );
     }
     return ListView.builder(
-      padding: EdgeInsets.symmetric(vertical: AppSize.p16),
+      padding: EdgeInsets.symmetric(vertical: AppSize.p8),
       itemCount: data.productDetail.length,
       itemBuilder: (context, index) {
         final product = data.productDetail[index];
         return horizontalPadding(
           child: Container(
-            margin: EdgeInsets.only(bottom: AppSize.p12),
+            margin: EdgeInsets.only(bottom: AppSize.p8),
             decoration: BoxDecoration(
               color: AppColor.white,
               borderRadius: BorderRadius.circular(AppSize.p20),
@@ -609,8 +614,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
                 _buildInfoRow(
                   AppIcon.locker,
                   AppString.locker,
-                  (product.lockerList != null &&
-                          product.lockerList!.isNotEmpty)
+                  (product.lockerList != null && product.lockerList!.isNotEmpty)
                       ? product.lockerList!.first.lockerCode ?? '-'
                       : '-',
                 ),
@@ -628,15 +632,18 @@ class _GiriviDetailState extends State<GiriviDetail> {
         children: [
           horizontalPadding(
             child: Container(
-              margin: EdgeInsets.symmetric(vertical: AppSize.p16),
+              margin: EdgeInsets.symmetric(vertical: AppSize.p4),
               decoration: BoxDecoration(
-                color: AppColor.white,
-                borderRadius: BorderRadius.circular(AppSize.p20),
+                color: AppColor.cardBg,
+                borderRadius: BorderRadius.circular(AppSize.p12),
+                border: Border.all(color: AppColor.border),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColor.black.withOpacity(0.05),
-                    blurRadius: AppSize.p10,
-                    offset: Offset(0, AppSize.p4),
+                    color: AppColor.black.withOpacity(
+                      AppColor.isDark ? 0.3 : 0.05,
+                    ),
+                    blurRadius: AppSize.p4,
+                    offset: Offset(0, 2),
                   ),
                 ],
               ),
@@ -644,7 +651,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
                 children: [
                   _sectionHeader(AppString.customerDetails, AppIcon.person),
                   Padding(
-                    padding: EdgeInsets.all(AppSize.p16),
+                    padding: EdgeInsets.all(AppSize.p8),
                     child: Column(
                       children: [
                         if (data.custName != null && data.custName!.isNotEmpty)
@@ -653,7 +660,8 @@ class _GiriviDetailState extends State<GiriviDetail> {
                             AppString.name,
                             data.custName ?? "-",
                           ),
-                        if (data.custPhone != null && data.custPhone!.isNotEmpty)
+                        if (data.custPhone != null &&
+                            data.custPhone!.isNotEmpty)
                           _buildInfoRowSimple(
                             AppIcon.phone,
                             AppString.phoneNumbar,
@@ -677,7 +685,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
                               data.nominee!.custRelation!.isNotEmpty))) ...[
                     _sectionHeader(AppString.nomineeDetail, AppIcon.person),
                     Padding(
-                      padding: EdgeInsets.all(AppSize.p16),
+                      padding: EdgeInsets.all(AppSize.p8),
                       child: Column(
                         children: [
                           _buildInfoRowSimple(
@@ -714,7 +722,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(vertical: AppSize.p8),
+          padding: EdgeInsets.symmetric(vertical: AppSize.p4),
           child: Row(
             children: [
               Icon(icon, color: AppColor.goldColor, size: AppSize.iconSmall),
@@ -725,17 +733,23 @@ class _GiriviDetailState extends State<GiriviDetail> {
                   label,
                   style: TextStyle(
                     fontSize: AppSize.commonText,
-                    color: AppColor.black,
+                    color: AppColor.mainText,
                   ),
                 ),
               ),
-              const Text(" : ", style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                " : ",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.mainText,
+                ),
+              ),
               Expanded(
                 child: Text(
                   value,
                   style: TextStyle(
                     fontSize: AppSize.commonText,
-                    color: AppColor.black,
+                    color: AppColor.mainText,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -824,8 +838,10 @@ class _GiriviDetailState extends State<GiriviDetail> {
 
   Widget _shimmerLoading() {
     return Shimmer.fromColors(
-      baseColor: AppColor.grey300,
-      highlightColor: AppColor.white,
+      baseColor: AppColor.isDark ? const Color(0xFF1E293B) : AppColor.grey300,
+      highlightColor: AppColor.isDark
+          ? const Color(0xFF334155)
+          : AppColor.white,
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -834,7 +850,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
                 margin: EdgeInsets.symmetric(vertical: AppSize.p16),
                 height: AppSize.height * 0.12,
                 decoration: BoxDecoration(
-                  color: AppColor.white,
+                  color: AppColor.cardBg,
                   borderRadius: BorderRadius.circular(AppSize.p20),
                 ),
               ),
@@ -843,7 +859,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
               child: Container(
                 height: AppSize.height * 0.1,
                 decoration: BoxDecoration(
-                  color: AppColor.white,
+                  color: AppColor.cardBg,
                   borderRadius: BorderRadius.circular(AppSize.p20),
                 ),
               ),
@@ -858,7 +874,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
                     width: AppSize.width * 0.25,
                     height: AppSize.p40 - 5,
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(AppSize.p8),
                     ),
                   ),
@@ -870,7 +886,7 @@ class _GiriviDetailState extends State<GiriviDetail> {
                 margin: EdgeInsets.symmetric(vertical: AppSize.p16),
                 height: AppSize.height * 0.5,
                 decoration: BoxDecoration(
-                  color: AppColor.white,
+                  color: AppColor.cardBg,
                   borderRadius: BorderRadius.circular(AppSize.p20),
                 ),
               ),

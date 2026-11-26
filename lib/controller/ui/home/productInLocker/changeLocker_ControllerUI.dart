@@ -60,7 +60,7 @@ class ChangeLockerControllerUI extends GetxController {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
+            colorScheme: ColorScheme.light(
               primary: AppColor.primaryColor,
               onPrimary: AppColor.fullScreenColor,
               onSurface: AppColor.primaryColor,

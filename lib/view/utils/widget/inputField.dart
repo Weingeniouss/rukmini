@@ -31,14 +31,14 @@ Widget inputField({
 
   Widget buildTextField(bool obscureText) {
     return Container(
-      margin: EdgeInsets.only(bottom: AppSize.p12),
+      margin: EdgeInsets.only(bottom: AppSize.p8),
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(AppSize.p12),
-        border: Border.all(color: AppColor.grey300.withOpacity(0.5)),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.02),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.02),
             blurRadius: AppSize.p4 + 1,
             offset: Offset(0, AppSize.p4 / 2),
           ),
@@ -57,7 +57,7 @@ Widget inputField({
         textInputAction: textInputAction,
         onSubmitted: onSubmitted,
         style: TextStyle(
-          color: textColor ?? AppColor.loginTextDark,
+          color: textColor ?? AppColor.mainText,
           fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
         ),
         cursorColor: iconColor ?? AppColor.goldColor,
@@ -106,7 +106,7 @@ Widget inputField({
           ),
           hintText: hintText,
           hintStyle: TextStyle(
-            color: (textColor ?? AppColor.loginTextDark).withOpacity(0.5),
+            color: (textColor ?? AppColor.subText).withOpacity(0.7),
             fontSize: isDesktopOrTablet ? 14.0 : AppSize.commonText,
           ),
         ),

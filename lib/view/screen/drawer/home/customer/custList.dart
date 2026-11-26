@@ -361,7 +361,7 @@ class _CustlistState extends State<Custlist> {
                     ),
                     child: Text(
                       AppString.noCustomersFound,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         color: AppColor.grey500,
                         fontWeight: FontWeight.w500,
@@ -407,12 +407,12 @@ class _CustlistState extends State<Custlist> {
                 child: Container(
                   height: 42,
                   decoration: BoxDecoration(
-                    color: AppColor.white,
+                    color: AppColor.cardBg,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColor.grey300),
+                    border: Border.all(color: AppColor.border),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColor.black.withOpacity(0.02),
+                        color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.02),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),
@@ -420,17 +420,17 @@ class _CustlistState extends State<Custlist> {
                   ),
                   child: TextField(
                     controller: _searchController,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: AppColor.black87,
+                      color: AppColor.mainText,
                     ),
                     decoration: InputDecoration(
                       hintText: AppString.searchCustomerPlaceholder,
-                      hintStyle: const TextStyle(
+                      hintStyle: TextStyle(
                         color: AppColor.grey500,
                         fontSize: 13,
                       ),
-                      prefixIcon: const Icon(
+                      prefixIcon: Icon(
                         AppIcon.searchIcon,
                         color: AppColor.grey500,
                         size: 20,
@@ -488,9 +488,9 @@ class _CustlistState extends State<Custlist> {
                 height: 42,
                 width: 42,
                 decoration: BoxDecoration(
-                  color: AppColor.white,
+                  color: AppColor.cardBg,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColor.grey300),
+                  border: Border.all(color: AppColor.border),
                 ),
                 child: IconButton(
                   icon: const Icon(
@@ -525,10 +525,10 @@ class _CustlistState extends State<Custlist> {
         decoration: BoxDecoration(
           color: isSelected
               ? AppColor.dashboardGold.withOpacity(0.08)
-              : AppColor.white,
+              : AppColor.cardBg,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isSelected ? AppColor.dashboardGold : AppColor.grey300,
+            color: isSelected ? AppColor.dashboardGold : AppColor.border,
           ),
         ),
         child: Row(
@@ -545,7 +545,7 @@ class _CustlistState extends State<Custlist> {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected ? AppColor.dashboardGold : AppColor.black87,
+                color: isSelected ? AppColor.dashboardGold : AppColor.mainText,
               ),
             ),
             const SizedBox(width: 6),
@@ -569,10 +569,10 @@ class _CustlistState extends State<Custlist> {
       children: [
         Text(
           "Showing $startNum – $endNum of $totalCount customers",
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: AppColor.black54,
+            color: AppColor.subText,
           ),
         ),
 
@@ -581,9 +581,9 @@ class _CustlistState extends State<Custlist> {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: AppColor.white,
+                color: AppColor.cardBg,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColor.grey300),
+                border: Border.all(color: AppColor.border),
               ),
               child: Row(
                 children: [
@@ -685,29 +685,29 @@ class _CustlistState extends State<Custlist> {
                 Get.snackbar(
                   AppString.export,
                   AppString.exportingContacts,
-                  backgroundColor: AppColor.white,
-                  colorText: AppColor.black,
+                  backgroundColor: AppColor.cardBg,
+                  colorText: AppColor.mainText,
                   borderColor: AppColor.dashboardGold,
                   borderWidth: 1,
                   snackPosition: SnackPosition.BOTTOM,
                 );
               },
-              icon: const Icon(
+              icon: Icon(
                 AppIcon.fileDownload,
                 size: 16,
-                color: AppColor.black87,
+                color: AppColor.mainText,
               ),
-              label: const Text(
+              label: Text(
                 AppString.export,
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: AppColor.black87,
+                  color: AppColor.mainText,
                 ),
               ),
               style: OutlinedButton.styleFrom(
-                backgroundColor: AppColor.white,
-                side: const BorderSide(color: AppColor.grey300),
+                backgroundColor: AppColor.cardBg,
+                side: BorderSide(color: AppColor.border),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -750,13 +750,14 @@ class _CustlistState extends State<Custlist> {
 
   Widget _buildTableView(List<CustomerData> list, {int startIndex = 0}) {
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColor.grey300),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.03),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.03),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -805,13 +806,13 @@ class _CustlistState extends State<Custlist> {
                   },
                 ),
               ),
-              const DataColumn(
+              DataColumn(
                 label: Text(
                   "#",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 13,
-                    color: AppColor.black87,
+                    color: AppColor.mainText,
                   ),
                 ),
               ),
@@ -821,13 +822,13 @@ class _CustlistState extends State<Custlist> {
               DataColumn(label: _tableHeaderWithSort("Type")),
               DataColumn(label: _tableHeaderWithSort("Address")),
               DataColumn(label: _tableHeaderWithSort("Status")),
-              const DataColumn(
+              DataColumn(
                 label: Text(
                   "Actions",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 13,
-                    color: AppColor.black87,
+                    color: AppColor.mainText,
                   ),
                 ),
               ),
@@ -865,10 +866,10 @@ class _CustlistState extends State<Custlist> {
                   DataCell(
                     Text(
                       "${startIndex + index + 1}",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: AppColor.black87,
+                        color: AppColor.mainText,
                       ),
                     ),
                   ),
@@ -879,10 +880,10 @@ class _CustlistState extends State<Custlist> {
                         const SizedBox(width: 10),
                         Text(
                           customer.name ?? AppString.noName,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
-                            color: AppColor.black87,
+                            color: AppColor.mainText,
                           ),
                         ),
                       ],
@@ -895,7 +896,7 @@ class _CustlistState extends State<Custlist> {
                   DataCell(
                     Text(
                       customer.custCode ?? "-",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                         color: AppColor.textSecondary,
@@ -905,7 +906,7 @@ class _CustlistState extends State<Custlist> {
                   DataCell(
                     Text(
                       phoneData?.phone ?? "-",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         color: AppColor.textSecondary,
                       ),
@@ -919,7 +920,7 @@ class _CustlistState extends State<Custlist> {
                         customer.address ?? "-",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           color: AppColor.textSecondary,
                         ),
@@ -962,7 +963,7 @@ class _CustlistState extends State<Custlist> {
                         ),
                         const SizedBox(width: 4),
                         PopupMenuButton<String>(
-                          icon: const Icon(
+                          icon: Icon(
                             AppIcon.moreVert,
                             color: AppColor.grey500,
                             size: 18,
@@ -1038,14 +1039,14 @@ class _CustlistState extends State<Custlist> {
       children: [
         Text(
           text,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 13,
-            color: AppColor.black87,
+            color: AppColor.mainText,
           ),
         ),
         const SizedBox(width: 4),
-        const Icon(AppIcon.unfoldMore, size: 14, color: AppColor.grey500),
+        Icon(AppIcon.unfoldMore, size: 14, color: AppColor.grey500),
       ],
     );
   }
@@ -1203,12 +1204,12 @@ class _CustlistState extends State<Custlist> {
         return Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: AppColor.white,
+            color: AppColor.cardBg,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColor.grey300),
+            border: Border.all(color: AppColor.border),
             boxShadow: [
               BoxShadow(
-                color: AppColor.black.withOpacity(0.03),
+                color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.03),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -1229,16 +1230,16 @@ class _CustlistState extends State<Custlist> {
                           customer.name ?? AppString.noName,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: AppColor.black87,
+                            color: AppColor.mainText,
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           "Code: ${customer.custCode ?? '-'}",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             color: AppColor.textMuted,
                           ),
@@ -1249,7 +1250,7 @@ class _CustlistState extends State<Custlist> {
                   _buildStatusBadge(customer.status),
                 ],
               ),
-              const Divider(height: 18, color: AppColor.grey200),
+              Divider(height: 18, color: AppColor.grey200),
               Row(
                 children: [
                   const Icon(
@@ -1261,7 +1262,7 @@ class _CustlistState extends State<Custlist> {
                   Expanded(
                     child: Text(
                       phoneData?.phone ?? "-",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         color: AppColor.textSecondary,
                       ),
@@ -1284,7 +1285,7 @@ class _CustlistState extends State<Custlist> {
                       customer.address ?? "-",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         color: AppColor.textMuted,
                       ),
@@ -1382,15 +1383,15 @@ class _CustlistState extends State<Custlist> {
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: AppColor.white,
+                    color: AppColor.cardBg,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColor.grey300),
+                    border: Border.all(color: AppColor.border),
                   ),
                   child: Icon(
                     AppIcon.chevronLeft,
                     size: 18,
                     color: currentPage > 1
-                        ? AppColor.black87
+                        ? AppColor.mainText
                         : AppColor.grey400,
                   ),
                 ),
@@ -1410,11 +1411,11 @@ class _CustlistState extends State<Custlist> {
                       decoration: BoxDecoration(
                         color: isSelected
                             ? AppColor.dashboardGold
-                            : AppColor.white,
+                            : AppColor.cardBg,
                         shape: BoxShape.circle,
                         border: isSelected
                             ? null
-                            : Border.all(color: AppColor.grey300),
+                            : Border.all(color: AppColor.border),
                       ),
                       child: Center(
                         child: Text(
@@ -1426,7 +1427,7 @@ class _CustlistState extends State<Custlist> {
                                 : FontWeight.w500,
                             color: isSelected
                                 ? AppColor.white
-                                : AppColor.black87,
+                                : AppColor.mainText,
                           ),
                         ),
                       ),
@@ -1435,7 +1436,7 @@ class _CustlistState extends State<Custlist> {
                 );
               }),
               if (totalPages > 5) ...[
-                const Text("...", style: TextStyle(color: AppColor.grey500)),
+                Text("...", style: TextStyle(color: AppColor.grey500)),
                 const SizedBox(width: 6),
                 InkWell(
                   onTap: () => _goToPage(totalPages),
@@ -1446,11 +1447,11 @@ class _CustlistState extends State<Custlist> {
                     decoration: BoxDecoration(
                       color: currentPage == totalPages
                           ? AppColor.dashboardGold
-                          : AppColor.white,
+                          : AppColor.cardBg,
                       shape: BoxShape.circle,
                       border: currentPage == totalPages
                           ? null
-                          : Border.all(color: AppColor.grey300),
+                          : Border.all(color: AppColor.border),
                     ),
                     child: Center(
                       child: Text(
@@ -1462,7 +1463,7 @@ class _CustlistState extends State<Custlist> {
                               : FontWeight.w500,
                           color: currentPage == totalPages
                               ? AppColor.white
-                              : AppColor.black87,
+                              : AppColor.mainText,
                         ),
                       ),
                     ),
@@ -1479,15 +1480,15 @@ class _CustlistState extends State<Custlist> {
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: AppColor.white,
+                    color: AppColor.cardBg,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColor.grey300),
+                    border: Border.all(color: AppColor.border),
                   ),
                   child: Icon(
                     AppIcon.chevronRight,
                     size: 18,
                     color: currentPage < totalPages
-                        ? AppColor.black87
+                        ? AppColor.mainText
                         : AppColor.grey400,
                   ),
                 ),
@@ -1513,23 +1514,23 @@ class _CustlistState extends State<Custlist> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: AppColor.white,
+                color: AppColor.cardBg,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppColor.grey300),
+                border: Border.all(color: AppColor.border),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     "${_rowsPerPage.value} / page",
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
-                      color: AppColor.black87,
+                      color: AppColor.mainText,
                     ),
                   ),
                   const SizedBox(width: 6),
-                  const Icon(
+                  Icon(
                     AppIcon.arrow_down,
                     size: 18,
                     color: AppColor.grey500,
@@ -1545,8 +1546,8 @@ class _CustlistState extends State<Custlist> {
 
   Widget customerLoading() {
     return Shimmer.fromColors(
-      baseColor: AppColor.baseColor,
-      highlightColor: AppColor.highlightColor,
+      baseColor: AppColor.isDark ? const Color(0xFF1E293B) : AppColor.baseColor,
+      highlightColor: AppColor.isDark ? const Color(0xFF334155) : AppColor.highlightColor,
       child: ListView.builder(
         padding: EdgeInsets.all(AppSize.p16),
         itemCount: 8,
@@ -1554,7 +1555,7 @@ class _CustlistState extends State<Custlist> {
           height: AppSize.height * 0.15,
           margin: EdgeInsets.only(bottom: AppSize.p16),
           decoration: BoxDecoration(
-            color: AppColor.white,
+            color: AppColor.cardBg,
             borderRadius: BorderRadius.circular(AppSize.p16),
           ),
         ),

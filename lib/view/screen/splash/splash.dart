@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,11 +13,33 @@ import 'package:rukmini/view/utils/app_background.dart';
 import 'package:rukmini/view/utils/widget/fullScreen.dart';
 import 'package:rukmini/view/utils/widget/responsive.dart';
 
-class Splash extends StatelessWidget {
+class Splash extends StatefulWidget {
   const Splash({super.key});
 
+  @override
+  State<Splash> createState() => _SplashState();
+}
+
+class _SplashState extends State<Splash> {
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer(const Duration(seconds: 2), () {
+      _navigateToNext();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
   void _navigateToNext() {
-    if (islogin) {
+    _timer?.cancel();
+    if (islogin && tokans.isNotEmpty) {
       Get.offAllNamed('/home');
     } else {
       Get.offAllNamed('/login');
@@ -189,6 +212,7 @@ class Splash extends StatelessWidget {
           _buildQuoteCard(
             AppString.williamGeorge,
             AppString.williamGeorgeJordan,
+            onTap: _navigateToNext,
           ),
           SizedBox(height: AppSize.p40),
         ],
@@ -198,7 +222,7 @@ class Splash extends StatelessWidget {
 
   Widget _buildQuoteCard(String quote, String author, {VoidCallback? onTap}) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap ?? _navigateToNext,
       child: Container(
         margin: EdgeInsets.symmetric(vertical: AppSize.p8),
         padding: EdgeInsets.all(AppSize.p20),

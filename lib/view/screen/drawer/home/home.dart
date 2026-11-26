@@ -92,7 +92,7 @@ class _HomeState extends State<Home> {
               final role = loginController.loginData.value.data?.roleName;
               return Text(
                 getInitials(role),
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColor.dashboardTextDark,
                   fontWeight: FontWeight.bold,
                 ),
@@ -335,8 +335,14 @@ class _HomeState extends State<Home> {
               decoration: BoxDecoration(
                 color: AppColor.dashboardCardBg,
                 borderRadius: BorderRadius.circular(AppSize.p12),
+                border: Border.all(color: AppColor.border),
               ),
-              child: const Center(child: Text("No recent activities")),
+              child: Center(
+                child: Text(
+                  "No recent activities",
+                  style: TextStyle(color: AppColor.dashboardTextLight),
+                ),
+              ),
             );
           }
           return ListView.separated(
@@ -351,7 +357,7 @@ class _HomeState extends State<Home> {
                 decoration: BoxDecoration(
                   color: AppColor.dashboardCardBg,
                   borderRadius: BorderRadius.circular(AppSize.p12),
-                  border: Border.all(color: AppColor.grey200),
+                  border: Border.all(color: AppColor.border),
                 ),
                 child: Row(
                   children: [
@@ -377,6 +383,7 @@ class _HomeState extends State<Home> {
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: AppSize.size14,
+                              color: AppColor.mainText,
                             ),
                           ),
                           Row(
@@ -430,9 +437,10 @@ class _HomeState extends State<Home> {
       decoration: BoxDecoration(
         color: AppColor.dashboardCardBg,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.05),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.05),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -471,6 +479,7 @@ class _HomeState extends State<Home> {
                 decoration: BoxDecoration(
                   color: AppColor.backgroundColor,
                   borderRadius: BorderRadius.circular(AppSize.p8),
+                  border: Border.all(color: AppColor.border),
                 ),
                 child: Row(
                   children: [
@@ -479,9 +488,10 @@ class _HomeState extends State<Home> {
                       style: TextStyle(
                         fontSize: AppSize.size12,
                         fontWeight: FontWeight.w500,
+                        color: AppColor.mainText,
                       ),
                     ),
-                    Icon(AppIcon.arrowDown, size: AppSize.p16),
+                    Icon(AppIcon.arrowDown, size: AppSize.p16, color: AppColor.mainText),
                   ],
                 ),
               ),
@@ -622,6 +632,7 @@ class _HomeState extends State<Home> {
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppSize.p16),
+        border: Border.all(color: AppColor.border),
         image: DecorationImage(
           image: NetworkImage(AppImage.bannerImage),
           fit: BoxFit.cover,
@@ -635,8 +646,12 @@ class _HomeState extends State<Home> {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: [
-              AppColor.white.withOpacity(0.9),
-              AppColor.white.withOpacity(0.2),
+              AppColor.isDark
+                  ? AppColor.dashboardCardBg.withOpacity(0.95)
+                  : AppColor.white.withOpacity(0.9),
+              AppColor.isDark
+                  ? AppColor.dashboardCardBg.withOpacity(0.7)
+                  : AppColor.white.withOpacity(0.2),
             ],
           ),
         ),
@@ -656,7 +671,7 @@ class _HomeState extends State<Home> {
               style: TextStyle(
                 fontSize: AppSize.largeText,
                 fontWeight: FontWeight.w500,
-                color: AppColor.dashboardTextDark,
+                color: AppColor.mainText,
               ),
             ),
             SizedBox(height: AppSize.p8),
@@ -690,12 +705,12 @@ class _HomeState extends State<Home> {
             : EdgeInsets.only(right: AppSize.p12),
         padding: EdgeInsets.all(isDesktopOrTablet ? 12 : AppSize.p16),
         decoration: BoxDecoration(
-          color: AppColor.white,
+          color: AppColor.dashboardCardBg,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColor.grey300.withOpacity(0.5)),
+          border: Border.all(color: AppColor.border),
           boxShadow: [
             BoxShadow(
-              color: AppColor.black.withOpacity(0.02),
+              color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.02),
               blurRadius: 5,
               offset: const Offset(0, 2),
             ),
@@ -724,7 +739,7 @@ class _HomeState extends State<Home> {
                 style: TextStyle(
                   fontSize: isDesktopOrTablet ? 18 : AppSize.extraLargeText,
                   fontWeight: FontWeight.bold,
-                  color: AppColor.black,
+                  color: AppColor.mainText,
                 ),
               ),
             ),
@@ -734,7 +749,7 @@ class _HomeState extends State<Home> {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: isDesktopOrTablet ? 12 : AppSize.size12,
-                color: AppColor.textColor,
+                color: AppColor.dashboardTextLight,
               ),
             ),
             SizedBox(height: isDesktopOrTablet ? 4 : AppSize.p8),
@@ -831,12 +846,12 @@ class _HomeState extends State<Home> {
           horizontal: AppSize.p4,
         ),
         decoration: BoxDecoration(
-          color: AppColor.white,
+          color: AppColor.dashboardCardBg,
           borderRadius: BorderRadius.circular(AppSize.p12),
-          border: Border.all(color: AppColor.grey300.withOpacity(0.5)),
+          border: Border.all(color: AppColor.border),
           boxShadow: [
             BoxShadow(
-              color: AppColor.black.withOpacity(0.02),
+              color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.02),
               blurRadius: 5,
               offset: const Offset(0, 2),
             ),
@@ -857,7 +872,7 @@ class _HomeState extends State<Home> {
                 style: TextStyle(
                   fontSize: AppSize.smallText,
                   fontWeight: FontWeight.w600,
-                  color: AppColor.black,
+                  color: AppColor.mainText,
                 ),
               ),
             ),
@@ -887,10 +902,10 @@ class _HomeState extends State<Home> {
         show: true,
         drawVerticalLine: false,
         horizontalInterval: 20,
-        getDrawingHorizontalLine: (value) => const FlLine(
+        getDrawingHorizontalLine: (value) => FlLine(
           color: AppColor.dashboardChartGrid,
           strokeWidth: 1,
-          dashArray: [5, 5],
+          dashArray: const [5, 5],
         ),
       ),
       titlesData: FlTitlesData(
@@ -978,8 +993,8 @@ class _HomeState extends State<Home> {
 
   Widget loadingWait() {
     return Shimmer.fromColors(
-      baseColor: AppColor.baseColor,
-      highlightColor: AppColor.highlightColor,
+      baseColor: AppColor.isDark ? const Color(0xFF1E293B) : AppColor.baseColor,
+      highlightColor: AppColor.isDark ? const Color(0xFF334155) : AppColor.highlightColor,
       child: SingleChildScrollView(
         padding: EdgeInsets.all(AppSize.p16),
         child: Column(
@@ -994,7 +1009,7 @@ class _HomeState extends State<Home> {
                     height: AppSize.height * 0.15,
                     margin: EdgeInsets.only(right: AppSize.p8),
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.dashboardCardBg,
                       borderRadius: BorderRadius.circular(AppSize.p16),
                     ),
                   ),
@@ -1007,7 +1022,7 @@ class _HomeState extends State<Home> {
             Container(
               height: AppSize.height * 0.28,
               decoration: BoxDecoration(
-                color: AppColor.white,
+                color: AppColor.dashboardCardBg,
                 borderRadius: BorderRadius.circular(AppSize.p16),
               ),
             ),
@@ -1021,7 +1036,7 @@ class _HomeState extends State<Home> {
                   width: AppSize.width * 0.4,
                   height: AppSize.p20,
                   decoration: BoxDecoration(
-                    color: AppColor.white,
+                    color: AppColor.dashboardCardBg,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -1033,7 +1048,7 @@ class _HomeState extends State<Home> {
                       height: AppSize.height * 0.08,
                       margin: EdgeInsets.only(bottom: AppSize.p8),
                       decoration: BoxDecoration(
-                        color: AppColor.white,
+                        color: AppColor.dashboardCardBg,
                         borderRadius: BorderRadius.circular(AppSize.p12),
                       ),
                     ),
@@ -1052,7 +1067,7 @@ class _HomeState extends State<Home> {
                     height: AppSize.height * 0.1,
                     margin: EdgeInsets.only(right: AppSize.p8),
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.dashboardCardBg,
                       borderRadius: BorderRadius.circular(AppSize.p12),
                     ),
                   ),
@@ -1065,7 +1080,7 @@ class _HomeState extends State<Home> {
             Container(
               height: AppSize.height * 0.18,
               decoration: BoxDecoration(
-                color: AppColor.white,
+                color: AppColor.dashboardCardBg,
                 borderRadius: BorderRadius.circular(AppSize.p16),
               ),
             ),

@@ -25,12 +25,12 @@ class AppIcon {
   static const IconData arrow_down = Icons.keyboard_arrow_down;
 
   // AppBar Icons
-  static const Icon search = Icon(Icons.search, color: AppColor.fullScreenColor);
-  static const Icon edit = Icon(Icons.edit, color: AppColor.fullScreenColor);
-  static const Icon delete = Icon(Icons.delete, color: AppColor.fullScreenColor);
-  static const Icon close = Icon(Icons.badge_outlined, color: AppColor.fullScreenColor);
-  static const Icon filter = Icon(Icons.filter_alt, color: AppColor.fullScreenColor);
-  static const Icon back = Icon(Icons.keyboard_arrow_left, color: AppColor.backgroundColor, size: 30);
+  static Icon search = Icon(Icons.search, color: AppColor.fullScreenColor);
+  static Icon edit = Icon(Icons.edit, color: AppColor.fullScreenColor);
+  static Icon delete = Icon(Icons.delete, color: AppColor.fullScreenColor);
+  static Icon close = Icon(Icons.badge_outlined, color: AppColor.fullScreenColor);
+  static Icon filter = Icon(Icons.filter_alt, color: AppColor.fullScreenColor);
+  static Icon back = Icon(Icons.keyboard_arrow_left, color: AppColor.backgroundColor, size: 30);
 
   // Common Icons (IconData)
   static const IconData add = Icons.add;

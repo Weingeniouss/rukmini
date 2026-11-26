@@ -131,11 +131,11 @@ class _YearMasterState extends State<YearMaster> {
                     height: 200,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColor.grey300),
+                      border: Border.all(color: AppColor.border),
                     ),
-                    child: const Text(
+                    child: Text(
                       AppString.noDataFound,
                       style: TextStyle(
                         fontSize: 15,
@@ -168,8 +168,8 @@ class _YearMasterState extends State<YearMaster> {
         const SizedBox(width: 8),
         Text(
           AppString.yearMaster,
-          style: const TextStyle(
-            color: AppColor.black87,
+          style: TextStyle(
+            color: AppColor.mainText,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
@@ -194,23 +194,23 @@ class _YearMasterState extends State<YearMaster> {
                 child: Container(
                   height: 42,
                   decoration: BoxDecoration(
-                    color: AppColor.white,
+                    color: AppColor.cardBg,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColor.grey300),
+                    border: Border.all(color: AppColor.border),
                   ),
                   child: TextField(
                     controller: _searchController,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: AppColor.black87,
+                      color: AppColor.mainText,
                     ),
                     decoration: InputDecoration(
                       hintText: AppString.searchYearPlaceholder,
-                      hintStyle: const TextStyle(
+                      hintStyle: TextStyle(
                         color: AppColor.grey500,
                         fontSize: 13,
                       ),
-                      prefixIcon: const Icon(
+                      prefixIcon: Icon(
                         AppIcon.searchIcon,
                         color: AppColor.grey500,
                         size: 20,
@@ -257,9 +257,9 @@ class _YearMasterState extends State<YearMaster> {
                 height: 42,
                 width: 42,
                 decoration: BoxDecoration(
-                  color: AppColor.white,
+                  color: AppColor.cardBg,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColor.grey300),
+                  border: Border.all(color: AppColor.border),
                 ),
                 child: IconButton(
                   icon: const Icon(
@@ -277,29 +277,29 @@ class _YearMasterState extends State<YearMaster> {
                   Get.snackbar(
                     AppString.export,
                     "Exporting Year Master list...",
-                    backgroundColor: AppColor.white,
-                    colorText: AppColor.black,
+                    backgroundColor: AppColor.cardBg,
+                    colorText: AppColor.mainText,
                     borderColor: AppColor.dashboardGold,
                     borderWidth: 1,
                     snackPosition: SnackPosition.BOTTOM,
                   );
                 },
-                icon: const Icon(
+                icon: Icon(
                   AppIcon.fileDownload,
                   size: 16,
-                  color: AppColor.black87,
+                  color: AppColor.mainText,
                 ),
-                label: const Text(
+                label: Text(
                   AppString.export,
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColor.black87,
+                    color: AppColor.mainText,
                   ),
                 ),
                 style: OutlinedButton.styleFrom(
-                  backgroundColor: AppColor.white,
-                  side: const BorderSide(color: AppColor.grey300),
+                  backgroundColor: AppColor.cardBg,
+                  side: BorderSide(color: AppColor.border),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -356,10 +356,10 @@ class _YearMasterState extends State<YearMaster> {
         decoration: BoxDecoration(
           color: isSelected
               ? AppColor.dashboardGold.withOpacity(0.08)
-              : AppColor.white,
+              : AppColor.cardBg,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isSelected ? AppColor.dashboardGold : AppColor.grey300,
+            color: isSelected ? AppColor.dashboardGold : AppColor.border,
           ),
         ),
         child: Row(
@@ -376,7 +376,7 @@ class _YearMasterState extends State<YearMaster> {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected ? AppColor.dashboardGold : AppColor.black87,
+                color: isSelected ? AppColor.dashboardGold : AppColor.mainText,
               ),
             ),
             const SizedBox(width: 6),
@@ -455,13 +455,14 @@ class _YearMasterState extends State<YearMaster> {
 
   Widget _buildTableView(List<YearData> list, {int startIndex = 0}) {
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColor.grey300),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.03),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -469,136 +470,142 @@ class _YearMasterState extends State<YearMaster> {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            headingRowColor: WidgetStateProperty.all(AppColor.dashboardGold),
-            headingTextStyle: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: AppColor.white,
-              fontSize: 13,
-            ),
-            dataRowMinHeight: 52,
-            dataRowMaxHeight: 52,
-            horizontalMargin: 16,
-            columnSpacing: 28,
-            columns: [
-              DataColumn(
-                label: Checkbox(
-                  value: _selectAll.value,
-                  activeColor: AppColor.white,
-                  checkColor: AppColor.dashboardGold,
-                  side: const BorderSide(color: AppColor.white, width: 1.5),
-                  onChanged: (val) {
-                    _selectAll.value = val ?? false;
-                    if (_selectAll.value) {
-                      _selectedIds.addAll(
-                        list.map((e) => e.yearId ?? ''),
-                      );
-                    } else {
-                      _selectedIds.clear();
-                    }
-                  },
-                ),
-              ),
-              const DataColumn(label: Text("#")),
-              const DataColumn(label: Text("Year Title")),
-              const DataColumn(label: Text("From Date")),
-              const DataColumn(label: Text("To Date")),
-              DataColumn(label: _sortHeader("Status")),
-              const DataColumn(label: Text("Actions")),
-            ],
-            rows: List.generate(list.length, (index) {
-              final item = list[index];
-              final id = item.yearId ?? '';
-              final isChecked = _selectedIds.contains(id);
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                child: DataTable(
+                  headingRowColor:
+                      WidgetStateProperty.all(AppColor.dashboardGold),
+                  headingTextStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: AppColor.white,
+                    fontSize: 13,
+                  ),
+                  dataRowMinHeight: 52,
+                  dataRowMaxHeight: 52,
+                  horizontalMargin: 16,
+                  columnSpacing: 28,
+                  columns: [
+                    DataColumn(
+                      label: Checkbox(
+                        value: _selectAll.value,
+                        activeColor: AppColor.white,
+                        checkColor: AppColor.dashboardGold,
+                        side:
+                            const BorderSide(color: AppColor.white, width: 1.5),
+                        onChanged: (val) {
+                          _selectAll.value = val ?? false;
+                          if (_selectAll.value) {
+                            _selectedIds.addAll(
+                              list.map((e) => e.yearId ?? ''),
+                            );
+                          } else {
+                            _selectedIds.clear();
+                          }
+                        },
+                      ),
+                    ),
+                    const DataColumn(label: Text("#")),
+                    const DataColumn(label: Text("Year Title")),
+                    const DataColumn(label: Text("From Date")),
+                    const DataColumn(label: Text("To Date")),
+                    DataColumn(label: _sortHeader("Status")),
+                    const DataColumn(label: Text("Actions")),
+                  ],
+                  rows: List.generate(list.length, (index) {
+                    final item = list[index];
+                    final id = item.yearId ?? '';
+                    final isChecked = _selectedIds.contains(id);
 
-              return DataRow(
-                selected: isChecked,
-                cells: [
-                  DataCell(
-                    Checkbox(
-                      value: isChecked,
-                      activeColor: AppColor.dashboardGold,
-                      onChanged: (val) {
-                        if (val == true) {
-                          _selectedIds.add(id);
-                        } else {
-                          _selectedIds.remove(id);
-                          _selectAll.value = false;
-                        }
-                      },
-                    ),
-                  ),
-                  DataCell(
-                    Text(
-                      "${startIndex + index + 1}",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                        color: AppColor.black87,
-                      ),
-                    ),
-                  ),
-                  DataCell(
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          AppIcon.calendar,
-                          color: AppColor.dashboardGold,
-                          size: 18,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          item.title ?? AppString.noName,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            color: AppColor.black87,
+                    return DataRow(
+                      selected: isChecked,
+                      cells: [
+                        DataCell(
+                          Checkbox(
+                            value: isChecked,
+                            activeColor: AppColor.dashboardGold,
+                            onChanged: (val) {
+                              if (val == true) {
+                                _selectedIds.add(id);
+                              } else {
+                                _selectedIds.remove(id);
+                                _selectAll.value = false;
+                              }
+                            },
                           ),
                         ),
-                        if (item.isCurrent == "1") ...[
-                          const SizedBox(width: 6),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
+                        DataCell(
+                          Text(
+                            "${startIndex + index + 1}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              color: AppColor.mainText,
                             ),
-                            decoration: BoxDecoration(
-                              color: AppColor.goldTagBg,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: const Text(
-                              AppString.defaultLabel,
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: AppColor.goldTagText,
+                          ),
+                        ),
+                        DataCell(
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                AppIcon.calendar,
+                                color: AppColor.dashboardGold,
+                                size: 18,
                               ),
+                              const SizedBox(width: 8),
+                              Text(
+                                item.title ?? AppString.noName,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                  color: AppColor.mainText,
+                                ),
+                              ),
+                              if (item.isCurrent == "1") ...[
+                                const SizedBox(width: 6),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.goldTagBg,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    AppString.defaultLabel,
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColor.goldTagText,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                        DataCell(
+                          Text(
+                            item.formDate ?? "-",
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: AppColor.subText,
                             ),
                           ),
-                        ],
-                      ],
-                    ),
-                  ),
-                  DataCell(
-                    Text(
-                      item.formDate ?? "-",
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: AppColor.textSecondary,
-                      ),
-                    ),
-                  ),
-                  DataCell(
-                    Text(
-                      item.toDate ?? "-",
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: AppColor.textSecondary,
+                        ),
+                        DataCell(
+                          Text(
+                            item.toDate ?? "-",
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                        color: AppColor.subText,
                       ),
                     ),
                   ),
@@ -608,9 +615,9 @@ class _YearMasterState extends State<YearMaster> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             AppIcon.eyeOutline,
-                            color: AppColor.black87,
+                            color: AppColor.mainText,
                             size: 18,
                           ),
                           tooltip: AppString.view,
@@ -623,9 +630,9 @@ class _YearMasterState extends State<YearMaster> {
                         ),
                         const SizedBox(width: 10),
                         IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             AppIcon.editOutline,
-                            color: AppColor.black87,
+                            color: AppColor.mainText,
                             size: 18,
                           ),
                           tooltip: AppString.edit,
@@ -656,7 +663,10 @@ class _YearMasterState extends State<YearMaster> {
             }),
           ),
         ),
-      ),
+      );
+    },
+  ),
+),
     );
   }
 
@@ -682,7 +692,7 @@ class _YearMasterState extends State<YearMaster> {
         color: AppColor.greenTagBg,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
@@ -716,9 +726,9 @@ class _YearMasterState extends State<YearMaster> {
       children: [
         Text(
           "Showing $startNum – $endNum of $totalCount records",
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 13,
-            color: AppColor.black54,
+            color: AppColor.subText,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -731,15 +741,15 @@ class _YearMasterState extends State<YearMaster> {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: AppColor.grey300),
+                      border: Border.all(color: AppColor.border),
                     ),
                     child: Icon(
                       AppIcon.chevronLeft,
                       size: 16,
                       color: currentPage > 1
-                          ? AppColor.black87
+                          ? AppColor.mainText
                           : AppColor.grey400,
                     ),
                   ),
@@ -752,15 +762,15 @@ class _YearMasterState extends State<YearMaster> {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: AppColor.grey300),
+                      border: Border.all(color: AppColor.border),
                     ),
                     child: Icon(
                       AppIcon.chevronLeft,
                       size: 16,
                       color: currentPage > 1
-                          ? AppColor.black87
+                          ? AppColor.mainText
                           : AppColor.grey400,
                     ),
                   ),
@@ -790,15 +800,15 @@ class _YearMasterState extends State<YearMaster> {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: AppColor.grey300),
+                      border: Border.all(color: AppColor.border),
                     ),
                     child: Icon(
                       AppIcon.chevronRight,
                       size: 16,
                       color: currentPage < totalPages
-                          ? AppColor.black87
+                          ? AppColor.mainText
                           : AppColor.grey400,
                     ),
                   ),
@@ -811,15 +821,15 @@ class _YearMasterState extends State<YearMaster> {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: AppColor.grey300),
+                      border: Border.all(color: AppColor.border),
                     ),
                     child: Icon(
                       AppIcon.chevronRight,
                       size: 16,
                       color: currentPage < totalPages
-                          ? AppColor.black87
+                          ? AppColor.mainText
                           : AppColor.grey400,
                     ),
                   ),
@@ -847,23 +857,23 @@ class _YearMasterState extends State<YearMaster> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColor.white,
+                  color: AppColor.cardBg,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColor.grey300),
+                  border: Border.all(color: AppColor.border),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       "${_rowsPerPage.value} / page",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: AppColor.black87,
+                        color: AppColor.mainText,
                       ),
                     ),
                     const SizedBox(width: 6),
-                    const Icon(
+                    Icon(
                       AppIcon.arrow_down,
                       size: 16,
                       color: AppColor.grey500,
@@ -896,8 +906,8 @@ class _YearMasterState extends State<YearMaster> {
 
   Widget _shimmerLoading() {
     return Shimmer.fromColors(
-      baseColor: AppColor.grey300,
-      highlightColor: AppColor.white,
+      baseColor: AppColor.isDark ? const Color(0xFF1E293B) : AppColor.grey300,
+      highlightColor: AppColor.isDark ? const Color(0xFF334155) : AppColor.white,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -907,7 +917,7 @@ class _YearMasterState extends State<YearMaster> {
               height: 52,
               margin: const EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
-                color: AppColor.white,
+                color: AppColor.cardBg,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),

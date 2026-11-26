@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/local/localDatabase.dart';
+import 'package:rukmini/controller/ui/theme_controller.dart';
 import 'package:toastification/toastification.dart';
 import 'routes/app_pages.dart';
 import 'view/screen/splash/splash.dart';
@@ -44,19 +45,29 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeController = Get.put(ThemeController());
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
     return ToastificationWrapper(
-      child: GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(fontFamily: 'Poppins', useMaterial3: true),
-        defaultTransition: Transition.fade,
-        transitionDuration: const Duration(milliseconds: 200),
-        initialRoute: AppPages.initial,
-        getPages: AppPages.routes,
-        unknownRoute: GetPage(
-          name: '/not-found',
-          page: () => const Splash(),
-        ),
+      child: Obx(
+        () {
+          final isDark = themeController.isDarkMode.value;
+          return GetMaterialApp(
+            key: ValueKey('RukminiApp_$isDark'),
+            debugShowCheckedModeBanner: false,
+            theme: ThemeController.lightTheme,
+            darkTheme: ThemeController.darkTheme,
+            themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+            defaultTransition: Transition.fade,
+            transitionDuration: const Duration(milliseconds: 200),
+            initialRoute: AppPages.initial,
+            getPages: AppPages.routes,
+            unknownRoute: GetPage(
+              name: '/not-found',
+              page: () => const Splash(),
+            ),
+          );
+        },
       ),
     );
   }

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rukmini/controller/api/controllers/credentials/login_controller.dart';
+import 'package:rukmini/controller/ui/theme_controller.dart';
 import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_string.dart';
@@ -16,7 +17,7 @@ Widget homeDrawer({bool isCollapsed = false}) {
   final navDrawerController = Get.put(NavDrawerController());
 
   return Drawer(
-    backgroundColor: AppColor.drawerBg,
+    backgroundColor: AppColor.drawerBackground,
     elevation: 0,
     child: Column(
       children: [
@@ -134,11 +135,91 @@ Widget homeDrawer({bool isCollapsed = false}) {
           ),
         ),
 
+        // Theme Toggle Section
+        _buildThemeToggleButton(isCollapsed),
+
         // Logout Section
         _buildLogoutButton(isCollapsed),
       ],
     ),
   );
+}
+
+Widget _buildThemeToggleButton(bool isCollapsed) {
+  final ThemeController themeController = Get.put(ThemeController());
+
+  return Obx(() {
+    final bool isDark = themeController.isDarkMode.value;
+
+    if (isCollapsed) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Tooltip(
+          message: isDark ? "Switch to Light Mode" : "Switch to Dark Mode",
+          preferBelow: false,
+          child: InkWell(
+            onTap: () => themeController.toggleTheme(),
+            borderRadius: BorderRadius.circular(10),
+            child: Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: isDark
+                    ? AppColor.goldTagBg.withOpacity(0.2)
+                    : AppColor.goldTagBg,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                isDark ? Icons.wb_sunny_rounded : Icons.nightlight_round,
+                color: isDark ? AppColor.goldColor : AppColor.dashboardGold,
+                size: 20,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppSize.p16, vertical: 4),
+      child: Material(
+        color: isDark
+            ? AppColor.white.withOpacity(0.05)
+            : AppColor.goldTagBg.withOpacity(0.4),
+        borderRadius: BorderRadius.circular(10),
+        clipBehavior: Clip.antiAlias,
+        child: ListTile(
+          dense: true,
+          onTap: () => themeController.toggleTheme(),
+          leading: Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: AppColor.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              isDark ? Icons.wb_sunny_rounded : Icons.nightlight_round,
+              color: isDark ? AppColor.goldColor : AppColor.dashboardGold,
+              size: 18,
+            ),
+          ),
+          title: Text(
+            isDark ? "Light Mode" : "Dark Mode",
+            style: TextStyle(
+              fontSize: (AppSize.isDesktop || AppSize.isTablet) ? 13.0 : 15.0,
+              fontWeight: FontWeight.w600,
+              color: isDark ? AppColor.white : AppColor.black87,
+            ),
+          ),
+          trailing: Switch(
+            value: isDark,
+            activeColor: AppColor.goldColor,
+            onChanged: (val) => themeController.toggleTheme(),
+          ),
+        ),
+      ),
+    );
+  });
 }
 
 Widget _buildCollapsedHeader(NavDrawerController navDrawerController) {
@@ -231,7 +312,7 @@ Widget _buildExpandedHeader(
                         return Text(
                           role ?? AppString.user,
                           style: TextStyle(
-                            color: AppColor.primaryColor,
+                            color: AppColor.mainText,
                             fontWeight: FontWeight.bold,
                             fontSize:
                                 isDesktopOrTablet ? 16.0 : AppSize.extraLargeText,
@@ -244,7 +325,7 @@ Widget _buildExpandedHeader(
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: AppColor.textField,
+                          color: AppColor.subText,
                           fontSize: isDesktopOrTablet ? 11.0 : AppSize.size14,
                         ),
                       ),
@@ -273,7 +354,7 @@ Widget _drawerItem({
     bool isSelected = navDrawerController.selectedIndex.value == index;
 
     final Color bgColor = isSelected
-        ? AppColor.drawerSelectedBg
+        ? AppColor.drawerSelectedItem
         : isSpecial
             ? AppColor.goldColor.withOpacity(0.05)
             : Colors.transparent;
@@ -314,7 +395,7 @@ Widget _drawerItem({
                       ? AppColor.goldColor
                       : isSpecial
                           ? AppColor.goldColor
-                          : AppColor.primaryColor,
+                          : AppColor.mainText,
                   size: 20,
                 ),
               ),
@@ -349,7 +430,7 @@ Widget _drawerItem({
                       ? AppColor.goldColor
                       : isSpecial
                           ? AppColor.goldColor
-                          : AppColor.primaryColor,
+                          : AppColor.mainText,
                   size: (AppSize.isDesktop || AppSize.isTablet) ? 20.0 : 24.0,
                 ),
                 title: Text(
@@ -359,7 +440,7 @@ Widget _drawerItem({
                         ? AppColor.goldColor
                         : isSpecial
                             ? AppColor.goldColor
-                            : AppColor.primaryColor,
+                            : AppColor.mainText,
                     fontSize: (AppSize.isDesktop || AppSize.isTablet)
                         ? 13.0
                         : AppSize.largeText,
@@ -414,7 +495,7 @@ Widget _buildLogoutButton(bool isCollapsed) {
               color: AppColor.logoutBg,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(
+            child: Icon(
               AppIcon.logout,
               color: AppColor.logoutIcon,
               size: 20,
@@ -430,7 +511,7 @@ Widget _buildLogoutButton(bool isCollapsed) {
       AppSize.p16,
       AppSize.p8,
       AppSize.p16,
-      isDesktopOrTablet ? 30.0 : AppSize.height * 0.08,
+      isDesktopOrTablet ? 20.0 : AppSize.height * 0.08,
     ),
     child: Material(
       color: AppColor.logoutBg,
@@ -443,7 +524,7 @@ Widget _buildLogoutButton(bool isCollapsed) {
             color: AppColor.white,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: const Icon(
+          child: Icon(
             AppIcon.logout,
             color: AppColor.logoutIcon,
             size: 20,

@@ -313,7 +313,7 @@ class _AddProductState extends State<AddProduct> {
           Container(
             padding: EdgeInsets.all(AppSize.p8),
             decoration: BoxDecoration(
-              color: AppColor.white,
+              color: AppColor.cardBg,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
@@ -330,7 +330,7 @@ class _AddProductState extends State<AddProduct> {
             style: TextStyle(
               fontSize: AppSize.headingText,
               fontWeight: FontWeight.bold,
-              color: AppColor.black,
+              color: AppColor.mainText,
             ),
           ),
           const Spacer(),
@@ -457,10 +457,11 @@ class _AddProductState extends State<AddProduct> {
     return Container(
       padding: EdgeInsets.all(AppSize.p16),
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
+        border: Border(top: BorderSide(color: AppColor.border)),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.05),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.05),
             blurRadius: AppSize.p10,
             offset: Offset(0, -AppSize.p4 - 1),
           ),

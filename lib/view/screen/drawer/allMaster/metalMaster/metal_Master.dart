@@ -159,13 +159,13 @@ class _MetalMasterState extends State<MetalMaster> {
                     height: 200,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColor.grey300),
+                      border: Border.all(color: AppColor.border),
                     ),
                     child: Text(
                       AppString.noDataFound,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         color: AppColor.grey500,
                         fontWeight: FontWeight.w500,
@@ -196,8 +196,8 @@ class _MetalMasterState extends State<MetalMaster> {
         const SizedBox(width: 8),
         Text(
           AppString.metalMaster,
-          style: const TextStyle(
-            color: AppColor.black87,
+          style: TextStyle(
+            color: AppColor.mainText,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
@@ -241,7 +241,7 @@ class _MetalMasterState extends State<MetalMaster> {
                     width: 46,
                     height: 46,
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
@@ -255,21 +255,21 @@ class _MetalMasterState extends State<MetalMaster> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           "Gold",
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            color: AppColor.black87,
+                            color: AppColor.mainText,
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           "₹ $goldRate",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: AppColor.black87,
+                            color: AppColor.mainText,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -296,10 +296,10 @@ class _MetalMasterState extends State<MetalMaster> {
                     width: 46,
                     height: 46,
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       AppIcon.metal,
                       color: AppColor.blueTagText,
                       size: 26,
@@ -310,21 +310,21 @@ class _MetalMasterState extends State<MetalMaster> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           "Silver",
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            color: AppColor.black87,
+                            color: AppColor.mainText,
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           "₹ $silverRate",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: AppColor.black87,
+                            color: AppColor.mainText,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -357,23 +357,23 @@ class _MetalMasterState extends State<MetalMaster> {
                 child: Container(
                   height: 42,
                   decoration: BoxDecoration(
-                    color: AppColor.white,
+                    color: AppColor.cardBg,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColor.grey300),
+                    border: Border.all(color: AppColor.border),
                   ),
                   child: TextField(
                     controller: _searchController,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: AppColor.black87,
+                      color: AppColor.mainText,
                     ),
                     decoration: InputDecoration(
                       hintText: AppString.searchMetalPlaceholder,
-                      hintStyle: const TextStyle(
+                      hintStyle: TextStyle(
                         color: AppColor.grey500,
                         fontSize: 13,
                       ),
-                      prefixIcon: const Icon(
+                      prefixIcon: Icon(
                         AppIcon.searchIcon,
                         color: AppColor.grey500,
                         size: 20,
@@ -420,9 +420,9 @@ class _MetalMasterState extends State<MetalMaster> {
                 height: 42,
                 width: 42,
                 decoration: BoxDecoration(
-                  color: AppColor.white,
+                  color: AppColor.cardBg,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColor.grey300),
+                  border: Border.all(color: AppColor.border),
                 ),
                 child: IconButton(
                   icon: const Icon(
@@ -440,29 +440,29 @@ class _MetalMasterState extends State<MetalMaster> {
                   Get.snackbar(
                     AppString.export,
                     "Exporting Metal Master list...",
-                    backgroundColor: AppColor.white,
-                    colorText: AppColor.black,
+                    backgroundColor: AppColor.cardBg,
+                    colorText: AppColor.mainText,
                     borderColor: AppColor.dashboardGold,
                     borderWidth: 1,
                     snackPosition: SnackPosition.BOTTOM,
                   );
                 },
-                icon: const Icon(
+                icon: Icon(
                   AppIcon.fileDownload,
                   size: 16,
-                  color: AppColor.black87,
+                  color: AppColor.mainText,
                 ),
-                label: const Text(
+                label: Text(
                   AppString.export,
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColor.black87,
+                    color: AppColor.mainText,
                   ),
                 ),
                 style: OutlinedButton.styleFrom(
-                  backgroundColor: AppColor.white,
-                  side: const BorderSide(color: AppColor.grey300),
+                  backgroundColor: AppColor.cardBg,
+                  side: BorderSide(color: AppColor.border),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -519,10 +519,10 @@ class _MetalMasterState extends State<MetalMaster> {
         decoration: BoxDecoration(
           color: isSelected
               ? AppColor.dashboardGold.withOpacity(0.08)
-              : AppColor.white,
+              : AppColor.cardBg,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isSelected ? AppColor.dashboardGold : AppColor.grey300,
+            color: isSelected ? AppColor.dashboardGold : AppColor.border,
           ),
         ),
         child: Row(
@@ -539,7 +539,7 @@ class _MetalMasterState extends State<MetalMaster> {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected ? AppColor.dashboardGold : AppColor.black87,
+                color: isSelected ? AppColor.dashboardGold : AppColor.mainText,
               ),
             ),
             const SizedBox(width: 6),
@@ -613,13 +613,14 @@ class _MetalMasterState extends State<MetalMaster> {
 
   Widget _buildTableView(List<ProductTypeData> list, {int startIndex = 0}) {
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColor.grey300),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.03),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -627,167 +628,173 @@ class _MetalMasterState extends State<MetalMaster> {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            headingRowColor: WidgetStateProperty.all(AppColor.dashboardGold),
-            headingTextStyle: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: AppColor.white,
-              fontSize: 13,
-            ),
-            dataRowMinHeight: 52,
-            dataRowMaxHeight: 52,
-            horizontalMargin: 16,
-            columnSpacing: 24,
-            columns: [
-              DataColumn(
-                label: Checkbox(
-                  value: _selectAll.value,
-                  activeColor: AppColor.white,
-                  checkColor: AppColor.dashboardGold,
-                  side: const BorderSide(color: AppColor.white, width: 1.5),
-                  onChanged: (val) {
-                    _selectAll.value = val ?? false;
-                    if (_selectAll.value) {
-                      _selectedIds.addAll(
-                        list.map((e) => e.productTypeId ?? ''),
-                      );
-                    } else {
-                      _selectedIds.clear();
-                    }
-                  },
-                ),
-              ),
-              const DataColumn(label: Text("#")),
-              const DataColumn(label: Text("Metal")),
-              const DataColumn(label: Text("Code")),
-              DataColumn(label: _sortHeader("Rate (₹)")),
-              DataColumn(label: _sortHeader("Qty / Weight")),
-              DataColumn(label: _sortHeader("Status")),
-              const DataColumn(label: Text("Actions")),
-            ],
-            rows: List.generate(list.length, (index) {
-              final item = list[index];
-              final id = item.productTypeId ?? '';
-              final isChecked = _selectedIds.contains(id);
-              final code = _generateCode(item.name);
-              final weightUnit = _getWeightUnit(item.name);
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                child: DataTable(
+                  headingRowColor:
+                      WidgetStateProperty.all(AppColor.dashboardGold),
+                  headingTextStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: AppColor.white,
+                    fontSize: 13,
+                  ),
+                  dataRowMinHeight: 52,
+                  dataRowMaxHeight: 52,
+                  horizontalMargin: 16,
+                  columnSpacing: 24,
+                  columns: [
+                    DataColumn(
+                      label: Checkbox(
+                        value: _selectAll.value,
+                        activeColor: AppColor.white,
+                        checkColor: AppColor.dashboardGold,
+                        side:
+                            const BorderSide(color: AppColor.white, width: 1.5),
+                        onChanged: (val) {
+                          _selectAll.value = val ?? false;
+                          if (_selectAll.value) {
+                            _selectedIds.addAll(
+                              list.map((e) => e.productTypeId ?? ''),
+                            );
+                          } else {
+                            _selectedIds.clear();
+                          }
+                        },
+                      ),
+                    ),
+                    const DataColumn(label: Text("#")),
+                    const DataColumn(label: Text("Metal")),
+                    const DataColumn(label: Text("Code")),
+                    DataColumn(label: _sortHeader("Rate (₹)")),
+                    DataColumn(label: _sortHeader("Qty / Weight")),
+                    DataColumn(label: _sortHeader("Status")),
+                    const DataColumn(label: Text("Actions")),
+                  ],
+                  rows: List.generate(list.length, (index) {
+                    final item = list[index];
+                    final id = item.productTypeId ?? '';
+                    final isChecked = _selectedIds.contains(id);
+                    final code = _generateCode(item.name);
+                    final weightUnit = _getWeightUnit(item.name);
 
-              return DataRow(
-                selected: isChecked,
-                cells: [
-                  DataCell(
-                    Checkbox(
-                      value: isChecked,
-                      activeColor: AppColor.dashboardGold,
-                      onChanged: (val) {
-                        if (val == true) {
-                          _selectedIds.add(id);
-                        } else {
-                          _selectedIds.remove(id);
-                          _selectAll.value = false;
-                        }
-                      },
-                    ),
-                  ),
-                  DataCell(
-                    Text(
-                      "${startIndex + index + 1}",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                        color: AppColor.black87,
-                      ),
-                    ),
-                  ),
-                  DataCell(
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          _getMetalIcon(item.name),
-                          color: AppColor.dashboardGold,
-                          size: 18,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          item.name ?? AppString.noName,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            color: AppColor.black87,
+                    return DataRow(
+                      selected: isChecked,
+                      cells: [
+                        DataCell(
+                          Checkbox(
+                            value: isChecked,
+                            activeColor: AppColor.dashboardGold,
+                            onChanged: (val) {
+                              if (val == true) {
+                                _selectedIds.add(id);
+                              } else {
+                                _selectedIds.remove(id);
+                                _selectAll.value = false;
+                              }
+                            },
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  DataCell(
-                    Text(
-                      code,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: AppColor.textSecondary,
-                      ),
-                    ),
-                  ),
-                  DataCell(
-                    Text(
-                      item.rate ?? "0.00",
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: AppColor.black87,
-                      ),
-                    ),
-                  ),
-                  DataCell(
-                    Text(
-                      weightUnit,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: AppColor.textSecondary,
-                      ),
-                    ),
-                  ),
-                  DataCell(_buildStatusBadge("Active")),
-                  DataCell(
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            AppIcon.eyeOutline,
-                            color: AppColor.black87,
-                            size: 18,
+                        DataCell(
+                          Text(
+                            "${startIndex + index + 1}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              color: AppColor.mainText,
+                            ),
                           ),
-                          tooltip: AppString.view,
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                          onPressed: () => _showAddEditDialog(item: item),
                         ),
-                        const SizedBox(width: 10),
-                        IconButton(
-                          icon: const Icon(
-                            AppIcon.editOutline,
-                            color: AppColor.black87,
-                            size: 18,
+                        DataCell(
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                _getMetalIcon(item.name),
+                                color: AppColor.dashboardGold,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                item.name ?? AppString.noName,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                  color: AppColor.mainText,
+                                ),
+                              ),
+                            ],
                           ),
-                          tooltip: AppString.edit,
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                          onPressed: () => _showAddEditDialog(item: item),
                         ),
-                        const SizedBox(width: 10),
-                        IconButton(
-                          icon: const Icon(
-                            AppIcon.deleteIcon,
-                            color: AppColor.deleteColor,
-                            size: 18,
+                        DataCell(
+                          Text(
+                            code,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: AppColor.subText,
+                            ),
                           ),
-                          tooltip: AppString.delete,
-                          padding: EdgeInsets.zero,
+                        ),
+                        DataCell(
+                          Text(
+                            item.rate ?? "0.00",
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: AppColor.mainText,
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Text(
+                            weightUnit,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppColor.subText,
+                            ),
+                          ),
+                        ),
+                        DataCell(_buildStatusBadge("Active")),
+                        DataCell(
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  AppIcon.eyeOutline,
+                                  color: AppColor.mainText,
+                                  size: 18,
+                                ),
+                                tooltip: AppString.view,
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                onPressed: () => _showAddEditDialog(item: item),
+                              ),
+                              const SizedBox(width: 10),
+                              IconButton(
+                                icon: Icon(
+                                  AppIcon.editOutline,
+                                  color: AppColor.mainText,
+                                  size: 18,
+                                ),
+                                tooltip: AppString.edit,
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                onPressed: () => _showAddEditDialog(item: item),
+                              ),
+                              const SizedBox(width: 10),
+                              IconButton(
+                                icon: const Icon(
+                                  AppIcon.deleteIcon,
+                                  color: AppColor.deleteColor,
+                                  size: 18,
+                                ),
+                                tooltip: AppString.delete,
+                                padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
                           onPressed: () => _showDeleteDialog(item),
                         ),
@@ -799,7 +806,10 @@ class _MetalMasterState extends State<MetalMaster> {
             }),
           ),
         ),
-      ),
+      );
+    },
+  ),
+),
     );
   }
 
@@ -825,7 +835,7 @@ class _MetalMasterState extends State<MetalMaster> {
         color: AppColor.greenTagBg,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
@@ -859,9 +869,9 @@ class _MetalMasterState extends State<MetalMaster> {
       children: [
         Text(
           "Showing $startNum – $endNum of $totalCount records",
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 13,
-            color: AppColor.black54,
+            color: AppColor.subText,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -874,15 +884,15 @@ class _MetalMasterState extends State<MetalMaster> {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: AppColor.grey300),
+                      border: Border.all(color: AppColor.border),
                     ),
                     child: Icon(
                       AppIcon.chevronLeft,
                       size: 16,
                       color: currentPage > 1
-                          ? AppColor.black87
+                          ? AppColor.mainText
                           : AppColor.grey400,
                     ),
                   ),
@@ -895,15 +905,15 @@ class _MetalMasterState extends State<MetalMaster> {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: AppColor.grey300),
+                      border: Border.all(color: AppColor.border),
                     ),
                     child: Icon(
                       AppIcon.chevronLeft,
                       size: 16,
                       color: currentPage > 1
-                          ? AppColor.black87
+                          ? AppColor.mainText
                           : AppColor.grey400,
                     ),
                   ),
@@ -933,15 +943,15 @@ class _MetalMasterState extends State<MetalMaster> {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: AppColor.grey300),
+                      border: Border.all(color: AppColor.border),
                     ),
                     child: Icon(
                       AppIcon.chevronRight,
                       size: 16,
                       color: currentPage < totalPages
-                          ? AppColor.black87
+                          ? AppColor.mainText
                           : AppColor.grey400,
                     ),
                   ),
@@ -954,15 +964,15 @@ class _MetalMasterState extends State<MetalMaster> {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: AppColor.white,
+                      color: AppColor.cardBg,
                       borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: AppColor.grey300),
+                      border: Border.all(color: AppColor.border),
                     ),
                     child: Icon(
                       AppIcon.chevronRight,
                       size: 16,
                       color: currentPage < totalPages
-                          ? AppColor.black87
+                          ? AppColor.mainText
                           : AppColor.grey400,
                     ),
                   ),
@@ -990,23 +1000,23 @@ class _MetalMasterState extends State<MetalMaster> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColor.white,
+                  color: AppColor.cardBg,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColor.grey300),
+                  border: Border.all(color: AppColor.border),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       "${_rowsPerPage.value} / page",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: AppColor.black87,
+                        color: AppColor.mainText,
                       ),
                     ),
                     const SizedBox(width: 6),
-                    const Icon(
+                    Icon(
                       AppIcon.arrow_down,
                       size: 16,
                       color: AppColor.grey500,
@@ -1036,9 +1046,10 @@ class _MetalMasterState extends State<MetalMaster> {
 
     Get.dialog(
       Dialog(
+        backgroundColor: AppColor.cardBg,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Container(
-          width: 400,
+          width: 380,
           padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -1054,25 +1065,35 @@ class _MetalMasterState extends State<MetalMaster> {
                   const SizedBox(width: 8),
                   Text(
                     item == null ? AppString.addMetal : "Edit Metal Master",
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: AppColor.black87,
+                      color: AppColor.mainText,
                     ),
                   ),
                   const Spacer(),
                   IconButton(
-                    icon: const Icon(AppIcon.clearIcon, size: 20),
+                    icon: Icon(AppIcon.clearIcon, size: 20, color: AppColor.mainText),
                     onPressed: () => Get.back(),
                   ),
                 ],
               ),
-              const Divider(height: 20),
+              Divider(height: 20, color: AppColor.border),
               const SizedBox(height: 10),
               TextField(
                 controller: metalMasterUI.metalController,
+                style: TextStyle(color: AppColor.mainText),
                 decoration: InputDecoration(
                   labelText: AppString.metal,
+                  labelStyle: TextStyle(color: AppColor.subText),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: AppColor.border),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: AppColor.dashboardGold),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -1082,8 +1103,18 @@ class _MetalMasterState extends State<MetalMaster> {
               TextField(
                 controller: metalMasterUI.rateController,
                 keyboardType: TextInputType.number,
+                style: TextStyle(color: AppColor.mainText),
                 decoration: InputDecoration(
                   labelText: AppString.rate,
+                  labelStyle: TextStyle(color: AppColor.subText),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: AppColor.border),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: AppColor.dashboardGold),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -1123,8 +1154,8 @@ class _MetalMasterState extends State<MetalMaster> {
 
   Widget _shimmerLoading() {
     return Shimmer.fromColors(
-      baseColor: AppColor.grey300,
-      highlightColor: AppColor.white,
+      baseColor: AppColor.isDark ? const Color(0xFF1E293B) : AppColor.grey300,
+      highlightColor: AppColor.isDark ? const Color(0xFF334155) : AppColor.white,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -1134,7 +1165,7 @@ class _MetalMasterState extends State<MetalMaster> {
               height: 52,
               margin: const EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
-                color: AppColor.white,
+                color: AppColor.cardBg,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),

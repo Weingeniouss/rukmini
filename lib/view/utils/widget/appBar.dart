@@ -5,6 +5,7 @@ import 'package:rukmini/controller/ui/widget/drawerControllerUI.dart';
 import 'package:rukmini/view/utils/app_background.dart';
 import 'package:rukmini/view/utils/app_size.dart';
 import 'package:rukmini/view/utils/app_color.dart';
+import 'package:rukmini/view/utils/app_image.dart';
 import '../app_icon.dart';
 
 AppBar appBar({
@@ -31,7 +32,7 @@ AppBar appBar({
     titleWidget = Text(
       title,
       style: TextStyle(
-        color: isPremium ? AppColor.goldColor : AppColor.black,
+        color: isPremium ? AppColor.goldColor : AppColor.mainText,
         fontSize: isPremium ? AppSize.titleText * 1.2 : AppSize.titleText,
         fontWeight: FontWeight.bold,
         letterSpacing: isPremium ? 2 : null,
@@ -46,9 +47,9 @@ AppBar appBar({
   final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
 
   return AppBar(
-    surfaceTintColor: isPremium ? AppColor.black : AppColor.backgroundColor,
-    foregroundColor: isPremium ? AppColor.black : AppColor.backgroundColor,
-    backgroundColor: isPremium ? AppColor.black : AppColor.backgroundColor,
+    surfaceTintColor: isPremium ? AppColor.black : AppColor.screenBg,
+    foregroundColor: isPremium ? AppColor.black : AppColor.screenBg,
+    backgroundColor: isPremium ? AppColor.black : AppColor.screenBg,
     elevation: 0,
     flexibleSpace: isPremium
         ? Container(
@@ -75,23 +76,23 @@ AppBar appBar({
                 NavDrawerController.back();
               },
               isPremium: isPremium,
-              iconColor: isDesktopOrTablet ? AppColor.black : null,
+              iconColor: isDesktopOrTablet ? AppColor.mainText : null,
             ),
           )
         : (!isDesktopOrTablet)
-        ? Builder(
-            builder: (context) {
-              return Padding(
-                padding: EdgeInsets.only(left: AppSize.p10),
-                child: _appBarButton(
-                  AppIcon.menu,
-                  () => Scaffold.of(context).openDrawer(),
-                  isPremium: isPremium,
-                ),
-              );
-            },
-          )
-        : null,
+            ? Builder(
+                builder: (context) {
+                  return Padding(
+                    padding: EdgeInsets.only(left: AppSize.p10),
+                    child: _appBarButton(
+                      AppIcon.menu,
+                      () => Scaffold.of(context).openDrawer(),
+                      isPremium: isPremium,
+                    ),
+                  );
+                },
+              )
+            : null,
     actions: [
       if (searchIcon == true)
         _appBarButton(
@@ -196,7 +197,7 @@ Widget _appBarButton(
       margin: EdgeInsets.symmetric(vertical: AppSize.p8, horizontal: 4),
       padding: EdgeInsets.all(AppSize.p4),
       decoration: BoxDecoration(
-        color: isPremium ? AppColor.white.withOpacity(0.1) : AppColor.white,
+        color: isPremium ? AppColor.white.withOpacity(0.1) : AppColor.cardBg,
         borderRadius: BorderRadius.circular(AppSize.p10),
         border: Border.all(color: AppColor.goldColor.withOpacity(0.3)),
         boxShadow: isPremium

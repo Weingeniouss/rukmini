@@ -153,10 +153,11 @@ class ChangeTheLocker extends StatelessWidget {
             flex: 1,
             child: TextField(
               controller: uiController.lockerCodeController,
+              style: TextStyle(color: AppColor.mainText),
               decoration: InputDecoration(
                 hintText: AppString.lockerCode,
                 hintStyle: TextStyle(
-                  color: AppColor.textColor,
+                  color: AppColor.subText,
                   fontSize: AppSize.size15,
                 ),
                 border: InputBorder.none,
@@ -404,7 +405,7 @@ class ChangeTheLocker extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: AppSize.size12,
-                                color: AppColor.dark,
+                                color: AppColor.mainText,
                               ),
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
@@ -511,7 +512,7 @@ class ChangeTheLocker extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: Get.width * 0.032,
-                                  color: AppColor.dark,
+                                  color: AppColor.mainText,
                                 ),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,

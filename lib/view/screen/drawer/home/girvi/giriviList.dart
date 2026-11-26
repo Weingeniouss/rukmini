@@ -28,10 +28,15 @@ class _GiriviListState extends State<GiriviList> {
   final giriviListController = Get.put(GiriviListController());
   final yearController = Get.put(YearController());
   final ScrollController _scrollController = ScrollController();
+  final ScrollController _horizontalScrollController = ScrollController();
 
-  final RxBool _isGridView = true.obs;
+  final RxBool _isGridView = false.obs;
   final RxString _selectedBranch = "All Branches".obs;
   final RxString _selectedStatus = "All Status".obs;
+  final RxSet<String> _selectedIds = <String>{}.obs;
+  final RxBool _selectAll = false.obs;
+  final RxInt _rowsPerPage = 10.obs;
+  final RxInt _currentPageIndex = 1.obs;
 
   @override
   void initState() {
@@ -41,8 +46,9 @@ class _GiriviListState extends State<GiriviList> {
     });
 
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+      if (_scrollController.hasClients &&
+          _scrollController.position.pixels ==
+              _scrollController.position.maxScrollExtent) {
         if (!giriviListController.isLoadMore.value &&
             giriviListController.hasMoreData.value) {
           callApiGirviList(giriviListController);
@@ -75,6 +81,7 @@ class _GiriviListState extends State<GiriviList> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _horizontalScrollController.dispose();
     super.dispose();
   }
 
@@ -143,54 +150,78 @@ class _GiriviListState extends State<GiriviList> {
         _isGridView.value;
         _selectedBranch.value;
         _selectedStatus.value;
+        _selectedIds.length;
+        _selectAll.value;
+        _rowsPerPage.value;
+        _currentPageIndex.value;
         giriviListController.selectedYearTitle.value;
+
+        final perPage = _rowsPerPage.value;
+        int pageIndex = _currentPageIndex.value;
+        int totalItems = filteredList.length;
+
+        int startIndex = (pageIndex - 1) * perPage;
+        if (startIndex >= totalItems && totalItems > 0) {
+          startIndex = (totalItems - 1) ~/ perPage * perPage;
+        }
+        final endIndex = (startIndex + perPage).clamp(0, totalItems);
+        final pagedList = filteredList.sublist(startIndex, endIndex);
+
+        final startNum = totalItems == 0 ? 0 : startIndex + 1;
+        final endNum = endIndex;
 
         return RefreshIndicator(
           backgroundColor: AppColor.white,
           color: AppColor.dashboardGold,
           elevation: 2.0,
           onRefresh: () => callApiGirviList(giriviListController),
-          child: SingleChildScrollView(
+          child: Scrollbar(
             controller: _scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildSummaryCards(filteredList, totalCount),
-                _buildFilterBar(),
-                if (filteredList.isEmpty)
-                  Container(
-                    height: 200,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: AppColor.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColor.grey300),
-                    ),
-                    child: Text(
-                      AppString.noDataFound,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        color: AppColor.grey500,
-                        fontWeight: FontWeight.w500,
+            thumbVisibility: true,
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSummaryCards(filteredList, totalCount),
+                  _buildFilterBar(),
+                  if (filteredList.isEmpty)
+                    Container(
+                      height: 200,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: AppColor.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColor.grey300),
+                      ),
+                      child: Text(
+                        AppString.noDataFound,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: AppColor.grey500,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    )
+                  else
+                    _isGridView.value
+                        ? _buildGridView(pagedList)
+                        : _buildTableView(pagedList, startIndex: startIndex),
+                  if (giriviListController.isLoadMore.value)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: AppColor.dashboardGold,
+                        ),
                       ),
                     ),
-                  )
-                else
-                  _isGridView.value
-                      ? _buildGridView(filteredList)
-                      : _buildListView(filteredList),
-                if (giriviListController.isLoadMore.value)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: AppColor.dashboardGold,
-                      ),
-                    ),
-                  ),
-              ],
+                  const SizedBox(height: 12),
+                  _buildPaginationBar(startNum, endNum, totalCount),
+                ],
+              ),
             ),
           ),
         );
@@ -205,7 +236,8 @@ class _GiriviListState extends State<GiriviList> {
     double totalAmtSum = 0.0;
     for (var x in list) {
       if (x.givenAmt != null) {
-        final clean = x.givenAmt!.replaceAll(',', '').replaceAll('₹', '').trim();
+        final clean =
+            x.givenAmt!.replaceAll(',', '').replaceAll('₹', '').trim();
         totalAmtSum += double.tryParse(clean) ?? 0.0;
       }
     }
@@ -321,12 +353,12 @@ class _GiriviListState extends State<GiriviList> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColor.grey300.withOpacity(0.6)),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.02),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.02),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -351,19 +383,19 @@ class _GiriviListState extends State<GiriviList> {
             children: [
               Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: AppColor.grey500,
+                  color: AppColor.subText,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
                 value,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: AppColor.black87,
+                  color: AppColor.mainText,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -391,12 +423,12 @@ class _GiriviListState extends State<GiriviList> {
                 child: Container(
                   height: 42,
                   decoration: BoxDecoration(
-                    color: AppColor.white,
+                    color: AppColor.cardBg,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColor.grey300),
+                    border: Border.all(color: AppColor.border),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColor.black.withOpacity(0.02),
+                        color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.02),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),
@@ -404,17 +436,17 @@ class _GiriviListState extends State<GiriviList> {
                   ),
                   child: TextField(
                     controller: giriviListController.searchTextController,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: AppColor.black87,
+                      color: AppColor.mainText,
                     ),
                     decoration: InputDecoration(
                       hintText: AppString.searchGirviPlaceholder,
-                      hintStyle: const TextStyle(
+                      hintStyle: TextStyle(
                         color: AppColor.grey500,
                         fontSize: 13,
                       ),
-                      prefixIcon: const Icon(
+                      prefixIcon: Icon(
                         AppIcon.searchIcon,
                         color: AppColor.grey500,
                         size: 20,
@@ -424,7 +456,8 @@ class _GiriviListState extends State<GiriviList> {
                           ? IconButton(
                               icon: const Icon(AppIcon.clearIcon, size: 18),
                               onPressed: () {
-                                giriviListController.searchTextController.clear();
+                                giriviListController.searchTextController
+                                    .clear();
                                 setState(() {});
                                 callApiGirviList(giriviListController);
                               },
@@ -472,9 +505,9 @@ class _GiriviListState extends State<GiriviList> {
                 height: 42,
                 width: 42,
                 decoration: BoxDecoration(
-                  color: AppColor.white,
+                  color: AppColor.cardBg,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColor.grey300),
+                  border: Border.all(color: AppColor.border),
                 ),
                 child: IconButton(
                   icon: const Icon(
@@ -489,15 +522,15 @@ class _GiriviListState extends State<GiriviList> {
 
               Container(
                 decoration: BoxDecoration(
-                  color: AppColor.white,
+                  color: AppColor.cardBg,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColor.grey300),
+                  border: Border.all(color: AppColor.border),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     InkWell(
-                      onTap: () => _isGridView.value = true,
+                      onTap: () => _isGridView.value = false,
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(9),
                         bottomLeft: Radius.circular(9),
@@ -508,7 +541,7 @@ class _GiriviListState extends State<GiriviList> {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: _isGridView.value
+                          color: !_isGridView.value
                               ? AppColor.dashboardGold
                               : AppColor.transparent,
                           borderRadius: const BorderRadius.only(
@@ -517,16 +550,16 @@ class _GiriviListState extends State<GiriviList> {
                           ),
                         ),
                         child: Icon(
-                          AppIcon.gridView,
+                          AppIcon.listBulleted,
                           size: 18,
-                          color: _isGridView.value
+                          color: !_isGridView.value
                               ? AppColor.white
                               : AppColor.grey500,
                         ),
                       ),
                     ),
                     InkWell(
-                      onTap: () => _isGridView.value = false,
+                      onTap: () => _isGridView.value = true,
                       borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(9),
                         bottomRight: Radius.circular(9),
@@ -537,7 +570,7 @@ class _GiriviListState extends State<GiriviList> {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: !_isGridView.value
+                          color: _isGridView.value
                               ? AppColor.dashboardGold
                               : AppColor.transparent,
                           borderRadius: const BorderRadius.only(
@@ -546,9 +579,9 @@ class _GiriviListState extends State<GiriviList> {
                           ),
                         ),
                         child: Icon(
-                          AppIcon.listBulleted,
+                          AppIcon.gridView,
                           size: 18,
-                          color: !_isGridView.value
+                          color: _isGridView.value
                               ? AppColor.white
                               : AppColor.grey500,
                         ),
@@ -582,10 +615,10 @@ class _GiriviListState extends State<GiriviList> {
         decoration: BoxDecoration(
           color: isSelected
               ? AppColor.dashboardGold.withOpacity(0.08)
-              : AppColor.white,
+              : AppColor.cardBg,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isSelected ? AppColor.dashboardGold : AppColor.grey300,
+            color: isSelected ? AppColor.dashboardGold : AppColor.border,
           ),
         ),
         child: Row(
@@ -602,7 +635,7 @@ class _GiriviListState extends State<GiriviList> {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected ? AppColor.dashboardGold : AppColor.black87,
+                color: isSelected ? AppColor.dashboardGold : AppColor.mainText,
               ),
             ),
             const SizedBox(width: 6),
@@ -762,15 +795,482 @@ class _GiriviListState extends State<GiriviList> {
     );
   }
 
-  Widget _buildListView(List<GirviData> list) {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: list.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 12),
-      itemBuilder: (context, index) {
-        return _buildGirviCardItem(list[index], isGrid: false);
-      },
+  Widget _buildTableView(List<GirviData> list, {int startIndex = 0}) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppColor.cardBg,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColor.border),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Scrollbar(
+            controller: _horizontalScrollController,
+            thumbVisibility: true,
+            scrollbarOrientation: ScrollbarOrientation.bottom,
+            child: SingleChildScrollView(
+              controller: _horizontalScrollController,
+              scrollDirection: Axis.horizontal,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minWidth: constraints.maxWidth,
+                ),
+                child: DataTable(
+                  headingRowColor:
+                      WidgetStateProperty.all(AppColor.dashboardGold),
+                  headingRowHeight: 48,
+                  dataRowMinHeight: 52,
+                  dataRowMaxHeight: 56,
+                  horizontalMargin: 16,
+                  columnSpacing: 20,
+                  showCheckboxColumn: false,
+                  columns: [
+                    DataColumn(
+                      label: Checkbox(
+                        value: _selectAll.value,
+                        activeColor: AppColor.white,
+                        checkColor: AppColor.dashboardGold,
+                        side:
+                            const BorderSide(color: AppColor.white, width: 1.5),
+                        onChanged: (val) {
+                          _selectAll.value = val ?? false;
+                          if (_selectAll.value) {
+                            _selectedIds.assignAll(
+                              list
+                                  .map((e) => e.girviId ?? "")
+                                  .where((id) => id.isNotEmpty),
+                            );
+                          } else {
+                            _selectedIds.clear();
+                          }
+                        },
+                      ),
+                    ),
+                    const DataColumn(
+                      label: Text(
+                        "#",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.white,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                    DataColumn(label: _tableHeaderWithSort("Customer")),
+                    DataColumn(label: _tableHeaderWithSort("Girvi ID")),
+                    DataColumn(label: _tableHeaderWithSort("Girvi Date")),
+                    DataColumn(label: _tableHeaderWithSort("Given Amount")),
+                    DataColumn(label: _tableHeaderWithSort("Interest (%)")),
+                    DataColumn(label: _tableHeaderWithSort("Phone")),
+                    DataColumn(label: _tableHeaderWithSort("Status")),
+                    const DataColumn(
+                      label: Text(
+                        "Actions",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.white,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ],
+                  rows: List.generate(list.length, (index) {
+                    final item = list[index];
+                    final isClosed = item.isClosed == "1";
+                    final girviId = item.girviId ?? "$index";
+                    final isChecked = _selectedIds.contains(girviId);
+
+                    return DataRow(
+                      selected: isChecked,
+                      cells: [
+                        DataCell(
+                          Checkbox(
+                            value: isChecked,
+                            activeColor: AppColor.dashboardGold,
+                            onChanged: (val) {
+                              if (val == true) {
+                                _selectedIds.add(girviId);
+                              } else {
+                                _selectedIds.remove(girviId);
+                                _selectAll.value = false;
+                              }
+                            },
+                          ),
+                        ),
+                        DataCell(
+                          Text(
+                            "${startIndex + index + 1}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              color: AppColor.mainText,
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 28,
+                                height: 28,
+                                decoration: BoxDecoration(
+                                  color: AppColor.goldTagBg,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  AppIcon.person,
+                                  color: AppColor.dashboardGold,
+                                  size: 16,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                item.custName ?? AppString.noName,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                  color: AppColor.mainText,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColor.goldTagBg.withOpacity(0.6),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              "# ${item.uniqueId ?? '-'}",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.goldTagText,
+                              ),
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Text(
+                            _formatDate(item.girviDate),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColor.textSecondary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Text(
+                            "₹ ${item.givenAmt ?? '0.00'}",
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: AppColor.dashboardGold,
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Text(
+                            "${item.interest ?? '0.00'} %",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: AppColor.textMuted,
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Text(
+                            item.custPhone ?? "-",
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: AppColor.black87,
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isClosed
+                                  ? AppColor.redLightBg
+                                  : AppColor.greenTagBg,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              isClosed ? AppString.closed : AppString.open,
+                              style: TextStyle(
+                                color: isClosed
+                                    ? AppColor.redText
+                                    : AppColor.greenTagText,
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  AppIcon.eyeOutline,
+                                  color: AppColor.dashboardGold,
+                                  size: 18,
+                                ),
+                                tooltip: AppString.view,
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                onPressed: () => NavDrawerController.toNamed(
+                                  '/giriviDetail',
+                                  arguments: item.girviId,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              IconButton(
+                                icon: const Icon(
+                                  AppIcon.chevronRight,
+                                  color: AppColor.dashboardGold,
+                                  size: 18,
+                                ),
+                                tooltip: AppString.viewDetails,
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                onPressed: () => NavDrawerController.toNamed(
+                                  '/giriviDetail',
+                                  arguments: item.girviId,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _tableHeaderWithSort(String text) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          text,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AppColor.white,
+            fontSize: 13,
+          ),
+        ),
+        const SizedBox(width: 4),
+        const Icon(
+          AppIcon.unfoldMore,
+          size: 14,
+          color: AppColor.white,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPaginationBar(int startNum, int endNum, int totalCount) {
+    if (totalCount <= 0) return const SizedBox.shrink();
+
+    final perPage = _rowsPerPage.value;
+    final totalPages = (totalCount / perPage).ceil().clamp(1, 9999);
+    final currentPage = _currentPageIndex.value.clamp(1, totalPages);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          "Showing $startNum – $endNum of $totalCount records",
+          style: TextStyle(
+            fontSize: 13,
+            color: AppColor.subText,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Row(
+          children: [
+            Row(
+              children: [
+                InkWell(
+                  onTap: currentPage > 1
+                      ? () => _currentPageIndex.value = 1
+                      : null,
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColor.cardBg,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColor.border),
+                    ),
+                    child: Icon(
+                      AppIcon.chevronLeft,
+                      size: 16,
+                      color: currentPage > 1
+                          ? AppColor.mainText
+                          : AppColor.grey400,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                InkWell(
+                  onTap: currentPage > 1
+                      ? () => _currentPageIndex.value = currentPage - 1
+                      : null,
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColor.cardBg,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColor.border),
+                    ),
+                    child: Icon(
+                      AppIcon.chevronLeft,
+                      size: 16,
+                      color: currentPage > 1
+                          ? AppColor.mainText
+                          : AppColor.grey400,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppColor.dashboardGold,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    "$currentPage",
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: AppColor.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                InkWell(
+                  onTap: currentPage < totalPages
+                      ? () => _currentPageIndex.value = currentPage + 1
+                      : null,
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColor.cardBg,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColor.border),
+                    ),
+                    child: Icon(
+                      AppIcon.chevronRight,
+                      size: 16,
+                      color: currentPage < totalPages
+                          ? AppColor.mainText
+                          : AppColor.grey400,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                InkWell(
+                  onTap: currentPage < totalPages
+                      ? () => _currentPageIndex.value = totalPages
+                      : null,
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColor.cardBg,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColor.border),
+                    ),
+                    child: Icon(
+                      AppIcon.chevronRight,
+                      size: 16,
+                      color: currentPage < totalPages
+                          ? AppColor.mainText
+                          : AppColor.grey400,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 14),
+            PopupMenuButton<int>(
+              onSelected: (count) {
+                _rowsPerPage.value = count;
+                _currentPageIndex.value = 1;
+              },
+              itemBuilder: (context) => [10, 25, 50, 100]
+                  .map(
+                    (count) => PopupMenuItem<int>(
+                      value: count,
+                      child: Text(
+                        "$count / page",
+                        style: const TextStyle(fontSize: 13),
+                      ),
+                    ),
+                  )
+                  .toList(),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColor.cardBg,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColor.border),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "${_rowsPerPage.value} / page",
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.mainText,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Icon(
+                      AppIcon.arrow_down,
+                      size: 16,
+                      color: AppColor.grey500,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -807,7 +1307,7 @@ class _GiriviListState extends State<GiriviList> {
                   Container(
                     width: 36,
                     height: 36,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: AppColor.goldTagBg,
                       shape: BoxShape.circle,
                     ),
@@ -844,7 +1344,7 @@ class _GiriviListState extends State<GiriviList> {
                           ),
                           child: Text(
                             "# ${item.uniqueId ?? '-'}",
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
                               color: AppColor.goldTagText,
@@ -878,7 +1378,7 @@ class _GiriviListState extends State<GiriviList> {
                 ],
               ),
 
-              const Divider(height: 16, color: AppColor.grey200),
+              Divider(height: 16, color: AppColor.grey200),
 
               Row(
                 children: [
@@ -890,7 +1390,7 @@ class _GiriviListState extends State<GiriviList> {
                   const SizedBox(width: 4),
                   Text(
                     formattedDate,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       color: AppColor.textSecondary,
                       fontWeight: FontWeight.w500,
@@ -903,7 +1403,7 @@ class _GiriviListState extends State<GiriviList> {
                     color: AppColor.dashboardGold,
                   ),
                   const SizedBox(width: 4),
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       "Pandesara",
                       style: TextStyle(
@@ -942,7 +1442,7 @@ class _GiriviListState extends State<GiriviList> {
                       const SizedBox(width: 4),
                       Text(
                         '(${item.interest ?? '0.00'}%)',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColor.textMuted,
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
@@ -1007,13 +1507,13 @@ class _GiriviListState extends State<GiriviList> {
       padding: const EdgeInsets.all(16),
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
-          baseColor: AppColor.grey300,
-          highlightColor: AppColor.white,
+          baseColor: AppColor.isDark ? const Color(0xFF1E293B) : AppColor.grey300,
+          highlightColor: AppColor.isDark ? const Color(0xFF334155) : AppColor.white,
           child: Container(
             margin: const EdgeInsets.symmetric(vertical: 8),
             height: 155,
             decoration: BoxDecoration(
-              color: AppColor.white,
+              color: AppColor.cardBg,
               borderRadius: BorderRadius.circular(16),
             ),
           ),

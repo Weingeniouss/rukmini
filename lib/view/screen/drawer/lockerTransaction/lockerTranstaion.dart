@@ -123,7 +123,7 @@ class LockerTranStaion extends StatelessWidget {
         Text(
           title,
           style: TextStyle(
-            color: AppColor.black,
+            color: AppColor.mainText,
             fontSize: AppSize.titleText,
             fontWeight: FontWeight.bold,
           ),
@@ -229,7 +229,7 @@ class LockerTranStaion extends StatelessWidget {
   void _showLockerSelectionDialog() {
     Get.dialog(
       AlertDialog(
-        backgroundColor: AppColor.white,
+        backgroundColor: AppColor.cardBg,
         titlePadding: EdgeInsets.zero,
         contentPadding: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
@@ -330,190 +330,197 @@ class LockerTranStaion extends StatelessWidget {
         vertical: AppSize.p8,
       ),
       child: Container(
+        width: double.infinity,
         decoration: BoxDecoration(
-          color: AppColor.white,
+          color: AppColor.cardBg,
           borderRadius: BorderRadius.circular(AppSize.p12),
-          border: Border.all(color: AppColor.tableBorder),
+          border: Border.all(color: AppColor.border),
           boxShadow: [
             BoxShadow(
-              color: AppColor.black.withOpacity(0.04),
+              color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.04),
               blurRadius: AppSize.p10,
               offset: const Offset(0, 4),
             ),
           ],
         ),
         clipBehavior: Clip.antiAlias,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Theme(
-            data: Theme.of(context).copyWith(
-              dividerColor: AppColor.tableDivider,
-            ),
-            child: DataTable(
-              headingRowColor: WidgetStateProperty.all(AppColor.tableHeaderBg),
-              headingRowHeight: 48,
-              dataRowHeight: 60,
-              horizontalMargin: 16,
-              columnSpacing: 28,
-              columns: const [
-                DataColumn(
-                  label: Text(
-                    AppString.hashSymbol,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.textMedium,
-                      fontSize: 13,
-                    ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    dividerColor: AppColor.tableDivider,
                   ),
-                ),
-                DataColumn(
-                  label: Text(
-                    AppString.customerName,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.textMedium,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    AppString.girviId,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.textMedium,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    AppString.lockerCode,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.textMedium,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    AppString.proTyp,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.textMedium,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    AppString.totalAmt,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.textMedium,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    AppString.actions,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.textMedium,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-              ],
-              rows: List.generate(items.length, (index) {
-                final item = items[index];
-                return DataRow(
-                  cells: [
-                    // #
-                    DataCell(
-                      Text(
-                        "${index + 1}",
-                        style: TextStyle(
-                          color: AppColor.textMuted,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
-                    // Customer Name
-                    DataCell(
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(AppSize.p4),
-                            decoration: BoxDecoration(
-                              color: AppColor.goldColor.withOpacity(0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              AppIcon.person,
-                              color: AppColor.goldColor,
-                              size: AppSize.p16,
-                            ),
-                          ),
-                          SizedBox(width: AppSize.p8),
-                          Text(
-                            item.custName ?? AppString.na,
-                            style: TextStyle(
-                              color: AppColor.dark,
-                              fontWeight: FontWeight.w600,
-                              fontSize: AppSize.size14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Girvi ID
-                    DataCell(
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: AppSize.p8,
-                          vertical: AppSize.p4 / 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColor.blueTagBg,
-                          borderRadius: BorderRadius.circular(AppSize.p12),
-                        ),
-                        child: Text(
-                          item.uniqueId ?? AppString.na,
+                  child: DataTable(
+                    headingRowColor:
+                        WidgetStateProperty.all(AppColor.tableHeaderBg),
+                    headingRowHeight: 48,
+                    dataRowHeight: 60,
+                    horizontalMargin: 16,
+                    columnSpacing: 28,
+                    columns: [
+                      DataColumn(
+                        label: Text(
+                          AppString.hashSymbol,
                           style: TextStyle(
-                            color: AppColor.blueTagText,
-                            fontWeight: FontWeight.w600,
-                            fontSize: AppSize.size12,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.mainText,
+                            fontSize: 13,
                           ),
                         ),
                       ),
-                    ),
-                    // Locker Code
-                    DataCell(
-                      Text(
-                        "${item.lockerCode}-${item.code}",
-                        style: TextStyle(
-                          color: AppColor.dark,
-                          fontWeight: FontWeight.w500,
-                          fontSize: AppSize.size14,
+                      DataColumn(
+                        label: Text(
+                          AppString.customerName,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.mainText,
+                            fontSize: 13,
+                          ),
                         ),
                       ),
-                    ),
-                    // Total Prod
-                    DataCell(
-                      Text(
-                        "${item.tatalProd} ${AppString.pcs}",
-                        style: TextStyle(
-                          color: AppColor.dark,
-                          fontWeight: FontWeight.w500,
-                          fontSize: AppSize.size14,
+                      DataColumn(
+                        label: Text(
+                          AppString.girviId,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.mainText,
+                            fontSize: 13,
+                          ),
                         ),
                       ),
-                    ),
+                      DataColumn(
+                        label: Text(
+                          AppString.lockerCode,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.mainText,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          AppString.proTyp,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.mainText,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          AppString.totalAmt,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.mainText,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          AppString.actions,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.mainText,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    ],
+                    rows: List.generate(items.length, (index) {
+                      final item = items[index];
+                      return DataRow(
+                        cells: [
+                          // #
+                          DataCell(
+                            Text(
+                              "${index + 1}",
+                              style: TextStyle(
+                                color: AppColor.subText,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                          // Customer Name
+                          DataCell(
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(AppSize.p4),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.goldColor.withOpacity(0.1),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    AppIcon.person,
+                                    color: AppColor.goldColor,
+                                    size: AppSize.p16,
+                                  ),
+                                ),
+                                SizedBox(width: AppSize.p8),
+                                Text(
+                                  item.custName ?? AppString.na,
+                                  style: TextStyle(
+                                    color: AppColor.mainText,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: AppSize.size14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Girvi ID
+                          DataCell(
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppSize.p8,
+                                vertical: AppSize.p4 / 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColor.blueTagBg,
+                                borderRadius:
+                                    BorderRadius.circular(AppSize.p12),
+                              ),
+                              child: Text(
+                                item.uniqueId ?? AppString.na,
+                                style: TextStyle(
+                                  color: AppColor.blueTagText,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: AppSize.size12,
+                                ),
+                              ),
+                            ),
+                          ),
+                          // Locker Code
+                          DataCell(
+                            Text(
+                              "${item.lockerCode}-${item.code}",
+                              style: TextStyle(
+                                color: AppColor.mainText,
+                                fontWeight: FontWeight.w500,
+                                fontSize: AppSize.size14,
+                              ),
+                            ),
+                          ),
+                          // Total Prod
+                          DataCell(
+                            Text(
+                              "${item.tatalProd} ${AppString.pcs}",
+                              style: TextStyle(
+                                color: AppColor.mainText,
+                                fontWeight: FontWeight.w500,
+                                fontSize: AppSize.size14,
+                              ),
+                            ),
+                          ),
                     // Total Amt
                     DataCell(
                       Text(
@@ -547,7 +554,10 @@ class LockerTranStaion extends StatelessWidget {
             ),
           ),
         ),
-      ),
+      );
+    },
+  ),
+),
     );
   }
 
@@ -556,11 +566,12 @@ class LockerTranStaion extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(bottom: AppSize.p16),
         decoration: BoxDecoration(
-          color: AppColor.white,
+          color: AppColor.cardBg,
           borderRadius: BorderRadius.circular(AppSize.p12),
+          border: Border.all(color: AppColor.border),
           boxShadow: [
             BoxShadow(
-              color: AppColor.black.withOpacity(0.05),
+              color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.05),
               blurRadius: AppSize.p10,
               offset: const Offset(0, 4),
             ),
