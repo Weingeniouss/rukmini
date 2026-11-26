@@ -81,9 +81,9 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
         child: Column(
           children: [
             TabBar(
-              labelColor: AppColor.primaryColor,
-              unselectedLabelColor: AppColor.textColor,
-              indicatorColor: AppColor.primaryColor,
+              labelColor: AppColor.goldColor,
+              unselectedLabelColor: AppColor.subText,
+              indicatorColor: AppColor.goldColor,
               indicatorSize: TabBarIndicatorSize.tab,
               tabs: [
                 Tab(text: AppString.productDetail),
@@ -99,8 +99,11 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
                 final detail =
                     lockerDetailController.lockerDetailData.value.data;
                 if (detail == null) {
-                  return const Center(
-                    child: Text(AppString.noTransactionsFound),
+                  return Center(
+                    child: Text(
+                      AppString.noTransactionsFound,
+                      style: TextStyle(color: AppColor.subText),
+                    ),
                   );
                 }
 
@@ -120,7 +123,12 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
 
   Widget _buildProductDetailsList(LockerDetailData detail) {
     if (detail.productList == null || detail.productList!.isEmpty) {
-      return const Center(child: Text(AppString.noProductsFound));
+      return Center(
+        child: Text(
+          AppString.noProductsFound,
+          style: TextStyle(color: AppColor.subText),
+        ),
+      );
     }
 
     final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
@@ -206,7 +214,7 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
                 text: TextSpan(
                   style: TextStyle(
                     fontSize: AppSize.size14,
-                    color: AppColor.dark,
+                    color: AppColor.mainText,
                   ),
                   children: [
                     const TextSpan(
@@ -233,7 +241,12 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
   Widget _buildTransactionDetails(LockerDetailData detail) {
     final trans = detail.transObj;
     if (trans == null) {
-      return const Center(child: Text(AppString.noTransactionsFound));
+      return Center(
+        child: Text(
+          AppString.noTransactionsFound,
+          style: TextStyle(color: AppColor.subText),
+        ),
+      );
     }
 
     final bool isDesktopOrTablet = AppSize.isDesktop || AppSize.isTablet;
@@ -275,7 +288,7 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
                     "${AppString.till} ${trans.tillDate}",
                     style: TextStyle(
                       fontSize: AppSize.p10,
-                      color: AppColor.textColor,
+                      color: AppColor.subText,
                     ),
                   ),
                 ],
@@ -341,7 +354,7 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
   Widget _buildRichItem(String label, String value) {
     return RichText(
       text: TextSpan(
-        style: TextStyle(fontSize: AppSize.size14, color: AppColor.dark),
+        style: TextStyle(fontSize: AppSize.size14, color: AppColor.mainText),
         children: [
           TextSpan(
             text: label,
@@ -349,7 +362,7 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
           ),
           TextSpan(
             text: value,
-            style: TextStyle(color: AppColor.textColor),
+            style: TextStyle(color: AppColor.subText),
           ),
         ],
       ),
@@ -359,7 +372,7 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
   Widget _buildTransItem(String label, String value) {
     return RichText(
       text: TextSpan(
-        style: TextStyle(fontSize: AppSize.size14, color: AppColor.dark),
+        style: TextStyle(fontSize: AppSize.size14, color: AppColor.mainText),
         children: [
           TextSpan(
             text: label,
@@ -376,8 +389,8 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
 
   Widget _shimmerLoading() {
     return Shimmer.fromColors(
-      baseColor: AppColor.baseColor!,
-      highlightColor: AppColor.highlightColor!,
+      baseColor: AppColor.isDark ? AppColor.shimmerBaseDark : AppColor.grey300,
+      highlightColor: AppColor.isDark ? AppColor.shimmerHighlightDark : AppColor.white,
       child: ListView.builder(
         itemCount: 3,
         padding: EdgeInsets.all(AppSize.p16),
@@ -386,7 +399,7 @@ class _LockerTransationDetailState extends State<LockerTransationDetail> {
             height: 120,
             margin: EdgeInsets.only(bottom: AppSize.p8),
             decoration: BoxDecoration(
-              color: AppColor.fullScreenColor,
+              color: AppColor.cardBg,
               borderRadius: BorderRadius.circular(5),
             ),
           );

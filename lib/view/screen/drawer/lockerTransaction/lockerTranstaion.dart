@@ -39,12 +39,12 @@ class LockerTranStaion extends StatelessWidget {
                     controller: uiController.searchController,
                     autofocus: true,
                     style: TextStyle(
-                      color: AppColor.dark,
+                      color: AppColor.mainText,
                       fontSize: AppSize.headingText,
                     ),
                     decoration: InputDecoration(
                       hintText: AppString.search,
-                      hintStyle: TextStyle(color: AppColor.textColor),
+                      hintStyle: TextStyle(color: AppColor.subText),
                       border: InputBorder.none,
                     ),
                     onChanged: (val) => uiController.updateSearch(val),
@@ -72,7 +72,7 @@ class LockerTranStaion extends StatelessWidget {
                   child: Text(
                     AppString.noTransactionsFound,
                     style: TextStyle(
-                      color: AppColor.textColor,
+                      color: AppColor.subText,
                       fontSize: AppSize.commonText,
                     ),
                   ),
@@ -167,7 +167,7 @@ class LockerTranStaion extends StatelessWidget {
           margin: EdgeInsets.symmetric(vertical: AppSize.p12),
           padding: EdgeInsets.all(AppSize.p12),
           decoration: BoxDecoration(
-            color: AppColor.whiteOrang.withOpacity(0.3),
+            color: AppColor.cardBg,
             borderRadius: BorderRadius.circular(AppSize.p12),
             border: Border.all(color: AppColor.goldColor.withOpacity(0.2)),
           ),
@@ -195,7 +195,7 @@ class LockerTranStaion extends StatelessWidget {
                       Text(
                         AppString.selectLocker,
                         style: TextStyle(
-                          color: AppColor.textColor,
+                          color: AppColor.subText,
                           fontSize: AppSize.size12,
                         ),
                       ),
@@ -204,7 +204,7 @@ class LockerTranStaion extends StatelessWidget {
                             ? "${selected.lockerCode} (${selected.comName}) [${selected.totalAmt}]"
                             : AppString.selectLocker,
                         style: TextStyle(
-                          color: AppColor.dark,
+                          color: AppColor.mainText,
                           fontSize: AppSize.size14,
                           fontWeight: FontWeight.bold,
                         ),
@@ -267,7 +267,10 @@ class LockerTranStaion extends StatelessWidget {
             if (uiController.lockerTransController.lockerTransList.isEmpty) {
               return Padding(
                 padding: EdgeInsets.all(AppSize.p20),
-                child: const Text(AppString.noLockersAvailable),
+                child: Text(
+                  AppString.noLockersAvailable,
+                  style: TextStyle(color: AppColor.subText),
+                ),
               );
             }
             return ListView.separated(
@@ -286,7 +289,7 @@ class LockerTranStaion extends StatelessWidget {
                   title: Text(
                     "${locker.lockerCode} (${locker.comName})",
                     style: TextStyle(
-                      color: AppColor.dark,
+                      color: AppColor.mainText,
                       fontSize: AppSize.size14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -294,7 +297,7 @@ class LockerTranStaion extends StatelessWidget {
                   subtitle: Text(
                     "${AppString.totalAmt}: ${locker.totalAmt}",
                     style: TextStyle(
-                      color: AppColor.textColor,
+                      color: AppColor.subText,
                       fontSize: AppSize.size12,
                     ),
                   ),
@@ -521,43 +524,43 @@ class LockerTranStaion extends StatelessWidget {
                               ),
                             ),
                           ),
-                    // Total Amt
-                    DataCell(
-                      Text(
-                        item.totalAmt ?? AppString.zeroAmount,
-                        style: TextStyle(
-                          color: AppColor.goldColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: AppSize.size14,
-                        ),
-                      ),
-                    ),
-                    // Actions
-                    DataCell(
-                      IconButton(
-                        icon: Icon(
-                          AppIcon.eyeOutline,
-                          color: AppColor.goldColor,
-                          size: AppSize.p20,
-                        ),
-                        onPressed: () {
-                          NavDrawerController.toNamed(
-                            '/lockerTransationDetail',
-                            arguments: item,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                );
-              }),
-            ),
-          ),
+                          // Total Amt
+                          DataCell(
+                            Text(
+                              item.totalAmt ?? AppString.zeroAmount,
+                              style: TextStyle(
+                                color: AppColor.goldColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: AppSize.size14,
+                              ),
+                            ),
+                          ),
+                          // Actions
+                          DataCell(
+                            IconButton(
+                              icon: Icon(
+                                AppIcon.eyeOutline,
+                                color: AppColor.goldColor,
+                                size: AppSize.p20,
+                              ),
+                              onPressed: () {
+                                NavDrawerController.toNamed(
+                                  '/lockerTransationDetail',
+                                  arguments: item,
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+                  ),
+                ),
+              ),
+            );
+          },
         ),
-      );
-    },
-  ),
-),
+      ),
     );
   }
 
@@ -661,7 +664,7 @@ class LockerTranStaion extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: AppSize.size12,
-            color: AppColor.textColor,
+            color: AppColor.subText,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -671,7 +674,7 @@ class LockerTranStaion extends StatelessWidget {
           style: TextStyle(
             fontSize: AppSize.size14,
             fontWeight: FontWeight.w600,
-            color: isCritical ? AppColor.goldColor : AppColor.dark,
+            color: isCritical ? AppColor.goldColor : AppColor.mainText,
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -682,8 +685,8 @@ class LockerTranStaion extends StatelessWidget {
 
   Widget _shimmerLoading() {
     return Shimmer.fromColors(
-      baseColor: AppColor.baseColor!,
-      highlightColor: AppColor.highlightColor!,
+      baseColor: AppColor.isDark ? AppColor.shimmerBaseDark : AppColor.grey300,
+      highlightColor: AppColor.isDark ? AppColor.shimmerHighlightDark : AppColor.white,
       child: ListView.builder(
         itemCount: 6,
         padding: EdgeInsets.all(AppSize.p16),
@@ -692,7 +695,7 @@ class LockerTranStaion extends StatelessWidget {
             height: AppSize.height * 0.15,
             margin: EdgeInsets.only(bottom: AppSize.p16),
             decoration: BoxDecoration(
-              color: AppColor.white,
+              color: AppColor.cardBg,
               borderRadius: BorderRadius.circular(AppSize.p12),
             ),
           );

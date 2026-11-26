@@ -151,7 +151,14 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
                     ),
                   )
                 else
-                  _buildTableView(pagedList, startIndex: startIndex),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      if (constraints.maxWidth < 650) {
+                        return _buildCardView(pagedList, startIndex: startIndex);
+                      }
+                      return _buildTableView(pagedList, startIndex: startIndex);
+                    },
+                  ),
                 const SizedBox(height: 12),
                 _buildPaginationBar(startNum, endNum, totalCount),
               ],
@@ -717,6 +724,216 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
     );
   }
 
+  Widget _buildCardView(List<LockerData> list, {required int startIndex}) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: list.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 10),
+      itemBuilder: (context, index) {
+        final item = list[index];
+        final id = item.lockerId ?? '';
+        final isChecked = _selectedIds.contains(id);
+
+        return Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: AppColor.cardBg,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isChecked ? AppColor.dashboardGold : AppColor.border,
+              width: isChecked ? 1.5 : 1.0,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.03),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Checkbox(
+                    value: isChecked,
+                    activeColor: AppColor.dashboardGold,
+                    onChanged: (val) {
+                      if (val == true) {
+                        _selectedIds.add(id);
+                      } else {
+                        _selectedIds.remove(id);
+                        _selectAll.value = false;
+                      }
+                    },
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColor.dashboardGold.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      AppIcon.locker,
+                      color: AppColor.dashboardGold,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              item.lockerCode ?? "-",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: AppColor.mainText,
+                              ),
+                            ),
+                            if (item.isDefault == "1") ...[
+                              const SizedBox(width: 6),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColor.goldTagBg,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  AppString.defaultLabel,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColor.goldTagText,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          "Company: ${item.comName ?? '-'}",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColor.subText,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  _buildStatusBadge("Active"),
+                ],
+              ),
+              Divider(height: 16, color: AppColor.border),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Contact Person",
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: AppColor.subText,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        item.personName ?? "-",
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: AppColor.mainText,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Interest Rate",
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: AppColor.subText,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        "${item.interestRate ?? '0.00'} %",
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.mainText,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          AppIcon.eyeOutline,
+                          color: AppColor.mainText,
+                          size: 18,
+                        ),
+                        tooltip: AppString.view,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () => Get.toNamed(
+                          '/addLockerCode',
+                          arguments: item,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      IconButton(
+                        icon: Icon(
+                          AppIcon.editOutline,
+                          color: AppColor.mainText,
+                          size: 18,
+                        ),
+                        tooltip: AppString.edit,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () => Get.toNamed(
+                          '/addLockerCode',
+                          arguments: item,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      IconButton(
+                        icon: const Icon(
+                          AppIcon.deleteIcon,
+                          color: AppColor.deleteColor,
+                          size: 18,
+                        ),
+                        tooltip: AppString.delete,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () => _showDeleteDialog(item),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildStatusBadge(String statusStr) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -753,8 +970,11 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
     final totalPages = (totalCount / perPage).ceil().clamp(1, 9999);
     final currentPage = _currentPage.value.clamp(1, totalPages);
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 12,
+      runSpacing: 12,
       children: [
         Text(
           "Showing $startNum – $endNum of $totalCount records",
@@ -765,6 +985,7 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
           ),
         ),
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               children: [
@@ -939,8 +1160,8 @@ class _LockerCodeMasterState extends State<LockerCodeMaster> {
 
   Widget _shimmerLoading() {
     return Shimmer.fromColors(
-      baseColor: AppColor.isDark ? const Color(0xFF1E293B) : AppColor.grey300,
-      highlightColor: AppColor.isDark ? const Color(0xFF334155) : AppColor.white,
+      baseColor: AppColor.isDark ? AppColor.shimmerBaseDark : AppColor.grey300,
+      highlightColor: AppColor.isDark ? AppColor.shimmerHighlightDark : AppColor.white,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

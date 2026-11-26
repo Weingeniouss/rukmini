@@ -50,7 +50,7 @@ class Login extends StatelessWidget {
               angle: math.pi / 4,
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppColor.white,
+                  color: AppColor.cardBg,
                   borderRadius: BorderRadius.circular(100),
                   border: Border.all(
                     color: AppColor.loginGold.withOpacity(0.2),
@@ -106,7 +106,7 @@ class Login extends StatelessWidget {
               padding: const EdgeInsets.all(24),
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppColor.white,
+                  color: AppColor.cardBg,
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(

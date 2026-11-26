@@ -67,7 +67,7 @@ class _ReportViewScreenState extends State<ReportViewScreen> {
                   AppString.noDataFound,
                   style: TextStyle(
                     fontSize: AppSize.size18,
-                    color: AppColor.textColor,
+                    color: AppColor.subText,
                   ),
                 ),
               ],
@@ -84,9 +84,17 @@ class _ReportViewScreenState extends State<ReportViewScreen> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: DataTable(
-                    headingRowColor: MaterialStateProperty.all(
-                      AppColor.whiteOrang.withOpacity(0.5),
+                    headingRowColor: WidgetStateProperty.all(
+                      AppColor.dashboardGold,
                     ),
+                    headingTextStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppColor.white,
+                      fontSize: 13,
+                    ),
+                    dataRowMinHeight: 48,
+                    dataRowMaxHeight: 48,
+                    horizontalMargin: 16,
                     columnSpacing: 20,
                     columns: _buildColumns(),
                     rows: _buildRows(uiController.reportList),
@@ -106,7 +114,7 @@ class _ReportViewScreenState extends State<ReportViewScreen> {
                 ),
                 child: ElevatedButton.icon(
                   onPressed: () => uiController.exportReport(index),
-                  icon: Icon(AppIcon.download, size: 18),
+                  icon: const Icon(AppIcon.download, size: 18),
                   label: const Text(AppString.exportExcel),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
@@ -132,9 +140,9 @@ class _ReportViewScreenState extends State<ReportViewScreen> {
         padding: EdgeInsets.all(AppSize.p16),
         margin: EdgeInsets.symmetric(vertical: AppSize.p16),
         decoration: BoxDecoration(
-          color: AppColor.whiteOrang.withOpacity(0.3),
+          color: AppColor.cardBg,
           borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: AppColor.goldColor.withOpacity(0.2)),
+          border: Border.all(color: AppColor.border),
         ),
         child: Row(
           children: [
@@ -147,7 +155,7 @@ class _ReportViewScreenState extends State<ReportViewScreen> {
             Container(
               height: 30,
               width: 1,
-              color: AppColor.goldColor.withOpacity(0.2),
+              color: AppColor.border,
             ),
             Expanded(
               child: _summaryItem(
@@ -169,7 +177,7 @@ class _ReportViewScreenState extends State<ReportViewScreen> {
           label,
           style: TextStyle(
             fontSize: AppSize.size12,
-            color: AppColor.textColor,
+            color: AppColor.subText,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -222,40 +230,41 @@ class _ReportViewScreenState extends State<ReportViewScreen> {
   }
 
   List<DataRow> _buildRows(List<dynamic> data) {
+    TextStyle cellTextStyle = TextStyle(color: AppColor.mainText, fontSize: 13);
     return data.map((item) {
       if (index == 0) {
         return DataRow(
           cells: [
-            DataCell(Text(item.custCode ?? '')),
-            DataCell(Text(item.name ?? '')),
-            DataCell(Text(item.custPhone ?? '')),
-            DataCell(Text(item.givenAmt?.toString() ?? '')),
-            DataCell(Text(item.pendingAmt?.toString() ?? '')),
-            DataCell(Text(item.address ?? '')),
+            DataCell(Text(item.custCode ?? '', style: cellTextStyle)),
+            DataCell(Text(item.name ?? '', style: cellTextStyle)),
+            DataCell(Text(item.custPhone ?? '', style: cellTextStyle)),
+            DataCell(Text(item.givenAmt?.toString() ?? '', style: cellTextStyle)),
+            DataCell(Text(item.pendingAmt?.toString() ?? '', style: cellTextStyle)),
+            DataCell(Text(item.address ?? '', style: cellTextStyle)),
           ],
         );
       } else if (index == 1) {
         return DataRow(
           cells: [
-            DataCell(Text(item.uniqueId ?? '')),
-            DataCell(Text(item.custName ?? '')),
-            DataCell(Text(item.custPhone ?? '')),
-            DataCell(Text(item.girviDate ?? '')),
-            DataCell(Text(item.dueDate ?? '')),
-            DataCell(Text(item.givenAmt ?? '')),
-            DataCell(Text(item.interest ?? '')),
-            DataCell(Text(item.balance ?? '')),
+            DataCell(Text(item.uniqueId ?? '', style: cellTextStyle)),
+            DataCell(Text(item.custName ?? '', style: cellTextStyle)),
+            DataCell(Text(item.custPhone ?? '', style: cellTextStyle)),
+            DataCell(Text(item.girviDate ?? '', style: cellTextStyle)),
+            DataCell(Text(item.dueDate ?? '', style: cellTextStyle)),
+            DataCell(Text(item.givenAmt ?? '', style: cellTextStyle)),
+            DataCell(Text(item.interest ?? '', style: cellTextStyle)),
+            DataCell(Text(item.balance ?? '', style: cellTextStyle)),
           ],
         );
       } else {
         return DataRow(
           cells: [
-            DataCell(Text(item.uniqueId ?? '')),
-            DataCell(Text(item.custName ?? '')),
-            DataCell(Text(item.lockerCode ?? '')),
-            DataCell(Text(item.code ?? '')),
-            DataCell(Text(item.totalAmt ?? '')),
-            DataCell(Text(item.balance ?? '')),
+            DataCell(Text(item.uniqueId ?? '', style: cellTextStyle)),
+            DataCell(Text(item.custName ?? '', style: cellTextStyle)),
+            DataCell(Text(item.lockerCode ?? '', style: cellTextStyle)),
+            DataCell(Text(item.code ?? '', style: cellTextStyle)),
+            DataCell(Text(item.totalAmt ?? '', style: cellTextStyle)),
+            DataCell(Text(item.balance ?? '', style: cellTextStyle)),
           ],
         );
       }
@@ -269,21 +278,21 @@ class _ReportViewScreenState extends State<ReportViewScreen> {
           children: [
             if (index == 0)
               Shimmer.fromColors(
-                baseColor: AppColor.grey300.withOpacity(0.5),
-                highlightColor: AppColor.white,
+                baseColor: AppColor.isDark ? AppColor.shimmerBaseDark : AppColor.grey300,
+                highlightColor: AppColor.isDark ? AppColor.shimmerHighlightDark : AppColor.white,
                 child: Container(
                   height: 80,
                   margin: EdgeInsets.all(AppSize.p16),
                   decoration: BoxDecoration(
-                    color: AppColor.white,
+                    color: AppColor.cardBg,
                     borderRadius: BorderRadius.circular(15),
                   ),
                 ),
               ),
             Expanded(
               child: Shimmer.fromColors(
-                baseColor: AppColor.grey300.withOpacity(0.5),
-                highlightColor: AppColor.white,
+                baseColor: AppColor.isDark ? AppColor.shimmerBaseDark : AppColor.grey300,
+                highlightColor: AppColor.isDark ? AppColor.shimmerHighlightDark : AppColor.white,
                 child: ListView.builder(
                   itemCount: 10,
                   itemBuilder: (context, index) {
@@ -294,7 +303,7 @@ class _ReportViewScreenState extends State<ReportViewScreen> {
                         vertical: AppSize.p8,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColor.white,
+                        color: AppColor.cardBg,
                         borderRadius: BorderRadius.circular(8),
                       ),
                     );

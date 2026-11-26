@@ -60,7 +60,7 @@ class _ExportCustomerContactsState extends State<ExportCustomerContacts> {
                   AppString.noDataFound,
                   style: TextStyle(
                     fontSize: AppSize.size18,
-                    color: AppColor.textColor,
+                    color: AppColor.subText,
                   ),
                 ),
               ],
@@ -77,9 +77,17 @@ class _ExportCustomerContactsState extends State<ExportCustomerContacts> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: DataTable(
-                    headingRowColor: MaterialStateProperty.all(
-                      AppColor.whiteOrang.withOpacity(0.5),
+                    headingRowColor: WidgetStateProperty.all(
+                      AppColor.dashboardGold,
                     ),
+                    headingTextStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppColor.white,
+                      fontSize: 13,
+                    ),
+                    dataRowMinHeight: 48,
+                    dataRowMaxHeight: 48,
+                    horizontalMargin: 16,
                     columnSpacing: 20,
                     columns: _buildColumns(),
                     rows: _buildRows(widget.uiController.reportList),
@@ -127,9 +135,9 @@ class _ExportCustomerContactsState extends State<ExportCustomerContacts> {
         padding: EdgeInsets.all(AppSize.p16),
         margin: EdgeInsets.symmetric(vertical: AppSize.p16),
         decoration: BoxDecoration(
-          color: AppColor.whiteOrang.withOpacity(0.3),
+          color: AppColor.cardBg,
           borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: AppColor.goldColor.withOpacity(0.2)),
+          border: Border.all(color: AppColor.border),
         ),
         child: Row(
           children: [
@@ -142,7 +150,7 @@ class _ExportCustomerContactsState extends State<ExportCustomerContacts> {
             Container(
               height: 30,
               width: 1,
-              color: AppColor.goldColor.withOpacity(0.2),
+              color: AppColor.border,
             ),
             Expanded(
               child: _summaryItem(
@@ -164,7 +172,7 @@ class _ExportCustomerContactsState extends State<ExportCustomerContacts> {
           label,
           style: TextStyle(
             fontSize: AppSize.size12,
-            color: AppColor.textColor,
+            color: AppColor.subText,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -195,15 +203,16 @@ class _ExportCustomerContactsState extends State<ExportCustomerContacts> {
   }
 
   List<DataRow> _buildRows(List<dynamic> data) {
+    TextStyle cellTextStyle = TextStyle(color: AppColor.mainText, fontSize: 13);
     return data.map((item) {
       return DataRow(
         cells: [
-          DataCell(Text(item.custCode ?? '')),
-          DataCell(Text(item.name ?? '')),
-          DataCell(Text(item.custPhone ?? '')),
-          DataCell(Text(item.givenAmt?.toString() ?? '')),
-          DataCell(Text(item.pendingAmt?.toString() ?? '')),
-          DataCell(Text(item.address ?? '')),
+          DataCell(Text(item.custCode ?? '', style: cellTextStyle)),
+          DataCell(Text(item.name ?? '', style: cellTextStyle)),
+          DataCell(Text(item.custPhone ?? '', style: cellTextStyle)),
+          DataCell(Text(item.givenAmt?.toString() ?? '', style: cellTextStyle)),
+          DataCell(Text(item.pendingAmt?.toString() ?? '', style: cellTextStyle)),
+          DataCell(Text(item.address ?? '', style: cellTextStyle)),
         ],
       );
     }).toList();
@@ -215,21 +224,21 @@ class _ExportCustomerContactsState extends State<ExportCustomerContacts> {
         Column(
           children: [
             Shimmer.fromColors(
-              baseColor: AppColor.grey300.withOpacity(0.5),
-              highlightColor: AppColor.white,
+              baseColor: AppColor.isDark ? AppColor.shimmerBaseDark : AppColor.grey300,
+              highlightColor: AppColor.isDark ? AppColor.shimmerHighlightDark : AppColor.white,
               child: Container(
                 height: 80,
                 margin: EdgeInsets.all(AppSize.p16),
                 decoration: BoxDecoration(
-                  color: AppColor.white,
+                  color: AppColor.cardBg,
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
             ),
             Expanded(
               child: Shimmer.fromColors(
-                baseColor: AppColor.grey300.withOpacity(0.5),
-                highlightColor: AppColor.white,
+                baseColor: AppColor.isDark ? AppColor.shimmerBaseDark : AppColor.grey300,
+                highlightColor: AppColor.isDark ? AppColor.shimmerHighlightDark : AppColor.white,
                 child: ListView.builder(
                   itemCount: 10,
                   itemBuilder: (context, index) {
@@ -240,7 +249,7 @@ class _ExportCustomerContactsState extends State<ExportCustomerContacts> {
                         vertical: AppSize.p8,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColor.white,
+                        color: AppColor.cardBg,
                         borderRadius: BorderRadius.circular(8),
                       ),
                     );

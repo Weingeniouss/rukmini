@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rukmini/view/utils/app_color.dart';
 import 'package:rukmini/view/utils/app_constants.dart';
 
 class ThemeController extends GetxController {
@@ -48,18 +49,18 @@ class ThemeController extends GetxController {
       brightness: Brightness.dark,
       fontFamily: 'Poppins',
       useMaterial3: true,
-      scaffoldBackgroundColor: const Color(0xFF0F172A),
-      cardColor: const Color(0xFF1E293B),
-      dividerColor: const Color(0xFF334155),
+      scaffoldBackgroundColor: AppColor.darkBg,
+      cardColor: AppColor.darkCardBg,
+      dividerColor: AppColor.darkBorderBg,
       appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFF0F172A),
+        backgroundColor: AppColor.darkBg,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
       colorScheme: const ColorScheme.dark(
         primary: Color(0xFFD4AF37),
         secondary: Color(0xFFB8860B),
-        surface: Color(0xFF1E293B),
+        surface: AppColor.darkCardBg,
         onSurface: Colors.white,
       ),
     );

@@ -870,8 +870,11 @@ class _ProductInLockerState extends State<ProductInLocker> {
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: AppColor.tableDivider)),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 12,
+        runSpacing: 12,
         children: [
           // Showing X - Y of Z products
           Text(
@@ -886,7 +889,10 @@ class _ProductInLockerState extends State<ProductInLocker> {
           ),
 
           // Actions Right: View Switcher & Change Locker Action
-          Row(
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               // List / Grid View Switcher
               Container(
@@ -896,6 +902,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                 ),
                 padding: const EdgeInsets.all(3),
                 child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     _viewToggleButton(
                       icon: AppIcon.listBulleted,
@@ -912,7 +919,6 @@ class _ProductInLockerState extends State<ProductInLocker> {
                   ],
                 ),
               ),
-              const SizedBox(width: 12),
 
               // Change Locker Action Button
               ElevatedButton.icon(
@@ -1416,7 +1422,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColor.white,
+                color: AppColor.cardBg,
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
                   color: isChecked ? AppColor.goldColor : AppColor.tableBorder,
@@ -1424,7 +1430,7 @@ class _ProductInLockerState extends State<ProductInLocker> {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColor.black.withOpacity(0.02),
+                    color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.02),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
@@ -1515,9 +1521,10 @@ class _ProductInLockerState extends State<ProductInLocker> {
                           ),
                           Text(
                             "${item.weight ?? '0.00'} gm",
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
+                              color: AppColor.mainText,
                             ),
                           ),
                         ],
@@ -1554,9 +1561,10 @@ class _ProductInLockerState extends State<ProductInLocker> {
                           ),
                           Text(
                             "${item.lockerCode ?? ''}-${item.code ?? ''}",
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
+                              color: AppColor.mainText,
                             ),
                           ),
                         ],

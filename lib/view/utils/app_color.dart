@@ -5,9 +5,18 @@ import 'package:get/get.dart';
 import 'package:rukmini/controller/ui/theme_controller.dart';
 
 class AppColor {
-  // loading
+  // Slate / Dark Mode Palette Constants
+  static const darkCardBg = Color(0xFF1E293B);
+  static const darkBorderBg = Color(0xFF334155);
+  static const slate800 = Color(0xFF1E293B);
+  static const slate700 = Color(0xFF334155);
+  static const darkBg = Color(0xFF0F172A);
+
+  // Loading / Shimmer
   static const baseColor = Colors.grey;
   static const highlightColor = Colors.white70;
+  static const shimmerBaseDark = Color(0xFF1E293B);
+  static const shimmerHighlightDark = Color(0xFF334155);
 
   // Dynamic Theme-Aware Reactive Colors
   static ThemeController get _tc => Get.isRegistered<ThemeController>()
@@ -16,17 +25,17 @@ class AppColor {
 
   static bool get isDark => _tc.isDarkMode.value;
 
-  static Color get fullScreenColor => isDark ? const Color(0xFF0F172A) : const Color(0xffFFFFFF);
-  static Color get backgroundColor => isDark ? const Color(0xFF0F172A) : const Color(0xffFAFAFA);
+  static Color get fullScreenColor => isDark ? darkBg : const Color(0xffFFFFFF);
+  static Color get backgroundColor => isDark ? darkBg : const Color(0xffFAFAFA);
   static const goldColor = Color(0xFFD4AF37);
   static const textField = Color(0xff8E8E8E);
   static const primaryColor = Color(0xff0A1624);
   static Color get textColor => isDark ? const Color(0xFF94A3B8) : const Color(0xff84878C);
-  static Color get subHeadingContainerColor => isDark ? const Color(0xFF1E293B) : const Color(0xffE7ECF2);
+  static Color get subHeadingContainerColor => isDark ? darkCardBg : const Color(0xffE7ECF2);
   static const orange = Color(0xFFFF8C00);
   static const yellow = Color(0xFFFFD700);
   static const oneYearup = Color(0xFFFF8C00);
-  static Color get whiteOrang => isDark ? const Color(0xFF334155) : const Color(0xFFFFF2E1);
+  static Color get whiteOrang => isDark ? darkBorderBg : const Color(0xFFFFF2E1);
 
   static const crimson = Color(0xFFC22E54);
   static const brown = Color(0xFF7B3F00);
@@ -36,7 +45,7 @@ class AppColor {
   static const deleteColor = Colors.red;
   static const boderSideColor = Colors.grey;
   static const errorColor = Colors.red;
-  static Color get lightBlue => isDark ? const Color(0xFF1E293B) : const Color(0xFFE3F2FD);
+  static Color get lightBlue => isDark ? darkCardBg : const Color(0xFFE3F2FD);
   static const dark = Colors.black;
   static const otherWhite = Colors.white70;
 
@@ -46,7 +55,7 @@ class AppColor {
   static const black54 = Colors.black54;
   static const black87 = Colors.black87;
   static const grey = Colors.grey;
-  static Color get grey200 => isDark ? const Color(0xFF334155) : const Color(0xFFEEEEEE);
+  static Color get grey200 => isDark ? darkBorderBg : const Color(0xFFEEEEEE);
   static Color get grey300 => isDark ? const Color(0xFF475569) : const Color(0xFFE0E0E0);
   static Color get grey400 => isDark ? const Color(0xFF64748B) : const Color(0xFFBDBDBD);
   static Color get grey500 => isDark ? const Color(0xFF94A3B8) : const Color(0xFF9E9E9E);
@@ -55,27 +64,27 @@ class AppColor {
   static const transparent = Colors.transparent;
 
   // Dashboard Specific Colors
-  static Color get dashboardCardBg => isDark ? const Color(0xFF1E293B) : const Color(0xFFFFFFFF);
-  static Color get dashboardIconBg => isDark ? const Color(0xFF334155) : const Color(0xFFF9F6EE);
+  static Color get dashboardCardBg => isDark ? darkCardBg : const Color(0xFFFFFFFF);
+  static Color get dashboardIconBg => isDark ? darkBorderBg : const Color(0xFFF9F6EE);
   static const dashboardGold = Color(0xFFB8860B);
   static Color get dashboardTextDark => isDark ? const Color(0xFFF8FAFC) : const Color(0xFF1A1A1B);
   static Color get dashboardTextLight => isDark ? const Color(0xFF94A3B8) : const Color(0xFF71717A);
-  static Color get dashboardChartArea => isDark ? const Color(0xFF1E293B) : const Color(0xFFFAF7F0);
-  static Color get dashboardCream => isDark ? const Color(0xFF334155) : const Color(0xFFF3EFE0);
-  static Color get dashboardQuickActionBg => isDark ? const Color(0xFF1E293B) : const Color(0xFFFDFBF7);
+  static Color get dashboardChartArea => isDark ? darkCardBg : const Color(0xFFFAF7F0);
+  static Color get dashboardCream => isDark ? darkBorderBg : const Color(0xFFF3EFE0);
+  static Color get dashboardQuickActionBg => isDark ? darkCardBg : const Color(0xFFFDFBF7);
   static Color get dashboardUsedLocker => isDark ? const Color(0xFFB8860B) : const Color(0xFFD4C3A3);
-  static Color get dashboardChartGrid => isDark ? const Color(0xFF334155) : const Color(0xFFE6E6E6);
+  static Color get dashboardChartGrid => isDark ? darkBorderBg : const Color(0xFFE6E6E6);
 
   // Drawer Specific Colors
-  static Color get drawerBg => isDark ? const Color(0xFF0F172A) : const Color(0xFFFDFBF7);
-  static Color get drawerSelectedBg => isDark ? const Color(0xFF334155) : const Color(0xFFFFF7EA);
+  static Color get drawerBg => isDark ? darkBg : const Color(0xFFFDFBF7);
+  static Color get drawerSelectedBg => isDark ? darkBorderBg : const Color(0xFFFFF7EA);
   static Color get drawerSelectedBorder => isDark ? const Color(0xFF475569) : const Color(0xFFFFE0B2);
   static Color get logoutBg => isDark ? const Color(0xFF3F1D1D) : const Color(0xFFFFF2E1);
   static Color get logoutIcon => isDark ? const Color(0xFFEF4444) : const Color(0xFFE57373);
   static Color get logoutText => isDark ? const Color(0xFFFCA5A5) : const Color(0xFFD32F2F);
 
   // Login Specific Colors (Light Theme)
-  static Color get loginBg => isDark ? const Color(0xFF0F172A) : const Color(0xFFFDFBF7);
+  static Color get loginBg => isDark ? darkBg : const Color(0xFFFDFBF7);
   static Color get loginTextDark => isDark ? const Color(0xFFF8FAFC) : const Color(0xFF1A1A1A);
   static const loginGold = Color(0xFFD4AF37);
   static const loginButtonStart = Color(0xFFDEB887);
@@ -89,15 +98,15 @@ class AppColor {
   static const quoteText = Colors.white;
 
   // Modern Layout & Table Colors
-  static Color get tableBg => isDark ? const Color(0xFF1E293B) : const Color(0xFFF8FAFC);
-  static Color get tableHeaderBg => isDark ? const Color(0xFF334155) : const Color(0xFFF8FAFC);
-  static Color get tableBorder => isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0);
-  static Color get tableDivider => isDark ? const Color(0xFF334155) : const Color(0xFFF1F5F9);
+  static Color get tableBg => isDark ? darkCardBg : const Color(0xFFF8FAFC);
+  static Color get tableHeaderBg => isDark ? darkBorderBg : const Color(0xFFF8FAFC);
+  static Color get tableBorder => isDark ? darkBorderBg : const Color(0xFFE2E8F0);
+  static Color get tableDivider => isDark ? darkBorderBg : const Color(0xFFF1F5F9);
   
   // Slate Text Colors
   static Color get textDark => isDark ? const Color(0xFFFFFFFF) : const Color(0xFF0F172A);
   static Color get textMedium => isDark ? const Color(0xFFF1F5F9) : const Color(0xFF475569);
-  static Color get textSecondary => isDark ? const Color(0xFFE2E8F0) : const Color(0xFF334155);
+  static Color get textSecondary => isDark ? const Color(0xFFE2E8F0) : darkBorderBg;
   static Color get textMuted => isDark ? const Color(0xFFCBD5E1) : const Color(0xFF64748B);
   static Color get textLight => isDark ? const Color(0xFFE2E8F0) : const Color(0xFF94A3B8);
 
@@ -128,15 +137,14 @@ class AppColor {
   static Color get redLightBg => isDark ? const Color(0xFF450A0A) : const Color(0xFFFEE2E2);
   static const redText = Color(0xFFDC2626);
 
-  static Color get darkBannerBg => isDark ? const Color(0xFF1E293B) : const Color(0xFF0F172A);
+  static Color get darkBannerBg => isDark ? darkCardBg : darkBg;
 
-  static Color get cardBg => isDark ? const Color(0xFF1E293B) : Colors.white;
-  static Color get screenBg => isDark ? const Color(0xFF0F172A) : const Color(0xffFAFAFA);
+  static Color get cardBg => isDark ? darkCardBg : Colors.white;
+  static Color get screenBg => isDark ? darkBg : const Color(0xffFAFAFA);
   static Color get mainText => isDark ? Colors.white : const Color(0xFF0F172A);
   static Color get subText => isDark ? const Color(0xFFE2E8F0) : const Color(0xFF64748B);
-  static Color get border => isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0);
-  static Color get tableHeader => isDark ? const Color(0xFF334155) : const Color(0xFFF8FAFC);
-  static Color get drawerBackground => isDark ? const Color(0xFF0F172A) : const Color(0xFFFDFBF7);
-  static Color get drawerSelectedItem => isDark ? const Color(0xFF334155) : const Color(0xFFFFF7EA);
+  static Color get border => isDark ? darkBorderBg : const Color(0xFFE2E8F0);
+  static Color get tableHeader => isDark ? darkBorderBg : const Color(0xFFF8FAFC);
+  static Color get drawerBackground => isDark ? darkBg : const Color(0xFFFDFBF7);
+  static Color get drawerSelectedItem => isDark ? darkBorderBg : const Color(0xFFFFF7EA);
 }
-

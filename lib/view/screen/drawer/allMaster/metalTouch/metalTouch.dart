@@ -82,11 +82,7 @@ class _MetalTouchState extends State<MetalTouch> {
     return Fullscreen(
       isPadding: false,
       backGroundcolor: AppColor.backgroundColor,
-      appBar: appBar(
-        back: true,
-        centerTitle: true,
-        title: _buildHeaderTitle(),
-      ),
+      appBar: appBar(back: true, centerTitle: true, title: _buildHeaderTitle()),
       child: Obx(() {
         final bool isLoading = metalController.isLoading.value;
         final rawList = metalController.metalList.toList();
@@ -146,7 +142,17 @@ class _MetalTouchState extends State<MetalTouch> {
                     ),
                   )
                 else
-                  _buildTableView(pagedList, startIndex: startIndex),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      if (constraints.maxWidth < 650) {
+                        return _buildCardView(
+                          pagedList,
+                          startIndex: startIndex,
+                        );
+                      }
+                      return _buildTableView(pagedList, startIndex: startIndex);
+                    },
+                  ),
                 const SizedBox(height: 12),
                 _buildPaginationBar(startNum, endNum, totalCount),
               ],
@@ -161,11 +167,7 @@ class _MetalTouchState extends State<MetalTouch> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(
-          AppIcon.balance,
-          color: AppColor.dashboardGold,
-          size: 22,
-        ),
+        const Icon(AppIcon.balance, color: AppColor.dashboardGold, size: 22),
         const SizedBox(width: 8),
         Text(
           AppString.metalTouchMaster,
@@ -201,10 +203,7 @@ class _MetalTouchState extends State<MetalTouch> {
                   ),
                   child: TextField(
                     controller: _searchController,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: AppColor.mainText,
-                    ),
+                    style: TextStyle(fontSize: 13, color: AppColor.mainText),
                     decoration: InputDecoration(
                       hintText: AppString.searchMetalTouchPlaceholder,
                       hintStyle: TextStyle(
@@ -404,13 +403,7 @@ class _MetalTouchState extends State<MetalTouch> {
         offset.dx + renderBox.size.width,
         0,
       ),
-      items: [
-        AppString.allMetalTouch,
-        "24",
-        "22",
-        "18",
-        "14"
-      ].map((k) {
+      items: [AppString.allMetalTouch, "24", "22", "18", "14"].map((k) {
         return PopupMenuItem<String>(
           value: k,
           child: Text("$k Karat", style: const TextStyle(fontSize: 13)),
@@ -479,8 +472,9 @@ class _MetalTouchState extends State<MetalTouch> {
               child: ConstrainedBox(
                 constraints: BoxConstraints(minWidth: constraints.maxWidth),
                 child: DataTable(
-                  headingRowColor:
-                      WidgetStateProperty.all(AppColor.dashboardGold),
+                  headingRowColor: WidgetStateProperty.all(
+                    AppColor.dashboardGold,
+                  ),
                   headingTextStyle: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: AppColor.white,
@@ -496,8 +490,10 @@ class _MetalTouchState extends State<MetalTouch> {
                         value: _selectAll.value,
                         activeColor: AppColor.white,
                         checkColor: AppColor.dashboardGold,
-                        side:
-                            const BorderSide(color: AppColor.white, width: 1.5),
+                        side: const BorderSide(
+                          color: AppColor.white,
+                          width: 1.5,
+                        ),
                         onChanged: (val) {
                           _selectAll.value = val ?? false;
                           if (_selectAll.value) {
@@ -607,30 +603,30 @@ class _MetalTouchState extends State<MetalTouch> {
                                 constraints: const BoxConstraints(),
                                 onPressed: () => _showAddEditDialog(item: item),
                               ),
-                        const SizedBox(width: 10),
-                        IconButton(
-                          icon: const Icon(
-                            AppIcon.deleteIcon,
-                            color: AppColor.deleteColor,
-                            size: 18,
+                              const SizedBox(width: 10),
+                              IconButton(
+                                icon: const Icon(
+                                  AppIcon.deleteIcon,
+                                  color: AppColor.deleteColor,
+                                  size: 18,
+                                ),
+                                tooltip: AppString.delete,
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                onPressed: () => _showDeleteDialog(item),
+                              ),
+                            ],
                           ),
-                          tooltip: AppString.delete,
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                          onPressed: () => _showDeleteDialog(item),
                         ),
                       ],
-                    ),
-                  ),
-                ],
-              );
-            }),
-          ),
+                    );
+                  }),
+                ),
+              ),
+            );
+          },
         ),
-      );
-    },
-  ),
-),
+      ),
     );
   }
 
@@ -640,12 +636,154 @@ class _MetalTouchState extends State<MetalTouch> {
       children: [
         Text(label),
         const SizedBox(width: 4),
-        const Icon(
-          AppIcon.unfoldMore,
-          size: 14,
-          color: AppColor.white,
-        ),
+        const Icon(AppIcon.unfoldMore, size: 14, color: AppColor.white),
       ],
+    );
+  }
+
+  Widget _buildCardView(List<MetalData> list, {required int startIndex}) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: list.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 10),
+      itemBuilder: (context, index) {
+        final item = list[index];
+        final id = item.metalId ?? '';
+        final isChecked = _selectedIds.contains(id);
+
+        return Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColor.cardBg,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isChecked ? AppColor.dashboardGold : AppColor.border,
+              width: isChecked ? 1.5 : 1.0,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.03),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: Checkbox(
+                      value: isChecked,
+                      activeColor: AppColor.dashboardGold,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      visualDensity: VisualDensity.compact,
+                      onChanged: (val) {
+                        if (val == true) {
+                          _selectedIds.add(id);
+                        } else {
+                          _selectedIds.remove(id);
+                          _selectAll.value = false;
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColor.dashboardGold.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      AppIcon.balance,
+                      color: AppColor.dashboardGold,
+                      size: 18,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${item.karat ?? '-'} Karat",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: AppColor.mainText,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          "Gold Content: ${item.goldContent ?? '0.00'}%",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColor.subText,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Divider(height: 16, color: AppColor.border),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildStatusBadge("Active"),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          AppIcon.eyeOutline,
+                          color: AppColor.mainText,
+                          size: 18,
+                        ),
+                        tooltip: AppString.view,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () => _showAddEditDialog(item: item),
+                      ),
+                      const SizedBox(width: 10),
+                      IconButton(
+                        icon: Icon(
+                          AppIcon.editOutline,
+                          color: AppColor.mainText,
+                          size: 18,
+                        ),
+                        tooltip: AppString.edit,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () => _showAddEditDialog(item: item),
+                      ),
+                      const SizedBox(width: 10),
+                      IconButton(
+                        icon: const Icon(
+                          AppIcon.deleteIcon,
+                          color: AppColor.deleteColor,
+                          size: 18,
+                        ),
+                        tooltip: AppString.delete,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () => _showDeleteDialog(item),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -659,11 +797,7 @@ class _MetalTouchState extends State<MetalTouch> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            AppIcon.checkCircle,
-            size: 12,
-            color: AppColor.greenTagText,
-          ),
+          Icon(AppIcon.checkCircle, size: 12, color: AppColor.greenTagText),
           SizedBox(width: 4),
           Text(
             "Active",
@@ -685,8 +819,11 @@ class _MetalTouchState extends State<MetalTouch> {
     final totalPages = (totalCount / perPage).ceil().clamp(1, 9999);
     final currentPage = _currentPage.value.clamp(1, totalPages);
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 12,
+      runSpacing: 12,
       children: [
         Text(
           "Showing $startNum – $endNum of $totalCount records",
@@ -697,6 +834,7 @@ class _MetalTouchState extends State<MetalTouch> {
           ),
         ),
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               children: [
@@ -741,8 +879,10 @@ class _MetalTouchState extends State<MetalTouch> {
                 ),
                 const SizedBox(width: 6),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColor.dashboardGold,
                     borderRadius: BorderRadius.circular(6),
@@ -818,8 +958,10 @@ class _MetalTouchState extends State<MetalTouch> {
                   )
                   .toList(),
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: AppColor.cardBg,
                   borderRadius: BorderRadius.circular(8),
@@ -837,28 +979,20 @@ class _MetalTouchState extends State<MetalTouch> {
                       ),
                     ),
                     const SizedBox(width: 6),
-                    Icon(
-                      AppIcon.arrow_down,
-                      size: 16,
-                      color: AppColor.grey500,
-                    ),
+                    Icon(AppIcon.arrow_down, size: 16, color: AppColor.grey500),
                   ],
                 ),
               ),
             ),
           ],
         ),
-    ]
+      ],
     );
   }
 
   void _showAddEditDialog({MetalData? item}) {
     if (item != null) {
-      uiController.startEditing(
-        item.metalId,
-        item.karat,
-        item.goldContent,
-      );
+      uiController.startEditing(item.metalId, item.karat, item.goldContent);
     } else {
       uiController.editingId.value = null;
       uiController.karatController.clear();
@@ -894,7 +1028,11 @@ class _MetalTouchState extends State<MetalTouch> {
                   ),
                   const Spacer(),
                   IconButton(
-                    icon: Icon(AppIcon.clearIcon, size: 20, color: AppColor.mainText),
+                    icon: Icon(
+                      AppIcon.clearIcon,
+                      size: 20,
+                      color: AppColor.mainText,
+                    ),
                     onPressed: () => Get.back(),
                   ),
                 ],
@@ -992,8 +1130,9 @@ class _MetalTouchState extends State<MetalTouch> {
 
   Widget _shimmerLoading() {
     return Shimmer.fromColors(
-      baseColor: AppColor.isDark ? const Color(0xFF1E293B) : AppColor.grey300,
-      highlightColor: AppColor.isDark ? const Color(0xFF334155) : AppColor.white,
+      baseColor: AppColor.isDark ? AppColor.shimmerBaseDark : AppColor.grey300,
+      highlightColor:
+          AppColor.isDark ? AppColor.shimmerHighlightDark : AppColor.white,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

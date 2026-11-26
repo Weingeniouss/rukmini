@@ -13,12 +13,12 @@ void showForgotPasswordPopup(BuildContext context) {
     context: context,
     builder: (context) {
       return AlertDialog(
-        backgroundColor: AppColor.white,
+        backgroundColor: AppColor.cardBg,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         title: Text(
           AppString.forgetPassword,
           style: TextStyle(
-            color: AppColor.primaryColor,
+            color: AppColor.mainText,
             fontSize: AppSize.size18,
             fontWeight: FontWeight.bold,
           ),
@@ -28,7 +28,7 @@ void showForgotPasswordPopup(BuildContext context) {
           children: [
             Text(
               "Enter your registered email to receive a password reset link.",
-              style: TextStyle(fontSize: AppSize.size14, color: AppColor.textColor),
+              style: TextStyle(fontSize: AppSize.size14, color: AppColor.subText),
             ),
             SizedBox(height: AppSize.p16),
             inputField(

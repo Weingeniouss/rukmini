@@ -576,8 +576,10 @@ class _CustlistState extends State<Custlist> {
           ),
         ),
 
-        Row(
-          mainAxisSize: MainAxisSize.min,
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Container(
               decoration: BoxDecoration(
@@ -586,6 +588,7 @@ class _CustlistState extends State<Custlist> {
                 border: Border.all(color: AppColor.border),
               ),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   InkWell(
                     onTap: () => _isGridView.value = false,
@@ -608,6 +611,7 @@ class _CustlistState extends State<Custlist> {
                         ),
                       ),
                       child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
                             AppIcon.listBulleted,
@@ -652,6 +656,7 @@ class _CustlistState extends State<Custlist> {
                         ),
                       ),
                       child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
                             AppIcon.gridView,
@@ -678,7 +683,6 @@ class _CustlistState extends State<Custlist> {
                 ],
               ),
             ),
-            const SizedBox(width: 10),
 
             OutlinedButton.icon(
               onPressed: () {
@@ -717,7 +721,6 @@ class _CustlistState extends State<Custlist> {
                 ),
               ),
             ),
-            const SizedBox(width: 10),
 
             ElevatedButton.icon(
               onPressed: () => NavDrawerController.toNamed('/addCustForm'),
@@ -1546,8 +1549,8 @@ class _CustlistState extends State<Custlist> {
 
   Widget customerLoading() {
     return Shimmer.fromColors(
-      baseColor: AppColor.isDark ? const Color(0xFF1E293B) : AppColor.baseColor,
-      highlightColor: AppColor.isDark ? const Color(0xFF334155) : AppColor.highlightColor,
+      baseColor: AppColor.isDark ? AppColor.shimmerBaseDark : AppColor.baseColor,
+      highlightColor: AppColor.isDark ? AppColor.shimmerHighlightDark : AppColor.highlightColor,
       child: ListView.builder(
         padding: EdgeInsets.all(AppSize.p16),
         itemCount: 8,

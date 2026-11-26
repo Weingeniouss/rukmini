@@ -79,15 +79,15 @@ class Profile extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: AppSize.p24),
         margin: EdgeInsets.only(top: AppSize.p16),
         decoration: BoxDecoration(
-          color: AppColor.whiteOrang.withOpacity(0.3),
+          color: AppColor.cardBg,
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: AppColor.goldColor.withOpacity(0.1)),
+          border: Border.all(color: AppColor.goldColor.withOpacity(0.2)),
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              AppColor.goldColor.withOpacity(0.4),
-              AppColor.whiteOrang,
+              AppColor.goldColor.withOpacity(AppColor.isDark ? 0.2 : 0.35),
+              AppColor.cardBg,
               AppColor.goldColor.withOpacity(0.1),
             ],
           ),
@@ -98,11 +98,11 @@ class Profile extends StatelessWidget {
               padding: const EdgeInsets.all(3),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: AppColor.goldColor.withOpacity(0.3)),
+                border: Border.all(color: AppColor.goldColor.withOpacity(0.4)),
               ),
               child: CircleAvatar(
                 radius: isDesktopOrTablet ? 55 : AppSize.width * 0.13,
-                backgroundColor: AppColor.white,
+                backgroundColor: AppColor.isDark ? AppColor.grey200 : AppColor.white,
                 child: Text(
                   _getInitials(userData?.roleName),
                   style: TextStyle(
@@ -125,7 +125,7 @@ class Profile extends StatelessWidget {
                     style: TextStyle(
                       fontSize: AppSize.titleText,
                       fontWeight: FontWeight.bold,
-                      color: AppColor.black,
+                      color: AppColor.mainText,
                     ),
                   ),
                 ),
@@ -137,7 +137,7 @@ class Profile extends StatelessWidget {
               userData?.email ?? '',
               style: TextStyle(
                 fontSize: AppSize.commonText,
-                color: AppColor.goldColor,
+                color: AppColor.subText,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -154,21 +154,21 @@ class Profile extends StatelessWidget {
           Container(
             width: 30,
             height: 1,
-            color: AppColor.goldColor.withOpacity(0.3),
+            color: AppColor.goldColor.withOpacity(0.4),
           ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4),
           child: Icon(
             AppIcon.star,
             size: 10,
-            color: AppColor.goldColor.withOpacity(0.5),
+            color: AppColor.goldColor.withOpacity(0.6),
           ),
         ),
         if (isRight)
           Container(
             width: 30,
             height: 1,
-            color: AppColor.goldColor.withOpacity(0.3),
+            color: AppColor.goldColor.withOpacity(0.4),
           ),
       ],
     );
@@ -217,11 +217,12 @@ class Profile extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: AppSize.p12),
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.03),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -234,7 +235,7 @@ class Profile extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppColor.whiteOrang.withOpacity(0.5),
+                color: AppColor.goldColor.withOpacity(0.12),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: AppColor.goldColor, size: 22),
@@ -248,7 +249,7 @@ class Profile extends StatelessWidget {
                     label,
                     style: TextStyle(
                       fontSize: AppSize.smallText,
-                      color: AppColor.textColor,
+                      color: AppColor.subText,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -259,8 +260,8 @@ class Profile extends StatelessWidget {
                         Container(
                           width: 8,
                           height: 8,
-                          decoration: const BoxDecoration(
-                            color: AppColor.activeColor,
+                          decoration: BoxDecoration(
+                            color: AppColor.greenTagText,
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -270,7 +271,7 @@ class Profile extends StatelessWidget {
                           style: TextStyle(
                             fontSize: AppSize.commonText,
                             fontWeight: FontWeight.bold,
-                            color: AppColor.activeColor,
+                            color: AppColor.greenTagText,
                           ),
                         ),
                       ],
@@ -281,7 +282,7 @@ class Profile extends StatelessWidget {
                       style: TextStyle(
                         fontSize: AppSize.commonText,
                         fontWeight: FontWeight.bold,
-                        color: AppColor.black,
+                        color: AppColor.mainText,
                       ),
                     ),
                 ],

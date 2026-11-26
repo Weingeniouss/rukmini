@@ -91,7 +91,7 @@ class Reports extends StatelessWidget {
         Text(
           title,
           style: TextStyle(
-            color: AppColor.black,
+            color: AppColor.mainText,
             fontSize: AppSize.titleText,
             fontWeight: FontWeight.bold,
           ),
@@ -140,11 +140,12 @@ class Reports extends StatelessWidget {
         return Container(
           margin: EdgeInsets.only(bottom: AppSize.p16),
           decoration: BoxDecoration(
-            color: AppColor.white,
+            color: AppColor.cardBg,
             borderRadius: BorderRadius.circular(AppSize.p12),
+            border: Border.all(color: AppColor.border),
             boxShadow: [
               BoxShadow(
-                color: AppColor.black.withOpacity(0.05),
+                color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.05),
                 blurRadius: AppSize.p10,
                 offset: Offset(0, AppSize.p4),
               ),
@@ -219,7 +220,7 @@ class Reports extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(AppSize.p10),
                     decoration: BoxDecoration(
-                      color: AppColor.whiteOrang.withOpacity(0.5),
+                      color: AppColor.goldColor.withOpacity(0.12),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -233,7 +234,7 @@ class Reports extends StatelessWidget {
                   Container(
                     width: AppSize.p4 / 4,
                     height: AppSize.p24,
-                    color: AppColor.grey300.withOpacity(0.5),
+                    color: AppColor.border,
                   ),
                 ],
               ),
@@ -243,7 +244,7 @@ class Reports extends StatelessWidget {
               child: Text(
                 title,
                 style: TextStyle(
-                  color: AppColor.black,
+                  color: AppColor.mainText,
                   fontSize: AppSize.commonText,
                   fontWeight: FontWeight.w600,
                 ),
@@ -255,7 +256,6 @@ class Reports extends StatelessWidget {
               child: AnimatedRotation(
                 duration: const Duration(milliseconds: 200),
                 turns: isExpanded ? 0.25 : 0,
-                // 90 degrees rotation when expanded
                 child: Icon(
                   AppIcon.rightArrow,
                   color: AppColor.goldColor,
@@ -355,12 +355,12 @@ class Reports extends StatelessWidget {
     return Obx(() {
       if (uiController.custReportController.isLoading.value) {
         return Shimmer.fromColors(
-          baseColor: AppColor.grey300.withOpacity(0.5),
-          highlightColor: AppColor.white,
+          baseColor: AppColor.isDark ? AppColor.shimmerBaseDark : AppColor.grey300,
+          highlightColor: AppColor.isDark ? AppColor.shimmerHighlightDark : AppColor.white,
           child: Container(
             height: 60,
             decoration: BoxDecoration(
-              color: AppColor.white,
+              color: AppColor.cardBg,
               borderRadius: BorderRadius.circular(AppSize.p12),
             ),
           ),
@@ -369,9 +369,9 @@ class Reports extends StatelessWidget {
       return Container(
         padding: EdgeInsets.all(AppSize.p12),
         decoration: BoxDecoration(
-          color: AppColor.whiteOrang.withOpacity(0.1),
+          color: AppColor.goldColor.withOpacity(0.08),
           borderRadius: BorderRadius.circular(AppSize.p12),
-          border: Border.all(color: AppColor.goldColor.withOpacity(0.1)),
+          border: Border.all(color: AppColor.goldColor.withOpacity(0.15)),
         ),
         child: Row(
           children: [
@@ -387,7 +387,7 @@ class Reports extends StatelessWidget {
               child: _summaryBox(
                 "Total Pending",
                 uiController.custReportController.totalPendingAmt.value,
-                AppColor.black,
+                AppColor.mainText,
               ),
             ),
           ],
@@ -403,7 +403,7 @@ class Reports extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: AppSize.size12,
-            color: AppColor.black.withOpacity(0.6),
+            color: AppColor.subText,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -492,7 +492,7 @@ class Reports extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: AppColor.white,
+          backgroundColor: AppColor.cardBg,
           titlePadding: EdgeInsets.fromLTRB(
             AppSize.p16,
             AppSize.p16,
@@ -521,6 +521,7 @@ class Reports extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: AppSize.p16),
                   child: TextField(
                     controller: uiController.searchLockerController,
+                    style: TextStyle(color: AppColor.mainText),
                     decoration: InputDecoration(
                       prefixIcon: Icon(
                         AppIcon.searchIcon,
@@ -530,7 +531,7 @@ class Reports extends StatelessWidget {
                       hintText: AppString.searchLockerHint,
                       hintStyle: TextStyle(
                         fontSize: AppSize.commonText,
-                        color: AppColor.black.withOpacity(0.4),
+                        color: AppColor.subText,
                       ),
                       isDense: true,
                       enabledBorder: UnderlineInputBorder(
@@ -573,7 +574,7 @@ class Reports extends StatelessWidget {
                               "${locker.lockerCode} (${locker.comName})",
                               style: TextStyle(
                                 fontSize: AppSize.commonText,
-                                color: AppColor.black,
+                                color: AppColor.mainText,
                               ),
                             ),
                             onTap: () {

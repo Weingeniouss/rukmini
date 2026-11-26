@@ -1596,8 +1596,8 @@ class _CustDetailState extends State<CustDetail> {
 
 Widget loadingState() {
   return Shimmer.fromColors(
-    baseColor: AppColor.isDark ? const Color(0xFF1E293B) : AppColor.grey300,
-    highlightColor: AppColor.isDark ? const Color(0xFF334155) : AppColor.white,
+    baseColor: AppColor.isDark ? AppColor.shimmerBaseDark : AppColor.grey300,
+    highlightColor: AppColor.isDark ? AppColor.shimmerHighlightDark : AppColor.white,
     child: Padding(
       padding: EdgeInsets.all(AppSize.p16),
       child: Column(

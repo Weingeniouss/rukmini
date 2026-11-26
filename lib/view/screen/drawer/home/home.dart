@@ -993,8 +993,8 @@ class _HomeState extends State<Home> {
 
   Widget loadingWait() {
     return Shimmer.fromColors(
-      baseColor: AppColor.isDark ? const Color(0xFF1E293B) : AppColor.baseColor,
-      highlightColor: AppColor.isDark ? const Color(0xFF334155) : AppColor.highlightColor,
+      baseColor: AppColor.isDark ? AppColor.shimmerBaseDark : AppColor.baseColor,
+      highlightColor: AppColor.isDark ? AppColor.shimmerHighlightDark : AppColor.highlightColor,
       child: SingleChildScrollView(
         padding: EdgeInsets.all(AppSize.p16),
         child: Column(

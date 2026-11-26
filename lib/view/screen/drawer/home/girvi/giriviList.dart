@@ -86,8 +86,9 @@ class _GiriviListState extends State<GiriviList> {
   }
 
   List<GirviData> getFilteredData(List<GirviData> list) {
-    final query =
-        giriviListController.searchTextController.text.toLowerCase().trim();
+    final query = giriviListController.searchTextController.text
+        .toLowerCase()
+        .trim();
     final status = _selectedStatus.value.toLowerCase();
 
     return list.where((item) {
@@ -145,7 +146,7 @@ class _GiriviListState extends State<GiriviList> {
         final filteredList = getFilteredData(rawList);
         final totalCount =
             giriviListController.giriviListData.value.custCount ??
-                rawList.length;
+            rawList.length;
 
         _isGridView.value;
         _selectedBranch.value;
@@ -236,8 +237,10 @@ class _GiriviListState extends State<GiriviList> {
     double totalAmtSum = 0.0;
     for (var x in list) {
       if (x.givenAmt != null) {
-        final clean =
-            x.givenAmt!.replaceAll(',', '').replaceAll('₹', '').trim();
+        final clean = x.givenAmt!
+            .replaceAll(',', '')
+            .replaceAll('₹', '')
+            .trim();
         totalAmtSum += double.tryParse(clean) ?? 0.0;
       }
     }
@@ -428,7 +431,9 @@ class _GiriviListState extends State<GiriviList> {
                     border: Border.all(color: AppColor.border),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.02),
+                        color: AppColor.black.withOpacity(
+                          AppColor.isDark ? 0.3 : 0.02,
+                        ),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),
@@ -436,10 +441,7 @@ class _GiriviListState extends State<GiriviList> {
                   ),
                   child: TextField(
                     controller: giriviListController.searchTextController,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: AppColor.mainText,
-                    ),
+                    style: TextStyle(fontSize: 13, color: AppColor.mainText),
                     decoration: InputDecoration(
                       hintText: AppString.searchGirviPlaceholder,
                       hintStyle: TextStyle(
@@ -451,8 +453,11 @@ class _GiriviListState extends State<GiriviList> {
                         color: AppColor.grey500,
                         size: 20,
                       ),
-                      suffixIcon: giriviListController
-                              .searchTextController.text.isNotEmpty
+                      suffixIcon:
+                          giriviListController
+                              .searchTextController
+                              .text
+                              .isNotEmpty
                           ? IconButton(
                               icon: const Icon(AppIcon.clearIcon, size: 18),
                               onPressed: () {
@@ -602,7 +607,8 @@ class _GiriviListState extends State<GiriviList> {
     required String label,
     required VoidCallback onTap,
   }) {
-    final bool isSelected = label != "All Years" &&
+    final bool isSelected =
+        label != "All Years" &&
         label != AppString.allBranches &&
         label != AppString.allStatus &&
         label != "All";
@@ -686,8 +692,9 @@ class _GiriviListState extends State<GiriviList> {
     if (value == '0') {
       giriviListController.selectedYearTitle.value = "All Years";
     } else {
-      final selected =
-          yearController.yearList.firstWhereOrNull((y) => y.yearId == value);
+      final selected = yearController.yearList.firstWhereOrNull(
+        (y) => y.yearId == value,
+      );
       giriviListController.selectedYearTitle.value =
           selected?.title ?? "All Years";
     }
@@ -706,12 +713,9 @@ class _GiriviListState extends State<GiriviList> {
         offset.dx + renderBox.size.width,
         0,
       ),
-      items: [
-        AppString.allBranches,
-        "Pandesara",
-        "Gambhir",
-        "Panchavati",
-      ].map((b) {
+      items: [AppString.allBranches, "Pandesara", "Gambhir", "Panchavati"].map((
+        b,
+      ) {
         return PopupMenuItem<String>(
           value: b,
           child: Text(b, style: const TextStyle(fontSize: 13)),
@@ -736,17 +740,18 @@ class _GiriviListState extends State<GiriviList> {
         offset.dx + renderBox.size.width,
         0,
       ),
-      items: [
-        AppString.allStatus,
-        AppString.open,
-        AppString.closed,
-        "Carry Forward",
-      ].map((s) {
-        return PopupMenuItem<String>(
-          value: s,
-          child: Text(s, style: const TextStyle(fontSize: 13)),
-        );
-      }).toList(),
+      items:
+          [
+            AppString.allStatus,
+            AppString.open,
+            AppString.closed,
+            "Carry Forward",
+          ].map((s) {
+            return PopupMenuItem<String>(
+              value: s,
+              child: Text(s, style: const TextStyle(fontSize: 13)),
+            );
+          }).toList(),
     ).then((value) {
       if (value != null) {
         _selectedStatus.value = value;
@@ -786,7 +791,7 @@ class _GiriviListState extends State<GiriviList> {
         crossAxisCount: crossAxisCount,
         crossAxisSpacing: 14,
         mainAxisSpacing: 14,
-        mainAxisExtent: 155,
+        mainAxisExtent: 175,
       ),
       itemCount: list.length,
       itemBuilder: (context, index) {
@@ -820,12 +825,11 @@ class _GiriviListState extends State<GiriviList> {
               controller: _horizontalScrollController,
               scrollDirection: Axis.horizontal,
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minWidth: constraints.maxWidth,
-                ),
+                constraints: BoxConstraints(minWidth: constraints.maxWidth),
                 child: DataTable(
-                  headingRowColor:
-                      WidgetStateProperty.all(AppColor.dashboardGold),
+                  headingRowColor: WidgetStateProperty.all(
+                    AppColor.dashboardGold,
+                  ),
                   headingRowHeight: 48,
                   dataRowMinHeight: 52,
                   dataRowMaxHeight: 56,
@@ -838,8 +842,10 @@ class _GiriviListState extends State<GiriviList> {
                         value: _selectAll.value,
                         activeColor: AppColor.white,
                         checkColor: AppColor.dashboardGold,
-                        side:
-                            const BorderSide(color: AppColor.white, width: 1.5),
+                        side: const BorderSide(
+                          color: AppColor.white,
+                          width: 1.5,
+                        ),
                         onChanged: (val) {
                           _selectAll.value = val ?? false;
                           if (_selectAll.value) {
@@ -1089,11 +1095,7 @@ class _GiriviListState extends State<GiriviList> {
           ),
         ),
         const SizedBox(width: 4),
-        const Icon(
-          AppIcon.unfoldMore,
-          size: 14,
-          color: AppColor.white,
-        ),
+        const Icon(AppIcon.unfoldMore, size: 14, color: AppColor.white),
       ],
     );
   }
@@ -1105,8 +1107,11 @@ class _GiriviListState extends State<GiriviList> {
     final totalPages = (totalCount / perPage).ceil().clamp(1, 9999);
     final currentPage = _currentPageIndex.value.clamp(1, totalPages);
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 12,
+      runSpacing: 12,
       children: [
         Text(
           "Showing $startNum – $endNum of $totalCount records",
@@ -1117,6 +1122,7 @@ class _GiriviListState extends State<GiriviList> {
           ),
         ),
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               children: [
@@ -1163,8 +1169,10 @@ class _GiriviListState extends State<GiriviList> {
                 ),
                 const SizedBox(width: 6),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColor.dashboardGold,
                     borderRadius: BorderRadius.circular(6),
@@ -1240,8 +1248,10 @@ class _GiriviListState extends State<GiriviList> {
                   )
                   .toList(),
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: AppColor.cardBg,
                   borderRadius: BorderRadius.circular(8),
@@ -1259,11 +1269,7 @@ class _GiriviListState extends State<GiriviList> {
                       ),
                     ),
                     const SizedBox(width: 6),
-                    Icon(
-                      AppIcon.arrow_down,
-                      size: 16,
-                      color: AppColor.grey500,
-                    ),
+                    Icon(AppIcon.arrow_down, size: 16, color: AppColor.grey500),
                   ],
                 ),
               ),
@@ -1280,12 +1286,12 @@ class _GiriviListState extends State<GiriviList> {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColor.white,
+        color: AppColor.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColor.goldTagBg.withOpacity(0.8)),
+        border: Border.all(color: AppColor.border),
         boxShadow: [
           BoxShadow(
-            color: AppColor.black.withOpacity(0.03),
+            color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.03),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -1324,10 +1330,10 @@ class _GiriviListState extends State<GiriviList> {
                       children: [
                         Text(
                           item.custName ?? AppString.noName,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
-                            color: AppColor.black87,
+                            color: AppColor.mainText,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -1361,15 +1367,17 @@ class _GiriviListState extends State<GiriviList> {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color:
-                          isClosed ? AppColor.redLightBg : AppColor.greenTagBg,
+                      color: isClosed
+                          ? AppColor.redLightBg
+                          : AppColor.greenTagBg,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       isClosed ? AppString.closed : AppString.open,
                       style: TextStyle(
-                        color:
-                            isClosed ? AppColor.redText : AppColor.greenTagText,
+                        color: isClosed
+                            ? AppColor.redText
+                            : AppColor.greenTagText,
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
                       ),
@@ -1378,7 +1386,7 @@ class _GiriviListState extends State<GiriviList> {
                 ],
               ),
 
-              Divider(height: 16, color: AppColor.grey200),
+              Divider(height: 16, color: AppColor.border),
 
               Row(
                 children: [
@@ -1392,7 +1400,7 @@ class _GiriviListState extends State<GiriviList> {
                     formattedDate,
                     style: TextStyle(
                       fontSize: 12,
-                      color: AppColor.textSecondary,
+                      color: AppColor.subText,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -1408,7 +1416,7 @@ class _GiriviListState extends State<GiriviList> {
                       "Pandesara",
                       style: TextStyle(
                         fontSize: 12,
-                        color: AppColor.textSecondary,
+                        color: AppColor.subText,
                         fontWeight: FontWeight.w500,
                       ),
                       maxLines: 1,
@@ -1443,7 +1451,7 @@ class _GiriviListState extends State<GiriviList> {
                       Text(
                         '(${item.interest ?? '0.00'}%)',
                         style: TextStyle(
-                          color: AppColor.textMuted,
+                          color: AppColor.subText,
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
                         ),
@@ -1461,9 +1469,9 @@ class _GiriviListState extends State<GiriviList> {
                       const SizedBox(width: 4),
                       Text(
                         item.custPhone ?? '',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: AppColor.black87,
+                          color: AppColor.mainText,
                           fontSize: 12,
                         ),
                       ),
@@ -1507,8 +1515,12 @@ class _GiriviListState extends State<GiriviList> {
       padding: const EdgeInsets.all(16),
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
-          baseColor: AppColor.isDark ? const Color(0xFF1E293B) : AppColor.grey300,
-          highlightColor: AppColor.isDark ? const Color(0xFF334155) : AppColor.white,
+          baseColor: AppColor.isDark
+              ? AppColor.shimmerBaseDark
+              : AppColor.grey300,
+          highlightColor: AppColor.isDark
+              ? AppColor.shimmerHighlightDark
+              : AppColor.white,
           child: Container(
             margin: const EdgeInsets.symmetric(vertical: 8),
             height: 155,
@@ -1523,8 +1535,7 @@ class _GiriviListState extends State<GiriviList> {
   }
 }
 
-Future<void> callApiGirviList(
-    GiriviListController giriviListController) async {
+Future<void> callApiGirviList(GiriviListController giriviListController) async {
   CallApi.callGiriviList(
     isRefresh: true,
     search: giriviListController.searchTextController.text,

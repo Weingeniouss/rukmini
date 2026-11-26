@@ -155,7 +155,14 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
                     ),
                   )
                 else
-                  _buildTableView(pagedList, startIndex: startIndex),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      if (constraints.maxWidth < 650) {
+                        return _buildCardView(pagedList, startIndex: startIndex);
+                      }
+                      return _buildTableView(pagedList, startIndex: startIndex);
+                    },
+                  ),
                 const SizedBox(height: 12),
                 _buildPaginationBar(startNum, endNum, totalCount),
               ],
@@ -659,6 +666,153 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
     );
   }
 
+  Widget _buildCardView(List<CustomerTypeData> list, {required int startIndex}) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: list.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 10),
+      itemBuilder: (context, index) {
+        final item = list[index];
+        final id = item.typeId ?? '';
+        final isChecked = _selectedIds.contains(id);
+        final code = _generateCode(item.name);
+
+        return Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColor.cardBg,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isChecked ? AppColor.dashboardGold : AppColor.border,
+              width: isChecked ? 1.5 : 1.0,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColor.black.withOpacity(AppColor.isDark ? 0.3 : 0.03),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: Checkbox(
+                      value: isChecked,
+                      activeColor: AppColor.dashboardGold,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      visualDensity: VisualDensity.compact,
+                      onChanged: (val) {
+                        if (val == true) {
+                          _selectedIds.add(id);
+                        } else {
+                          _selectedIds.remove(id);
+                          _selectAll.value = false;
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColor.dashboardGold.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      AppIcon.group,
+                      color: AppColor.dashboardGold,
+                      size: 18,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.name ?? AppString.noName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: AppColor.mainText,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          "Code: $code",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColor.subText,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Divider(height: 16, color: AppColor.border),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildStatusBadge("Active"),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          AppIcon.eyeOutline,
+                          color: AppColor.mainText,
+                          size: 18,
+                        ),
+                        tooltip: AppString.view,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () => _showAddEditDialog(item: item),
+                      ),
+                      const SizedBox(width: 10),
+                      IconButton(
+                        icon: Icon(
+                          AppIcon.editOutline,
+                          color: AppColor.mainText,
+                          size: 18,
+                        ),
+                        tooltip: AppString.edit,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () => _showAddEditDialog(item: item),
+                      ),
+                      const SizedBox(width: 10),
+                      IconButton(
+                        icon: const Icon(
+                          AppIcon.deleteIcon,
+                          color: AppColor.deleteColor,
+                          size: 18,
+                        ),
+                        tooltip: AppString.delete,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () => _showDeleteDialog(item),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildStatusBadge(String statusStr) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -695,8 +849,11 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
     final totalPages = (totalCount / perPage).ceil().clamp(1, 9999);
     final currentPage = _currentPage.value.clamp(1, totalPages);
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 12,
+      runSpacing: 12,
       children: [
         Text(
           "Showing $startNum – $endNum of $totalCount records",
@@ -707,6 +864,7 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
           ),
         ),
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               children: [
@@ -979,8 +1137,8 @@ class _CustomerTypeMasterState extends State<CustomerTypeMaster> {
 
   Widget _shimmerLoading() {
     return Shimmer.fromColors(
-      baseColor: AppColor.isDark ? const Color(0xFF1E293B) : AppColor.grey300,
-      highlightColor: AppColor.isDark ? const Color(0xFF334155) : AppColor.white,
+      baseColor: AppColor.isDark ? AppColor.shimmerBaseDark : AppColor.grey300,
+      highlightColor: AppColor.isDark ? AppColor.shimmerHighlightDark : AppColor.white,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
